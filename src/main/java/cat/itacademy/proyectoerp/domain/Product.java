@@ -1,6 +1,5 @@
-package cat.itacademy.proyectoerp.dto;
+package cat.itacademy.proyectoerp.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "products")
-public class Products {
+public class Product {
 
 	// Products entity attributes
 
@@ -22,17 +21,15 @@ public class Products {
 	private String family;
 	private double price;
 	private double vat;
-	@Column(name = "wholesale_price") // column name is different in DDBB
-	private double wholesalePrice;
-	@Column(name = "wholesale_quantity") // column name is different in DDBB
-	private int wholesaleQuantity;
+	private double wholesale_price;
+	private int wholesale_quantity;
 
 	// Constructors
 
 	/**
 	 * Constructor without parameters
 	 */
-	public Products() {
+	public Product() {
 	}
 
 	/**
@@ -48,8 +45,8 @@ public class Products {
 	 * @param wholesalePrice    product wholesale price
 	 * @param wholesaleQuantity product wholesale quantity
 	 */
-	public Products(int id, String name, int stock, String image, String family, double price, double vat,
-			double wholesalePrice, int wholesaleQuantity) {
+	public Product(int id, String name, int stock, String image, String family, double price, double vat,
+			double wholesale_price, int wholesale_quantity) {
 
 		this.id = id;
 		this.name = name;
@@ -58,8 +55,8 @@ public class Products {
 		this.family = family;
 		this.price = price;
 		this.vat = vat;
-		this.wholesalePrice = wholesalePrice;
-		this.wholesaleQuantity = wholesaleQuantity;
+		this.wholesale_price = wholesale_price;
+		this.wholesale_quantity = wholesale_quantity;
 	}
 
 	// Getters and Setters
@@ -165,36 +162,36 @@ public class Products {
 	/**
 	 * @return product wholesale price
 	 */
-	public double getWholesalePrice() {
-		return wholesalePrice;
+	public double getWholesale_price() {
+		return wholesale_price;
 	}
 
 	/**
-	 * @param wholesalePrice to set product wholesale price
+	 * @param wholesale_price to set product wholesale price
 	 */
-	public void setWholesalePrice(double wholesalePrice) {
-		this.wholesalePrice = wholesalePrice;
+	public void setWholesale_price(double wholesale_price) {
+		this.wholesale_price = wholesale_price;
 	}
 
 	/**
 	 * @return product wholesale quantity
 	 */
-	public int getWholesaleQuantity() {
-		return wholesaleQuantity;
+	public int getWholesale_quantity() {
+		return wholesale_quantity;
 	}
 
 	/**
-	 * @param wholesaleQuantity to set product wholesale quantity
+	 * @param wholesale_quantity to set product wholesale quantity
 	 */
-	public void setWholesaleQuantity(int wholesaleQuantity) {
-		this.wholesaleQuantity = wholesaleQuantity;
+	public void setWholesale_quantity(int wholesale_quantity) {
+		this.wholesale_quantity = wholesale_quantity;
 	}
 
 	// Console data printing method
 	@Override
 	public String toString() {
-		return "Products [id=" + id + ", name=" + name + ", stock=" + stock + ", image=" + image + ", family=" + family
-				+ ", price=" + price + ", vat=" + vat + ", wholesalePrice=" + wholesalePrice + ", wholesaleQuantity="
-				+ wholesaleQuantity + "]";
+		return "Product [id=" + id + ", name=" + name + ", stock=" + stock + ", image=" + image + ", family=" + family
+				+ ", price=" + price + ", vat=" + vat + ", wholesale_price=" + wholesale_price + ", wholesale_quantity="
+				+ wholesale_quantity + "]";
 	}
 }
