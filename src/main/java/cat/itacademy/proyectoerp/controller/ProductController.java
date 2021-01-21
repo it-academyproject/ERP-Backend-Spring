@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
-public class ProductsController {
+public class ProductController {
 	
 	@PostMapping("/products")
 	public String createProduct(@RequestBody String name) {
-		return "Product "+ name + "is created!";
+		return "Product "+ name + " is created!";
 	}
 	
 	@GetMapping("/products/{id}")
@@ -30,13 +30,13 @@ public class ProductsController {
 	}
 	
 	@PutMapping("/products/{id}")
-	public String updateProduct(@PathVariable(name = "id") int id) {
-		return "";
+	public String updateProduct(@PathVariable(name = "id") int id, @RequestBody String name) {
+		return "in the future you will receive the modified data of product " + id;
 	}
 	
 	@DeleteMapping("/products/{id}")
 	public String deleteProduct(@PathVariable(name = "id") int id) {
-		return "Product "+ id + "has been successfully deleted";
+		return "Product "+ id + " has been successfully deleted";
 	}
 
 	
