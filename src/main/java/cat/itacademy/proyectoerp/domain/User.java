@@ -1,4 +1,4 @@
-package cat.itacademy.proyectoerp.dto;
+package cat.itacademy.proyectoerp.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,8 +22,8 @@ import javax.validation.constraints.Size;
  * @author Rubén Rodríguez
  *
  */
-@Entity
 //@Inheritance(strategy = InheritanceType.JOINED)
+@Entity
 public class User   {
 
 	@Id
