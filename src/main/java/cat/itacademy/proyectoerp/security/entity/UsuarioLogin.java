@@ -1,4 +1,4 @@
-/*package cat.itacademy.proyectoerp.security.entity;
+package cat.itacademy.proyectoerp.security.entity;
 
 import java.util.Collection;
 
@@ -8,9 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class UsuarioLogin implements UserDetails{
 	
-	/**
-	 * 
-	 *//*
+	
 	private static final long serialVersionUID = 1L;
 
 	private String username;
@@ -27,8 +25,7 @@ public class UsuarioLogin implements UserDetails{
 		this.password = password;
 		this.authorities = authorities;
 	}
-
-	public static 
+	
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -73,4 +70,4 @@ public class UsuarioLogin implements UserDetails{
 	
 	
 
-}*/
+}
