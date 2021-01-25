@@ -40,7 +40,7 @@ public class ProductController {
 
 			map.put("success", "true");
 			map.put("message", "New product created");
-			map.put("new product", product);
+			map.put("product", product);
 
 		} catch (Exception e) {
 
@@ -70,11 +70,10 @@ public class ProductController {
 			map.put("message", "product found");
 			map.put("product", product);
 
-		} catch (Exception idNotFound) {
+		} catch (Exception e) {
 
 			map.put("success", "false");
-			map.put("message", "Product not found. The id " + id + " doesn't exist");
-
+			map.put("message", "Error: " + e.getMessage());
 		}
 
 		return map;
@@ -90,18 +89,17 @@ public class ProductController {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
-		List<Product> productList = productService.getProducts();
+		try {
 
-		// If the size of the product list is greater than 0, return list
-		if (productList.size() > 0) {
+			List<Product> productList = productService.getProducts();
 
 			map.put("success", "true");
 			map.put("message", "product list found");
-			map.put("all products", productList);
+			map.put("products", productList);
 
-		} else {
+		} catch (Exception e) {
 			map.put("success", "false");
-			map.put("message", "No products found");
+			map.put("message", "Error: " + e.getMessage());
 		}
 
 		return map;
@@ -120,37 +118,12 @@ public class ProductController {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		try {
-			
-			Product productSelected = productService.findProductById(id);
 
-			// If the name has been changed, verify that the name is unique
-			if (!productSelected.getName().equalsIgnoreCase(product.getName())) {
-
-				Product productFound = productService.findByName(product.getName());
-
-				if (productFound != null) {
-
-					map.put("success", "false");
-					map.put("message", "Product name already exists");
-
-					return map;
-				}
-			}
-
-			productSelected.setName(product.getName());
-			productSelected.setStock(product.getStock());
-			productSelected.setImage(product.getImage());
-			productSelected.setFamily(product.getFamily());
-			productSelected.setPrice(product.getPrice());
-			productSelected.setVat(product.getVat());
-			productSelected.setWholesale_price(product.getWholesale_price());
-			productSelected.setWholesale_quantity(product.getWholesale_quantity());
-
-			Product productUpdated = productService.updateProduct(productSelected);
+			Product productUpdated = productService.updateProduct(product);
 
 			map.put("success", "true");
 			map.put("message", "product updated");
-			map.put("product updated", productUpdated);
+			map.put("product", productUpdated);
 
 		} catch (Exception e) {
 
@@ -169,21 +142,23 @@ public class ProductController {
 	 * @return message: product removed successfully
 	 */
 	@DeleteMapping("/products/{id}")
-	public HashMap<String, Object> deleteProduct(@PathVariable(name = "id") int id) {
+	public HashMap<String, Object> deleteProduct(@PathVariable(name = "id") int id, @RequestBody Product product) {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		try {
 
-			productService.deleteProduct(id);
+			productService.findProductById(product.getId());
+
+			productService.deleteProduct(product.getId());
 
 			map.put("success", "true");
-			map.put("message", "Product " + id + " has been successfully deleted");
+			map.put("message", "Product id: " + product.getId() + " has been successfully deleted");
 
-		} catch (Exception idNotFound) {
+		} catch (Exception e) {
 
 			map.put("success", "false");
-			map.put("message", "Product not found. The id " + id + " doesn't exist");
+			map.put("message", "Error: " + e.getMessage());
 
 		}
 
