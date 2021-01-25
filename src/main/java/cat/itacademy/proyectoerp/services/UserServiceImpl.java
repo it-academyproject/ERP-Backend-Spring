@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import cat.itacademy.proyectoerp.dao.UserDao;
@@ -20,7 +21,7 @@ import cat.itacademy.proyectoerp.dto.UserDTO;
  */
 @Transactional
 @Service
-public class UserService implements IUserService{
+public class UserServiceImpl implements IUserService{
 	
 	@Autowired
 	UserDao userDao;
@@ -59,21 +60,36 @@ public class UserService implements IUserService{
 	 * 
 	 */
 	@Override
-	public UserDTO registerNewUserAccount(UserDTO userDto) {
-	    User user;
-	    if (userDao.existsByUsername(userDto.getUsername())) {  
+	public UserDTO registerNewUserAccount(User user) {
+		//The default typeUser is CLIENT. If client don't send typeUSer, back assign CLIENT how userType.
+		if (user.getUserType() == null)
+			user.setUserType(UserType.CLIENT);
+		
+		UserDTO userDto = modelMapper.map(user, UserDTO.class);
+	    System.out.println("user pasado "+user.toString());
+		if (userDao.existsByUsername(user.getUsername())) {  
 	        userDto.setSuccess("False");
 	    	userDto.setMessage("User Exist");
 	    	return userDto;
 	    }
-		user =modelMapper.map(userDto,  User.class);
+		
+			
+			
+	    user.setPassword(passEconder(user.getPassword()));
+		//user = modelMapper.map(userDto,  User.class);
 		userDao.save(user);
 	    userDto.setSuccess("True");
 	    userDto.setMessage("User created");
 	    return userDto;
 	     
 	    }
-	 
+	
+	public String passEconder(String pass) {
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String encodedPassword = passwordEncoder.encode(pass);
+		System.out.println("pass encrip "+encodedPassword);
+		return encodedPassword;
+	}
 	/**
 	 * Method for list all users.
 	 *@return List of all users. 
@@ -156,8 +172,16 @@ public class UserService implements IUserService{
 	 */
 	@Transactional
 	@Override
-	public Optional<UserDTO> modifyUser(Long id, UserDTO userDto) {
+	public Optional<UserDTO> modifyUser(Long id, User user) {
+	    //UserDTO don't have a password property. 
+		//For this reason we need save password in a variable for add to user object.
+		//Obviously, if password have been send.
+		String password = null;
+		
+		if (user.getPassword() !=null)
+			password = user.getPassword();
 	    
+		UserDTO userDto = modelMapper.map(user, UserDTO.class);
 		//Verify if user id exist
 		if (!userDao.existsById(id)) {  
 	    	 userDto.setSuccess("False");
@@ -165,31 +189,31 @@ public class UserService implements IUserService{
 	    	 return Optional.of(userDto);
 	     }
 		//Verify if username already exist
-		if (userDao.findByUsername(userDto.getUsername()) != null) {
+		if (userDao.findByUsername(user.getUsername()) != null) {
 			userDto.setSuccess("Failed");
 			userDto.setMessage("User already exist");
 			return Optional.of(userDto);
 		}
 	    
 		
-		User user = userDao.findById(id).get();
+		user = userDao.findById(id).get();
 		
 		/**
 		 * We Verified what properties has received.
 		 */
+		
 		if (userDto.getUsername() != null)
 			user.setUsername(userDto.getUsername());
-		if (userDto.getPassword() != null)
-			user.setPassword(userDto.getPassword());
-		if (userDto.getUser_type() != null)
-			user.setUserType(userDto.getUser_type());
+		if (password != null)
+		    user.setPassword(passEconder(password));
+		if (userDto.getUserType() != null)
+			user.setUserType(userDto.getUserType());
+
 		
         userDao.save(user);
 	    userDto.setSuccess("True");
 	    userDto.setMessage("User modified");
 	    return Optional.of(userDto);
 	     
-	    }
-	
-				   
+	}			   
 }

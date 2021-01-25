@@ -33,21 +33,21 @@ public class UserDTO implements Serializable{
     @Size(min = 3, max = 12, message ="username not valid. min 3 characters and max 12")
 	private String username;
 	
-	@Size(min = 8, max = 16, message= "Password not valid. min 8 characters and max 16 ")
-	private String password;
+	/*@Size(min = 8, max = 12, message= "Password not valid. min 8 characters and max 16 ")
+	private String password;*/
 	
 	//@NotNull
-	UserType user_type=UserType.CLIENT;
+	UserType userType;
 
 	
 	//SETERRS AND GETTERS
-	public String getPassword() {
+/*	public String getPassword() {
 		return password;
 	}
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+	*/
 
 	public String getSuccess() {
 		return success;
@@ -68,11 +68,11 @@ public class UserDTO implements Serializable{
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	public UserType getUser_type() {
-		return user_type;
+	public UserType getUserType() {
+		return userType;
 	}
-	public void setUser_type(UserType user_type) {
-		this.user_type = user_type;
+	public void setUserType(UserType user_type) {
+		this.userType = user_type;
 	}
 
 }

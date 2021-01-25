@@ -14,12 +14,12 @@ import cat.itacademy.proyectoerp.dto.UserDTO;
 public interface IUserService {
 
 	public Optional<UserDTO> getByUsername(String username);
-	public UserDTO registerNewUserAccount(UserDTO userDto);
+	public UserDTO registerNewUserAccount(User user);
 	public List<UserDTO> listAllUsers();
 	public List<UserDTO> listAllEmployees();
 	public List<UserDTO> listAllClients();
 	public Optional<UserDTO> deleteUserById(Long id);
-	public Optional<UserDTO> modifyUser(Long id, UserDTO userDto);
+	public Optional<UserDTO> modifyUser(Long id, User user);
 
 
 

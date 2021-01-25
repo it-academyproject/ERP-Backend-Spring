@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,8 +22,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import cat.itacademy.proyectoerp.domain.User;
+import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.dto.UserDTO;
-import cat.itacademy.proyectoerp.services.UserService;
+import cat.itacademy.proyectoerp.services.UserServiceImpl;
 /**
  * Class of User Controller 
  * @author Rubén Rodríguez 
@@ -33,7 +35,19 @@ import cat.itacademy.proyectoerp.services.UserService;
 public class UserController {
 	
 	@Autowired
-	UserService userService;
+	UserServiceImpl userService;
+	
+	/**
+	 * Method for all url which don't exist
+	 * @return a informative message
+	 */
+	@RequestMapping(value ="**")
+	public ResponseEntity<MessageDTO> otherUrl(){
+		MessageDTO messageDto = new MessageDTO("False","Url don't exist");
+		
+		return new ResponseEntity<>(messageDto, HttpStatus.NOT_FOUND);
+	}
+
 	
 	/**
 	 * Method for create a new user.
@@ -41,13 +55,18 @@ public class UserController {
 	 * @return Welcome String.
 	 */
 	@RequestMapping(value ="/users", method = RequestMethod.POST)
-	public ResponseEntity<UserDTO> newUser(@Valid @RequestBody UserDTO userDTO) {
-		userDTO= userService.registerNewUserAccount(userDTO);
+	public ResponseEntity<UserDTO> newUser(@Valid @RequestBody User user) {
+		
+		UserDTO userDTO;
+		
+		userDTO= userService.registerNewUserAccount(user);
 		if (userDTO.getSuccess() == "False")
 			return new ResponseEntity<>(userDTO, HttpStatus.UNPROCESSABLE_ENTITY);	
 		return 	 new ResponseEntity<>(userDTO, HttpStatus.OK);	
 
 	}
+	
+	
 	
 	/**
 	 * Method for user login
@@ -95,8 +114,10 @@ public class UserController {
 	 * @param id    user ID
   	 * @return OK if user exist. Not OK if user don't exists.
 	 */
-	@DeleteMapping("/users/{id}")
-	public ResponseEntity<UserDTO>  deleteUserById(@PathVariable(name="id") Long id) {
+	@DeleteMapping("/users")
+	public ResponseEntity<UserDTO>  deleteUserById(@RequestBody User user) {
+		Long id= user.getId();
+		
 		UserDTO userDto;
 		userDto = userService.deleteUserById(id).get();
 		if (userDto.getSuccess() == "False")
@@ -111,11 +132,12 @@ public class UserController {
 	 * @param String new type of user.  
 	 * @return OK if user exists.
 	 */
-	@PutMapping("/users/{id}")
-	public ResponseEntity<UserDTO> modifyTypeUser(@PathVariable(name="id") Long id, @RequestBody UserDTO userDTO) {
+	@PutMapping("/users")
+	public ResponseEntity<UserDTO> modifyTypeUser(@RequestBody User user) {
 		
 		UserDTO userDto;
-		userDto = userService.modifyUser(id, userDTO).get();
+		Long id = user.getId();
+		userDto = userService.modifyUser(id, user).get();
 		if (userDto.getSuccess() == "False")
 			return new ResponseEntity<>(userDto, HttpStatus.UNPROCESSABLE_ENTITY);	
 		return 	 new ResponseEntity<>(userDto, HttpStatus.OK);	

@@ -34,8 +34,7 @@ public class User   {
 	@Size(min = 3, max = 12)
 	private String username;
 	
-	@Column(length=16)
-	@Size(min = 8, max = 16)
+	@Column(length=106)
 	private String password;
 
 	@Column(length=16)
