@@ -40,9 +40,27 @@ public class User   {
 
 	@Column(length=16)
     @Enumerated(EnumType.STRING)
-	UserType user_type;
+	UserType userType; 
 	
 	
+	
+	public User() {
+		super();
+	}
+
+	/**
+	 * Constructor. Create a User object with parameters. By default, userType is CLIENT. 	
+	 * @param username
+	 * @param password
+	 */
+	public User(@Size(min = 3, max = 12) String username, @Size(min = 8, max = 16) String password) {
+		super();
+		this.username = username;
+		this.password = password;
+		userType = UserType.CLIENT;
+	}
+
+
 	/**
 	 * Constructor. Create a User object with parameters.	
 	 * @param username
@@ -52,7 +70,7 @@ public class User   {
 	public User(String username, String password, UserType user_type) {
 		this.username = username;
 		this.password = password;
-		this.user_type = user_type;
+		this.userType = user_type;
 	}
 
 
@@ -76,13 +94,19 @@ public class User   {
 	}
 
 
-	public UserType getUser_type() {
-		return user_type;
+	public UserType getUserType() {
+		return userType;
 	}
 
 
-	public void setUser_type(UserType user_type) {
-		this.user_type = user_type;
+	public void setUserType(UserType user_type) {
+		this.userType = user_type;
+	}
+
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", userType=" + userType + "]";
 	}
 
 
