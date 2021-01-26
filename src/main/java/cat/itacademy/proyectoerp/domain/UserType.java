@@ -1,4 +1,4 @@
-package cat.itacademy.proyectoerp.dto;
+package cat.itacademy.proyectoerp.domain;
 
 public enum UserType {
 	ADMIN,
