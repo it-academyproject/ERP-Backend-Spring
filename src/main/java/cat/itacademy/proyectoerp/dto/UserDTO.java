@@ -3,11 +3,11 @@ package cat.itacademy.proyectoerp.dto;
 import java.io.Serializable;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 
 import cat.itacademy.proyectoerp.domain.UserType;
 
@@ -33,21 +33,11 @@ public class UserDTO implements Serializable{
     @Size(min = 3, max = 12, message ="username not valid. min 3 characters and max 12")
 	private String username;
 	
-	/*@Size(min = 8, max = 12, message= "Password not valid. min 8 characters and max 16 ")
-	private String password;*/
-	
-	//@NotNull
 	UserType user_type;
 
 	
 	//SETERRS AND GETTERS
-/*	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	*/
+
 
 	public String getSuccess() {
 		return success;

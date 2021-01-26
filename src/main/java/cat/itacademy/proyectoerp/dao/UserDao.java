@@ -32,7 +32,7 @@ public interface UserDao extends CrudRepository<User, Long> {
 	
 	/**
 	 * Method for search list of users by userType.
-	 * @param user_type
+	 * @param userType
 	 * @return list of users by userType.
 	 */
 	List<User> findByUserType(UserType user_type);

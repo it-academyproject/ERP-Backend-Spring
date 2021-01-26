@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.NameTokenizers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class UserServiceImpl implements IUserService{
 	
 	//We use ModelMapper for map User entity with the DTO.
 	ModelMapper modelMapper = new ModelMapper();
+
 
 	/**
 	 * Method for search a entity by username.
@@ -61,10 +63,14 @@ public class UserServiceImpl implements IUserService{
 	 */
 	@Override
 	public UserDTO registerNewUserAccount(User user) {
+		
+		modelMapper.getConfiguration()
+		  .setSourceNameTokenizer(NameTokenizers.UNDERSCORE)
+		  .setDestinationNameTokenizer(NameTokenizers.UNDERSCORE);
 		//The default typeUser is CLIENT. If client don't send typeUSer, back assign CLIENT how userType.
 		if (user.getUserType() == null)
 			user.setUserType(UserType.CLIENT);
-		
+
 		UserDTO userDto = modelMapper.map(user, UserDTO.class);
 	    System.out.println("user pasado "+user.toString());
 		if (userDao.existsByUsername(user.getUsername())) {  

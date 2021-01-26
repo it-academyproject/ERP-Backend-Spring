@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 /**
  * User class. 
@@ -17,7 +19,7 @@ import javax.validation.constraints.Size;
  * - Id : Auto <br>
  * - username : max length = 12 <br>
  * - password: max length = 16<br>
- * - user_type: Enum type for role type.<br> 
+ * - userType: Enum type for role type.<br> 
  * 
  * @author Rubén Rodríguez
  *
@@ -37,6 +39,7 @@ public class User   {
 	@Column(length=106)
 	private String password;
 
+   // @JsonProperty("user_type")
 	@Column(length=16)
     @Enumerated(EnumType.STRING)
 	UserType userType; 
@@ -64,7 +67,7 @@ public class User   {
 	 * Constructor. Create a User object with parameters.	
 	 * @param username
 	 * @param password
-	 * @param user_type
+	 * @param userType
 	 */
 	public User(String username, String password, UserType user_type) {
 		this.username = username;

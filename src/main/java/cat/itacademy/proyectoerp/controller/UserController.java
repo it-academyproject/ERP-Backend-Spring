@@ -88,7 +88,7 @@ public class UserController {
 	
 	
 	/**
-	 * Method for list all user with user_type = EMPLOYEE
+	 * Method for list all user with userType = EMPLOYEE
 	 * @return all employees
 	 */
 	@GetMapping("/users/employees") 
@@ -97,7 +97,7 @@ public class UserController {
 	}
 	
 	/**
-	 * Method for list all user with user_type = CLIENTS
+	 * Method for list all user with userType = CLIENTS
 	 * @return all clients
 	 */
 	@GetMapping("/users/clients") 
