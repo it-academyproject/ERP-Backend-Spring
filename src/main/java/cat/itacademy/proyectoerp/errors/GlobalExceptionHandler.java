@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -62,4 +64,20 @@ public class GlobalExceptionHandler   {
 		        
 		        return new ResponseEntity<ApiError>(err, HttpStatus.BAD_REQUEST);				   
 	    }
+	
+	@ExceptionHandler(value = HttpMessageNotReadableException.class)
+	public ResponseEntity <ApiError>HttpMessageNotReadableException(HttpMessageNotReadableException error, WebRequest request)  {
+		fieldErrors.clear();
+        
+      
+        //We construct ApiError object.
+        ApiError err = new ApiError(
+            LocalDateTime.now(),
+            HttpStatus.BAD_REQUEST, 
+            "Request invalid. ");
+        
+        return new ResponseEntity<ApiError>(err, HttpStatus.BAD_REQUEST);				   
+	}
+		
+	
 }

@@ -29,10 +29,26 @@ public class ApiError {
     private String message;
     private Map errors;
     
+	public ApiError(LocalDateTime timestamp, HttpStatus status, String message, Map errors) {
+		super();
+		this.timestamp = timestamp;
+		this.status = status;
+		this.message = message;
+		this.errors = errors;
+	}
+	
+    
+    public ApiError(LocalDateTime timestamp, HttpStatus status, String message) {
+		super();
+		this.timestamp = timestamp;
+		this.status = status;
+		this.message = message;
+	}
     //SETTERS AND GETTERS
 	public LocalDateTime getTimestamp() {
 		return timestamp;
 	}
+	
 	public void setTimestamp(LocalDateTime timestamp) {
 		this.timestamp = timestamp;
 	}
@@ -54,13 +70,6 @@ public class ApiError {
 	public void setErrors(Map errors) {
 		this.errors = errors;
 	}
-	public ApiError(LocalDateTime timestamp, HttpStatus status, String message, Map errors) {
-		super();
-		this.timestamp = timestamp;
-		this.status = status;
-		this.message = message;
-		this.errors = errors;
-	}
-	
+
 	
 }

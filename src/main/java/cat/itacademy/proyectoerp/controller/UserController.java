@@ -3,18 +3,14 @@ package cat.itacademy.proyectoerp.controller;
 
 import java.util.List;
 
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -133,7 +129,7 @@ public class UserController {
 	 * @return OK if user exists.
 	 */
 	@PutMapping("/users")
-	public ResponseEntity<UserDTO> modifyTypeUser(@RequestBody User user) {
+	public ResponseEntity<UserDTO> modifyTypeUser(@Valid @RequestBody User user) {
 		
 		UserDTO userDto;
 		Long id = user.getId();

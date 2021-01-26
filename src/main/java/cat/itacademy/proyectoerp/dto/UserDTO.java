@@ -37,7 +37,7 @@ public class UserDTO implements Serializable{
 	private String password;*/
 	
 	//@NotNull
-	UserType userType;
+	UserType user_type;
 
 	
 	//SETERRS AND GETTERS
@@ -69,10 +69,10 @@ public class UserDTO implements Serializable{
 		this.username = username;
 	}
 	public UserType getUserType() {
-		return userType;
+		return user_type;
 	}
 	public void setUserType(UserType user_type) {
-		this.userType = user_type;
+		this.user_type = user_type;
 	}
 
 }
