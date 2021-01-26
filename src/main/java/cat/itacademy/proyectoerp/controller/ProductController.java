@@ -108,12 +108,11 @@ public class ProductController {
 	/**
 	 * Update product data
 	 * 
-	 * @param id      product id
 	 * @param product product new data
 	 * @return product updated
 	 */
-	@PutMapping("/products/{id}")
-	public HashMap<String, Object> updateProduct(@PathVariable(name = "id") int id, @RequestBody Product product) {
+	@PutMapping("/products")
+	public HashMap<String, Object> updateProduct(@RequestBody Product product) {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
@@ -138,11 +137,11 @@ public class ProductController {
 	/**
 	 * Delete product according to id
 	 * 
-	 * @param id product id
+	 * @param product product id
 	 * @return message: product removed successfully
 	 */
-	@DeleteMapping("/products/{id}")
-	public HashMap<String, Object> deleteProduct(@PathVariable(name = "id") int id, @RequestBody Product product) {
+	@DeleteMapping("/products")
+	public HashMap<String, Object> deleteProduct(@RequestBody Product product) {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
