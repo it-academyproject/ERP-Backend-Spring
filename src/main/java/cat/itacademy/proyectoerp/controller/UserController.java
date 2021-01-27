@@ -8,7 +8,15 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,18 +28,32 @@ import org.springframework.web.bind.annotation.RestController;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.dto.UserDTO;
+import cat.itacademy.proyectoerp.security.entity.JwtLogin;
+import cat.itacademy.proyectoerp.security.entity.JwtResponse;
+import cat.itacademy.proyectoerp.security.jwt.JwtUtil;
+import cat.itacademy.proyectoerp.security.services.UserDetailServiceImpl;
 import cat.itacademy.proyectoerp.services.UserServiceImpl;
 /**
  * Class of User Controller 
  * @author Rubén Rodríguez 
  *
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class UserController {
 	
 	@Autowired
 	UserServiceImpl userService;
+	
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	UserDetailServiceImpl userDetailService;
+	
+	@Autowired
+	JwtUtil jwtUtil;
 	
 	/**
 	 * Method for all url which don't exist
@@ -62,18 +84,24 @@ public class UserController {
 
 	}
 	
-	
-	
+
 	/**
 	 * Method for user login
 	 * @param user JSON with credentials.
-	 * @return String with message: Succes or unauthorized.
+	 * @return String with message: Success or unauthorized.
+	 * @throws Exception 
 	 */
 	@RequestMapping(value ="/login", method = RequestMethod.POST)
-	public ResponseEntity<UserDTO> loginUser(@RequestBody User user) {
+	public ResponseEntity<JwtResponse> loginUser(@RequestBody JwtLogin jwtLogin) throws Exception {
 		
+        SecurityContextHolder.getContext().setAuthentication(authenticate(jwtLogin.getUsername(), jwtLogin.getPassword()));
+
+        UserDetails userDetails = userDetailService.loadUserByUsername(jwtLogin.getUsername());
+
+		final String token = jwtUtil.generateToken(userDetails);
+
 		
-		return new ResponseEntity<>(userService.getByUsername(user.getUsername()).get(), HttpStatus.OK);
+		return ResponseEntity.ok(new JwtResponse(token));
 		
 	}
 	
@@ -110,6 +138,7 @@ public class UserController {
 	 * @param id    user ID
   	 * @return OK if user exist. Not OK if user don't exists.
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/users")
 	public ResponseEntity<UserDTO>  deleteUserById(@RequestBody User user) {
 		Long id= user.getId();
@@ -128,6 +157,7 @@ public class UserController {
 	 * @param String new type of user.  
 	 * @return OK if user exists.
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/users")
 	public ResponseEntity<UserDTO> modifyTypeUser(@Valid @RequestBody User user) {
 		
@@ -138,6 +168,16 @@ public class UserController {
 			return new ResponseEntity<>(userDto, HttpStatus.UNPROCESSABLE_ENTITY);	
 		return 	 new ResponseEntity<>(userDto, HttpStatus.OK);	
 		}
+	
+	private Authentication authenticate(String username, String password) throws Exception {
+		try {
+			return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+		} catch (DisabledException e) {
+			throw new Exception("USER_DISABLED", e);
+		} catch (BadCredentialsException e) {
+			throw new Exception("INVALID_CREDENTIALS", e);
+		}
+	}
 		
 	
 }

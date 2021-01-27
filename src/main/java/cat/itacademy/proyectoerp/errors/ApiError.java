@@ -1,11 +1,9 @@
 package cat.itacademy.proyectoerp.errors;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
