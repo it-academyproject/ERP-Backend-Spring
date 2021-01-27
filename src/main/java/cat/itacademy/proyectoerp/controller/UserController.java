@@ -144,6 +144,12 @@ public class UserController {
 		return new ResponseEntity<>(userDto, HttpStatus.OK);
 	}
 
+	/**
+	 * Method to recover password
+	 * 
+	 * @param user username of user
+	 * @return password
+	 */
 	@GetMapping("/users/passwords")
 	public ResponseEntity<HashMap<String, Object>> recoverPassword(@RequestBody User user) {
 
@@ -156,11 +162,12 @@ public class UserController {
 			map.put("success", "true");
 			map.put("message", "New product created");
 			map.put("password", userPassword);
-			
+
 		} catch (Exception e) {
 
 			map.put("success", "false");
 			map.put("message", "username not found");
+			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.BAD_REQUEST);
 		}
 
 		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);

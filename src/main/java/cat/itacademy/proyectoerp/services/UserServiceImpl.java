@@ -227,20 +227,30 @@ public class UserServiceImpl implements IUserService {
 
 	}
 
-	public String recoverPassword(String username) throws ArgumentNotValidException{
+	/**
+	 * Method to recover password
+	 * 
+	 * @param username
+	 * @return new password
+	 * @throws ArgumentNotValidException if username does not exist
+	 */
+	public String recoverPassword(String username) throws ArgumentNotValidException {
 
 		User user = userDao.findByUsername(username);
 
+		// Verify if username exists
 		if (user == null) {
 			throw new ArgumentNotValidException("The username does not exist");
-			
-		} else {
-			user.setPassword(passEconder(String.valueOf((int)(Math.random() * 10))));
-			
-			userDao.save(user);
+
 		}
 
-		return user.getPassword();
+		String newPassword = String.valueOf((int) (Math.random() * 10));
+		user.setPassword(passEconder(newPassword));
+
+		// Save user new password in ddbb
+		userDao.save(user);
+
+		return newPassword;
 
 	}
 }
