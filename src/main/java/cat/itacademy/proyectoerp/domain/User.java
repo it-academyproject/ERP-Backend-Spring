@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 /**
  * User class. 
@@ -17,13 +19,13 @@ import javax.validation.constraints.Size;
  * - Id : Auto <br>
  * - username : max length = 12 <br>
  * - password: max length = 16<br>
- * - user_type: Enum type for role type.<br> 
+ * - userType: Enum type for role type.<br> 
  * 
  * @author Rubén Rodríguez
  *
  */
-@Entity
 //@Inheritance(strategy = InheritanceType.JOINED)
+@Entity
 public class User   {
 
 	@Id
@@ -34,25 +36,43 @@ public class User   {
 	@Size(min = 3, max = 12)
 	private String username;
 	
-	@Column(length=16)
-	@Size(min = 8, max = 16)
+	@Column(length=106)
 	private String password;
 
+   // @JsonProperty("user_type")
 	@Column(length=16)
     @Enumerated(EnumType.STRING)
-	UserType user_type;
+	UserType userType; 
 	
 	
+	
+	public User() {
+		super();
+	}
+
+	/**
+	 * Constructor. Create a User object with parameters. By default, userType is CLIENT. 	
+	 * @param username
+	 * @param password
+	 */
+	public User(@Size(min = 3, max = 12) String username, @Size(min = 8, max = 16) String password) {
+		super();
+		this.username = username;
+		this.password = password;
+		userType = UserType.CLIENT;
+	}
+
+
 	/**
 	 * Constructor. Create a User object with parameters.	
 	 * @param username
 	 * @param password
-	 * @param user_type
+	 * @param userType
 	 */
 	public User(String username, String password, UserType user_type) {
 		this.username = username;
 		this.password = password;
-		this.user_type = user_type;
+		this.userType = user_type;
 	}
 
 
@@ -76,13 +96,19 @@ public class User   {
 	}
 
 
-	public UserType getUser_type() {
-		return user_type;
+	public UserType getUserType() {
+		return userType;
 	}
 
 
-	public void setUser_type(UserType user_type) {
-		this.user_type = user_type;
+	public void setUserType(UserType user_type) {
+		this.userType = user_type;
+	}
+
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", userType=" + userType + "]";
 	}
 
 
