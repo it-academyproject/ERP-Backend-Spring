@@ -184,7 +184,7 @@ public class UserController {
 	 * @param user username of user
 	 * @return password
 	 */
-	@GetMapping("/users/passwords")
+	@PutMapping("/users/passwords")
 	public ResponseEntity<HashMap<String, Object>> recoverPassword(@RequestBody User user) {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -194,7 +194,7 @@ public class UserController {
 			String userPassword = userService.recoverPassword(user.getUsername());
 
 			map.put("success", "true");
-			map.put("message", "New product created");
+			map.put("message", "Password recovered");
 			map.put("password", userPassword);
 
 		} catch (Exception e) {
