@@ -16,6 +16,7 @@ import cat.itacademy.proyectoerp.dao.UserDao;
 import cat.itacademy.proyectoerp.domain.*;
 import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
+import cat.itacademy.proyectoerp.util.PasswordGenerator;
 
 /**
  * Class Service for User entity
@@ -241,16 +242,20 @@ public class UserServiceImpl implements IUserService {
 		// Verify if username exists
 		if (user == null) {
 			throw new ArgumentNotValidException("The username does not exist");
-
 		}
 
-		String newPassword = String.valueOf((int) (Math.random() * 10));
-		user.setPassword(passEconder(newPassword));
+		//Generate random password
+		PasswordGenerator pass = new PasswordGenerator();
+		
+		String password = pass.generatePassword();
+
+		//set user password (encrypted)
+		user.setPassword(passEconder(password));
 
 		// Save user new password in ddbb
 		userDao.save(user);
 
-		return newPassword;
+		return password;
 
 	}
 }
