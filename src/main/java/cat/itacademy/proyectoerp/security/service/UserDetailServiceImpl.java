@@ -1,4 +1,4 @@
-package cat.itacademy.proyectoerp.security.services;
+package cat.itacademy.proyectoerp.security.service;
 
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

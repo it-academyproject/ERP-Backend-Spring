@@ -11,14 +11,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import cat.itacademy.proyectoerp.security.jwt.JwtAuthenticationEntryPoint;
 import cat.itacademy.proyectoerp.security.jwt.JwtFilters;
-import cat.itacademy.proyectoerp.security.services.UserDetailServiceImpl;
+import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -63,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/login","/api/users").permitAll()
+                .antMatchers("/api/login","/api/users","/api/users/passwords").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 //Exception control. 401 no authorized

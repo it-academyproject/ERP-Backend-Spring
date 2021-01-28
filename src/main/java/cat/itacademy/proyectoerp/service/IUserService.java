@@ -1,4 +1,4 @@
-package cat.itacademy.proyectoerp.services;
+package cat.itacademy.proyectoerp.service;
 
 import java.util.List;
 import java.util.Optional;

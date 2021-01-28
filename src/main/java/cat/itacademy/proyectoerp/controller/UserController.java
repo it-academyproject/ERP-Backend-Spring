@@ -31,13 +31,14 @@ import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 import cat.itacademy.proyectoerp.security.entity.JwtResponse;
 import cat.itacademy.proyectoerp.security.jwt.JwtUtil;
-import cat.itacademy.proyectoerp.security.services.UserDetailServiceImpl;
-import cat.itacademy.proyectoerp.services.UserServiceImpl;
+import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
+import cat.itacademy.proyectoerp.service.UserServiceImpl;
 /**
  * Class of User Controller 
  * @author Rubén Rodríguez 
  *
  */
+
 @CrossOrigin
 @RestController
 @RequestMapping("/api")
@@ -54,6 +55,7 @@ public class UserController {
 	
 	@Autowired
 	JwtUtil jwtUtil;
+	
 	
 	/**
 	 * Method for all url which don't exist
@@ -74,7 +76,7 @@ public class UserController {
 	 */
 	@RequestMapping(value ="/users", method = RequestMethod.POST)
 	public ResponseEntity<UserDTO> newUser(@Valid @RequestBody User user) {
-		
+			
 		UserDTO userDTO;
 		
 		userDTO= userService.registerNewUserAccount(user);
@@ -93,15 +95,17 @@ public class UserController {
 	 */
 	@RequestMapping(value ="/login", method = RequestMethod.POST)
 	public ResponseEntity<JwtResponse> loginUser(@RequestBody JwtLogin jwtLogin) throws Exception {
-		
-        SecurityContextHolder.getContext().setAuthentication(authenticate(jwtLogin.getUsername(), jwtLogin.getPassword()));
+		JwtResponse jwtResponse;
+        
+		SecurityContextHolder.getContext().setAuthentication(authenticate(jwtLogin.getUsername(), jwtLogin.getPassword()));
 
         UserDetails userDetails = userDetailService.loadUserByUsername(jwtLogin.getUsername());
 
 		final String token = jwtUtil.generateToken(userDetails);
-
+		//Create JSON to Response to client.
+		jwtResponse = new JwtResponse(token, jwtLogin.getUsername(), userDetails.getAuthorities());
 		
-		return ResponseEntity.ok(new JwtResponse(token));
+		return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
 		
 	}
 	
@@ -178,6 +182,9 @@ public class UserController {
 			throw new Exception("INVALID_CREDENTIALS", e);
 		}
 	}
+	
+	
+
 		
 	
 }

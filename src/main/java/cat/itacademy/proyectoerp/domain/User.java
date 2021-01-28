@@ -7,6 +7,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 
@@ -30,14 +32,16 @@ public class User   {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(length=12)
-	@Size(min = 3, max = 12)
+   	@Email(message="email incorrect")
+    @Column(length=50)
+	@Size(min = 6, max = 50)
 	private String username;
 	
-	@Column(length=106)
+    
+    @Pattern(regexp="^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=]).*$",message="Password invalid. Minim 8 characters with 1 upercase, 1 lowercase, 1 special symbol, 1 number)")  
+    @Column(length=106)
 	private String password;
 
-   // @JsonProperty("user_type")
 	@Column(length=16)
     @Enumerated(EnumType.STRING)
 	UserType userType; 
@@ -53,14 +57,14 @@ public class User   {
 	 * @param username
 	 * @param password
 	 */
-	public User(@Size(min = 3, max = 12) String username, @Size(min = 8, max = 16) String password) {
+	public User(@Size(min = 6, max = 50) String username, @Size(min = 8, max = 16) String password) {
 		super();
 		this.username = username;
 		this.password = password;
 		userType = UserType.CLIENT;
 	}
 
-
+	
 	/**
 	 * Constructor. Create a User object with parameters.	
 	 * @param username

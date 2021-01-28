@@ -1,4 +1,4 @@
-package cat.itacademy.proyectoerp.services;
+package cat.itacademy.proyectoerp.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -221,5 +221,9 @@ public class UserServiceImpl implements IUserService{
 	    userDto.setMessage("User modified");
 	    return Optional.of(userDto);
 	     
-	}			   
+	}		
+	
+
+	
+	
 }
