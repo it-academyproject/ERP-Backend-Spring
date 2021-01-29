@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import cat.itacademy.proyectoerp.domain.User;
 
 @Service
-public class EmailServiceImpl {
+public class EmailServiceImpl implements IEmailService{
 
 	@Autowired
 	JavaMailSender javaMailSender;
@@ -20,6 +20,7 @@ public class EmailServiceImpl {
 	 * @param user username
 	 * @throws MailException
 	 */
+	@Override
 	public void sendWelcomeEmail(User user) throws MailException {
 
 		SimpleMailMessage message = new SimpleMailMessage();
@@ -29,8 +30,9 @@ public class EmailServiceImpl {
 		message.setFrom("example@gmail.com");
 		message.setSubject("Welcome to ProyectoERP");
 		message.setText(
-				"Welcome to ProyectoERP \n\nThanks for signing up! \n\n To visit our website click here: https://example.com/");
+				"Welcome to ProyectoERP \n\nThanks for signing up! \n\nTo visit our website click here: https://example.com/");
 
+		// send email
 		javaMailSender.send(message);
 
 	}
