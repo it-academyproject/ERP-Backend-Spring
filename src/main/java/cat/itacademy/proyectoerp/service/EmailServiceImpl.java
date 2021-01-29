@@ -40,22 +40,23 @@ public class EmailServiceImpl {
 	
 	
 	public  SimpleMailMessage constructResetTokenEmail(
-			  String contextPath, Locale locale, String token, String  user) {
-			    String url = contextPath + "/user/changePassword?token=" + token;
-			    String message = messages.getMessage("message.resetPassword", 
-			      null, locale);
-			    return constructEmail("Reset Password", message + " \r\n" + url, user);
-			}
+		 String contextPath, Locale locale, String token, String  user) {
+		 String url = contextPath + "/user/changePassword?token=" + token;
+		 String message = messages.getMessage("message.resetPassword", null, locale);
+		 
+		 return constructEmail("Reset Password", message + " \r\n" + url, user);
+	}
 
-	private SimpleMailMessage constructEmail(String subject, String body, 
-			  String user) {
-			    SimpleMailMessage email = new SimpleMailMessage();
-			    email.setSubject(subject);
-			    email.setText(body);
-			    email.setTo(user);
-			    email.setFrom("support.email");
-			    return email;
-			}
+	private SimpleMailMessage constructEmail(String subject, String body,  String user) {
+		 SimpleMailMessage email = new SimpleMailMessage();
+		
+		 email.setSubject(subject);
+		 email.setText(body);
+		 email.setTo(user);
+		 email.setFrom("support.email");
+		
+		 return email;
+	}
 
 	public void sendResetPass(SimpleMailMessage message) {
 	javaMailSender.send(message);
