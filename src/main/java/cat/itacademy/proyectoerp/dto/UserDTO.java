@@ -7,7 +7,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import cat.itacademy.proyectoerp.domain.UserType;
 
@@ -16,6 +18,7 @@ import cat.itacademy.proyectoerp.domain.UserType;
  * @author Rubén Rodríguez
  *
  */
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO implements Serializable{
 
@@ -33,6 +36,7 @@ public class UserDTO implements Serializable{
     @Size(min = 3, max = 12, message ="username not valid. min 3 characters and max 12")
 	private String username;
 	
+	//@JsonProperty("user_type")
 	UserType user_type;
 
 	

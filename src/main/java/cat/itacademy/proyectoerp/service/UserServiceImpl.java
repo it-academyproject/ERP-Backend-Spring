@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import cat.itacademy.proyectoerp.dao.UserDao;
+import cat.itacademy.proyectoerp.dao.IUserDao;
 import cat.itacademy.proyectoerp.domain.*;
 import cat.itacademy.proyectoerp.dto.UserDTO;
+import cat.itacademy.proyectoerp.security.dao.PasswordTokenDAO;
+import cat.itacademy.proyectoerp.security.entity.PasswordResetToken;
 /**
  * Class Service for User entity
  * @author Rubén Rodríguez
@@ -25,7 +27,10 @@ import cat.itacademy.proyectoerp.dto.UserDTO;
 public class UserServiceImpl implements IUserService{
 	
 	@Autowired
-	UserDao userDao;
+	IUserDao userDao;
+	
+	@Autowired
+	PasswordTokenDAO passwordTokenDao;
 	
 	//We use ModelMapper for map User entity with the DTO.
 	ModelMapper modelMapper = new ModelMapper();
@@ -64,10 +69,11 @@ public class UserServiceImpl implements IUserService{
 	@Override
 	public UserDTO registerNewUserAccount(User user) {
 		
-		modelMapper.getConfiguration()
+		/*modelMapper.getConfiguration()
 		  .setSourceNameTokenizer(NameTokenizers.UNDERSCORE)
-		  .setDestinationNameTokenizer(NameTokenizers.UNDERSCORE);
+		  .setDestinationNameTokenizer(NameTokenizers.UNDERSCORE);*/
 		//The default typeUser is CLIENT. If client don't send typeUSer, back assign CLIENT how userType.
+		//System.out.println("user type \n" +user.getUserType().toString());
 		if (user.getUserType() == null)
 			user.setUserType(UserType.CLIENT);
 
@@ -221,7 +227,15 @@ public class UserServiceImpl implements IUserService{
 	    userDto.setMessage("User modified");
 	    return Optional.of(userDto);
 	     
-	}		
+	}	
+	
+	public void createPasswordResetTokenForUser(String username, String token) {
+	   
+		User user = userDao.findByUsername(username);
+
+		PasswordResetToken myToken = new PasswordResetToken(token, user);
+		passwordTokenDao.save(myToken);
+	}
 	
 
 	

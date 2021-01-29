@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 
 
 @Configuration
-
 public class JsonFormatConfiguration {
 	 @Bean
 	    public Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder() {

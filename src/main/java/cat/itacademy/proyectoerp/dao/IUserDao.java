@@ -14,7 +14,7 @@ import cat.itacademy.proyectoerp.domain.UserType;
  *
  */
 @Repository
-public interface UserDao extends CrudRepository<User, Long> {
+public interface IUserDao extends CrudRepository<User, Long> {
 	
 	
 	/**

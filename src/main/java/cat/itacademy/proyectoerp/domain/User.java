@@ -11,6 +11,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 /**
  * User class. 
@@ -42,6 +44,7 @@ public class User   {
     @Column(length=106)
 	private String password;
 
+    @JsonProperty("user_type")
 	@Column(length=16)
     @Enumerated(EnumType.STRING)
 	UserType userType; 

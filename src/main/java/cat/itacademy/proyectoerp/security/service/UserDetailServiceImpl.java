@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import cat.itacademy.proyectoerp.dao.UserDao;
+import cat.itacademy.proyectoerp.dao.IUserDao;
 import cat.itacademy.proyectoerp.domain.UserType;
 
 import java.util.HashSet;
@@ -20,7 +20,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 public class UserDetailServiceImpl implements UserDetailsService {
 
 	@Autowired
-	UserDao userDao;
+	IUserDao userDao;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
