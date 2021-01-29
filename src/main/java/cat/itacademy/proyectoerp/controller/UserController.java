@@ -21,12 +21,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cat.itacademy.proyectoerp.domain.User;
@@ -36,7 +34,6 @@ import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 import cat.itacademy.proyectoerp.security.entity.JwtResponse;
 import cat.itacademy.proyectoerp.security.jwt.JwtUtil;
 import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
-import cat.itacademy.proyectoerp.service.EmailServiceImpl;
 import cat.itacademy.proyectoerp.service.UserServiceImpl;
 /**
  * Class of User Controller 
@@ -61,8 +58,6 @@ public class UserController {
 	@Autowired
 	JwtUtil jwtUtil;
 	
-	/*@Autowired
-	EmailServiceImpl emailService;*/
 	
 	/**
 	 * Method for all url which don't exist
@@ -190,25 +185,7 @@ public class UserController {
 			throw new Exception("INVALID_CREDENTIALS", e);
 		}
 	}
-/*
-	@PostMapping("/users/resetPassword")
-	public ResponseEntity<MessageDTO> resetPassword(HttpServletRequest request, 
-	  @RequestParam("email") String userEmail) {
-	    
-		UserDTO user = userService.getByUsername(userEmail).get();
-		if (user.getSuccess() == "False")
-			return new ResponseEntity<>(new MessageDTO("False", "Usermail don't exist"), HttpStatus.UNPROCESSABLE_ENTITY);	
-	   
-	    String token = UUID.randomUUID().toString();
-	    
-	    userService.createPasswordResetTokenForUser(userEmail, token);
-	    
-	    emailService.sendResetPass(emailService.constructResetTokenEmail(request.getRequestURI(),request.getLocale(), token, userEmail));
-	    
-	      return new ResponseEntity<MessageDTO>(new MessageDTO("OK","message.resetPasswordEmail"), HttpStatus.OK);
-	}
-	
-*/
+
 		
 	
 }
