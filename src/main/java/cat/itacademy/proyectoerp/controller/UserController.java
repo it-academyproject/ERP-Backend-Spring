@@ -32,7 +32,7 @@ import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 import cat.itacademy.proyectoerp.security.entity.JwtResponse;
 import cat.itacademy.proyectoerp.security.jwt.JwtUtil;
 import cat.itacademy.proyectoerp.security.services.UserDetailServiceImpl;
-import cat.itacademy.proyectoerp.services.UserServiceImpl;
+import cat.itacademy.proyectoerp.service.UserServiceImpl;
 
 /**
  * Class of User Controller
@@ -99,14 +99,17 @@ public class UserController {
 
 	public ResponseEntity<JwtResponse> loginUser(@RequestBody JwtLogin jwtLogin) throws Exception {
 
-		SecurityContextHolder.getContext()
-				.setAuthentication(authenticate(jwtLogin.getUsername(), jwtLogin.getPassword()));
+		JwtResponse jwtResponse;
+        
+		SecurityContextHolder.getContext().setAuthentication(authenticate(jwtLogin.getUsername(), jwtLogin.getPassword()));
 
-		UserDetails userDetails = userDetailService.loadUserByUsername(jwtLogin.getUsername());
+        UserDetails userDetails = userDetailService.loadUserByUsername(jwtLogin.getUsername());
 
 		final String token = jwtUtil.generateToken(userDetails);
-
-		return ResponseEntity.ok(new JwtResponse(token));
+		//Create JSON to Response to client.
+		jwtResponse = new JwtResponse(token, jwtLogin.getUsername(), userDetails.getAuthorities());
+		
+		return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
 
 	}
 

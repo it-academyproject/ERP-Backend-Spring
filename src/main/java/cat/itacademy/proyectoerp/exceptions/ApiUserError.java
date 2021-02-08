@@ -1,4 +1,4 @@
-package cat.itacademy.proyectoerp.errors;
+package cat.itacademy.proyectoerp.exceptions;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -9,11 +9,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * Class for construct Error Object of API. This error is send to Front.
- * @author Rubén Rodríguez
+ * @author ITacademy
  *
  */
 
-public class ApiError {
+public class ApiUserError {
 	/**
 	 * LocalDateTime. Datetime of error.
 	 * Http status.
@@ -27,7 +27,7 @@ public class ApiError {
     private String message;
     private Map errors;
     
-	public ApiError(LocalDateTime timestamp, HttpStatus status, String message, Map errors) {
+	public ApiUserError(LocalDateTime timestamp, HttpStatus status, String message, Map errors) {
 		super();
 		this.timestamp = timestamp;
 		this.status = status;
@@ -36,7 +36,7 @@ public class ApiError {
 	}
 	
     
-    public ApiError(LocalDateTime timestamp, HttpStatus status, String message) {
+    public ApiUserError(LocalDateTime timestamp, HttpStatus status, String message) {
 		super();
 		this.timestamp = timestamp;
 		this.status = status;
