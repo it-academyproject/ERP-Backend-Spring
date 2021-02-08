@@ -1,5 +1,6 @@
 package cat.itacademy.proyectoerp.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -98,7 +99,6 @@ public class UserController {
 
 			return new ResponseEntity<>(userDTO, HttpStatus.OK);
 		}
-
 	}
 
 	/**
@@ -188,6 +188,35 @@ public class UserController {
 		if (userDto.getSuccess() == "False")
 			return new ResponseEntity<>(userDto, HttpStatus.UNPROCESSABLE_ENTITY);
 		return new ResponseEntity<>(userDto, HttpStatus.OK);
+	}
+
+	/**
+	 * Method to recover password
+	 * 
+	 * @param user username of user
+	 * @return password
+	 */
+	@PutMapping("/users/passwords")
+	public ResponseEntity<HashMap<String, Object>> recoverPassword(@RequestBody User user) {
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+
+		try {
+
+			String userPassword = userService.recoverPassword(user.getUsername());
+
+			map.put("success", "true");
+			map.put("message", "Password recovered");
+			map.put("password", userPassword);
+
+		} catch (Exception e) {
+
+			map.put("success", "false");
+			map.put("message", "username not found");
+			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.BAD_REQUEST);
+		}
+
+		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
 	}
 
 	private Authentication authenticate(String username, String password) throws Exception {

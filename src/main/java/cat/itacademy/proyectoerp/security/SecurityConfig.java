@@ -63,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/login","/api/users").permitAll()
+                .antMatchers("/api/login","/api/users","/api/users/passwords").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 //Exception control. 401 no authorized
