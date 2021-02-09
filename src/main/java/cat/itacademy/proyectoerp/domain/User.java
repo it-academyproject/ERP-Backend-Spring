@@ -38,8 +38,8 @@ public class User   {
     @Column(length=50)
 	@Size(min = 6, max = 50)
 	private String username;
-	
-    @Pattern(regexp="^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=]).*$",message="Password invalid. Minim 8 characters with 1 upercase, 1 lowercase, 1 special symbol, 1 number)")  
+																			
+    @Pattern(regexp="^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%?&+=]).*$",message="Password invalid. Minim 8 characters with 1 upercase, 1 lowercase, 1 special symbol, 1 number)")  
 	@Column(length=106)
 	private String password;
 
