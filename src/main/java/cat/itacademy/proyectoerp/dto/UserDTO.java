@@ -30,7 +30,7 @@ public class UserDTO implements Serializable{
 	private String message;
     
 	@NotBlank(message = "Username is mandatory")
-    @Size(min = 3, max = 12, message ="username not valid. min 3 characters and max 12")
+    @Size(min = 6, max = 50, message ="username not valid. min 6 characters and max 50")
 	private String username;
 	
 	UserType user_type;
