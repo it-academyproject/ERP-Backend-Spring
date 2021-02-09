@@ -15,7 +15,10 @@ import org.springframework.stereotype.Service;
 import cat.itacademy.proyectoerp.dao.UserDao;
 import cat.itacademy.proyectoerp.domain.*;
 import cat.itacademy.proyectoerp.dto.UserDTO;
+import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
+import cat.itacademy.proyectoerp.security.dao.IPasswordTokenDAO;
+import cat.itacademy.proyectoerp.security.entity.PasswordResetToken;
 import cat.itacademy.proyectoerp.util.PasswordGenerator;
 
 /**
@@ -30,6 +33,9 @@ public class UserServiceImpl implements IUserService {
 
 	@Autowired
 	UserDao userDao;
+
+	@Autowired
+	IPasswordTokenDAO passwordTokenDao;
 
 	// We use ModelMapper for map User entity with the DTO.
 	ModelMapper modelMapper = new ModelMapper();
@@ -244,12 +250,12 @@ public class UserServiceImpl implements IUserService {
 			throw new ArgumentNotValidException("The username does not exist");
 		}
 
-		//Generate random password
+		// Generate random password
 		PasswordGenerator pass = new PasswordGenerator();
-		
+
 		String password = pass.generatePassword();
 
-		//set user password (encrypted)
+		// set user password (encrypted)
 		user.setPassword(passEconder(password));
 
 		// Save user new password in ddbb
@@ -257,5 +263,60 @@ public class UserServiceImpl implements IUserService {
 
 		return password;
 
+	}
+
+	/**
+	 * Method to create a new token
+	 * 
+	 * @param user
+	 * @param token
+	 */
+	public void createPasswordResetTokenForUser(User user, String token) {
+
+		PasswordResetToken newToken = new PasswordResetToken(token, user);
+		// Save token to database
+		passwordTokenDao.save(newToken);
+	}
+
+	/**
+	 * Method to find user by username
+	 * 
+	 * @param username
+	 * @return user
+	 * @throws ArgumentNotFoundException
+	 */
+	@Override
+	public User findUserByUsername(String username) throws ArgumentNotFoundException {
+		
+		// Verify if user Exist.
+		User userFound = userDao.findByUsername(username);
+		if (userFound == null) {
+			throw new ArgumentNotFoundException("No username found");
+		}
+
+		return userFound;
+	}
+
+	/**
+	 * Method to update user password
+	 * 
+	 * @param user
+	 * @return user with new password
+	 * @throws ArgumentNotFoundException
+	 */
+	@Override
+	public User updatePassword(User user) throws ArgumentNotFoundException {
+
+		// Verify if user Exist.
+		User updatedUser = userDao.findByUsername(user.getUsername());
+
+		if (updatedUser != null) {
+			updatedUser.setPassword(passEconder(user.getPassword()));
+
+			return userDao.save(updatedUser);
+
+		} else {
+			throw new ArgumentNotFoundException("No username found");
+		}
 	}
 }
