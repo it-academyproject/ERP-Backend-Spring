@@ -20,7 +20,8 @@ public interface IUserService {
 	public List<UserDTO> listAllClients();
 	public Optional<UserDTO> deleteUserById(Long id);
 	public Optional<UserDTO> modifyUser(Long id, User user);
-
+	public User updatePassword(User user); 
+	public User findUserByUsername(String username); 
 
 
 

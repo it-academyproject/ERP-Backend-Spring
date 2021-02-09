@@ -16,70 +16,66 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import cat.itacademy.proyectoerp.security.jwt.JwtAuthenticationEntryPoint;
 import cat.itacademy.proyectoerp.security.jwt.JwtFilters;
-import cat.itacademy.proyectoerp.security.services.UserDetailServiceImpl;
+import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)  //Para poder usar la anotación @PreAuthorized en los controllers
-public class SecurityConfig extends WebSecurityConfigurerAdapter{
-	
+@EnableGlobalMethodSecurity(prePostEnabled = true) // Para poder usar la anotación @PreAuthorized en los controllers
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
 	@Autowired
-    UserDetailServiceImpl userDetailService;
+	UserDetailServiceImpl userDetailService;
 
-    @Autowired
-    JwtAuthenticationEntryPoint jwtEntryPoint;
+	@Autowired
+	JwtAuthenticationEntryPoint jwtEntryPoint;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    @Bean
-    public JwtFilters jwtFilters(){
-        return new JwtFilters();
-    }
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
-   /* @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }*/
+	@Bean
+	public JwtFilters jwtFilters() {
+		return new JwtFilters();
+	}
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider());
-    }
+	/*
+	 * @Bean public PasswordEncoder passwordEncoder(){ return new
+	 * BCryptPasswordEncoder(); }
+	 */
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.authenticationProvider(authenticationProvider());
+	}
 
-    @Override
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
-    }
+	@Bean
+	@Override
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/api/login","/api/users","/api/users/passwords").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                //Exception control. 401 no authorized
-                .exceptionHandling().authenticationEntryPoint(jwtEntryPoint)
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+	@Override
+	protected AuthenticationManager authenticationManager() throws Exception {
+		return super.authenticationManager();
+	}
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.cors().and().csrf().disable().authorizeRequests()
+				.antMatchers("/api/login", "/api/users", "/api/users/passwords", "/api/users/forgotPasswords",
+						"/api/users/confirmReset", "/api/users/resetPasswords")
+				.permitAll().anyRequest().authenticated().and()
+				// Exception control. 401 no authorized
+				.exceptionHandling().authenticationEntryPoint(jwtEntryPoint).and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		// Filter to validate the tokens with every request
-        http.addFilterBefore(jwtFilters(), UsernamePasswordAuthenticationFilter.class);
-    }
-    
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder);
-        provider.setUserDetailsService(userDetailService);
-        return provider;
-    }
-}
-		
+		http.addFilterBefore(jwtFilters(), UsernamePasswordAuthenticationFilter.class);
+	}
 
-	
+	@Bean
+	public DaoAuthenticationProvider authenticationProvider() {
+		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+		provider.setPasswordEncoder(passwordEncoder);
+		provider.setUserDetailsService(userDetailService);
+		return provider;
+	}
+}

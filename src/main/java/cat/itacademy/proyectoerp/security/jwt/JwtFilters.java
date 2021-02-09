@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import cat.itacademy.proyectoerp.security.services.UserDetailServiceImpl;
+import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
 
 public class JwtFilters extends OncePerRequestFilter{
 	
