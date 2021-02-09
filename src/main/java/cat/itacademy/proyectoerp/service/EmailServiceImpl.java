@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import cat.itacademy.proyectoerp.domain.User;
 
 @Service
-public class EmailServiceImpl implements IEmailService{
+public class EmailServiceImpl implements IEmailService {
 
 	@Autowired
 	JavaMailSender javaMailSender;
@@ -31,6 +31,30 @@ public class EmailServiceImpl implements IEmailService{
 		message.setSubject("Welcome to ProyectoERP");
 		message.setText(
 				"Welcome to ProyectoERP \n\nThanks for signing up! \n\nTo visit our website click here: https://example.com/");
+
+		// send email
+		javaMailSender.send(message);
+
+	}
+
+	/**
+	 * Method to send reset token
+	 * 
+	 * @param user
+	 * @param resetToken
+	 * @throws MailException
+	 */
+	@Override
+	public void passwordResetEmail(User user, String resetToken) throws MailException {
+
+		SimpleMailMessage message = new SimpleMailMessage();
+
+		// set email properties/body
+		message.setTo(user.getUsername());
+		message.setFrom("example@gmail.com");
+		message.setSubject("Password Reset Request");
+		message.setText("To reset your password, click the link below:\n"
+				+ "http://localhost:8080/api/users/confirmReset?token=" + resetToken);
 
 		// send email
 		javaMailSender.send(message);
