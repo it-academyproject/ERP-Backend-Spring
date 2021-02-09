@@ -1,4 +1,4 @@
-package cat.itacademy.proyectoerp.security.services;
+package cat.itacademy.proyectoerp.security.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
