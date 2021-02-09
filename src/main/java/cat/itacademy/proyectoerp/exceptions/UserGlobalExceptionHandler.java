@@ -1,4 +1,4 @@
-package cat.itacademy.proyectoerp.errors;
+package cat.itacademy.proyectoerp.exceptions;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  */
 @RestControllerAdvice
-public class GlobalExceptionHandler   {
+public class UserGlobalExceptionHandler   {
 	
 	/**
 	 * Save in a map a list of details of errors with validation constraints.
@@ -40,7 +41,7 @@ public class GlobalExceptionHandler   {
 	 * @return ApiError object with list of errors in JSON.
 	 */
 	@ExceptionHandler(value = MethodArgumentNotValidException.class)
-	public ResponseEntity <ApiError>handleMethodArgumentNotValidException(MethodArgumentNotValidException error, WebRequest request)  {
+	public ResponseEntity <ApiUserError>handleMethodArgumentNotValidException(MethodArgumentNotValidException error, WebRequest request)  {
 	    
 		        fieldErrors.clear();
 		        
@@ -49,28 +50,42 @@ public class GlobalExceptionHandler   {
 				}
 		        
 		        //We construct ApiError object.
-		        ApiError err = new ApiError(
+		        ApiUserError err = new ApiUserError(
 		            LocalDateTime.now(),
 		            HttpStatus.BAD_REQUEST, 
 		            "Request invalid. " ,
 		            fieldErrors);
 		        
-		        return new ResponseEntity<ApiError>(err, HttpStatus.BAD_REQUEST);				   
+		        return new ResponseEntity<ApiUserError>(err, HttpStatus.BAD_REQUEST);				   
 	    }
 	
 	@ExceptionHandler(value = HttpMessageNotReadableException.class)
-	public ResponseEntity <ApiError>HttpMessageNotReadableException(HttpMessageNotReadableException error, WebRequest request)  {
+	public ResponseEntity <ApiUserError>HttpMessageNotReadableException(HttpMessageNotReadableException error, WebRequest request)  {
 		fieldErrors.clear();
         
       
         //We construct ApiError object.
-        ApiError err = new ApiError(
+        ApiUserError err = new ApiUserError(
             LocalDateTime.now(),
             HttpStatus.BAD_REQUEST, 
             "Request invalid. ");
         
-        return new ResponseEntity<ApiError>(err, HttpStatus.BAD_REQUEST);				   
+        return new ResponseEntity<ApiUserError>(err, HttpStatus.BAD_REQUEST);				   
 	}
+	
+	@ExceptionHandler(value = AccessDeniedException.class)
+	public ResponseEntity <ApiUserError>AccessDeniedException(AccessDeniedException error, WebRequest request)  {
+		fieldErrors.clear();
+        
+      
+        //We construct ApiUserError object.
+        ApiUserError err = new ApiUserError(
+            LocalDateTime.now(),
+            HttpStatus.UNAUTHORIZED, 
+            "Access Denied");
+        
+        return new ResponseEntity<ApiUserError>(err, HttpStatus.UNAUTHORIZED);				   
+	} 
 		
 	
 }

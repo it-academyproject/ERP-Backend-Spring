@@ -1,4 +1,4 @@
-package cat.itacademy.proyectoerp.services;
+package cat.itacademy.proyectoerp.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import cat.itacademy.proyectoerp.util.PasswordGenerator;
 /**
  * Class Service for User entity
  * 
- * @author Rubén Rodríguez
+ * @author ITAcademy 
  *
  */
 @Transactional

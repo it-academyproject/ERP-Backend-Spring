@@ -104,3 +104,32 @@ To do so:
 	
 >6. Finally, do a pull request in GitHub, from your branch to Dev
 
+## CONFIGURE DATABASE
+
+You must configure the database in the application.properties file.
+First, create database in your Mysql Server.
+
+Configuration for a database in MySQL.
+
+
+>1. Connect to database
+
+	spring.datasource.url=jdbc:mysql://localhost:3306/proyectoERP?useSSL=false
+	spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver
+
+>2. Database credentials
+
+	spring.datasource.username=root
+	spring.datasource.password=root
+  
+Configure JPA and Hibernate
+
+>3. Hibernate dialect for Mysql, logs and ddl configuration.
+
+	spring.jpa.database-platform=org.hibernate.dialect.MySQL5InnoDBDialect
+	spring.jpa.hibernate.ddl-auto=update
+	spring.jpa.show-sql = true
+	logging.level.org.hibernate.SQL=debug
+
+
+  
