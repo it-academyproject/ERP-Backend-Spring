@@ -2,6 +2,7 @@ package cat.itacademy.proyectoerp.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cat.itacademy.proyectoerp.domain.User;
@@ -30,8 +32,11 @@ import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 import cat.itacademy.proyectoerp.security.entity.JwtResponse;
+import cat.itacademy.proyectoerp.security.entity.PasswordResetToken;
 import cat.itacademy.proyectoerp.security.jwt.JwtUtil;
+import cat.itacademy.proyectoerp.security.services.PasswordResetTokenServiceImpl;
 import cat.itacademy.proyectoerp.security.services.UserDetailServiceImpl;
+import cat.itacademy.proyectoerp.service.EmailServiceImpl;
 import cat.itacademy.proyectoerp.services.UserServiceImpl;
 
 /**
@@ -57,13 +62,18 @@ public class UserController {
 	@Autowired
 	JwtUtil jwtUtil;
 
+	@Autowired
+	EmailServiceImpl emailService;
+
+	@Autowired
+	PasswordResetTokenServiceImpl resetTokenService;
+
 	/**
 	 * Method for all url which don't exist
 	 * 
 	 * @return a informative message
 	 */
 	@RequestMapping(value = "**")
-
 	public ResponseEntity<MessageDTO> otherUrl() {
 		MessageDTO messageDto = new MessageDTO("False", "Url don't exist");
 
@@ -82,10 +92,20 @@ public class UserController {
 		UserDTO userDTO;
 
 		userDTO = userService.registerNewUserAccount(user);
-		if (userDTO.getSuccess() == "False")
-			return new ResponseEntity<>(userDTO, HttpStatus.UNPROCESSABLE_ENTITY);
-		return new ResponseEntity<>(userDTO, HttpStatus.OK);
 
+		if (userDTO.getSuccess() == "False") {
+			return new ResponseEntity<>(userDTO, HttpStatus.UNPROCESSABLE_ENTITY);
+		} else {
+
+			// send welcome email to new user
+			try {
+				emailService.sendWelcomeEmail(user);
+			} catch (Exception e) {
+				e.getMessage();
+			}
+
+			return new ResponseEntity<>(userDTO, HttpStatus.OK);
+		}
 	}
 
 	/**
@@ -96,7 +116,6 @@ public class UserController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-
 	public ResponseEntity<JwtResponse> loginUser(@RequestBody JwtLogin jwtLogin) throws Exception {
 
 		SecurityContextHolder.getContext()
@@ -217,4 +236,97 @@ public class UserController {
 		}
 	}
 
+	/**
+	 * Method to send mail to reset the password when the user has forgotten the
+	 * password
+	 * 
+	 * @param user
+	 * @return token
+	 */
+	@PutMapping("/users/forgotPasswords")
+	public ResponseEntity<HashMap<String, Object>> forgotPassword(@RequestBody User user) {
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+
+		try {
+			// verify if user exists
+			User userFound = userService.findUserByUsername(user.getUsername());
+			// Generate random token for reset password
+			String token = UUID.randomUUID().toString();
+
+			userService.createPasswordResetTokenForUser(userFound, token);
+
+			// send email with reset token
+			emailService.passwordResetEmail(userFound, token);
+
+			map.put("success", "true");
+			map.put("message", "Token reset");
+			map.put("token", token);
+
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "username not found");
+
+			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+	}
+
+	/**
+	 * Method to validate the reset token
+	 * 
+	 * @param token
+	 * @return message
+	 */
+	@GetMapping("/users/confirmReset")
+	public ResponseEntity<HashMap<String, Object>> validateResetToken(@RequestParam("token") String token) {
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+
+		try {
+			// verify token
+			PasswordResetToken newToken = resetTokenService.findByToken(token);
+
+			map.put("success", "true");
+			map.put("message", "Valid token. Redirect to: http://localhost:8080/api/users/resetPasswords");
+
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "Unvalid token. Token not found");
+
+			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+	}
+
+	/**
+	 * Method to set new password
+	 * 
+	 * @param user
+	 * @return user updated
+	 */
+	@PutMapping("/users/resetPasswords")
+	public ResponseEntity<HashMap<String, Object>> setNewPassword(@RequestBody User user) {
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+
+		try {
+
+			User userFound = userService.updatePassword(user);
+
+			map.put("success", "true");
+			map.put("message", "User password updated");
+			map.put("user", userFound);
+
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "User not found");
+
+			return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<HashMap<String, Object>>(map, HttpStatus.OK);
+	}
 }

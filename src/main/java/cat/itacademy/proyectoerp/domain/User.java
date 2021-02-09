@@ -31,7 +31,7 @@ public class User   {
 	private Long id;
 	
 	@Column(length=12)
-	@Size(min = 3, max = 12)
+	@Size(min = 3, max = 35)
 	private String username;
 	
 	@Column(length=106)
