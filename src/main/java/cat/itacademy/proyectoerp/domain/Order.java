@@ -59,43 +59,63 @@ public class Order implements Serializable{
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-
+	/**
+	 * @return employee id
+	 */
 	public String getEmployeeId() {
 		return employeeId;
 	}
-
+	/**
+	 * @return client id
+	 */
 	public String getClientId() {
 		return clientId;
 	}
-
+	/**
+	 * @return order date
+	 */
 	public Date getDate() {
 		return date;
 	}
-
+	/**
+	 * @return order status
+	 */
 	public String getStatus() {
 		return status;
 	}
-
+	/**
+	 * @return order products
+	 */
 	public List<Product> getProducts() {
 		return products;
 	}
-
+	/**
+	 * @param employeeId to set responsible employee id
+	 */
 	public void setEmployeeId(String employeeId) {
 		this.employeeId = employeeId;
 	}
-
+	/**
+	 * @param clientId to set client id
+	 */
 	public void setClientId(String clientId) {
 		this.clientId = clientId;
 	}
-
+	/**
+	 * @param date to set order date
+	 */
 	public void setDate(Date date) {
 		this.date = date;
 	}
-
+	/**
+	 * @param status to set order status
+	 */
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
+	/**
+	 * @param products to set order products
+	 */
 	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
