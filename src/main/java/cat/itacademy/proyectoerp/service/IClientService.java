@@ -13,7 +13,7 @@ public interface IClientService {
 	
 	public Client findClientById(UUID id); //READ - finds the client by Id
 	
-	public Client updateClient(Client client); //UPDATE - Updates clients info
+	public void updateClient(Client client); //UPDATE - Updates clients info
 	
 	public void deleteClient(Client client); //DELETE - deletes client
 	
