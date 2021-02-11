@@ -1,28 +1,35 @@
 package cat.itacademy.proyectoerp.domain;
 
-import java.io.Serializable;
 import java.sql.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 @Entity
-@Table(name = "orders")
-public class Order implements Serializable{
+@Table(name = "order")
+public class Order{
 	
 	// Order entity attributes
 
-	/**
-	 * 
-	 */
 	@Id
-	private static final long serialVersionUID = 7415327125952515489L;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Column
 	private String employeeId;
+	@Column
 	private String clientId;
+	@Column
 	private Date date;
+	@Column
 	private String status;
+	@ManyToMany
 	private List<Product> products;
+
 
 	
 	// Constructors
@@ -40,7 +47,7 @@ public class Order implements Serializable{
 	 * @param clientId         client id
 	 * @param date			   date of the emitted order
 	 * @param status		   order status
-	 * @param products		   products included
+	 * @param products		   products included(TODO=
 	 */
 	
 	
@@ -49,16 +56,11 @@ public class Order implements Serializable{
 		this.clientId = clientId;
 		this.date = date;
 		this.status = status;
-		this.products = products;
+//		this.products = products;
 	}
 
 	//Getters and setters
-	/**
-	 * @return order id
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+
 	/**
 	 * @return employee id
 	 */
@@ -86,9 +88,9 @@ public class Order implements Serializable{
 	/**
 	 * @return order products
 	 */
-	public List<Product> getProducts() {
-		return products;
-	}
+//	public List<Product> getProducts() {
+//		return products;
+//	}
 	/**
 	 * @param employeeId to set responsible employee id
 	 */
@@ -116,14 +118,15 @@ public class Order implements Serializable{
 	/**
 	 * @param products to set order products
 	 */
-	public void setProducts(List<Product> products) {
-		this.products = products;
-	}
+//	public void setProducts(List<Product> products) {
+//		this.products = products;
+//	}
 
 	@Override
 	public String toString() {
-		return "Order id=" + serialVersionUID +" [employeeId=" + employeeId + ", clientId=" + clientId + ", date=" + date + ", status=" + status
-				+ ", products=" + products + "]";
+		return "Order id=" + id +" [employeeId=" + employeeId + ", clientId=" + clientId + ", date=" + date + ", status=" + status
+				+ "]";
+		// ", products=" + products + 
 	}
 	
 	
