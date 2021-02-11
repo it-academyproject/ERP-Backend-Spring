@@ -53,7 +53,9 @@ public class Order implements Serializable{
 	}
 
 	//Getters and setters
-	
+	/**
+	 * @return order id
+	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
