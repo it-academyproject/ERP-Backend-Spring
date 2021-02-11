@@ -22,7 +22,7 @@ import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true) // Para poder usar la anotación @PreAuthorized en los controllers
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
+	
 	@Autowired
 	UserDetailServiceImpl userDetailService;
 
