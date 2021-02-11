@@ -113,7 +113,7 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public List<UserDTO> listAllUsers() {
 
-		List<UserDTO> listaUsers = new ArrayList<UserDTO>();
+		List<UserDTO> listaUsers = new ArrayList<>();
 
 		for (User user : userDao.findAll()) {
 			listaUsers.add(modelMapper.map(user, UserDTO.class));
