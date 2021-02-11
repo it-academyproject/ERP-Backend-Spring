@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,14 +53,19 @@ public class ClientServiceImpl implements IClientService {
 	}
 
 	@Override
-	public Client updateClient(Client client) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public void updateClient(Client client) {
+		  repository.findById(client.getClient()).map(clientDB -> {
+              BeanUtils.copyProperties(client, clientDB);
+              ;
+              return repository.save(clientDB);
+          }
+  ).orElseThrow(() -> new ArgumentNotFoundException("Client not found"));
+}
+			
 
 	@Override
 	public void deleteClient(Client client) {
-		// TODO Auto-generated method stub
+		repository.deleteById(client.getClient());
 		
 	}
 
