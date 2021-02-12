@@ -62,9 +62,8 @@ public class Client extends User {
 	 * @param orders            client orders
 	 */
 
-	public Client(String name, String password, UUID client, String address, String dni, String image, List<Product> orders) {
-		super(name, password);
-		this.id = client;
+	public Client(String username, String password, String address, String dni, String image, List<Product> orders) {
+		super(username, password);
 		this.address = address;
 		this.dni = dni;
 		this.image = image;
@@ -172,10 +171,6 @@ public class Client extends User {
 	public String toString() {
 		return "Client [id=" + id + ", address=" + address + ", dni=" + dni + ", image=" + image + ", orders=" + orders + "]";
 	}
-	
-	
-	
-	
 	
 
 }

@@ -1,5 +1,7 @@
 package cat.itacademy.proyectoerp.domain;
 
+
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -120,8 +122,5 @@ public class User   {
 	public Long getId() {
 		return id;
 	}
-
-	
-
 
 }
