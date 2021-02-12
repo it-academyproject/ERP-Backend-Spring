@@ -1,7 +1,7 @@
 package cat.itacademy.proyectoerp.service;
 
 import java.util.List;
-import java.util.UUID;
+
 
 import cat.itacademy.proyectoerp.domain.Client;
 
@@ -11,7 +11,7 @@ public interface IClientService {
 	
 	public List<Client> getAllClients(); // READ - full list of all clients
 	
-	public Client findClientById(UUID id); //READ - finds the client by Id
+	public Client findClientById(Long id); //READ - finds the client by Id
 	
 	public void updateClient(Client client); //UPDATE - Updates clients info
 	
