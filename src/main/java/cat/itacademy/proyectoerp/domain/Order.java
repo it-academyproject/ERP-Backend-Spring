@@ -2,6 +2,7 @@ package cat.itacademy.proyectoerp.domain;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,7 +19,7 @@ public class Order{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private UUID id;
 	@Column
 	private String employeeId;
 	@Column
@@ -51,16 +52,22 @@ public class Order{
 	 */
 	
 	
-	public Order(String employeeId, String clientId, Date date, String status, List<Product> products) {
+	public Order(UUID id, String employeeId, String clientId, Date date, String status, List<Product> products) {
+		this.id = id;
 		this.employeeId = employeeId;
 		this.clientId = clientId;
 		this.date = date;
 		this.status = status;
-//		this.products = products;
+		this.products = products;
 	}
 
 	//Getters and setters
-
+	/**
+	 * @return order id
+	 */
+	public UUID getId() {
+		return id;
+	}
 	/**
 	 * @return employee id
 	 */
@@ -88,9 +95,15 @@ public class Order{
 	/**
 	 * @return order products
 	 */
-//	public List<Product> getProducts() {
-//		return products;
-//	}
+	public List<Product> getProducts() {
+		return products;
+	}
+	/**
+	 * @param id to set order id
+	 */
+	public void setId(UUID id) {
+		this.id = id;
+	}
 	/**
 	 * @param employeeId to set responsible employee id
 	 */
@@ -118,15 +131,15 @@ public class Order{
 	/**
 	 * @param products to set order products
 	 */
-//	public void setProducts(List<Product> products) {
-//		this.products = products;
-//	}
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
 
 	@Override
 	public String toString() {
 		return "Order id=" + id +" [employeeId=" + employeeId + ", clientId=" + clientId + ", date=" + date + ", status=" + status
-				+ "]";
-		// ", products=" + products + 
+				+ ", products=" + products + "]";
+		
 	}
 	
 	
