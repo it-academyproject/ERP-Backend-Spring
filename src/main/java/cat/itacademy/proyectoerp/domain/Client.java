@@ -1,6 +1,6 @@
 package cat.itacademy.proyectoerp.domain;
 
-import java.util.List;
+//import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Entity;

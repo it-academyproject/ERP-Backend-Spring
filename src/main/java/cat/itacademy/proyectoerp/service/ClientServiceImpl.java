@@ -41,12 +41,12 @@ public class ClientServiceImpl implements IClientService {
 	}
 
 	@Override
-	public Client findClientById(Long id) throws ArgumentNotFoundException {
+	public Optional<Client> findClientById(Long id) throws ArgumentNotFoundException {
 		Optional<Client> tempClient = repository.findById(id);
 		if (tempClient.isEmpty()) {
 			throw new ArgumentNotFoundException("The client with id " + id + "doesn't exists");
 		} else {
-			return repository.findById(id).get();			
+			return repository.findById(id);			
 		}
 	}
 
@@ -62,8 +62,8 @@ public class ClientServiceImpl implements IClientService {
 			
 
 	@Override
-	public void deleteClient(Client client) {
-		repository.deleteById(client.getId());
+	public void deleteClient(Long id) {
+		repository.deleteById(id);
 		
 	}
 
