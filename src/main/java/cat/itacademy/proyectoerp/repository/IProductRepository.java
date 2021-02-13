@@ -1,10 +1,10 @@
-package cat.itacademy.proyectoerp.dao;
+package cat.itacademy.proyectoerp.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import cat.itacademy.proyectoerp.domain.Product;
 
-public interface IProductDAO extends JpaRepository<Product, Integer> {
+public interface IProductRepository extends JpaRepository<Product, Integer> {
 
 	// Count number of records by name
 	Long countByName(String name);
