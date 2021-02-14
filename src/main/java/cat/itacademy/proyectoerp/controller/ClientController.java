@@ -18,7 +18,7 @@ import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.service.IClientService;
 
 @RestController
-@RequestMapping("/clients")
+@RequestMapping("/api/clients")
 public class ClientController {
 	
 	@Autowired
@@ -46,14 +46,14 @@ public class ClientController {
     }
 
     //Update a client by id
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateClientById(@RequestBody Client clientUpdate) {
         service.updateClient(clientUpdate);
         return ResponseEntity.status(HttpStatus.CREATED).body(clientUpdate);
     }
 
     //Delete a client
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteClientById(@PathVariable Long id){
     	  service.deleteClient(id);
         return ResponseEntity.ok().build();
