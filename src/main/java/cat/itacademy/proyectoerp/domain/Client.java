@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 
@@ -28,22 +30,15 @@ public class Client {
 	private String dni;
 	private String image;
 	//private List<Order> orders;
+    @OneToOne
+    @JoinColumn(name="id")
+    private User user;
 	
 	//Client empty constructor
 	
 	public Client() {
 
 	}
-	
-	
-	/**
-	 * Constructor only with super parameters
-	 * 
-	 * 
-	 * @param name              client name
-	 * @param stock             client password
-
-	 */
 
 
 	/**
@@ -145,7 +140,7 @@ public class Client {
 	 * @return client orders
 	 */
 
-	//public List<Product> getOrders() {
+	//public List<Order> getOrders() {
 		//return orders;
 	//}
 
@@ -154,16 +149,38 @@ public class Client {
 	 * @param orders to set client orders
 	 */
 
-	//public void setOrders(List<Product> orders) {
+	//public void setOrders(List<Order> orders) {
 		//this.orders = orders;
 	//}
+	
+	/**
+	 * @return client user
+	 */
+
+	public User getUser() {
+		return user;
+	}
+	
+	
+	/**
+	 * @param user to set user
+	 */
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Client [clientId=" + clientId + ", address=" + address + ", dni=" + dni + ", image=" + image + ", user="
+				+ user + "]";
+	}
 
 	// Console data printing method
 	
-	@Override
-	public String toString() {
-		return "Client [ClientId=" + clientId + ", address=" + address + ", dni=" + dni + ", image=" + image+ "]";
-	}
+
+
 	
 
 }
