@@ -3,11 +3,13 @@ package cat.itacademy.proyectoerp.domain;
 //import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
+
 
 /**
  * @author Anton Lage & Rita Casiello
@@ -15,11 +17,12 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name="clients")
-public class Client extends User {
+public class Client {
 	
 	//Client Attributes
-	
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "client_id")
 	private UUID clientId;
 	private String address;
 	private String dni;
@@ -29,7 +32,6 @@ public class Client extends User {
 	//Client empty constructor
 	
 	public Client() {
-		super();
 
 	}
 	
@@ -43,32 +45,24 @@ public class Client extends User {
 
 	 */
 
-	public Client(@Size(min = 6, max = 50) String username, @Size(min = 8, max = 16) String password) {
-		super(username, password);
-
-	}
-
 
 	/**
 	 * Constructor with parameters
 	 * 
 	 * @param clientId                client id
-	 * @param name              client name
-	 * @param password          client password
 	 * @param address           client address
 	 * @param dni               client dni
 	 * @param image             client image
 	 * @param orders            client orders
 	 */
 
-	public Client(String username, String password, String address, String dni, String image/*, List<Order> orders*/) {
-		super(username, password);
+	public Client(String address, String dni, String image/*, List<Order> orders*/) {
 		this.address = address;
 		this.dni = dni;
 		this.image = image;
 		//this.orders = orders;
 	}
-
+	
 
 	//Getters and setters
 	

@@ -2,6 +2,8 @@ package cat.itacademy.proyectoerp.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +43,7 @@ public class ClientController {
 
     //get a client by id
     @GetMapping("/{id}")
-    public Optional<Client> getClientById(@PathVariable Long id) {
+    public Optional<Client> getClientById(@PathVariable UUID id) {
         return service.findClientById(id);
     }
 
@@ -54,7 +56,7 @@ public class ClientController {
 
     //Delete a client
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteClientById(@PathVariable Long id){
+    public ResponseEntity<?> deleteClientById(@PathVariable UUID id){
     	  service.deleteClient(id);
         return ResponseEntity.ok().build();
 

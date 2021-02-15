@@ -2,6 +2,8 @@ package cat.itacademy.proyectoerp.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +21,7 @@ public class ClientServiceImpl implements IClientService {
 
 	@Override
 	public Client createClient(Client client) throws ArgumentNotValidException {
-		
-		//checks that user name and address are filled
-		if(client.getUsername() == null || client.getUsername().isEmpty()) {
-			throw new ArgumentNotValidException("User must have a name");
-		}
+	
 		
 		if(client.getAddress() == null || client.getAddress().isEmpty()) {
 			throw new ArgumentNotValidException("Address can't be empty");
@@ -41,7 +39,7 @@ public class ClientServiceImpl implements IClientService {
 	}
 
 	@Override
-	public Optional<Client> findClientById(Long id) throws ArgumentNotFoundException {
+	public Optional<Client> findClientById(UUID id) throws ArgumentNotFoundException {
 		Optional<Client> tempClient = repository.findById(id);
 		if (tempClient.isEmpty()) {
 			throw new ArgumentNotFoundException("The client with id " + id + "doesn't exists");
@@ -52,7 +50,7 @@ public class ClientServiceImpl implements IClientService {
 
 	@Override
 	public void updateClient(Client client) {
-		  repository.findById(client.getId()).map(clientDB -> {
+		  repository.findById(client.getClientId()).map(clientDB -> {
               BeanUtils.copyProperties(client, clientDB);
               ;
               return repository.save(clientDB);
@@ -62,7 +60,7 @@ public class ClientServiceImpl implements IClientService {
 			
 
 	@Override
-	public void deleteClient(Long id) {
+	public void deleteClient(UUID id) {
 		repository.deleteById(id);
 		
 	}
