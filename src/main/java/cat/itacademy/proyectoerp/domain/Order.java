@@ -5,11 +5,14 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import cat.itacademy.proyectoerp.util.StringToListConverter;
 @Entity
 @Table(name = "order")
 public class Order{
@@ -27,7 +30,8 @@ public class Order{
 	private Date date;
 	@Column
 	private String status;
-	//private List<String> productsId;
+	@Convert(converter = StringToListConverter.class)
+	private List<String> productsId;
 
 
 	
@@ -56,7 +60,7 @@ public class Order{
 		this.clientId = clientId;
 		this.date = date;
 		this.status = status;
-		//this.productsId = productsId;
+		this.productsId = productsId;
 	}
 
 	//Getters and setters
@@ -93,9 +97,9 @@ public class Order{
 	/**
 	 * @return order products by id
 	 */
-//	public List<String> getProducts() {
-//		//return productsId;
-//	}
+	public List<String> getProducts() {
+		return productsId;
+	}
 	/**
 	 * @param id to set order id
 	 */
@@ -130,13 +134,13 @@ public class Order{
 	 * @param products to set order products id
 	 */
 	public void setProducts(List<String> productsId) {
-		//this.productsId = productsId;
+		this.productsId = productsId;
 	}
 
 	@Override
 	public String toString() {
 		return "Order id=" + id +" [employeeId=" + employeeId + ", clientId=" + clientId + ", date=" + date + ", status=" + status
-				//+ ", products=" + productsId 
+				+ ", products=" + productsId 
 				+ "]";
 		
 	}
