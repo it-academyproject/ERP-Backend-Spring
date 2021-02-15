@@ -8,7 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cat.itacademy.proyectoerp.dao.ClientRepository;
+import cat.itacademy.proyectoerp.repository.ClientRepository;
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
@@ -41,7 +41,7 @@ public class ClientServiceImpl implements IClientService {
 	@Override
 	public Optional<Client> findClientById(UUID id) throws ArgumentNotFoundException {
 		Optional<Client> tempClient = repository.findById(id);
-		if (tempClient.isEmpty()) {
+		if (tempClient==null) {
 			throw new ArgumentNotFoundException("The client with id " + id + "doesn't exists");
 		} else {
 			return repository.findById(id);			
