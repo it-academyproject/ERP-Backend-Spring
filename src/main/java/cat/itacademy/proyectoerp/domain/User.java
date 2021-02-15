@@ -1,5 +1,7 @@
 package cat.itacademy.proyectoerp.domain;
 
+
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -7,6 +9,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -26,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author IAcademy
  *
  */
-//@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.JOINED)
 @Entity
 public class User   {
 
@@ -49,6 +55,9 @@ public class User   {
     @Enumerated(EnumType.STRING)
 	UserType userType; 
 	
+    @OneToOne
+    @JoinColumn(name="client_id")
+    private Client client;
 	
 	
 	public User() {
@@ -120,8 +129,5 @@ public class User   {
 	public Long getId() {
 		return id;
 	}
-
-	
-
 
 }
