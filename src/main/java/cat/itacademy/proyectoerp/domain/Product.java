@@ -1,5 +1,6 @@
 package cat.itacademy.proyectoerp.domain;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,6 +26,7 @@ public class Product {
 	private double vat;
 	private double wholesale_price;
 	private int wholesale_quantity;
+
 
 	// Constructors
 
