@@ -6,8 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import cat.itacademy.proyectoerp.dao.UserDao;
 import cat.itacademy.proyectoerp.domain.UserType;
+import cat.itacademy.proyectoerp.repository.IUserRepository;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +20,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 public class UserDetailServiceImpl implements UserDetailsService {
 
 	@Autowired
-	UserDao userDao;
+	IUserRepository userDao;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -31,14 +31,14 @@ public class UserDetailServiceImpl implements UserDetailsService {
 		
 		//final User user = userDao.findByUsername(username);
 				
-		if (userDao.findByUsername(username) == null)
+		if (userDao.withUsername(username) == null)
 			 throw new UsernameNotFoundException(username);
 		
 		//for (String role : user.getUserType())
-		authoritiesUser.add(new SimpleGrantedAuthority("ROLE_" + userDao.findByUsername(username).getUserType().toString()));
+		authoritiesUser.add(new SimpleGrantedAuthority("ROLE_" + userDao.withUsername(username).getUserType().toString()));
 
 		
-		UserDetails userDetails = User.withUsername(userDao.findByUsername(username).getUsername()).password(userDao.findByUsername(username).getPassword()).authorities(authoritiesUser).build();
+		UserDetails userDetails = User.withUsername(userDao.withUsername(username).getUsername()).password(userDao.withUsername(username).getPassword()).authorities(authoritiesUser).build();
 		
 		return userDetails;
 	}
