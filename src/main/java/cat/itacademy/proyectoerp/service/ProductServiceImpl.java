@@ -5,16 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cat.itacademy.proyectoerp.dao.IProductDAO;
 import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
+import cat.itacademy.proyectoerp.repository.IProductRepository;
 
 @Service
 public class ProductServiceImpl implements IProductService {
 
 	@Autowired
-	IProductDAO productRepo;
+	IProductRepository productRepo;
 
 	@Override
 	public Product createProduct(Product product) throws ArgumentNotValidException {
