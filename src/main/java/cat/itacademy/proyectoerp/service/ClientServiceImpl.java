@@ -2,8 +2,6 @@ package cat.itacademy.proyectoerp.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,18 +41,18 @@ public class ClientServiceImpl implements IClientService {
 	}
 
 	@Override
-	public Client findClientById(UUID id) throws ArgumentNotFoundException {
+	public Optional<Client> findClientById(Long id) throws ArgumentNotFoundException {
 		Optional<Client> tempClient = repository.findById(id);
 		if (tempClient.isEmpty()) {
 			throw new ArgumentNotFoundException("The client with id " + id + "doesn't exists");
 		} else {
-			return repository.findById(id).get();			
+			return repository.findById(id);			
 		}
 	}
 
 	@Override
 	public void updateClient(Client client) {
-		  repository.findById(client.getClient()).map(clientDB -> {
+		  repository.findById(client.getId()).map(clientDB -> {
               BeanUtils.copyProperties(client, clientDB);
               ;
               return repository.save(clientDB);
@@ -64,8 +62,8 @@ public class ClientServiceImpl implements IClientService {
 			
 
 	@Override
-	public void deleteClient(Client client) {
-		repository.deleteById(client.getClient());
+	public void deleteClient(Long id) {
+		repository.deleteById(id);
 		
 	}
 

@@ -1,12 +1,11 @@
 package cat.itacademy.proyectoerp.domain;
 
-import java.util.List;
+//import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
@@ -19,13 +18,13 @@ import javax.validation.constraints.Size;
 public class Client extends User {
 	
 	//Client Attributes
-	@Id
+	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private UUID id;
+	private UUID clientId;
 	private String address;
 	private String dni;
 	private String image;
-	private List<Product> orders;
+	//private List<Order> orders;
 	
 	//Client empty constructor
 	
@@ -53,7 +52,7 @@ public class Client extends User {
 	/**
 	 * Constructor with parameters
 	 * 
-	 * @param id                client id
+	 * @param clientId                client id
 	 * @param name              client name
 	 * @param password          client password
 	 * @param address           client address
@@ -62,13 +61,12 @@ public class Client extends User {
 	 * @param orders            client orders
 	 */
 
-	public Client(String name, String password, UUID client, String address, String dni, String image, List<Product> orders) {
-		super(name, password);
-		this.id = client;
+	public Client(String username, String password, String address, String dni, String image/*, List<Order> orders*/) {
+		super(username, password);
 		this.address = address;
 		this.dni = dni;
 		this.image = image;
-		this.orders = orders;
+		//this.orders = orders;
 	}
 
 
@@ -78,8 +76,8 @@ public class Client extends User {
 	 * @return client id
 	 */
 
-	public UUID getClient() {
-		return id;
+	public UUID getClientId() {
+		return clientId;
 	}
 
 
@@ -87,8 +85,8 @@ public class Client extends User {
 	 * @param id to set client id
 	 */
 
-	public void setClient(UUID client) {
-		this.id = client;
+	public void setClientId(UUID clientId) {
+		this.clientId = clientId;
 	}
 
 
@@ -153,29 +151,25 @@ public class Client extends User {
 	 * @return client orders
 	 */
 
-	public List<Product> getOrders() {
-		return orders;
-	}
+	//public List<Product> getOrders() {
+		//return orders;
+	//}
 
 
 	/**
 	 * @param orders to set client orders
 	 */
 
-	public void setOrders(List<Product> orders) {
-		this.orders = orders;
-	}
+	//public void setOrders(List<Product> orders) {
+		//this.orders = orders;
+	//}
 
 	// Console data printing method
 	
 	@Override
 	public String toString() {
-		return "Client [id=" + id + ", address=" + address + ", dni=" + dni + ", image=" + image + ", orders=" + orders + "]";
+		return "Client [ClientId=" + clientId + ", address=" + address + ", dni=" + dni + ", image=" + image+ "]";
 	}
-	
-	
-	
-	
 	
 
 }
