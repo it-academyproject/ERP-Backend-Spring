@@ -1,13 +1,11 @@
 package cat.itacademy.proyectoerp.domain;
 
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -28,8 +26,7 @@ public class Product {
 	private double vat;
 	private double wholesale_price;
 	private int wholesale_quantity;
-	@ManyToMany
-	private List<Order> orders;
+
 
 	// Constructors
 

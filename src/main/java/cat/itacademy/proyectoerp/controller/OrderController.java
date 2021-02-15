@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cat.itacademy.proyectoerp.domain.Order;
 
-@RestController
-@RequestMapping("/api")
+//@RestController
+//@RequestMapping("/api")
 public class OrderController {
 	@Autowired
 //	OrderServiceImpl orderService;

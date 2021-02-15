@@ -9,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 @Entity
 @Table(name = "order")
@@ -28,8 +27,7 @@ public class Order{
 	private Date date;
 	@Column
 	private String status;
-	@ManyToMany
-	private List<Product> products;
+	//private List<String> productsId;
 
 
 	
@@ -48,17 +46,17 @@ public class Order{
 	 * @param clientId         client id
 	 * @param date			   date of the emitted order
 	 * @param status		   order status
-	 * @param products		   products included(TODO=
+	 * @param productsId	   products id included in order
 	 */
 	
 	
-	public Order(UUID id, String employeeId, String clientId, Date date, String status, List<Product> products) {
+	public Order(UUID id, String employeeId, String clientId, Date date, String status, List<String> productsId) {
 		this.id = id;
 		this.employeeId = employeeId;
 		this.clientId = clientId;
 		this.date = date;
 		this.status = status;
-		this.products = products;
+		//this.productsId = productsId;
 	}
 
 	//Getters and setters
@@ -93,11 +91,11 @@ public class Order{
 		return status;
 	}
 	/**
-	 * @return order products
+	 * @return order products by id
 	 */
-	public List<Product> getProducts() {
-		return products;
-	}
+//	public List<String> getProducts() {
+//		//return productsId;
+//	}
 	/**
 	 * @param id to set order id
 	 */
@@ -129,16 +127,17 @@ public class Order{
 		this.status = status;
 	}
 	/**
-	 * @param products to set order products
+	 * @param products to set order products id
 	 */
-	public void setProducts(List<Product> products) {
-		this.products = products;
+	public void setProducts(List<String> productsId) {
+		//this.productsId = productsId;
 	}
 
 	@Override
 	public String toString() {
 		return "Order id=" + id +" [employeeId=" + employeeId + ", clientId=" + clientId + ", date=" + date + ", status=" + status
-				+ ", products=" + products + "]";
+				//+ ", products=" + productsId 
+				+ "]";
 		
 	}
 	
