@@ -32,6 +32,7 @@ public class UserDTO implements Serializable{
 	@NotBlank(message = "Username is mandatory")
     @Size(min = 6, max = 50, message ="username not valid. min 6 characters and max 50")
 	private String username;
+	private Long id;
 	
 	UserType user_type;
 
@@ -64,5 +65,13 @@ public class UserDTO implements Serializable{
 	public void setUserType(UserType user_type) {
 		this.user_type = user_type;
 	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
+	
 
 }

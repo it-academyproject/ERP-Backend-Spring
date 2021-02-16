@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.NameTokenizers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +18,12 @@ import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 import cat.itacademy.proyectoerp.repository.UserRepository;
-import cat.itacademy.proyectoerp.security.dao.IPasswordTokenDAO;
-import cat.itacademy.proyectoerp.security.entity.PasswordResetToken;
 import cat.itacademy.proyectoerp.util.PasswordGenerator;
 
 /**
  * Class Service for User entity
  * 
- * @author ITAcademy 
+ * @author ITAcademy
  *
  */
 @Transactional
@@ -35,7 +34,7 @@ public class UserServiceImpl implements IUserService {
 	UserRepository userRepository;
 
 	@Autowired
-	IPasswordTokenDAO passwordTokenDao;
+	EmailServiceImpl emailService;
 
 	// We use ModelMapper for map User entity with the DTO.
 	ModelMapper modelMapper = new ModelMapper();
@@ -92,6 +91,16 @@ public class UserServiceImpl implements IUserService {
 		user.setPassword(passEconder(user.getPassword()));
 		// user = modelMapper.map(userDto, User.class);
 		userRepository.save(user);
+
+		// send welcome email to new user
+		try {
+			emailService.sendWelcomeEmail(user);
+		} catch (MailException e) {
+			userDto.setSuccess("False");
+			userDto.setMessage("Email Authentication failed");
+			return userDto;
+		}
+
 		userDto.setSuccess("True");
 		userDto.setMessage("User created");
 		return userDto;
@@ -113,7 +122,7 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public List<UserDTO> listAllUsers() {
 
-		List<UserDTO> listaUsers = new ArrayList<UserDTO>();
+		List<UserDTO> listaUsers = new ArrayList<>();
 
 		for (User user : userRepository.findAll()) {
 			listaUsers.add(modelMapper.map(user, UserDTO.class));
@@ -235,25 +244,29 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	/**
-	 * Method to recover password
+	 * Method to recover password. Generate a new password and send it by email to
+	 * the user
 	 * 
 	 * @param username
 	 * @return new password
 	 * @throws ArgumentNotValidException if username does not exist
 	 */
-	public String recoverPassword(String username) throws ArgumentNotValidException {
+	public String recoverPassword(String username) throws ArgumentNotFoundException, MailException {
 
 		User user = userRepository.findByUsername(username);
 
 		// Verify if username exists
 		if (user == null) {
-			throw new ArgumentNotValidException("The username does not exist");
+			throw new ArgumentNotFoundException("username not found");
 		}
 
 		// Generate random password
 		PasswordGenerator pass = new PasswordGenerator();
 
 		String password = pass.generatePassword();
+
+		// send the new random password to the user's email
+		emailService.sendPasswordEmail(user, password);
 
 		// set user password (encrypted)
 		user.setPassword(passEconder(password));
@@ -262,61 +275,6 @@ public class UserServiceImpl implements IUserService {
 		userRepository.save(user);
 
 		return password;
-
 	}
 
-	/**
-	 * Method to create a new token
-	 * 
-	 * @param user
-	 * @param token
-	 */
-	public void createPasswordResetTokenForUser(User user, String token) {
-
-		PasswordResetToken newToken = new PasswordResetToken(token, user);
-		// Save token to database
-		passwordTokenDao.save(newToken);
-	}
-
-	/**
-	 * Method to find user by username
-	 * 
-	 * @param username
-	 * @return user
-	 * @throws ArgumentNotFoundException
-	 */
-	@Override
-	public User findUserByUsername(String username) throws ArgumentNotFoundException {
-		
-		// Verify if user Exist.
-		User userFound = userRepository.findByUsername(username);
-		if (userFound == null) {
-			throw new ArgumentNotFoundException("No username found");
-		}
-
-		return userFound;
-	}
-
-	/**
-	 * Method to update user password
-	 * 
-	 * @param user
-	 * @return user with new password
-	 * @throws ArgumentNotFoundException
-	 */
-	@Override
-	public User updatePassword(User user) throws ArgumentNotFoundException {
-
-		// Verify if user Exist.
-		User updatedUser = userRepository.findByUsername(user.getUsername());
-
-		if (updatedUser != null) {
-			updatedUser.setPassword(passEconder(user.getPassword()));
-
-			return userRepository.save(updatedUser);
-
-		} else {
-			throw new ArgumentNotFoundException("No username found");
-		}
-	}
 }

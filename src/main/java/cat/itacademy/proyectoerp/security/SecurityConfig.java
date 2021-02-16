@@ -22,7 +22,7 @@ import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true) // Para poder usar la anotación @PreAuthorized en los controllers
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
+
 	@Autowired
 	UserDetailServiceImpl userDetailService;
 
@@ -61,8 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable().authorizeRequests()
-				.antMatchers("/api/login", "/api/users", "/api/users/passwords", "/api/users/forgotPasswords",
-						"/api/users/confirmReset", "/api/users/resetPasswords")
+				.antMatchers("/api/login", "/api/users", "/api/users/recoverpassword")
 				.permitAll().anyRequest().authenticated().and()
 				// Exception control. 401 no authorized
 				.exceptionHandling().authenticationEntryPoint(jwtEntryPoint).and().sessionManagement()

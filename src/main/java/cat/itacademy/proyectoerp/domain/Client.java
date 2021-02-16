@@ -1,61 +1,100 @@
 package cat.itacademy.proyectoerp.domain;
 
-import java.util.ArrayList;
+//import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 
+
+/**
+ * @author Anton Lage & Rita Casiello
+ *
+ */
 @Entity
 @Table(name="clients")
-public class Client extends User {
+public class Client {
 	
 	//Client Attributes
-	/*@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private UUID client;*/
+
+	@Id
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private UUID id;
 	private String address;
 	private String dni;
 	private String image;
-	private ArrayList<Product> orders;
+	//private List<Order> orders;
+    
+	@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    private User user;
 	
-	
+	//Client empty constructor
 	
 	public Client() {
-		super();
-		// TODO Auto-generated constructor stub
+
 	}
 
 
+	/**
+	 * Constructor with parameters
+	 * 
+	 * @param id                client id
+	 * @param address           client address
+	 * @param dni               client dni
+	 * @param image             client image
+	 * @param orders            client orders
+	 */
 
-
-	public Client(@Size(min = 6, max = 50) String username, @Size(min = 8, max = 16) String password) {
-		super(username, password);
-		// TODO Auto-generated constructor stub
-	}
-
-
-
-	public Client(String name, String password, String address, String dni, String image, ArrayList<Product> orders) {
-		super(name, password);
+	public Client(String address, String dni, String image/*, List<Order> orders*/) {
 		this.address = address;
 		this.dni = dni;
 		this.image = image;
-		this.orders = orders;
+		//this.orders = orders;
+	}
+	
+
+	//Getters and setters
+	
+	/**
+	 * @return client id
+	 */
+
+
+	public UUID getid() {
+		return id;
 	}
 
 
+	/**
+	 * @param id to set client id
+	 */
 
+	public void setid(UUID id) {
+		this.id = id;
+	}
+
+
+	/**
+	 * @return client address
+	 */
 
 	public String getAddress() {
 		return address;
 	}
 
 
+	/**
+	 * @param address to set client address
+	 */
 
 
 	public void setAddress(String address) {
@@ -63,13 +102,18 @@ public class Client extends User {
 	}
 
 
-
+	/**
+	 * @return client dni
+	 */
 
 	public String getDni() {
 		return dni;
 	}
 
 
+	/**
+	 * @param dni to set client dni
+	 */
 
 
 	public void setDni(String dni) {
@@ -77,13 +121,18 @@ public class Client extends User {
 	}
 
 
-
+	/**
+	 * @return client image
+	 */
 
 	public String getImage() {
 		return image;
 	}
 
 
+	/**
+	 * @param image to set client image
+	 */
 
 
 	public void setImage(String image) {
@@ -91,22 +140,51 @@ public class Client extends User {
 	}
 
 
+	/**
+	 * @return client orders
+	 */
+
+	//public List<Order> getOrders() {
+		//return orders;
+	//}
 
 
-	public ArrayList<Product> getOrders() {
-		return orders;
+	/**
+	 * @param orders to set client orders
+	 */
+
+	//public void setOrders(List<Order> orders) {
+		//this.orders = orders;
+	//}
+	
+	/**
+	 * @return client user
+	 */
+
+	public User getUser() {
+		return user;
+	}
+	
+	
+	/**
+	 * @param user to set user
+	 */
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 
-
-
-	public void setOrders(ArrayList<Product> orders) {
-		this.orders = orders;
+	@Override
+	public String toString() {
+		return "Client [id=" + id + ", address=" + address + ", dni=" + dni + ", image=" + image + ", user="
+				+ user + "]";
 	}
+
+	// Console data printing method
 	
-	
-	
-	
+
+
 	
 
 }
