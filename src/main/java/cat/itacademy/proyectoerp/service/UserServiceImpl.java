@@ -12,11 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import cat.itacademy.proyectoerp.dao.UserDao;
 import cat.itacademy.proyectoerp.domain.*;
 import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
+import cat.itacademy.proyectoerp.repository.IUserRepository;
 import cat.itacademy.proyectoerp.security.dao.IPasswordTokenDAO;
 import cat.itacademy.proyectoerp.security.entity.PasswordResetToken;
 import cat.itacademy.proyectoerp.util.PasswordGenerator;
@@ -32,7 +32,7 @@ import cat.itacademy.proyectoerp.util.PasswordGenerator;
 public class UserServiceImpl implements IUserService {
 
 	@Autowired
-	UserDao userDao;
+	IUserRepository userRepository;
 
 	@Autowired
 	IPasswordTokenDAO passwordTokenDao;
@@ -50,7 +50,7 @@ public class UserServiceImpl implements IUserService {
 		UserDTO userDTO = new UserDTO();
 
 		// Verify if user Exist.
-		User user = userDao.findByUsername(username);
+		User user = userRepository.withUsername(username);
 		if (user == null) {
 			userDTO.setSuccess("Failed");
 			userDTO.setMessage("User don't exist");
@@ -83,7 +83,7 @@ public class UserServiceImpl implements IUserService {
 
 		UserDTO userDto = modelMapper.map(user, UserDTO.class);
 		System.out.println("user pasado " + user.toString());
-		if (userDao.existsByUsername(user.getUsername())) {
+		if (userRepository.existsWithUsername(user.getUsername())) {
 			userDto.setSuccess("False");
 			userDto.setMessage("User Exist");
 			return userDto;
@@ -91,7 +91,7 @@ public class UserServiceImpl implements IUserService {
 
 		user.setPassword(passEconder(user.getPassword()));
 		// user = modelMapper.map(userDto, User.class);
-		userDao.save(user);
+		userRepository.save(user);
 		userDto.setSuccess("True");
 		userDto.setMessage("User created");
 		return userDto;
@@ -113,9 +113,9 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public List<UserDTO> listAllUsers() {
 
-		List<UserDTO> listaUsers = new ArrayList<UserDTO>();
+		List<UserDTO> listaUsers = new ArrayList<>();
 
-		for (User user : userDao.findAll()) {
+		for (User user : userRepository.findAll()) {
 			listaUsers.add(modelMapper.map(user, UserDTO.class));
 
 		}
@@ -133,7 +133,7 @@ public class UserServiceImpl implements IUserService {
 	public List<UserDTO> listAllEmployees() {
 		List<UserDTO> listaUsers = new ArrayList<UserDTO>();
 
-		for (User user : userDao.findByUserType(UserType.EMPLOYEE)) {
+		for (User user : userRepository.withUserType(UserType.EMPLOYEE)) {
 			listaUsers.add(modelMapper.map(user, UserDTO.class));
 
 		}
@@ -151,7 +151,7 @@ public class UserServiceImpl implements IUserService {
 	public List<UserDTO> listAllClients() {
 		List<UserDTO> listaUsers = new ArrayList<UserDTO>();
 
-		for (User user : userDao.findByUserType(UserType.CLIENT)) {
+		for (User user : userRepository.withUserType(UserType.CLIENT)) {
 			listaUsers.add(modelMapper.map(user, UserDTO.class));
 
 		}
@@ -169,14 +169,14 @@ public class UserServiceImpl implements IUserService {
 	public Optional<UserDTO> deleteUserById(Long id) {
 		UserDTO userDto = new UserDTO();
 		// Verify if id exist
-		if (!userDao.existsById(id)) {
+		if (!userRepository.existsById(id)) {
 			userDto = new UserDTO();
 			userDto.setSuccess("False");
 			userDto.setMessage("User Don't Exist");
 			return Optional.of(userDto);
 		}
 
-		userDao.deleteById(id);
+		userRepository.deleteById(id);
 
 		userDto.setSuccess("True");
 		userDto.setMessage("User Deleted");
@@ -202,19 +202,19 @@ public class UserServiceImpl implements IUserService {
 
 		UserDTO userDto = modelMapper.map(user, UserDTO.class);
 		// Verify if user id exist
-		if (!userDao.existsById(id)) {
+		if (!userRepository.existsById(id)) {
 			userDto.setSuccess("False");
 			userDto.setMessage("User Don't Exist");
 			return Optional.of(userDto);
 		}
 		// Verify if username already exist
-		if (userDao.findByUsername(user.getUsername()) != null) {
+		if (userRepository.withUsername(user.getUsername()) != null) {
 			userDto.setSuccess("Failed");
 			userDto.setMessage("User already exist");
 			return Optional.of(userDto);
 		}
 
-		user = userDao.findById(id).get();
+		user = userRepository.findById(id).get();
 
 		/**
 		 * We Verified what properties has received.
@@ -227,7 +227,7 @@ public class UserServiceImpl implements IUserService {
 		if (userDto.getUserType() != null)
 			user.setUserType(userDto.getUserType());
 
-		userDao.save(user);
+		userRepository.save(user);
 		userDto.setSuccess("True");
 		userDto.setMessage("User modified");
 		return Optional.of(userDto);
@@ -243,7 +243,7 @@ public class UserServiceImpl implements IUserService {
 	 */
 	public String recoverPassword(String username) throws ArgumentNotValidException {
 
-		User user = userDao.findByUsername(username);
+		User user = userRepository.withUsername(username);
 
 		// Verify if username exists
 		if (user == null) {
@@ -259,7 +259,7 @@ public class UserServiceImpl implements IUserService {
 		user.setPassword(passEconder(password));
 
 		// Save user new password in ddbb
-		userDao.save(user);
+		userRepository.save(user);
 
 		return password;
 
@@ -289,7 +289,7 @@ public class UserServiceImpl implements IUserService {
 	public User findUserByUsername(String username) throws ArgumentNotFoundException {
 		
 		// Verify if user Exist.
-		User userFound = userDao.findByUsername(username);
+		User userFound = userRepository.withUsername(username);
 		if (userFound == null) {
 			throw new ArgumentNotFoundException("No username found");
 		}
@@ -308,12 +308,12 @@ public class UserServiceImpl implements IUserService {
 	public User updatePassword(User user) throws ArgumentNotFoundException {
 
 		// Verify if user Exist.
-		User updatedUser = userDao.findByUsername(user.getUsername());
+		User updatedUser = userRepository.withUsername(user.getUsername());
 
 		if (updatedUser != null) {
 			updatedUser.setPassword(passEconder(user.getPassword()));
 
-			return userDao.save(updatedUser);
+			return userRepository.save(updatedUser);
 
 		} else {
 			throw new ArgumentNotFoundException("No username found");

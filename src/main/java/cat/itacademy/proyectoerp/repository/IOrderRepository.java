@@ -1,4 +1,4 @@
-package cat.itacademy.proyectoerp.dao;
+package cat.itacademy.proyectoerp.repository;
 
 import java.util.UUID;
 
