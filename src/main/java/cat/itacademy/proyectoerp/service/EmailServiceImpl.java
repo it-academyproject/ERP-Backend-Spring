@@ -29,8 +29,7 @@ public class EmailServiceImpl implements IEmailService {
 		message.setTo(user.getUsername());
 		message.setFrom("example@gmail.com");
 		message.setSubject("Welcome to ProyectoERP");
-		message.setText(
-				"Welcome to ProyectoERP \n\nThanks for signing up! \n\nTo visit our website click here: https://example.com/");
+		message.setText("Welcome to ProyectoERP \n\nThanks for signing up!");
 
 		// send email
 		javaMailSender.send(message);
@@ -38,23 +37,23 @@ public class EmailServiceImpl implements IEmailService {
 	}
 
 	/**
-	 * Method to send reset token
+	 * Method to send a new random password to user
 	 * 
 	 * @param user
-	 * @param resetToken
+	 * @param password new random password
 	 * @throws MailException
 	 */
 	@Override
-	public void passwordResetEmail(User user, String resetToken) throws MailException {
+	public void sendPasswordEmail(User user, String password) throws MailException {
 
 		SimpleMailMessage message = new SimpleMailMessage();
 
 		// set email properties/body
 		message.setTo(user.getUsername());
 		message.setFrom("example@gmail.com");
-		message.setSubject("Password Reset Request");
-		message.setText("To reset your password, click the link below:\n"
-				+ "http://localhost:8080/api/users/confirmReset?token=" + resetToken);
+		message.setSubject("Forgot Password");
+		message.setText("Your new password is: " + password
+				+ "\n\nNow you can login with your new password and navigate through the app, see you soon!");
 
 		// send email
 		javaMailSender.send(message);
