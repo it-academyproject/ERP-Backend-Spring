@@ -93,9 +93,13 @@ public class UserServiceImpl implements IUserService {
 		userRepository.save(user);
 
 		// send welcome email to new user
-		// if the application does not have access to the mail throws
-		// MailAuthenticationException
-		emailService.sendWelcomeEmail(user);
+		try {
+			emailService.sendWelcomeEmail(user);
+		} catch (MailException e) {
+			userDto.setSuccess("False");
+			userDto.setMessage("Email Authentication failed");
+			return userDto;
+		}
 
 		userDto.setSuccess("True");
 		userDto.setMessage("User created");
