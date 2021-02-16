@@ -31,14 +31,14 @@ public class UserDetailServiceImpl implements UserDetailsService {
 		
 		//final User user = userDao.findByUsername(username);
 				
-		if (userDao.withUsername(username) == null)
+		if (userDao.findByUsername(username) == null)
 			 throw new UsernameNotFoundException(username);
 		
 		//for (String role : user.getUserType())
-		authoritiesUser.add(new SimpleGrantedAuthority("ROLE_" + userDao.withUsername(username).getUserType().toString()));
+		authoritiesUser.add(new SimpleGrantedAuthority("ROLE_" + userDao.findByUsername(username).getUserType().toString()));
 
 		
-		UserDetails userDetails = User.withUsername(userDao.withUsername(username).getUsername()).password(userDao.withUsername(username).getPassword()).authorities(authoritiesUser).build();
+		UserDetails userDetails = User.withUsername(userDao.findByUsername(username).getUsername()).password(userDao.findByUsername(username).getPassword()).authorities(authoritiesUser).build();
 		
 		return userDetails;
 	}
