@@ -3,6 +3,8 @@ package cat.itacademy.proyectoerp.domain;
 //import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,15 +25,15 @@ public class Client {
 	
 	//Client Attributes
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "client_id")
-	private UUID clientId;
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private UUID id;
 	private String address;
 	private String dni;
 	private String image;
 	//private List<Order> orders;
-    @OneToOne
-    @JoinColumn(name="id")
+    
+	@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id",referencedColumnName = "id")
     private User user;
 	
 	//Client empty constructor
@@ -44,7 +46,7 @@ public class Client {
 	/**
 	 * Constructor with parameters
 	 * 
-	 * @param clientId                client id
+	 * @param id                client id
 	 * @param address           client address
 	 * @param dni               client dni
 	 * @param image             client image
@@ -65,8 +67,8 @@ public class Client {
 	 * @return client id
 	 */
 
-	public UUID getClientId() {
-		return clientId;
+	public UUID getid() {
+		return id;
 	}
 
 
@@ -74,8 +76,8 @@ public class Client {
 	 * @param id to set client id
 	 */
 
-	public void setClientId(UUID clientId) {
-		this.clientId = clientId;
+	public void setid(UUID id) {
+		this.id = id;
 	}
 
 
@@ -173,7 +175,7 @@ public class Client {
 
 	@Override
 	public String toString() {
-		return "Client [clientId=" + clientId + ", address=" + address + ", dni=" + dni + ", image=" + image + ", user="
+		return "Client [id=" + id + ", address=" + address + ", dni=" + dni + ", image=" + image + ", user="
 				+ user + "]";
 	}
 
