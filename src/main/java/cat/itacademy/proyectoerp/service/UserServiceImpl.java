@@ -50,7 +50,7 @@ public class UserServiceImpl implements IUserService {
 		UserDTO userDTO = new UserDTO();
 
 		// Verify if user Exist.
-		User user = userRepository.withUsername(username);
+		User user = userRepository.findByUsername(username);
 		if (user == null) {
 			userDTO.setSuccess("Failed");
 			userDTO.setMessage("User don't exist");
@@ -83,7 +83,7 @@ public class UserServiceImpl implements IUserService {
 
 		UserDTO userDto = modelMapper.map(user, UserDTO.class);
 		System.out.println("user pasado " + user.toString());
-		if (userRepository.existsWithUsername(user.getUsername())) {
+		if (userRepository.existsByUsername(user.getUsername())) {
 			userDto.setSuccess("False");
 			userDto.setMessage("User Exist");
 			return userDto;
@@ -133,7 +133,7 @@ public class UserServiceImpl implements IUserService {
 	public List<UserDTO> listAllEmployees() {
 		List<UserDTO> listaUsers = new ArrayList<UserDTO>();
 
-		for (User user : userRepository.withUserType(UserType.EMPLOYEE)) {
+		for (User user : userRepository.findByUserType(UserType.EMPLOYEE)) {
 			listaUsers.add(modelMapper.map(user, UserDTO.class));
 
 		}
@@ -151,7 +151,7 @@ public class UserServiceImpl implements IUserService {
 	public List<UserDTO> listAllClients() {
 		List<UserDTO> listaUsers = new ArrayList<UserDTO>();
 
-		for (User user : userRepository.withUserType(UserType.CLIENT)) {
+		for (User user : userRepository.findByUserType(UserType.CLIENT)) {
 			listaUsers.add(modelMapper.map(user, UserDTO.class));
 
 		}
@@ -208,7 +208,7 @@ public class UserServiceImpl implements IUserService {
 			return Optional.of(userDto);
 		}
 		// Verify if username already exist
-		if (userRepository.withUsername(user.getUsername()) != null) {
+		if (userRepository.findByUsername(user.getUsername()) != null) {
 			userDto.setSuccess("Failed");
 			userDto.setMessage("User already exist");
 			return Optional.of(userDto);
@@ -243,7 +243,7 @@ public class UserServiceImpl implements IUserService {
 	 */
 	public String recoverPassword(String username) throws ArgumentNotValidException {
 
-		User user = userRepository.withUsername(username);
+		User user = userRepository.findByUsername(username);
 
 		// Verify if username exists
 		if (user == null) {
@@ -289,7 +289,7 @@ public class UserServiceImpl implements IUserService {
 	public User findUserByUsername(String username) throws ArgumentNotFoundException {
 		
 		// Verify if user Exist.
-		User userFound = userRepository.withUsername(username);
+		User userFound = userRepository.findByUsername(username);
 		if (userFound == null) {
 			throw new ArgumentNotFoundException("No username found");
 		}
@@ -308,7 +308,7 @@ public class UserServiceImpl implements IUserService {
 	public User updatePassword(User user) throws ArgumentNotFoundException {
 
 		// Verify if user Exist.
-		User updatedUser = userRepository.withUsername(user.getUsername());
+		User updatedUser = userRepository.findByUsername(user.getUsername());
 
 		if (updatedUser != null) {
 			updatedUser.setPassword(passEconder(user.getPassword()));
