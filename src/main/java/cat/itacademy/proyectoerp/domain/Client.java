@@ -15,9 +15,9 @@ import javax.validation.constraints.Size;
 public class Client extends User {
 	
 	//Client Attributes
-	@Id
+	/*@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private UUID client;
+	private UUID client;*/
 	private String address;
 	private String dni;
 	private String image;
@@ -40,27 +40,12 @@ public class Client extends User {
 
 
 
-	public Client(String name, String password, UUID client, String address, String dni, String image, ArrayList<Product> orders) {
+	public Client(String name, String password, String address, String dni, String image, ArrayList<Product> orders) {
 		super(name, password);
-		this.client = client;
 		this.address = address;
 		this.dni = dni;
 		this.image = image;
 		this.orders = orders;
-	}
-
-
-
-
-	public UUID getClient() {
-		return client;
-	}
-
-
-
-
-	public void setClient(UUID client) {
-		this.client = client;
 	}
 
 

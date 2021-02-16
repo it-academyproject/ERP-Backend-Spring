@@ -42,7 +42,7 @@ import cat.itacademy.proyectoerp.service.EmailServiceImpl;
 /**
  * Class of User Controller
  * 
- * @author Rubén Rodríguez
+ * @author 
  *
  */
 @CrossOrigin
