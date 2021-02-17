@@ -18,6 +18,7 @@ import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 import cat.itacademy.proyectoerp.repository.UserRepository;
+
 import cat.itacademy.proyectoerp.util.PasswordGenerator;
 
 /**
@@ -249,7 +250,8 @@ public class UserServiceImpl implements IUserService {
 	 * 
 	 * @param username
 	 * @return new password
-	 * @throws ArgumentNotValidException if username does not exist
+	 * @throws ArgumentNotFoundException
+	 * @throws MailException
 	 */
 	public String recoverPassword(String username) throws ArgumentNotFoundException, MailException {
 
@@ -277,4 +279,28 @@ public class UserServiceImpl implements IUserService {
 		return password;
 	}
 
+
+	/**
+	 * Method to update user password
+	 * 
+	 * @param user
+	 * @return user with new password
+	 * @throws ArgumentNotFoundException
+	 */
+	@Override
+	public User updatePassword(User user) throws ArgumentNotFoundException {
+
+		// Verify if user exist
+		User updatedUser = userRepository.findByUsername(user.getUsername());
+
+		if (updatedUser != null) {
+
+			// set user password (encrypted)
+			updatedUser.setPassword(passEconder(user.getPassword()));
+
+			return userRepository.save(updatedUser);
+		} else {
+			throw new ArgumentNotFoundException("username not found");
+		}
+	}
 }

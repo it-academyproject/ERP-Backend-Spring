@@ -218,4 +218,28 @@ public class UserController {
 		}
 	}
 
+	/**
+	 * Method to reset password
+	 * 
+	 * @param user
+	 * @return user updated
+	 */
+	@PutMapping("/users/resetpassword")
+	public HashMap<String, Object> resetPassword(@Valid @RequestBody User user) {
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+
+		try {
+			userService.updatePassword(user);
+
+			map.put("success", "true");
+			map.put("message", "User password updated");
+
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", e.getMessage());
+		}
+
+		return map;
+	}
 }
