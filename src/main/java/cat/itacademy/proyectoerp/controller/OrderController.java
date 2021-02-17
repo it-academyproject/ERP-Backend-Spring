@@ -1,6 +1,7 @@
 package cat.itacademy.proyectoerp.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,26 @@ public class OrderController {
 		return map;
 	}
 
+
+	/**
+	 * Get all orders
+	 *
+	 * @return list of orders
+	 */
+	@GetMapping("/orders")
+	public HashMap<String, Object> findOrders() {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		List<Order> ordersList = orderService.findAllOrders();
+		try {
+			map.put("success", "true");
+			map.put("message", "order found");
+			map.put("order", ordersList);
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "Error: " + e.getMessage());
+		}
+		return map;
+	}
 
 	/**
 	 * Update order
