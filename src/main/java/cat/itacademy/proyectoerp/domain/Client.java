@@ -25,8 +25,7 @@ public class Client {
 	
 	//Client Attributes
 	@Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private UUID id;
+	private UUID id = UUID.randomUUID();
 	private String address;
 	private String dni;
 	private String image;
