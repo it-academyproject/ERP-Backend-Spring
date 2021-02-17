@@ -14,8 +14,6 @@ import cat.itacademy.proyectoerp.util.StringToListConverter;
 @Entity
 @Table(name = "orders")
 public class Order{
-	
-	// Order entity attributes
 
 	@Id
 	private UUID id;
@@ -29,7 +27,6 @@ public class Order{
 	private String status;
 	@Convert(converter = StringToListConverter.class)
 	private List<String> productsId;
-
 	
 	public Order() {
 	}
