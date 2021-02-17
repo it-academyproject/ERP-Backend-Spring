@@ -16,6 +16,7 @@ import cat.itacademy.proyectoerp.util.StringToListConverter;
 public class Order{
 
 	@Id
+	@Column(name = "id", columnDefinition = "BINARY(16)")
 	private UUID id;
 	@Column
 	private String employeeId;
