@@ -12,7 +12,6 @@ public interface IOrderService {
 	
 	public Order createOrder(Order order);
 
-	//public Order findOrderById(UUID id);
 	public Optional<Order> findOrderById(UUID id);
 
 	public List<Order> findAllOrders();
