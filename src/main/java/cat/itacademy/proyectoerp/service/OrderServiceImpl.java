@@ -39,14 +39,13 @@ public class OrderServiceImpl implements IOrderService{
 	
 	@Override
 	public Order updateOrder(Order order) {
-		/**Order orderToUpdate = findOrderById(order.getId());
+		Order orderToUpdate = iOrderRepository.getOne(order.getId());
+		//Order orderToUpdate = findOrderById(order.getId());
 		orderToUpdate.setClientId(order.getClientId());
 		orderToUpdate.setEmployeeId(order.getEmployeeId());
 		orderToUpdate.setStatus(order.getStatus());
 		orderToUpdate.setProducts(order.getProducts());
 		return createOrder(orderToUpdate);
-		 */
-		return null;
 	}
 
 	@Override
