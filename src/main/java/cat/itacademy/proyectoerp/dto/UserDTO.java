@@ -13,7 +13,7 @@ import cat.itacademy.proyectoerp.domain.UserType;
 
 /**
  * DTO Class for Users
- * @author Rubén Rodríguez
+ * @author 
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)

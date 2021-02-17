@@ -151,7 +151,7 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	/**
-	 * Method for list all Client users.
+	 * Method for list all Client users with DTO format.
 	 * 
 	 * @return list of all Cloient users.
 	 * 

@@ -2,7 +2,7 @@ package cat.itacademy.proyectoerp.dto;
 
 /**
  * DTO class for send messages to client without data.
- * @author Rubén Rodríguez
+ * @author 
  *
  */
 public class MessageDTO {
