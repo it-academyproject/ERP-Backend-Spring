@@ -1,6 +1,7 @@
 package cat.itacademy.proyectoerp.controller;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +30,9 @@ public class OrderController {
 	 * @return new order 
 	 */
 	@PostMapping("/orders")
-	public HashMap<String, Object> createOrder(@RequestBody Order order) {
+	public Map<String, Object> createOrder(@RequestBody Order order) {
 
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		HashMap<String, Object> map = new HashMap<>();
 
 		try {
 
@@ -57,9 +58,9 @@ public class OrderController {
 	 * @return order by id
 	 */
 	@GetMapping("/orders/{id}")
-	public HashMap<String, Object> findOrderById(@PathVariable(name = "id") UUID id) {
+	public Map<String, Object> findOrderById(@PathVariable(name = "id") UUID id) {
 
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		HashMap<String, Object> map = new HashMap<>();
 
 		try {
 
@@ -86,9 +87,9 @@ public class OrderController {
 	 * @return order updated
 	 */
 	@PutMapping("/order")
-	public HashMap<String, Object> updateOrder(@RequestBody Order order) {
+	public Map<String, Object> updateOrder(@RequestBody Order order) {
 
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		HashMap<String, Object> map = new HashMap<>();
 
 		try {
 
@@ -115,9 +116,9 @@ public class OrderController {
 	 * @return message
 	 */
 	@DeleteMapping("/orders")
-	public HashMap<String, Object> deleteOrder(@RequestBody Order order) {
+	public Map<String, Object> deleteOrder(@RequestBody Order order) {
 
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		HashMap<String, Object> map = new HashMap<>();
 
 		try {
 
