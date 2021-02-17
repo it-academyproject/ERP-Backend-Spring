@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import cat.itacademy.proyectoerp.domain.Client;
+import cat.itacademy.proyectoerp.dto.ClientDTO;
 
 public interface IClientService {
 	
@@ -17,6 +18,8 @@ public interface IClientService {
 	public void updateClient(Client client); //UPDATE - Updates clients info
 	
 	public void deleteClient(UUID id); //DELETE - deletes client
+
+	List<ClientDTO> listAllUsers();
 	
 
 	
