@@ -2,18 +2,18 @@ package cat.itacademy.proyectoerp.security.entity;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 
 import org.springframework.security.core.GrantedAuthority;
 
-import cat.itacademy.proyectoerp.domain.UserType;
 
 public class JwtResponse implements Serializable {
 
-    private String token;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1138581471978379303L;
+	private String token;
     private String bearer = "Bearer";
     private String nombreUsuario;
     private Collection<? extends GrantedAuthority> authorities;

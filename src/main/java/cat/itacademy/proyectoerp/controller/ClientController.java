@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cat.itacademy.proyectoerp.domain.Client;
+import cat.itacademy.proyectoerp.dto.ClientDTO;
+import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.service.IClientService;
 
 @RestController
@@ -61,5 +63,11 @@ public class ClientController {
         return ResponseEntity.ok().build();
 
     }	
+    
+    //pruebaDTO
+	@GetMapping("/lista")
+	public ResponseEntity<List<ClientDTO>> listAllUsers() {
+		return new ResponseEntity<>(service.listAllUsers(), HttpStatus.OK);
+	} 
 
 }

@@ -37,7 +37,7 @@ import cat.itacademy.proyectoerp.service.UserServiceImpl;
 /**
  * Class of User Controller
  * 
- * @author Rubén Rodríguez
+ * @author 
  *
  */
 @CrossOrigin

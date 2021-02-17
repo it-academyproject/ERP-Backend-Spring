@@ -24,6 +24,7 @@ import javax.persistence.Table;
 public class Client {
 	
 	//Client Attributes
+
 	@Id
 //	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private UUID id;
@@ -66,6 +67,7 @@ public class Client {
 	/**
 	 * @return client id
 	 */
+
 
 	public UUID getid() {
 		return id;

@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 import cat.itacademy.proyectoerp.domain.*;
 import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
-import cat.itacademy.proyectoerp.repository.IUserRepository;
+import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
+import cat.itacademy.proyectoerp.repository.UserRepository;
+
 import cat.itacademy.proyectoerp.util.PasswordGenerator;
 
 /**
@@ -30,7 +32,7 @@ import cat.itacademy.proyectoerp.util.PasswordGenerator;
 public class UserServiceImpl implements IUserService {
 
 	@Autowired
-	IUserRepository userRepository;
+	UserRepository userRepository;
 
 	@Autowired
 	EmailServiceImpl emailService;
@@ -150,7 +152,7 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	/**
-	 * Method for list all Client users.
+	 * Method for list all Client users with DTO format.
 	 * 
 	 * @return list of all Cloient users.
 	 * 
@@ -276,6 +278,7 @@ public class UserServiceImpl implements IUserService {
 
 		return password;
 	}
+
 
 	/**
 	 * Method to update user password
