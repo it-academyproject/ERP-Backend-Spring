@@ -1,6 +1,7 @@
 package cat.itacademy.proyectoerp.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,8 @@ public class OrderServiceImpl implements IOrderService{
 	}
 
 	@Override
-	public Order findOrderById(UUID id) {
-		return iOrderRepository.getOne(id);
+	public Optional<Order> findOrderById(UUID id) {
+		return iOrderRepository.findById(id);
 	}
 
 	@Override
@@ -38,12 +39,14 @@ public class OrderServiceImpl implements IOrderService{
 	
 	@Override
 	public Order updateOrder(Order order) {
-		Order orderToUpdate = findOrderById(order.getId());
+		/**Order orderToUpdate = findOrderById(order.getId());
 		orderToUpdate.setClientId(order.getClientId());
 		orderToUpdate.setEmployeeId(order.getEmployeeId());
 		orderToUpdate.setStatus(order.getStatus());
 		orderToUpdate.setProducts(order.getProducts());
 		return createOrder(orderToUpdate);
+		 */
+		return null;
 	}
 
 	@Override
