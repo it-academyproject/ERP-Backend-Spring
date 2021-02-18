@@ -62,7 +62,29 @@ public class Order {
 		this.status = status;
 		this.productsId = productsId;
 	}
+	
+	/**
+	 * Constructor with all the parameters.
+	 * 
+	 * @param id         order id
+	 * @param employeeId employee responsible
+	 * @param clientId   client id
+	 * @param date       date of the emitted order
+	 * @param status     order status
+	 * @param productsId products id included in order
+	 */
 
+
+	public Order(UUID id, String employeeId, String clientId, Date date, OrderStatus status, List<String> productsId) {
+		super();
+		this.id = id;
+		this.employeeId = employeeId;
+		this.clientId = clientId;
+		this.date = date;
+		this.status = status;
+		this.productsId = productsId;
+	}
+	
 	/**
 	 * @return order id
 	 */
