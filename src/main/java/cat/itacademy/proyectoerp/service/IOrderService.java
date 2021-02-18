@@ -8,6 +8,7 @@ import cat.itacademy.proyectoerp.domain.Order;
 
 public interface IOrderService {
 	
+	public List<String> getAllProducts(UUID orderId);
 	
 	public Order createOrder(Order order);
 
@@ -18,7 +19,5 @@ public interface IOrderService {
 	public Order updateOrder(Order order);
 
 	public void deleteOrder(UUID id);
-	
-	public boolean listIsValid(List<String> productsId);
 
 }

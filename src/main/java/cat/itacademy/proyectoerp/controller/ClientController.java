@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.dto.ClientDTO;
@@ -31,7 +32,10 @@ public class ClientController {
 	
 	 //Add a new Client
     @PostMapping
-    public ResponseEntity<?> addNewClient(@RequestBody Client client) {
+    public ResponseEntity<?> addNewClient(@RequestBody Client client) throws MethodArgumentTypeMismatchException{
+//    	if(!client.getid().toString().matches("^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")){
+//			throw new MethodArgumentTypeMismatchException("Invalid UUID", null, null, null, null);
+//		}
         service.createClient(client);
         return ResponseEntity.status(HttpStatus.CREATED).body(client);
     }

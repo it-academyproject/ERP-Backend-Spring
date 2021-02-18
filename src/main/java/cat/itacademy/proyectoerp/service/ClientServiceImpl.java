@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import cat.itacademy.proyectoerp.repository.ClientRepository;
 import cat.itacademy.proyectoerp.domain.Client;
@@ -31,18 +32,17 @@ public class ClientServiceImpl implements IClientService {
 
 	@Override
 	public Client createClient(Client client) throws ArgumentNotValidException {
-		
 		if(client.getid() == null) {
 			throw new ArgumentNotValidException("You need to add the UUID manually.For ideas go to: https://www.uuidgenerator.net/ ");
 		}
-		if(!client.getid().toString().matches("^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")){
-			throw new ArgumentNotValidException("Invalid UUID");
-		}
-		if (client.getAddress() == null || client.getAddress().isEmpty()) {
+		else if (client.getAddress() == null || client.getAddress().isEmpty()) {
 			throw new ArgumentNotValidException("Address can't be empty");
 		}
-		if (client.getDni() == null || client.getDni().isEmpty()) {
+		else if (client.getDni() == null || client.getDni().isEmpty()) {
 			throw new ArgumentNotValidException("Dni can't be empty");
+		}
+		else if(client.getUser() == null) {
+			throw new ArgumentNotValidException("You have to assign this client to an user.");
 		} else {
 			return repository.save(client);
 		}
@@ -83,10 +83,9 @@ public class ClientServiceImpl implements IClientService {
 		if (tempClient == null) {
 			throw new ArgumentNotFoundException("The client with id " + id + "doesn't exists");
 		} else {
-			return repository.findById(id);
+			return tempClient;
 		}
 	}
-
 
 	@Override
 	public void updateClient(Client client) {
@@ -98,7 +97,7 @@ public class ClientServiceImpl implements IClientService {
 
 	@Override
 	public void deleteClient(UUID id) throws ArgumentNotFoundException {
-		if(repository.getOne(id) == null) {
+		if (repository.getOne(id) == null) {
 			throw new ArgumentNotFoundException("The client with id " + id + "doesn't exists");
 		} else {
 			repository.deleteById(id);
