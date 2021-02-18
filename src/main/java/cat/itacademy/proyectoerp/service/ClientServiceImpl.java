@@ -31,9 +31,18 @@ public class ClientServiceImpl implements IClientService {
 
 	@Override
 	public Client createClient(Client client) throws ArgumentNotValidException {
-
+		
+		if(client.getid() == null) {
+			throw new ArgumentNotValidException("You need to add the UUID manually.For ideas go to: https://www.uuidgenerator.net/ ");
+		}
+		if(!client.getid().toString().matches("^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")){
+			throw new ArgumentNotValidException("Invalid UUID");
+		}
 		if (client.getAddress() == null || client.getAddress().isEmpty()) {
 			throw new ArgumentNotValidException("Address can't be empty");
+		}
+		if (client.getDni() == null || client.getDni().isEmpty()) {
+			throw new ArgumentNotValidException("Dni can't be empty");
 		} else {
 			return repository.save(client);
 		}
@@ -88,8 +97,12 @@ public class ClientServiceImpl implements IClientService {
 	}
 
 	@Override
-	public void deleteClient(UUID id) {
-		repository.deleteById(id);
+	public void deleteClient(UUID id) throws ArgumentNotFoundException {
+		if(repository.getOne(id) == null) {
+			throw new ArgumentNotFoundException("The client with id " + id + "doesn't exists");
+		} else {
+			repository.deleteById(id);
+		}
 
 	}
 
