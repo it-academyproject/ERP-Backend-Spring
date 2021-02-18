@@ -19,6 +19,11 @@ import cat.itacademy.proyectoerp.domain.UserType;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO implements Serializable{
 
+	@Override
+	public String toString() {
+		return "UserDTO [success=" + success + ", message=" + message + ", username=" + username + ", id=" + id
+				+ ", user_type=" + user_type + "]";
+	}
 	private static final long serialVersionUID = 1L;
 	
 	/**
