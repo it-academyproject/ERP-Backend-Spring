@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.Order;
+import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.domain.UserType;
@@ -79,11 +80,11 @@ public class Runner implements CommandLineRunner {
 
 		Date today = new Date();
 
-		Order orderOne = new Order(UUID.randomUUID(), "1", clientOne.getid().toString(), today, "Completed",
+		Order orderOne = new Order(UUID.randomUUID(), "1", clientOne.getid().toString(), today, OrderStatus.COMPLETED,
 				productsId);
 		orderService.createOrder(orderOne);
 
-		Order orderTwo = new Order(UUID.randomUUID(), "1", clientTwo.getid().toString(), today, "Completed",
+		Order orderTwo = new Order(UUID.randomUUID(), "1", clientTwo.getid().toString(), today, OrderStatus.COMPLETED,
 				productsId);
 		orderService.createOrder(orderTwo);
 
