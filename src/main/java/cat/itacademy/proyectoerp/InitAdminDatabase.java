@@ -22,7 +22,8 @@ public class InitAdminDatabase {
 	@PostConstruct
 	public void init() {
 
-		userRepo.save(new User("administrator@admin.com", passwordEncoder.encode("Administrator1."), UserType.ADMIN));
+		if(!userRepo.existsByUsername("administrator@admin.com"))
+			userRepo.save(new User("administrator@admin.com", passwordEncoder.encode("Administrator1."), UserType.ADMIN));
 	}
 	
 	

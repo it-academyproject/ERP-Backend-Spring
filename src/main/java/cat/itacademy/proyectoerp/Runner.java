@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.Order;
+import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.domain.UserType;
@@ -50,42 +51,48 @@ public class Runner implements CommandLineRunner {
 	@Transactional
 	public void run(String... args) throws Exception {
 
-		logger.info("initializing 2 users type client, 2 clients, 2 products and 2 orders");
+		
+		if(userService.listAllUsers().size()<=1) {
+			logger.info("initializing 2 users type client, 2 clients, 2 products and 2 orders");
+			
 
-		// Initialize two Users type Client
-		User userClientOne = new User("userclientone@example.com", "ReW9a0&+TP", UserType.CLIENT);
-		userService.registerNewUserAccount(userClientOne);
+			// Initialize two Users type Client
+			User userClientOne = new User("userclientone@example.com", "ReW9a0&+TP", UserType.CLIENT);
+			userService.registerNewUserAccount(userClientOne);
 
-		User userClientTwo = new User("userclienttwo@example.com", "ReW9a0&+ET", UserType.CLIENT);
-		userService.registerNewUserAccount(userClientTwo);
+			User userClientTwo = new User("userclienttwo@example.com", "ReW9a0&+ET", UserType.CLIENT);
+			userService.registerNewUserAccount(userClientTwo);
 
-		// Initialize two Clients
-		Client clientOne = new Client("address example", "L1234567Z", "url image", userClientOne);
-		clientService.createClient(clientOne);
+			// Initialize two Clients
+			Client clientOne = new Client("address example", "L1234567Z", "url image", userClientOne);
+			clientService.createClient(clientOne);
 
-		Client clientTwo = new Client("address example", "L7654321Z", "url image", userClientTwo);
-		clientService.createClient(clientTwo);
+			Client clientTwo = new Client("address example", "L7654321Z", "url image", userClientTwo);
+			clientService.createClient(clientTwo);
 
-		// Initialize two products
-		Product productOne = new Product(1, "ejemplo 1", 100, "url image", "Bebidas", 3.00, 21.00, 2.50, 500);
-		productService.createProduct(productOne);
+			// Initialize two products
+			Product productOne = new Product(1, "ejemplo 1", 100, "url image", "Bebidas", 3.00, 21.00, 2.50, 500);
+			productService.createProduct(productOne);
 
-		Product productTwo = new Product(2, "ejemplo 2", 100, "url image", "Bebidas", 3.00, 21.00, 2.50, 500);
-		productService.createProduct(productTwo);
+			Product productTwo = new Product(2, "ejemplo 2", 100, "url image", "Bebidas", 3.00, 21.00, 2.50, 500);
+			productService.createProduct(productTwo);
 
-		// Initialize two orders
+			// Initialize two orders
 
-		List<String> productsId = new ArrayList<String>(Arrays.asList("1", "2"));
+			List<String> productsId = new ArrayList<String>(Arrays.asList("1", "2"));
 
-		Date today = new Date();
+			Date today = new Date();
 
-		Order orderOne = new Order(UUID.randomUUID(), "1", clientOne.getid().toString(), today, "Completed",
-				productsId);
-		orderService.createOrder(orderOne);
+			Order orderOne = new Order(UUID.randomUUID(), "1", clientOne.getid().toString(), today, OrderStatus.COMPLETED,
+					productsId);
+			orderService.createOrder(orderOne);
 
-		Order orderTwo = new Order(UUID.randomUUID(), "1", clientTwo.getid().toString(), today, "Completed",
-				productsId);
-		orderService.createOrder(orderTwo);
+			Order orderTwo = new Order(UUID.randomUUID(), "1", clientTwo.getid().toString(), today, OrderStatus.COMPLETED,
+					productsId);
+			orderService.createOrder(orderTwo);
+		}
+		
+		
 
 	}
 

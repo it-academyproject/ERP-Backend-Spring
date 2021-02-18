@@ -4,6 +4,7 @@ package cat.itacademy.proyectoerp.domain;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -21,8 +22,8 @@ public class Client {
 	// Client Attributes
 
 	@Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private UUID id;
+	@Column(name = "id", columnDefinition = "BINARY(16)")
+	private UUID id = UUID.randomUUID();
 	private String address;
 	private String dni;
 	private String image;
@@ -64,7 +65,7 @@ public class Client {
 	 * @param user    client user
 	 */
 	public Client(String address, String dni, String image, User user) {
-		id = UUID.randomUUID();
+		//id = UUID.randomUUID();
 		this.address = address;
 		this.dni = dni;
 		this.image = image;
