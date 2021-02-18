@@ -1,6 +1,5 @@
 package cat.itacademy.proyectoerp.domain;
 
-
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -17,9 +16,8 @@ import cat.itacademy.proyectoerp.util.StringToListConverter;
 @Table(name = "orders")
 public class Order {
 
-	// Order entity attributes
-
 	@Id
+	@Column(name = "id", columnDefinition = "BINARY(16)")
 	private UUID id;
 	@Column
 	private String employeeId;
@@ -31,10 +29,6 @@ public class Order {
 	private String status;
 	@Convert(converter = StringToListConverter.class)
 	private List<String> productsId;
-
-	// Constructors
-
-	// Constructor without parameters.
 
 	public Order() {
 	}
@@ -48,8 +42,7 @@ public class Order {
 	 * @param status     order status
 	 * @param productsId products id included in order
 	 */
-
-	public Order(UUID id, String employeeId, String clientId, Date date, String status, List<String> productsId) { 
+	public Order(UUID id, String employeeId, String clientId, Date date, String status, List<String> productsId) {
 		this.id = id;
 		this.employeeId = employeeId;
 		this.clientId = clientId;
@@ -57,27 +50,7 @@ public class Order {
 		this.status = status;
 		this.productsId = productsId;
 	}
-	
-	/**
-	 * Constructor with parameters
-	 * 
-	 * @param employeeId employee responsible
-	 * @param clientId   client id
-	 * @param date       date of the emitted order
-	 * @param status     order status
-	 * @param productsId products id included in order
-	 */
 
-	public Order(String employeeId, String clientId, Date date, String status, List<String> productsId) { 
-		id = UUID.randomUUID();
-		this.employeeId = employeeId;
-		this.clientId = clientId;
-		this.date = date;
-		this.status = status;
-		this.productsId = productsId;
-	}
-
-	// Getters and setters
 	/**
 	 * @return order id
 	 */
@@ -156,7 +129,7 @@ public class Order {
 	}
 
 	/**
-	 * @param products to set order products id
+	 * @param productsId to set order products id
 	 */
 	public void setProducts(List<String> productsId) {
 		this.productsId = productsId;
@@ -166,7 +139,6 @@ public class Order {
 	public String toString() {
 		return "Order id=" + id + " [employeeId=" + employeeId + ", clientId=" + clientId + ", date=" + date
 				+ ", status=" + status + ", products=" + productsId + "]";
-
 	}
 
 }
