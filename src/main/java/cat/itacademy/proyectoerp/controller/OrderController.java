@@ -1,6 +1,8 @@
 package cat.itacademy.proyectoerp.controller;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 @RestController
 @RequestMapping("/api")
 public class OrderController {
+
 	@Autowired
 	OrderServiceImpl orderService;
 
@@ -34,15 +37,12 @@ public class OrderController {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		try {
-
 			orderService.createOrder(order);
-
 			map.put("success", "true");
 			map.put("message", "Order created");
 			map.put("order", order);
 
 		} catch (Exception e) {
-
 			map.put("success", "false");
 			map.put("message", "Error: " + e.getMessage());
 		}
@@ -58,26 +58,40 @@ public class OrderController {
 	 */
 	@GetMapping("/orders/{id}")
 	public HashMap<String, Object> findOrderById(@PathVariable(name = "id") UUID id) {
-
 		HashMap<String, Object> map = new HashMap<String, Object>();
-
 		try {
-
-			Order order = orderService.findOrderById(id);
-
+			Optional<Order> order = orderService.findOrderById(id);
+			//Order order = orderService.findOrderById(id);
 			map.put("success", "true");
 			map.put("message", "order found");
 			map.put("order", order);
-
 		} catch (Exception e) {
-
 			map.put("success", "false");
 			map.put("message", "Error: " + e.getMessage());
 		}
-
 		return map;
 	}
 
+
+	/**
+	 * Get all orders
+	 *
+	 * @return list of orders
+	 */
+	@GetMapping("/orders")
+	public HashMap<String, Object> findOrders() {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		List<Order> ordersList = orderService.findAllOrders();
+		try {
+			map.put("success", "true");
+			map.put("message", "order found");
+			map.put("order", ordersList);
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "Error: " + e.getMessage());
+		}
+		return map;
+	}
 
 	/**
 	 * Update order
@@ -87,24 +101,16 @@ public class OrderController {
 	 */
 	@PutMapping("/order")
 	public HashMap<String, Object> updateOrder(@RequestBody Order order) {
-
 		HashMap<String, Object> map = new HashMap<String, Object>();
-
 		try {
-
 			Order updatedOrder = orderService.updateOrder(order);
-
 			map.put("success", "true");
 			map.put("message", "order updated");
 			map.put("product", updatedOrder);
-
 		} catch (Exception e) {
-
 			map.put("success", "false");
 			map.put("message", "Error: " + e.getMessage());
-
 		}
-
 		return map;
 	}
 
@@ -116,25 +122,16 @@ public class OrderController {
 	 */
 	@DeleteMapping("/orders")
 	public HashMap<String, Object> deleteOrder(@RequestBody Order order) {
-
 		HashMap<String, Object> map = new HashMap<String, Object>();
-
 		try {
-
 			orderService.findOrderById(order.getId());
-
 			orderService.deleteOrder(order.getId());
-
 			map.put("success", "true");
 			map.put("message", "Order with id: " + order.getId() + " has been deleted");
-
 		} catch (Exception e) {
-
 			map.put("success", "false");
 			map.put("message", "Error: " + e.getMessage());
-
 		}
-
 		return map;
 	}
 
