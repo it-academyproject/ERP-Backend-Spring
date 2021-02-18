@@ -83,8 +83,11 @@ public class UserController {
 		userDTO = userService.registerNewUserAccount(user);
 
 		if (userDTO.getSuccess() == "False") {
+			System.out.println("user pasado DTO en controller! " + userDTO.toString());
+
 			return new ResponseEntity<>(userDTO, HttpStatus.UNPROCESSABLE_ENTITY);
 		} else {
+
 			return new ResponseEntity<>(userDTO, HttpStatus.OK);
 		}
 	}

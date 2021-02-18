@@ -83,6 +83,7 @@ public class UserServiceImpl implements IUserService {
 
 		UserDTO userDto = modelMapper.map(user, UserDTO.class);
 		System.out.println("user pasado " + user.toString());
+
 		if (userRepository.existsByUsername(user.getUsername())) {
 			userDto.setSuccess("False");
 			userDto.setMessage("User Exist");
@@ -99,6 +100,8 @@ public class UserServiceImpl implements IUserService {
 		} catch (MailException e) {
 			userDto.setSuccess("False");
 			userDto.setMessage("Email Authentication failed");
+			System.out.println("user pasado DTO " + userDto.toString());
+
 			return userDto;
 		}
 
