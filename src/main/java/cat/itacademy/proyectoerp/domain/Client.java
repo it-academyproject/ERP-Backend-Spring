@@ -68,7 +68,6 @@ public class Client {
 	 * @param user    client user
 	 */
 	public Client(String address, String dni, String image, User user) {
-		super();
 		id = UUID.randomUUID();
 		this.address = address;
 		this.dni = dni;
