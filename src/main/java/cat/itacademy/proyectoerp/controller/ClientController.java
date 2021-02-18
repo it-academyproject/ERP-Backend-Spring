@@ -50,7 +50,7 @@ public class ClientController {
     }
 
     //Update a client by id
-    @PutMapping("/{id}")
+    @PutMapping
     public ResponseEntity<?> updateClientById(@RequestBody Client clientUpdate) {
         service.updateClient(clientUpdate);
         return ResponseEntity.status(HttpStatus.CREATED).body(clientUpdate);
