@@ -1,6 +1,6 @@
 package cat.itacademy.proyectoerp.domain;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,9 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import cat.itacademy.proyectoerp.util.StringToListConverter;
+
 @Entity
 @Table(name = "orders")
-public class Order{
+public class Order {
 
 	@Id
 	@Column(name = "id", columnDefinition = "BINARY(16)")
@@ -28,18 +29,18 @@ public class Order{
 	private String status;
 	@Convert(converter = StringToListConverter.class)
 	private List<String> productsId;
-	
+
 	public Order() {
 	}
 
 	/**
 	 * Constructor with all the parameters.
 	 * 
-	 * @param employeeId       employee responsible
-	 * @param clientId         client id
-	 * @param date			   date of the emitted order
-	 * @param status		   order status
-	 * @param productsId	   products id included in order
+	 * @param employeeId employee responsible
+	 * @param clientId   client id
+	 * @param date       date of the emitted order
+	 * @param status     order status
+	 * @param productsId products id included in order
 	 */
 	public Order(UUID id, String employeeId, String clientId, Date date, String status, List<String> productsId) {
 		this.id = id;
@@ -136,9 +137,8 @@ public class Order{
 
 	@Override
 	public String toString() {
-		return "Order id=" + id +" [employeeId=" + employeeId + ", clientId=" + clientId + ", date=" + date + ", status=" + status
-				+ ", products=" + productsId 
-				+ "]";
+		return "Order id=" + id + " [employeeId=" + employeeId + ", clientId=" + clientId + ", date=" + date
+				+ ", status=" + status + ", products=" + productsId + "]";
 	}
 
 }
