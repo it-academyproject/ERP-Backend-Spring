@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,10 +79,12 @@ public class Runner implements CommandLineRunner {
 
 		Date today = new Date();
 
-		Order orderOne = new Order("1", clientOne.getid().toString(), today, "Completed", productsId);
+		Order orderOne = new Order(UUID.randomUUID(), "1", clientOne.getid().toString(), today, "Completed",
+				productsId);
 		orderService.createOrder(orderOne);
 
-		Order orderTwo = new Order("1", clientTwo.getid().toString(), today, "Completed", productsId);
+		Order orderTwo = new Order(UUID.randomUUID(), "1", clientTwo.getid().toString(), today, "Completed",
+				productsId);
 		orderService.createOrder(orderTwo);
 
 	}
