@@ -111,7 +111,7 @@ public class UserServiceImpl implements IUserService {
 	public String passEconder(String pass) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String encodedPassword = passwordEncoder.encode(pass);
-		System.out.println("pass encrip " + encodedPassword);
+		//System.out.println("pass encrip " + encodedPassword);
 		return encodedPassword;
 	}
 
