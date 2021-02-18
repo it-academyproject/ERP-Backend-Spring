@@ -22,6 +22,11 @@ import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 public class OrderController {
 	@Autowired
 	OrderServiceImpl orderService;
+	
+	String success = "success";
+	String message = "message";
+	String isFalse = "false";
+	String error = "Error: ";
 
 	/**
 	 * Create a new order
@@ -38,14 +43,14 @@ public class OrderController {
 
 			orderService.createOrder(order);
 
-			map.put("success", "true");
-			map.put("message", "Order created");
+			map.put(success, "true");
+			map.put(message, "Order created");
 			map.put("order", order);
 
 		} catch (Exception e) {
 
-			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.put(success, isFalse);
+			map.put(message, error + e.getMessage());
 		}
 
 		return map;
@@ -66,14 +71,14 @@ public class OrderController {
 
 			Order order = orderService.findOrderById(id);
 
-			map.put("success", "true");
-			map.put("message", "order found");
+			map.put(success, "true");
+			map.put(message, "order found");
 			map.put("order", order);
 
 		} catch (Exception e) {
 
-			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.put(success, isFalse);
+			map.put(message, error + e.getMessage());
 		}
 
 		return map;
@@ -95,14 +100,14 @@ public class OrderController {
 
 			Order updatedOrder = orderService.updateOrder(order);
 
-			map.put("success", "true");
-			map.put("message", "order updated");
+			map.put(success, "true");
+			map.put(message, "order updated");
 			map.put("product", updatedOrder);
 
 		} catch (Exception e) {
 
-			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.put(success, isFalse);
+			map.put(message, error + e.getMessage());
 
 		}
 
@@ -126,13 +131,13 @@ public class OrderController {
 
 			orderService.deleteOrder(order.getId());
 
-			map.put("success", "true");
-			map.put("message", "Order with id: " + order.getId() + " has been deleted");
+			map.put(success, "true");
+			map.put(message, "Order with id: " + order.getId() + " has been deleted");
 
 		} catch (Exception e) {
 
-			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.put(success, isFalse);
+			map.put(message, error + e.getMessage());
 
 		}
 
