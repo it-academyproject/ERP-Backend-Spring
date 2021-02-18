@@ -3,12 +3,12 @@ package cat.itacademy.proyectoerp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import javax.annotation.PostConstruct;
 
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.domain.UserType;
 import cat.itacademy.proyectoerp.repository.UserRepository;
 
-import javax.annotation.PostConstruct;
 
 @Component
 public class InitAdminDatabase {
