@@ -20,6 +20,7 @@ import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 @RestController
 @RequestMapping("/api")
 public class OrderController {
+
 	@Autowired
 	OrderServiceImpl orderService;
 	
@@ -40,7 +41,6 @@ public class OrderController {
 		HashMap<String, Object> map = new HashMap<>();
 
 		try {
-
 			orderService.createOrder(order);
 
 			map.put(success, "true");
@@ -74,16 +74,34 @@ public class OrderController {
 			map.put(success, "true");
 			map.put(message, "order found");
 			map.put("order", order);
-
 		} catch (Exception e) {
 
 			map.put(success, isFalse);
 			map.put(message, error + e.getMessage());
 		}
-
 		return map;
 	}
 
+
+	/**
+	 * Get all orders
+	 *
+	 * @return list of orders
+	 */
+	@GetMapping("/orders")
+	public HashMap<String, Object> findOrders() {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		List<Order> ordersList = orderService.findAllOrders();
+		try {
+			map.put("success", "true");
+			map.put("message", "order found");
+			map.put("order", ordersList);
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "Error: " + e.getMessage());
+		}
+		return map;
+	}
 
 	/**
 	 * Update order
@@ -97,20 +115,17 @@ public class OrderController {
 		HashMap<String, Object> map = new HashMap<>();
 
 		try {
-
 			Order updatedOrder = orderService.updateOrder(order);
 
 			map.put(success, "true");
 			map.put(message, "order updated");
 			map.put("product", updatedOrder);
-
 		} catch (Exception e) {
 
 			map.put(success, isFalse);
 			map.put(message, error + e.getMessage());
 
 		}
-
 		return map;
 	}
 
@@ -126,9 +141,7 @@ public class OrderController {
 		HashMap<String, Object> map = new HashMap<>();
 
 		try {
-
 			orderService.findOrderById(order.getId());
-
 			orderService.deleteOrder(order.getId());
 
 			map.put(success, "true");
@@ -140,7 +153,6 @@ public class OrderController {
 			map.put(message, error + e.getMessage());
 
 		}
-
 		return map;
 	}
 
