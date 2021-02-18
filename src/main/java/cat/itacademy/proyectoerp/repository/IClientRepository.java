@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 import cat.itacademy.proyectoerp.domain.Client;
 
 @Repository
-public interface ClientRepository extends JpaRepository<Client,UUID> {
+public interface IClientRepository extends JpaRepository<Client,UUID> {
 
 }

@@ -1,8 +1,7 @@
 package cat.itacademy.proyectoerp.controller;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +30,9 @@ public class OrderController {
 	 * @return new order 
 	 */
 	@PostMapping("/orders")
-	public HashMap<String, Object> createOrder(@RequestBody Order order) {
+	public Map<String, Object> createOrder(@RequestBody Order order) {
 
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		HashMap<String, Object> map = new HashMap<>();
 
 		try {
 
@@ -59,13 +58,13 @@ public class OrderController {
 	 * @return order by id
 	 */
 	@GetMapping("/orders/{id}")
-	public HashMap<String, Object> findOrderById(@PathVariable(name = "id") UUID id) {
+	public Map<String, Object> findOrderById(@PathVariable(name = "id") UUID id) {
 
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		HashMap<String, Object> map = new HashMap<>();
 
 		try {
 
-			Optional<Order> order = orderService.findOrderById(id);
+			Order order = orderService.findOrderById(id);
 
 			map.put("success", "true");
 			map.put("message", "order found");
@@ -80,26 +79,6 @@ public class OrderController {
 		return map;
 	}
 
-	@GetMapping("/orders")
-	public HashMap<String, Object> getProducts() {
-
-		HashMap<String, Object> map = new HashMap<String, Object>();
-
-		try {
-
-			List<Order> orderList = orderService.findAllOrders();
-
-			map.put("success", "true");
-			map.put("message", "orders list found");
-			map.put("products", orderList);
-
-		} catch (Exception e) {
-			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
-		}
-
-		return map;
-	}
 
 	/**
 	 * Update order
@@ -108,9 +87,9 @@ public class OrderController {
 	 * @return order updated
 	 */
 	@PutMapping("/order")
-	public HashMap<String, Object> updateOrder(@RequestBody Order order) {
+	public Map<String, Object> updateOrder(@RequestBody Order order) {
 
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		HashMap<String, Object> map = new HashMap<>();
 
 		try {
 
@@ -137,9 +116,9 @@ public class OrderController {
 	 * @return message
 	 */
 	@DeleteMapping("/orders")
-	public HashMap<String, Object> deleteOrder(@RequestBody Order order) {
+	public Map<String, Object> deleteOrder(@RequestBody Order order) {
 
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		HashMap<String, Object> map = new HashMap<>();
 
 		try {
 
@@ -161,5 +140,4 @@ public class OrderController {
 	}
 
 }
-
 
