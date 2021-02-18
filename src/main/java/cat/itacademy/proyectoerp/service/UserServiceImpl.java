@@ -98,15 +98,14 @@ public class UserServiceImpl implements IUserService {
 		try {
 			emailService.sendWelcomeEmail(user);
 		} catch (MailException e) {
-			userDto.setSuccess("False");
-			userDto.setMessage("Email Authentication failed");
-			System.out.println("user pasado DTO " + userDto.toString());
+			userDto.setSuccess("True");
+			userDto.setMessage("User created. But the mail could not be sent.");
 
 			return userDto;
 		}
 
 		userDto.setSuccess("True");
-		userDto.setMessage("User created");
+		userDto.setMessage("User created and Welcome email sended.");
 		return userDto;
 
 	}
