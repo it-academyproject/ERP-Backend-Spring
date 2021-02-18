@@ -10,7 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cat.itacademy.proyectoerp.repository.IClientRepository;
+import cat.itacademy.proyectoerp.repository.ClientRepository;
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.dto.ClientDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
@@ -20,7 +20,7 @@ import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 public class ClientServiceImpl implements IClientService {
 
 	@Autowired
-	IClientRepository repository;
+	ClientRepository repository;
 
 	/*
 	 * @Autowired UserRepository repositoryUser;
