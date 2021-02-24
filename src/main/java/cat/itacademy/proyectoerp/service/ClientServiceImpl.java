@@ -9,8 +9,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import cat.itacademy.proyectoerp.repository.IClientRepository;
+import cat.itacademy.proyectoerp.repository.ClientRepository;
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.dto.ClientDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
@@ -20,7 +21,7 @@ import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 public class ClientServiceImpl implements IClientService {
 
 	@Autowired
-	IClientRepository repository;
+	ClientRepository repository;
 
 	/*
 	 * @Autowired UserRepository repositoryUser;
@@ -31,9 +32,17 @@ public class ClientServiceImpl implements IClientService {
 
 	@Override
 	public Client createClient(Client client) throws ArgumentNotValidException {
-
-		if (client.getAddress() == null || client.getAddress().isEmpty()) {
+		if(client.getid() == null) {
+			throw new ArgumentNotValidException("You need to add the UUID manually.For ideas go to: https://www.uuidgenerator.net/ ");
+		}
+		else if (client.getAddress() == null || client.getAddress().isEmpty()) {
 			throw new ArgumentNotValidException("Address can't be empty");
+		}
+		else if (client.getDni() == null || client.getDni().isEmpty()) {
+			throw new ArgumentNotValidException("Dni can't be empty");
+		}
+		else if(client.getUser() == null) {
+			throw new ArgumentNotValidException("You have to assign this client to an user.");
 		} else {
 			return repository.save(client);
 		}
@@ -74,10 +83,9 @@ public class ClientServiceImpl implements IClientService {
 		if (tempClient == null) {
 			throw new ArgumentNotFoundException("The client with id " + id + "doesn't exists");
 		} else {
-			return repository.findById(id);
+			return tempClient;
 		}
 	}
-
 
 	@Override
 	public void updateClient(Client client) {
@@ -88,8 +96,12 @@ public class ClientServiceImpl implements IClientService {
 	}
 
 	@Override
-	public void deleteClient(UUID id) {
-		repository.deleteById(id);
+	public void deleteClient(UUID id) throws ArgumentNotFoundException {
+		if (repository.getOne(id) == null) {
+			throw new ArgumentNotFoundException("The client with id " + id + "doesn't exists");
+		} else {
+			repository.deleteById(id);
+		}
 
 	}
 
