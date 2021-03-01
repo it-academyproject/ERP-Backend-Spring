@@ -7,8 +7,13 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import cat.itacademy.proyectoerp.util.StringToListConverter;
 
@@ -17,7 +22,12 @@ import cat.itacademy.proyectoerp.util.StringToListConverter;
 public class Order {
 
 	@Id
-	@Column(name = "id", columnDefinition = "BINARY(16)")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+        name = "UUID",
+        strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	@Column
 	private String employeeId;
@@ -26,7 +36,8 @@ public class Order {
 	@Column
 	private Date date;
 	@Column
-	private String status;
+	@Enumerated(EnumType.STRING)
+	private OrderStatus status;
 	@Convert(converter = StringToListConverter.class)
 	private List<String> productsId;
 
@@ -42,7 +53,30 @@ public class Order {
 	 * @param status     order status
 	 * @param productsId products id included in order
 	 */
-	public Order(UUID id, String employeeId, String clientId, Date date, String status, List<String> productsId) {
+	
+	
+	public Order(String employeeId, String clientId, Date date, OrderStatus status, List<String> productsId) {
+		this.employeeId = employeeId;
+		this.clientId = clientId;
+		this.date = date;
+		this.status = status;
+		this.productsId = productsId;
+	}
+	
+	/**
+	 * Constructor with all the parameters.
+	 * 
+	 * @param id         order id
+	 * @param employeeId employee responsible
+	 * @param clientId   client id
+	 * @param date       date of the emitted order
+	 * @param status     order status
+	 * @param productsId products id included in order
+	 */
+
+
+	public Order(UUID id, String employeeId, String clientId, Date date, OrderStatus status, List<String> productsId) {
+		super();
 		this.id = id;
 		this.employeeId = employeeId;
 		this.clientId = clientId;
@@ -50,7 +84,7 @@ public class Order {
 		this.status = status;
 		this.productsId = productsId;
 	}
-
+	
 	/**
 	 * @return order id
 	 */
@@ -82,7 +116,7 @@ public class Order {
 	/**
 	 * @return order status
 	 */
-	public String getStatus() {
+	public OrderStatus getStatus() {
 		return status;
 	}
 
@@ -124,7 +158,7 @@ public class Order {
 	/**
 	 * @param status to set order status
 	 */
-	public void setStatus(String status) {
+	public void setStatus(OrderStatus status) {
 		this.status = status;
 	}
 
