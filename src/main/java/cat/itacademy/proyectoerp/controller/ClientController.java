@@ -19,7 +19,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.dto.ClientDTO;
-import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.service.IClientService;
 
 @RestController
