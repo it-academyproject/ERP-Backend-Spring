@@ -4,15 +4,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import cat.itacademy.proyectoerp.util.StringToListConverter;
@@ -40,6 +34,11 @@ public class Order {
 	private OrderStatus status;
 	@Convert(converter = StringToListConverter.class)
 	private List<String> productsId;
+
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(name="employee_id")
+	private Employee employee;
 
 	public Order() {
 	}
