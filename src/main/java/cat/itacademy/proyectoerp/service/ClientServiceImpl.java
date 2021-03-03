@@ -8,10 +8,11 @@ import java.util.UUID;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-
-import cat.itacademy.proyectoerp.repository.ClientRepository;
+import cat.itacademy.proyectoerp.repository.IClientRepository;
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.dto.ClientDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
@@ -21,7 +22,7 @@ import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 public class ClientServiceImpl implements IClientService {
 
 	@Autowired
-	ClientRepository repository;
+	IClientRepository repository;
 
 	/*
 	 * @Autowired UserRepository repositoryUser;
@@ -103,6 +104,24 @@ public class ClientServiceImpl implements IClientService {
 			repository.deleteById(id);
 		}
 
+	}
+
+	@Override
+	public List<ClientDTO> getPageOfClients(int page, int amount) {
+		Pageable pageable = PageRequest.of(page, amount);
+		if (pageable.isUnpaged()) {
+			throw new ArgumentNotFoundException("Page Not Found");
+		}
+		Page<Client> clients = repository.findAll(pageable);
+		if (clients.isEmpty()) {
+			throw new ArgumentNotFoundException("No clients found");
+		}
+		List<ClientDTO> clientsList = new ArrayList<>();
+		for(Client client : clients) {
+			ClientDTO clientDTO = modelMapper.map(client, ClientDTO.class);
+			clientsList.add(clientDTO);
+		}
+		return clientsList;
 	}
 
 }

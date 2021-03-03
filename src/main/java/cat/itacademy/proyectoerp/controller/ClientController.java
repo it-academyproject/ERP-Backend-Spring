@@ -19,7 +19,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.dto.ClientDTO;
-import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.service.IClientService;
 
 @RestController
@@ -45,6 +44,14 @@ public class ClientController {
     public ResponseEntity<?> getAllClients() {
         List<Client> list = (List<Client>) service.getAllClients();
         return ResponseEntity.ok().body(list);
+    }
+    
+    //Get clients per page
+    @GetMapping("/list/{amount}/{page}")
+    public ResponseEntity<List<ClientDTO>> getClientsByPage(@PathVariable int amount, @PathVariable int page) {
+    	List<ClientDTO> list = service.getPageOfClients(page, amount);
+    	return ResponseEntity.ok().body(list);
+    	
     }
 
     //get a client by id
