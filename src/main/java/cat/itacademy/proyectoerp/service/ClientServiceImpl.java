@@ -109,6 +109,9 @@ public class ClientServiceImpl implements IClientService {
 	@Override
 	public List<ClientDTO> getPageOfClients(int page, int amount) {
 		Pageable pageable = PageRequest.of(page, amount);
+		if (pageable.isUnpaged()) {
+			throw new ArgumentNotFoundException("Page Not Found");
+		}
 		Page<Client> clients = repository.findAll(pageable);
 		if (clients.isEmpty()) {
 			throw new ArgumentNotFoundException("No clients found");
