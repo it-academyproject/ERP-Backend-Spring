@@ -1,6 +1,7 @@
 package cat.itacademy.proyectoerp.controller;
 
 import cat.itacademy.proyectoerp.domain.Employee;
+import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.service.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -57,6 +58,20 @@ public class EmployeeController {
       map.put("message", "employee found");
       map.put("employee", employee);
     } catch (Exception e){
+      map.put("success", "false");
+      map.put("message", "error: " + e.getMessage());
+    }
+    return map;
+  }
+
+  @DeleteMapping("/{id}")
+  public Map<String, Object> deleteEmployee(@PathVariable(name="id") UUID id) {
+    HashMap<String, Object> map = new HashMap<>();
+    try {
+      iEmployeeService.deleteEmployee(id);
+      map.put("success", "true");
+      map.put("message", "Employee with id: " + id + " has been deleted");
+    } catch (Exception e) {
       map.put("success", "false");
       map.put("message", "error: " + e.getMessage());
     }
