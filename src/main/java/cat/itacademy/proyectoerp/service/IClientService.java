@@ -22,8 +22,5 @@ public interface IClientService {
 	public void deleteClient(UUID id); //DELETE - deletes client
 
 	List<ClientDTO> listAllUsers();
-	
-
-	
 
 }
