@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import cat.itacademy.proyectoerp.domain.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -120,6 +121,15 @@ public class OrderServiceImpl implements IOrderService{
 		return answer;
 	}
 
-
+	@Override
+	public List<Order> findOrdersByStatus(OrderStatus status) {
+		if(iOrderRepository.findOrdersByStatus(status) == null){
+			throw new ArgumentNotFoundException("No orders found");
+		} else{
+			return iOrderRepository.findOrdersByStatus(status);
+		}
+	}
 
 }
+
+

@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import cat.itacademy.proyectoerp.domain.Order;
+import cat.itacademy.proyectoerp.domain.OrderStatus;
 
 public interface IOrderService {
 	
@@ -20,5 +21,7 @@ public interface IOrderService {
 	public void deleteOrder(UUID id);
 	
 	public boolean listIsValid(List<String> productsId);
+
+	public List<Order> findOrdersByStatus(OrderStatus status);
 
 }
