@@ -9,11 +9,11 @@ public interface IEmployeeService {
 
   public Employee createEmployee(Employee employee);
 
-  public Employee findOrderById(UUID id);
+  public Employee findEmployeeById(UUID id);
 
   public List<Employee> findAllEmployees();
 
-  public void updateEmployee(Employee employee);
+  public Employee updateEmployee(Employee employee);
 
   public void deleteEmployee(UUID id);
 

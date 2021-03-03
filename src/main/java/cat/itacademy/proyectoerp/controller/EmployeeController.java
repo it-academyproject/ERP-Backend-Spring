@@ -1,7 +1,6 @@
 package cat.itacademy.proyectoerp.controller;
 
 import cat.itacademy.proyectoerp.domain.Employee;
-import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.service.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +52,7 @@ public class EmployeeController {
   public Map<String, Object> getEmployeeById(@PathVariable(name="id") UUID id){
     HashMap<String, Object> map = new HashMap<>();
     try {
-      Employee employee = iEmployeeService.findOrderById(id);
+      Employee employee = iEmployeeService.findEmployeeById(id);
       map.put("success", "true");
       map.put("message", "employee found");
       map.put("employee", employee);
@@ -74,6 +73,22 @@ public class EmployeeController {
     } catch (Exception e) {
       map.put("success", "false");
       map.put("message", "error: " + e.getMessage());
+    }
+    return map;
+  }
+
+  @PutMapping()
+  public HashMap<String, Object> updateEmployee(@RequestBody Employee employee){
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    try {
+      Employee employeeUpdated = iEmployeeService.updateEmployee(employee);
+      map.put("success", "true");
+      map.put("message", "Employee with id: " + employee.getId() + " has been updated");
+      map.put("employee", employee);
+
+    } catch (Exception e) {
+      map.put("success", "false");
+      map.put("message", "Error: " + e.getMessage());
     }
     return map;
   }

@@ -102,7 +102,6 @@ public class ClientServiceImpl implements IClientService {
 		} else {
 			repository.deleteById(id);
 		}
-
 	}
 
 }
