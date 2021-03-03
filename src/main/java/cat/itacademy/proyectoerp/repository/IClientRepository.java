@@ -14,6 +14,5 @@ import cat.itacademy.proyectoerp.domain.Client;
 @Repository
 public interface IClientRepository extends JpaRepository<Client,UUID> {
 	
-	Page<Client> findAllClientsPaged(Pageable pageable);
 
 }

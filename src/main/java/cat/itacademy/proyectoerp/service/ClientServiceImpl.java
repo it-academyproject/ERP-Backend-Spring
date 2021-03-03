@@ -8,6 +8,9 @@ import java.util.UUID;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import cat.itacademy.proyectoerp.repository.IClientRepository;
 import cat.itacademy.proyectoerp.domain.Client;
@@ -101,6 +104,21 @@ public class ClientServiceImpl implements IClientService {
 			repository.deleteById(id);
 		}
 
+	}
+
+	@Override
+	public List<ClientDTO> getPageOfClients(int page, int amount) {
+		Pageable pageable = PageRequest.of(page, amount);
+		Page<Client> clients = repository.findAll(pageable);
+		if (clients.isEmpty()) {
+			throw new ArgumentNotFoundException("No clients found");
+		}
+		List<ClientDTO> clientsList = new ArrayList<>();
+		for(Client client : clients) {
+			ClientDTO clientDTO = modelMapper.map(client, ClientDTO.class);
+			clientsList.add(clientDTO);
+		}
+		return clientsList;
 	}
 
 }

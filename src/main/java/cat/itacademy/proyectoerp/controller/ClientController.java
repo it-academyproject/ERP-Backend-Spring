@@ -45,6 +45,14 @@ public class ClientController {
         List<Client> list = (List<Client>) service.getAllClients();
         return ResponseEntity.ok().body(list);
     }
+    
+    //Get clients per page
+    @GetMapping("/list/{amount}/{page}")
+    public ResponseEntity<List<ClientDTO>> getClientsByPage(@PathVariable int amount, @PathVariable int page) {
+    	List<ClientDTO> list = service.getPageOfClients(page, amount);
+    	return ResponseEntity.ok().body(list);
+    	
+    }
 
     //get a client by id
     @GetMapping("/{id}")

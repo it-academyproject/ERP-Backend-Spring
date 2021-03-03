@@ -13,6 +13,8 @@ public interface IClientService {
 	
 	public List<Client> getAllClients(); // READ - full list of all clients
 	
+	public List<ClientDTO> getPageOfClients(int page, int amount); // READ - Get a page of X clients
+	
 	public Optional<Client> findClientById(UUID id); //READ - finds the client by Id
 	
 	public void updateClient(Client client); //UPDATE - Updates clients info
