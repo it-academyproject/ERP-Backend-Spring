@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -43,6 +44,21 @@ public class EmployeeController {
     } catch (Exception e) {
       map.put("success", "false");
       map.put("message", "Error: " + e.getMessage());
+    }
+    return map;
+  }
+
+  @GetMapping("/{id}")
+  public Map<String, Object> getEmployeeById(@PathVariable(name="id") UUID id){
+    HashMap<String, Object> map = new HashMap<>();
+    try {
+      Employee employee = iEmployeeService.findOrderById(id);
+      map.put("success", "true");
+      map.put("message", "employee found");
+      map.put("employee", employee);
+    } catch (Exception e){
+      map.put("success", "false");
+      map.put("message", "error: " + e.getMessage());
     }
     return map;
   }
