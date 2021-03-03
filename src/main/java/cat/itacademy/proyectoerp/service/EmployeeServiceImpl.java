@@ -1,8 +1,10 @@
 package cat.itacademy.proyectoerp.service;
 
 import cat.itacademy.proyectoerp.domain.Employee;
+import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 import cat.itacademy.proyectoerp.repository.IEmployeeRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,22 +38,29 @@ public class EmployeeServiceImpl implements IEmployeeService {
   }
 
   @Override
-  public Employee findOrderById(UUID id) {
-    return null;
+  public Employee findOrderById(UUID id) throws ArgumentNotFoundException  {
+    return iEmployeeRepository.findById(id)
+            .orElseThrow(() -> new ArgumentNotFoundException("Order not found. The id " + id + " doesn't exist"));
   }
 
   @Override
-  public List<Employee> findAllEmployees() {
-    return null;
+  public List<Employee> findAllEmployees() throws ArgumentNotFoundException {
+    if(iEmployeeRepository.findAll().isEmpty()){
+      throw new ArgumentNotFoundException("No employees found");
+    }
+    return iEmployeeRepository.findAll();
   }
 
   @Override
-  public Employee updateEmployee(Employee employee) {
-    return null;
+  public void updateEmployee(Employee employee) {
+    iEmployeeRepository.findById(employee.getId()).map(employeeDB -> {
+      BeanUtils.copyProperties(employee, employeeDB);
+      return iEmployeeRepository.save(employeeDB);
+    }).orElseThrow(() -> new ArgumentNotFoundException("Client not found"));
   }
 
   @Override
   public void deleteEmployee(UUID id) {
-
+    iEmployeeRepository.deleteById(id);
   }
 }

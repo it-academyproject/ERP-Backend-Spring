@@ -3,12 +3,10 @@ package cat.itacademy.proyectoerp.controller;
 import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.service.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -30,6 +28,21 @@ public class EmployeeController {
     } catch (Exception e){
       map.put("success", "false");
       map.put("message", "error: " + e.getMessage());
+    }
+    return map;
+  }
+
+  @GetMapping()
+  public Map<String, Object> getEmployees(){
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    try {
+      List<Employee> employeeList = iEmployeeService.findAllEmployees();
+      map.put("success", "true");
+      map.put("message", "employee found");
+      map.put("employee", employeeList);
+    } catch (Exception e) {
+      map.put("success", "false");
+      map.put("message", "Error: " + e.getMessage());
     }
     return map;
   }

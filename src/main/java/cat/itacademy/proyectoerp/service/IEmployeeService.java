@@ -13,7 +13,7 @@ public interface IEmployeeService {
 
   public List<Employee> findAllEmployees();
 
-  public Employee updateEmployee(Employee employee);
+  public void updateEmployee(Employee employee);
 
   public void deleteEmployee(UUID id);
 

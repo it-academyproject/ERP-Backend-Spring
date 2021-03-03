@@ -40,6 +40,14 @@ public class Employee {
     this.user = user;
   }
 
+  public UUID getId() {
+    return id;
+  }
+
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
   public double getSalary() {
     return salary;
   }
