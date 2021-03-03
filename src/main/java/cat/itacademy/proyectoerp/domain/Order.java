@@ -35,10 +35,10 @@ public class Order {
 	@Convert(converter = StringToListConverter.class)
 	private List<String> productsId;
 
-	@ManyToOne
+	/** @ManyToOne
 	@JsonIgnore
 	@JoinColumn(name="employee_id")
-	private Employee employee;
+	private Employee employee; */
 
 	public Order() {
 	}

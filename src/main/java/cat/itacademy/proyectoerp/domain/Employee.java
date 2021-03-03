@@ -1,9 +1,5 @@
 package cat.itacademy.proyectoerp.domain;
 
-import cat.itacademy.proyectoerp.util.StringToListConverter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.aspectj.weaver.ast.Or;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.UUID;
@@ -17,13 +13,8 @@ public class Employee {
 
   private double salary;
   private String email;
+  private String dni;
   private int phone;
-
-  @JsonIgnore
-  @OneToMany(mappedBy = "employee", cascade = {
-          CascadeType.ALL
-  })
-  private List<Order> orders;
 
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -32,12 +23,20 @@ public class Employee {
 
   public Employee(){};
 
-  public Employee(double salary, String email, int phone, List<Order> orders, User user) {
+  public Employee(double salary, String email, String dni, int phone, List<Order> orders, User user) {
     this.id = UUID.randomUUID();
     this.salary = salary;
     this.email = email;
+    this.dni = dni;
     this.phone = phone;
-    this.orders = orders;
+    this.user = user;
+  }
+
+  public Employee(double salary, String email, String dni, int phone, User user) {
+    this.salary = salary;
+    this.email = email;
+    this.dni = dni;
+    this.phone = phone;
     this.user = user;
   }
 
@@ -57,20 +56,20 @@ public class Employee {
     this.email = email;
   }
 
+  public String getDni() {
+    return dni;
+  }
+
+  public void setDni(String dni) {
+    this.dni = dni;
+  }
+
   public int getPhone() {
     return phone;
   }
 
   public void setPhone(int phone) {
     this.phone = phone;
-  }
-
-  public List<Order> getOrders() {
-    return orders;
-  }
-
-  public void setOrders(List<Order> orders) {
-    this.orders = orders;
   }
 
   public User getUser() {
