@@ -87,7 +87,7 @@ public class Runner implements CommandLineRunner {
 					productsId);
 			orderService.createOrder(orderOne);
 
-			Order orderTwo = new Order(UUID.randomUUID(), "1", clientTwo.getid().toString(), today, OrderStatus.COMPLETED,
+			Order orderTwo = new Order(UUID.randomUUID(), "1", clientTwo.getid().toString(), today, OrderStatus.IN_DELIVERY,
 					productsId);
 			orderService.createOrder(orderTwo);
 		}

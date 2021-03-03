@@ -130,6 +130,14 @@ public class OrderServiceImpl implements IOrderService{
 		}
 	}
 
+	@Override
+	public List<Order> findOrdersByClient(String id) {
+		if(iOrderRepository.findOrdersByClientId(id) == null){
+			throw new ArgumentNotFoundException("No orders with client " + id + " found");
+		} else{
+			return iOrderRepository.findOrdersByClientId(id);
+		}
+	}
 }
 
 

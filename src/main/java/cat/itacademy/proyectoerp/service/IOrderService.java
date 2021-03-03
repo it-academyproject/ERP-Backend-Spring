@@ -24,4 +24,6 @@ public interface IOrderService {
 
 	public List<Order> findOrdersByStatus(OrderStatus status);
 
+	public List<Order> findOrdersByClient(String id);
+
 }
