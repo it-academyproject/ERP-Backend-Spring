@@ -65,18 +65,13 @@ public class OrderController {
 	 */
 	@GetMapping("/orders/{id}")
 	public Map<String, Object> findOrderById(@PathVariable(name = "id") UUID id) {
-
 		HashMap<String, Object> map = new HashMap<>();
-
 		try {
-
 			Order order = orderService.findOrderById(id);
-
 			map.put(success, "true");
 			map.put(message, "order found");
 			map.put("order", order);
 		} catch (Exception e) {
-
 			map.put(success, isFalse);
 			map.put(message, error + e.getMessage());
 		}
