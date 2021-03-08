@@ -1,5 +1,6 @@
 package cat.itacademy.proyectoerp.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -48,9 +49,12 @@ public class ClientController {
     
     //Get clients per page
     @GetMapping("/list/{amount}/{page}")
-    public ResponseEntity<List<ClientDTO>> getClientsByPage(@PathVariable int amount, @PathVariable int page) {
+    public ResponseEntity<HashMap<String, Object>> getClientsByPage(@PathVariable int amount, @PathVariable int page) {
     	List<ClientDTO> list = service.getPageOfClients(page, amount);
-    	return ResponseEntity.ok().body(list);
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+    	map.put("totalClients", service.getAllClients().size());
+    	map.put("Clients of the page", list);
+    	return ResponseEntity.ok().body(map);
     	
     }
 
