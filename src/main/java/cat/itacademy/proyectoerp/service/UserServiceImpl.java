@@ -67,7 +67,7 @@ public class UserServiceImpl implements IUserService {
 	/**
 	 * Method for create a new user. If user
 	 * 
-	 * @param userDto
+	 * @param user
 	 * @return UserDTO
 	 * 
 	 */
@@ -199,7 +199,7 @@ public class UserServiceImpl implements IUserService {
 	 * Method for modify data of User.
 	 * 
 	 * @param id      id of user to modify.
-	 * @param userDto user data to modify.
+	 * @param user user data to modify.
 	 */
 	@Transactional
 	@Override

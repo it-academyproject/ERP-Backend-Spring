@@ -27,7 +27,7 @@ public class EmailServiceImpl implements IEmailService {
 
 		// set email properties/body
 		message.setTo(user.getUsername());
-		message.setFrom("example@gmail.com");
+		message.setFrom("bcnactivaitacademy01@gmail.com");
 		message.setSubject("Welcome to ProyectoERP");
 		message.setText("Welcome to ProyectoERP \n\nThanks for signing up!");
 
