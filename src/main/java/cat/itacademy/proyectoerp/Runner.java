@@ -53,17 +53,28 @@ public class Runner implements CommandLineRunner {
 
 		
 		if(userService.listAllUsers().size()<=1) {
-			logger.info("initializing 2 users type client, 2 clients, 2 products and 2 orders");
+			int x = 18;
+			logger.info("initializing " + x+2 +" users type client, " + x+2 + " clients, 2 products and 2 orders");
 			
-
-			// Initialize two Users type Client
+			//Initialize the amount of users and clients marked by x
+			for (int i = 1; i < 20; i++) {
+				String mail = "userclient"+x+"@example.com";
+				User userClient = new User(mail, "ReW9a0&+TP", UserType.CLIENT);
+				userService.registerNewUserAccount(userClient);
+				Client client = new Client("address example", "L1234567Z", "url image", userClient);
+				clientService.createClient(client);
+			}
+			
+			
+			//Initialize two users for the clients for the orders
 			User userClientOne = new User("userclientone@example.com", "ReW9a0&+TP", UserType.CLIENT);
 			userService.registerNewUserAccount(userClientOne);
 
 			User userClientTwo = new User("userclienttwo@example.com", "ReW9a0&+ET", UserType.CLIENT);
 			userService.registerNewUserAccount(userClientTwo);
 
-			// Initialize two Clients
+			
+			// Initialize two Clients for the orders
 			Client clientOne = new Client("address example", "L1234567Z", "url image", userClientOne);
 			clientService.createClient(clientOne);
 
