@@ -57,7 +57,7 @@ public class Runner implements CommandLineRunner {
 			logger.info("initializing " + x+2 +" users type client, " + x+2 + " clients, 2 products and 2 orders");
 			
 			//Initialize the amount of users and clients marked by x
-			for (int i = 1; i < 20; i++) {
+			for (int i = 1; i < x; i++) {
 				String mail = "userclient"+x+"@example.com";
 				User userClient = new User(mail, "ReW9a0&+TP", UserType.CLIENT);
 				userService.registerNewUserAccount(userClient);

@@ -60,7 +60,7 @@ public class ClientController {
     	List<ClientDTO> list = service.getPageOfClients(page, amount);
     	HashMap<String, Object> map = new HashMap<String, Object>();
     	map.put("totalClients", service.getAllClients().size());
-    	map.put("Clients of the page", list);
+    	map.put("ClientsOfThePage", list);
     	return ResponseEntity.ok().body(map);
     	
     }
