@@ -11,6 +11,8 @@ public interface IClientService {
 	
 	public Client createClient(Client client); //CREATE - Adds new client to the Database
 	
+	public Client createFastClient(ClientDTO client); // CREATE - Adds a new client without needing an username. Only for admin purposes.
+	
 	public List<Client> getAllClients(); // READ - full list of all clients
 	
 	public List<ClientDTO> getPageOfClients(int page, int amount); // READ - Get a page of X clients

@@ -22,8 +22,8 @@ public class ClientDTO implements Serializable {
 	private String address;
 	private String dni;
 	private String image;
-
 	private String username;
+	private String nameAndSurname;
 	// private Long id;
 
 	// SETERRS AND GETTERS
@@ -67,5 +67,15 @@ public class ClientDTO implements Serializable {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
+	public String getNameAndSurname() {
+		return nameAndSurname;
+	}
+
+	public void setNameAndSurname(String nameAndSurname) {
+		this.nameAndSurname = nameAndSurname;
+	}
+	
+	
 
 }
