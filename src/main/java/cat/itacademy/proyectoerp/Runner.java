@@ -61,7 +61,7 @@ public class Runner implements CommandLineRunner {
 				String mail = "userclient"+x+"@example.com";
 				User userClient = new User(mail, "ReW9a0&+TP", UserType.CLIENT);
 				userService.registerNewUserAccount(userClient);
-				Client client = new Client("address example", "L1234567Z", "url image", userClient);
+				Client client = new Client("address example", "L1234567Z", "url image","Random Name", userClient);
 				clientService.createClient(client);
 			}
 			
@@ -75,10 +75,10 @@ public class Runner implements CommandLineRunner {
 
 			
 			// Initialize two Clients for the orders
-			Client clientOne = new Client("address example", "L1234567Z", "url image", userClientOne);
+			Client clientOne = new Client("address example", "L1234567Z", "url image","Random Name", userClientOne);
 			clientService.createClient(clientOne);
 
-			Client clientTwo = new Client("address example", "L7654321Z", "url image", userClientTwo);
+			Client clientTwo = new Client("address example", "L7654321Z", "url image","Random Name", userClientTwo);
 			clientService.createClient(clientTwo);
 
 			// Initialize two products

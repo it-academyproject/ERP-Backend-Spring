@@ -1,5 +1,6 @@
 package cat.itacademy.proyectoerp.domain;
 
+import java.util.List;
 //import java.util.List;
 import java.util.UUID;
 
@@ -27,7 +28,8 @@ public class Client {
 	private String address;
 	private String dni;
 	private String image;
-	// private List<Order> orders;
+	private String nameAndSurname;
+	//private List<Order> orders;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -42,18 +44,20 @@ public class Client {
 	/**
 	 * Constructor with parameters
 	 * 
-	 * @param id      client id
-	 * @param address client address
-	 * @param dni     client dni
-	 * @param image   client image
-	 * @param orders  client orders
+	 * @param id             client id
+	 * @param address        client address
+	 * @param dni            client dni
+	 * @param image          client image
+	 * @param nameAndSurname client name
+	 * @param orders         client orders
 	 */
 
-	public Client(String address, String dni, String image/* , List<Order> orders */) {
+	public Client(String address, String dni, String image, String name) {
 		this.address = address;
-		this.dni = dni;
+		this.dni = dni; 
 		this.image = image;
-		// this.orders = orders;
+		this.nameAndSurname = name;
+		//this.orders = orders;
 	}
 
 	/**
@@ -64,8 +68,9 @@ public class Client {
 	 * @param image   client image
 	 * @param user    client user
 	 */
-	public Client(String address, String dni, String image, User user) {
+	public Client(String address, String dni, String image, String name, User user) {
 		//id = UUID.randomUUID();
+		this.nameAndSurname = name;
 		this.address = address;
 		this.dni = dni;
 		this.image = image;
@@ -141,18 +146,34 @@ public class Client {
 	/**
 	 * @return client orders
 	 */
+	
+//		 public List<Order> getOrders() {
+//	 return orders;
+//	 }
 
-	// public List<Order> getOrders() {
-	// return orders;
-	// }
+	/**
+	 * @param nameAndSurname  to set client Name
+	 */
+		 
+	public String getNameAndSurname() {
+		return nameAndSurname;
+	}
+	
+	/**
+	 * @return client name
+	 */
+
+	public void setNameAndSurname(String nameAndSurname) {
+		this.nameAndSurname = nameAndSurname;
+	}
 
 	/**
 	 * @param orders to set client orders
 	 */
 
-	// public void setOrders(List<Order> orders) {
-	// this.orders = orders;
-	// }
+//	 public void setOrders(List<Order> orders) {
+//	 this.orders = orders;
+//	 }
 
 	/**
 	 * @return client user

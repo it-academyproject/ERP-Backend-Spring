@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import cat.itacademy.proyectoerp.repository.IClientRepository;
 import cat.itacademy.proyectoerp.domain.Client;
+import cat.itacademy.proyectoerp.domain.User;
+import cat.itacademy.proyectoerp.domain.UserType;
 import cat.itacademy.proyectoerp.dto.ClientDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
@@ -121,6 +123,14 @@ public class ClientServiceImpl implements IClientService {
 			clientsList.add(clientDTO);
 		}
 		return clientsList;
+	}
+
+	@Override
+	public Client createFastClient(ClientDTO client) {
+		Client finalClient = modelMapper.map(client, Client.class);
+		User user = new User("userclientone@example.com", "ReW9a0&+TP", UserType.CLIENT);
+		finalClient.setUser(user);
+		return repository.save(finalClient);
 	}
 
 }

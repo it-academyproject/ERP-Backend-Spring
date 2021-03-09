@@ -40,6 +40,13 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.CREATED).body(client);
     }
     
+    //Add client without giving user
+    @PostMapping("/fastClient")
+    public ResponseEntity<?> addFastClient(@RequestBody ClientDTO client) {
+    	Client finalClient = service.createFastClient(client);
+    	return ResponseEntity.ok().body(finalClient);
+    }
+    
     //Get all the clients
     @GetMapping
     public ResponseEntity<?> getAllClients() {
