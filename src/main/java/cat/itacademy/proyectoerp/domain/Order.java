@@ -21,7 +21,7 @@ public class Order {
         name = "UUID",
         strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "id", updatable = false, nullable = false)
+	@Column(name = "id", columnDefinition = "BINARY(16)")
 	private UUID id;
 	@Column
 	private String employeeId;
