@@ -34,7 +34,7 @@ public class ClientServiceImpl implements IClientService {
 	ModelMapper modelMapper = new ModelMapper();
 
 	@Override
-	public Client createClient(Client client) throws ArgumentNotValidException {
+	public Client createClient(Client client) {
 		if(client.getid() == null) {
 			throw new ArgumentNotValidException("You need to add the UUID manually.For ideas go to: https://www.uuidgenerator.net/ ");
 		}
@@ -52,7 +52,7 @@ public class ClientServiceImpl implements IClientService {
 	}
 
 	@Override
-	public List<Client> getAllClients() throws ArgumentNotFoundException {
+	public List<Client> getAllClients() {
 		if (repository.findAll().isEmpty()) {
 			throw new ArgumentNotFoundException("No clients found");
 		}
@@ -67,7 +67,9 @@ public class ClientServiceImpl implements IClientService {
 
 	@Override
 	public List<ClientDTO> listAllUsers() {
-
+		if (repository.findAll().isEmpty()) {
+			throw new ArgumentNotFoundException("No clients found");
+		}
 		List<ClientDTO> listaUsers = new ArrayList<>();
 		for (Client user : repository.findAll()) {
 
@@ -91,8 +93,8 @@ public class ClientServiceImpl implements IClientService {
 	}
 
 	@Override
-	public void updateClient(Client client) {
-		repository.findById(client.getid()).map(clientDB -> {
+	public Client updateClient(Client client) {
+		return repository.findById(client.getid()).map(clientDB -> {
 			BeanUtils.copyProperties(client, clientDB);
 			return repository.save(clientDB);
 		}).orElseThrow(() -> new ArgumentNotFoundException("Client not found"));
