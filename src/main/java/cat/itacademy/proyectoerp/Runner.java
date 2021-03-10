@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.domain.UserType;
+import cat.itacademy.proyectoerp.repository.UserRepository;
 import cat.itacademy.proyectoerp.service.ClientServiceImpl;
 import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 import cat.itacademy.proyectoerp.service.ProductServiceImpl;
@@ -46,19 +48,38 @@ public class Runner implements CommandLineRunner {
 
 	@Autowired
 	OrderServiceImpl orderService;
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	UserRepository userRepository;
 
 	@Override
 	@Transactional
 	public void run(String... args) throws Exception {
-
 		
-		if(userService.listAllUsers().size()<=1) {
-			int x = 18;
+		//checks if there is already an admin created and if not it creates one.
+		if(!userRepository.existsByUsername("administrator@admin.com")){
+			userRepository.save(new User("administrator@admin.com", passwordEncoder.encode("administrator1."), UserType.ADMIN));
+		}
+		
+		//X is the variable of the amount of clients do you want to have. 
+        //that excludes two separate clients that are made to create two test orders.
+		int x = 18;
+		
+		
+		//Checks if there is less data than the asked about and adds the amount left.
+		if(userService.listAllUsers().size() < x+1) {
+			
+			//Subtracts the amount of users already created
+			x = x - userService.listAllUsers().size()+1;
+			
 			logger.info("initializing " + x+2 +" users type client, " + x+2 + " clients, 2 products and 2 orders");
 			
 			//Initialize the amount of users and clients marked by x
-			for (int i = 1; i < x; i++) {
-				String mail = "userclient"+x+"@example.com";
+			for (int i = 0;i < x; i++) {
+				String mail = "userclient"+i+"@example.com";
 				User userClient = new User(mail, "ReW9a0&+TP", UserType.CLIENT);
 				userService.registerNewUserAccount(userClient);
 				Client client = new Client("address example", "L1234567Z", "url image","Random Name", userClient);
@@ -90,7 +111,7 @@ public class Runner implements CommandLineRunner {
 
 			// Initialize two orders
 
-			List<String> productsId = new ArrayList<String>(Arrays.asList("1", "2"));
+			List<String> productsId = new ArrayList<>(Arrays.asList("1", "2"));
 
 			Date today = new Date();
 
