@@ -3,6 +3,7 @@ package cat.itacademy.proyectoerp.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -61,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable().authorizeRequests()
+				.antMatchers(HttpMethod.GET, "/api/products").permitAll()
 				.antMatchers("/api/login", "/api/users", "/api/users/recoverpassword")
 				.permitAll().anyRequest().authenticated().and()
 				// Exception control. 401 no authorized
