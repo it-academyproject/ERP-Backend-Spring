@@ -25,13 +25,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import cat.itacademy.proyectoerp.domain.Client;
+import cat.itacademy.proyectoerp.domain.StandarRegistration;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.dto.UserDTO;
+import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 import cat.itacademy.proyectoerp.security.entity.JwtResponse;
 import cat.itacademy.proyectoerp.security.jwt.JwtUtil;
 import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
+import cat.itacademy.proyectoerp.service.ClientServiceImpl;
 import cat.itacademy.proyectoerp.service.UserServiceImpl;
 
 /**
@@ -56,6 +60,9 @@ public class UserController {
 
 	@Autowired
 	JwtUtil jwtUtil;
+	
+	@Autowired
+	ClientServiceImpl clientService;
 
 	/**
 	 * Method for all url which don't exist
@@ -90,6 +97,31 @@ public class UserController {
 			return new ResponseEntity<>(userDTO, HttpStatus.OK);
 		}
 	}
+	
+	/**
+	 * Method for create a new user and client.
+	 * 
+	 * @param user JSON with StandarRegistration data
+	 * @return Welcome String.
+	 */
+	@RequestMapping(value = "/users/clients", method = RequestMethod.POST)
+	public ResponseEntity<?> newUserAndClient(@Valid @RequestBody StandarRegistration standar) {
+		
+		User userRegistered = new User(standar.getUsername(),standar.getPassword());
+		
+		this.newUser(userRegistered);
+		
+		Client clientRegistered = new Client(standar.getAddress(),standar.getDni(),
+				standar.getImage(),standar.getNameAndSurname(),userRegistered);
+		
+		try {
+    		clientService.createClient(clientRegistered);
+    	} catch (ArgumentNotValidException e) {
+    		return ResponseEntity.unprocessableEntity().body(e.getMessage());
+    	}
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(standar);
+    }
 
 	/**
 	 * Method for user login
