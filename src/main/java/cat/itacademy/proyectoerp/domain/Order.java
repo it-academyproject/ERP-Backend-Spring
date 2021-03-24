@@ -1,18 +1,20 @@
 package cat.itacademy.proyectoerp.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
 import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.validation.Valid;
 import org.hibernate.annotations.GenericGenerator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import cat.itacademy.proyectoerp.util.StringToListConverter;
+
 
 @Entity
 @Table(name = "orders")
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class,property="orderDetails")
 public class Order {
 
 	@Id
@@ -32,16 +34,19 @@ public class Order {
 	@Column
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status;
-	@Convert(converter = StringToListConverter.class)
-	private List<String> productsId;
+	//@Convert(converter = StringToListConverter.class)
+	//private List<String> productsId;
 
 	/** @ManyToOne
 	@JsonIgnore
 	@JoinColumn(name="employee_id")
 	private Employee employee; */
+	
+	
+	    @OneToMany(mappedBy = "pk.order")
+	    @Valid
+	    private List<OrderDetail> orderDetails = new ArrayList<>();
 
-	public Order() {
-	}
 
 	/**
 	 * Constructor with all the parameters.
@@ -54,13 +59,12 @@ public class Order {
 	 */
 	
 	
-	public Order(String employeeId, String clientId, Date date, OrderStatus status, List<String> productsId) {
-		this.employeeId = employeeId;
-		this.clientId = clientId;
-		this.date = date;
-		this.status = status;
-		this.productsId = productsId;
-	}
+	/*
+	 * public Order(String employeeId, String clientId, Date date, OrderStatus
+	 * status, List<String> productsId) { this.employeeId = employeeId;
+	 * this.clientId = clientId; this.date = date; this.status = status;
+	 * this.productsId = productsId; }
+	 */
 	
 	/**
 	 * Constructor with all the parameters.
@@ -73,20 +77,27 @@ public class Order {
 	 * @param productsId products id included in order
 	 */
 
-
-	public Order(UUID id, String employeeId, String clientId, Date date, OrderStatus status, List<String> productsId) {
-		super();
-		this.id = id;
-		this.employeeId = employeeId;
-		this.clientId = clientId;
-		this.date = date;
-		this.status = status;
-		this.productsId = productsId;
-	}
+	/*
+	 * public Order(UUID id, String employeeId, String clientId, Date date,
+	 * OrderStatus status, List<String> productsId) { super(); this.id = id;
+	 * this.employeeId = employeeId; this.clientId = clientId; this.date = date;
+	 * this.status = status; this.productsId = productsId; }
+	 */
 	
 	/**
 	 * @return order id
 	 */
+	
+	 @Transient
+	    public Double getTotalOrderPrice() {
+	        double sum = 0.0;
+	        List<OrderDetail> orderDetails = getOrderDetails();
+	        for (OrderDetail od : orderDetails) {
+	            sum += od.getTotalPrice();
+	        }
+	        return sum;
+	    }
+	
 	public UUID getId() {
 		return id;
 	}
@@ -122,9 +133,9 @@ public class Order {
 	/**
 	 * @return order products by id
 	 */
-	public List<String> getProducts() {
-		return productsId;
-	}
+	/*
+	 * public List<String> getProducts() { return productsId; }
+	 */
 
 	/**
 	 * @param id to set order id
@@ -161,17 +172,27 @@ public class Order {
 		this.status = status;
 	}
 
+	public List<OrderDetail> getOrderDetails() {
+		return orderDetails;
+	}
+
+	public void setOrderDetail(List<OrderDetail> orderDetails) {
+		this.orderDetails = orderDetails;
+	}
+	
+	@Transient
+	public int getNumberOfProducts() {
+		return this.orderDetails.size();
+	}
+
 	/**
 	 * @param productsId to set order products id
 	 */
-	public void setProducts(List<String> productsId) {
-		this.productsId = productsId;
-	}
+	/*
+	 * public void setProducts(List<String> productsId) { this.productsId =
+	 * productsId; }
+	 */
 
-	@Override
-	public String toString() {
-		return "Order id=" + id + " [employeeId=" + employeeId + ", clientId=" + clientId + ", date=" + date
-				+ ", status=" + status + ", products=" + productsId + "]";
-	}
+	
 
 }

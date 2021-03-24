@@ -5,16 +5,15 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import cat.itacademy.proyectoerp.domain.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import cat.itacademy.proyectoerp.repository.IClientRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.Order;
+import cat.itacademy.proyectoerp.domain.OrderDetail;
 import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
@@ -47,10 +46,10 @@ public class OrderServiceImpl implements IOrderService{
 		} else if (order.getDate() == null) {
 			throw new ArgumentNotValidException("Order must have a date.");
 
-		} else if (order.getProducts() == null) {
+		} else if (order.getOrderDetails() == null) {
 			throw new ArgumentNotValidException("Orders must have a product list.");
 
-		} else if (!listIsValid(order.getProducts())){
+		} else if (!listIsValid(order.getOrderDetails())){
 			throw new ArgumentNotValidException("Invalid products in the order");
 		} else {
 			return iOrderRepository.save(order);
@@ -94,8 +93,8 @@ public class OrderServiceImpl implements IOrderService{
 			throw new ArgumentNotValidException("Status can't be null");
 		}
 		orderToUpdate.setStatus(order.getStatus());
-		if (listIsValid(order.getProducts())) {
-			orderToUpdate.setProducts(order.getProducts());
+		if (listIsValid(order.getOrderDetails())) {
+			orderToUpdate.setOrderDetail(order.getOrderDetails());
 		} else {
 			throw new ArgumentNotValidException("Invalid products in the order");
 		}
@@ -110,10 +109,10 @@ public class OrderServiceImpl implements IOrderService{
 	}
 
 	@Override
-	public boolean listIsValid(List<String> productsId) {
+	public boolean listIsValid(List<OrderDetail> orderDetails) {
 		boolean answer = true;
-		for (String id : productsId) {
-			Optional<Product> tempProduct = iProductRepository.findById(Integer.parseInt(id));
+		for (OrderDetail product : orderDetails) {
+			Optional<Product> tempProduct = iProductRepository.findById(product.getProduct().getId());
 			if (tempProduct.isEmpty()) {
 				answer = false;
 			}

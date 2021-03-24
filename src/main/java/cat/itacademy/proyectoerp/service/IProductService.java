@@ -2,8 +2,11 @@ package cat.itacademy.proyectoerp.service;
 
 import java.util.List;
 
+import org.springframework.validation.annotation.Validated;
+
 import cat.itacademy.proyectoerp.domain.Product;
 
+@Validated
 public interface IProductService {
 
 	public Product createProduct(Product product); // CREATE - create new product

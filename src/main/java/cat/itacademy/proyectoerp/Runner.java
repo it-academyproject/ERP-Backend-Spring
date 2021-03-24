@@ -1,10 +1,5 @@
 package cat.itacademy.proyectoerp;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import cat.itacademy.proyectoerp.domain.Client;
-import cat.itacademy.proyectoerp.domain.Order;
-import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.domain.UserType;
@@ -111,18 +104,26 @@ public class Runner implements CommandLineRunner {
 
 			// Initialize two orders
 
-			List<String> productsId = new ArrayList<>(Arrays.asList("1", "2"));
+			//List<String> productsId = new ArrayList<>(Arrays.asList("1", "2"));
+			
+			
 
-			Date today = new Date();
-
-			Order orderOne = new Order(UUID.randomUUID(), "1", clientOne.getid().toString(), today, OrderStatus.COMPLETED,
-					productsId);
-			orderService.createOrder(orderOne);
-
-			Order orderTwo = new Order(UUID.randomUUID(), "1", clientTwo.getid().toString(), today, OrderStatus.IN_DELIVERY,
-					productsId);
-			orderService.createOrder(orderTwo);
+			/*
+			 * Date today = new Date();
+			 * 
+			 * Order orderOne = new Order("1",clientOne.getid().toString(),today,
+			 * OrderStatus.COMPLETED); orderService.createOrder(orderOne);
+			 * 
+			 * Order orderTwo = new Order( "1", clientTwo.getid().toString(), today,
+			 * OrderStatus.IN_DELIVERY); orderService.createOrder(orderTwo);
+			 * 
+			 * 
+			 * List<OrderDetail> detail1 = (List<OrderDetail>) new OrderDetail(orderOne,
+			 * productOne,12);
+			 */
 		}
+		
+	
 		
 		
 
