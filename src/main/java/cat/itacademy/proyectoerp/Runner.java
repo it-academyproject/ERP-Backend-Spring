@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import cat.itacademy.proyectoerp.domain.Client;
+import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.domain.Product;
@@ -22,6 +23,7 @@ import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.domain.UserType;
 import cat.itacademy.proyectoerp.repository.UserRepository;
 import cat.itacademy.proyectoerp.service.ClientServiceImpl;
+import cat.itacademy.proyectoerp.service.EmployeeServiceImpl;
 import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 import cat.itacademy.proyectoerp.service.ProductServiceImpl;
 import cat.itacademy.proyectoerp.service.UserServiceImpl;
@@ -54,6 +56,9 @@ public class Runner implements CommandLineRunner {
 	
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	EmployeeServiceImpl employeeService;
 
 	@Override
 	@Transactional
@@ -93,7 +98,6 @@ public class Runner implements CommandLineRunner {
 
 			User userClientTwo = new User("userclienttwo@example.com", "ReW9a0&+ET", UserType.CLIENT);
 			userService.registerNewUserAccount(userClientTwo);
-
 			
 			// Initialize two Clients for the orders
 			Client clientOne = new Client("address example", "L1234567Z", "url image","Random Name", userClientOne);
@@ -101,6 +105,22 @@ public class Runner implements CommandLineRunner {
 
 			Client clientTwo = new Client("address example", "L7654321Z", "url image","Random Name", userClientTwo);
 			clientService.createClient(clientTwo);
+			
+			
+			//Initialize two users for the employees for the orders
+			User userEmployeeOne = new User("useremployeeone@example.com", "ReW9a0&+TP", UserType.EMPLOYEE);
+			userService.registerNewUserAccount(userEmployeeOne);
+
+			User userEmployeeTwo = new User("useremployeetwo@example.com", "ReW9a0&+ET", UserType.EMPLOYEE);
+			userService.registerNewUserAccount(userEmployeeTwo);
+			
+			// Initialize two Employees for the orders
+			Employee employeeOne = new Employee(24000.00,"employee1@company.com", "A1234567Z",667999999, userEmployeeOne);
+			employeeService.createEmployee(employeeOne);
+
+			Employee employeeTwo = new Employee(14000.00,"employee2@company.com", "B1234567Z",667999998, userEmployeeTwo);
+			employeeService.createEmployee(employeeTwo);
+			
 
 			// Initialize two products
 			Product productOne = new Product(1, "ejemplo 1", 100, "url image", "Bebidas", 3.00, 21.00, 2.50, 500);
