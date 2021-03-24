@@ -108,19 +108,24 @@ public class UserController {
 	public ResponseEntity<?> newUserAndClient(@Valid @RequestBody StandarRegistration standar) {
 		
 		User userRegistered = new User(standar.getUsername(),standar.getPassword());
+		UserDTO userDTO;
 		
-		this.newUser(userRegistered);
+		userDTO = userService.registerNewUserAccount(userRegistered);
 		
-		Client clientRegistered = new Client(standar.getAddress(),standar.getDni(),
-				standar.getImage(),standar.getNameAndSurname(),userRegistered);
-		
-		try {
-    		clientService.createClient(clientRegistered);
-    	} catch (ArgumentNotValidException e) {
-    		return ResponseEntity.unprocessableEntity().body(e.getMessage());
-    	}
-        
-        return ResponseEntity.status(HttpStatus.CREATED).body(standar);
+		if (userDTO.getSuccess() == "False") {
+			return new ResponseEntity<>(userDTO, HttpStatus.UNPROCESSABLE_ENTITY);
+			
+		} else {
+			try {
+				Client clientRegistered = new Client(standar.getAddress(),standar.getDni(),
+						standar.getImage(),standar.getName_surname(),userRegistered);
+	    		clientService.createClient(clientRegistered);
+	    	} catch (ArgumentNotValidException e) {
+	    		return ResponseEntity.unprocessableEntity().body(e.getMessage());
+	    	}	        
+	        return ResponseEntity.status(HttpStatus.CREATED).body(standar);
+		}
+	
     }
 
 	/**

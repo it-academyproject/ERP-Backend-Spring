@@ -1,5 +1,9 @@
 package cat.itacademy.proyectoerp.domain;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 /**
  * @author Piero Reppucci
  *
@@ -10,7 +14,10 @@ public class StandarRegistration {
 	 * Attributes.
 	 */
 	
+	@Email(message = "email incorrect")
+	@Size(min = 6, max = 50)
 	private String username;
+	@Pattern(regexp = "^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%?&+=]).*$", message = "Password invalid. Minim 8 characters with 1 upercase, 1 lowercase, 1 special symbol, 1 number)")
 	private String password;
 	private String address;
 	private String dni;
@@ -42,7 +49,7 @@ public class StandarRegistration {
 	public String getImage() {
 		return image;
 	}
-	public String getNameAndSurname() {
+	public String getName_surname() {
 		return name_surname;
 	}
 	public void setUsername(String username) {
@@ -60,7 +67,7 @@ public class StandarRegistration {
 	public void setImage(String image) {
 		this.image = image;
 	}
-	public void setNameAndSurname(String nameAndSurname) {
+	public void setName_surname(String nameAndSurname) {
 		this.name_surname = nameAndSurname;
 	}
 
@@ -68,7 +75,7 @@ public class StandarRegistration {
 	@Override
 	public String toString() {
 		return "StandarRegistration [username=" + username + ", password=" + password + ", address=" + address
-				+ ", dni=" + dni + ", image=" + image + ", nameAndSurname=" + name_surname + "]";
+				+ ", dni=" + dni + ", image=" + image + ", name_surname=" + name_surname + "]";
 	}
 
 	
