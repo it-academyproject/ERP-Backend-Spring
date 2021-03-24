@@ -15,7 +15,7 @@ public class StandarRegistration {
 	private String address;
 	private String dni;
 	private String image;
-	private String nameAndSurname;
+	private String name_surname;
 	
 	/**
 	 * Constructor.
@@ -43,7 +43,7 @@ public class StandarRegistration {
 		return image;
 	}
 	public String getNameAndSurname() {
-		return nameAndSurname;
+		return name_surname;
 	}
 	public void setUsername(String username) {
 		this.username = username;
@@ -61,14 +61,14 @@ public class StandarRegistration {
 		this.image = image;
 	}
 	public void setNameAndSurname(String nameAndSurname) {
-		this.nameAndSurname = nameAndSurname;
+		this.name_surname = nameAndSurname;
 	}
 
 
 	@Override
 	public String toString() {
 		return "StandarRegistration [username=" + username + ", password=" + password + ", address=" + address
-				+ ", dni=" + dni + ", image=" + image + ", nameAndSurname=" + nameAndSurname + "]";
+				+ ", dni=" + dni + ", image=" + image + ", nameAndSurname=" + name_surname + "]";
 	}
 
 	
