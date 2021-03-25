@@ -1,13 +1,17 @@
 package cat.itacademy.proyectoerp.service;
 
+
 import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 import cat.itacademy.proyectoerp.repository.IEmployeeRepository;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -37,9 +41,12 @@ public class EmployeeServiceImpl implements IEmployeeService {
   }
 
   @Override
-  public Employee findEmployeeById(UUID id) throws ArgumentNotFoundException  {
-    return iEmployeeRepository.findById(id)
-            .orElseThrow(() -> new ArgumentNotFoundException("Order not found. The id " + id + " doesn't exist"));
+  public Optional<Employee> findEmployeeById(UUID id) {
+      Optional<Employee> employeeDB = iEmployeeRepository.findById(id);
+      if (employeeDB.isPresent())
+          return employeeDB;
+      else
+            throw new ArgumentNotFoundException("Employee not found. The id " + id + " doesn't exist");
   }
 
   @Override
@@ -50,13 +57,14 @@ public class EmployeeServiceImpl implements IEmployeeService {
     return iEmployeeRepository.findAll();
   }
 
+
   @Override
-  public Employee updateEmployee(Employee employee) {
-    if(iEmployeeRepository.findById(employee.getId()) == null){
-      throw new ArgumentNotFoundException("No employee found");
-    }
-    return iEmployeeRepository.save(employee);
-  }
+	public Employee updateEmployee(Employee employee) {
+		return iEmployeeRepository.findById(employee.getId()).map(employeeDB -> {
+			BeanUtils.copyProperties(employee, employeeDB);
+			return iEmployeeRepository.save(employeeDB);
+		}).orElseThrow(() -> new ArgumentNotFoundException("Employee not found. The id " + employee.getId() + " doesn't exist"));
+	}
 
   @Override
   public void deleteEmployee(UUID id) {

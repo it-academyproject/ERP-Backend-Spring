@@ -24,7 +24,7 @@ public class Employee {
   public Employee(){};
 
   public Employee(double salary, String email, String dni, int phone, List<Order> orders, User user) {
-    this.id = UUID.randomUUID();
+    //this.id = UUID.randomUUID();
     this.salary = salary;
     this.email = email;
     this.dni = dni;

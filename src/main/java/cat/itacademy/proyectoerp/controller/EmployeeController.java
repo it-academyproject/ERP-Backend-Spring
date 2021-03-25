@@ -3,11 +3,15 @@ package cat.itacademy.proyectoerp.controller;
 import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.service.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -33,35 +37,22 @@ public class EmployeeController {
     return map;
   }
 
-  @GetMapping()
-  public Map<String, Object> getEmployees(){
-    HashMap<String, Object> map = new HashMap<String, Object>();
-    try {
-      List<Employee> employeeList = iEmployeeService.findAllEmployees();
-      map.put("success", "true");
-      map.put("message", "employee found");
-      map.put("employee", employeeList);
-    } catch (Exception e) {
-      map.put("success", "false");
-      map.put("message", "Error: " + e.getMessage());
-    }
-    return map;
+  @GetMapping("/{id}")
+  public Optional<Employee> getEmployeeById(@PathVariable UUID id) {
+      return iEmployeeService.findEmployeeById(id);
   }
 
-  @GetMapping("/{id}")
-  public Map<String, Object> getEmployeeById(@PathVariable(name="id") UUID id){
-    HashMap<String, Object> map = new HashMap<>();
-    try {
-      Employee employee = iEmployeeService.findEmployeeById(id);
-      map.put("success", "true");
-      map.put("message", "employee found");
-      map.put("employee", employee);
-    } catch (Exception e){
-      map.put("success", "false");
-      map.put("message", "error: " + e.getMessage());
-    }
-    return map;
+  @GetMapping()
+  public ResponseEntity<?> getAllEmployees() {
+      List<Employee> list = new ArrayList<>();
+		try {
+			list = iEmployeeService.findAllEmployees();
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+		}
+      return ResponseEntity.ok().body(list);
   }
+
 
   @DeleteMapping("/{id}")
   public Map<String, Object> deleteEmployee(@PathVariable(name="id") UUID id) {
@@ -78,18 +69,16 @@ public class EmployeeController {
   }
 
   @PutMapping()
-  public HashMap<String, Object> updateEmployee(@RequestBody Employee employee){
-    HashMap<String, Object> map = new HashMap<String, Object>();
-    try {
-      Employee employeeUpdated = iEmployeeService.updateEmployee(employee);
-      map.put("success", "true");
-      map.put("message", "Employee with id: " + employee.getId() + " has been updated");
-      map.put("employee", employee);
+  public ResponseEntity<?> updateEmployeeById(@RequestBody Employee employeeToUpdate) {
+	  try {
+	        iEmployeeService.updateEmployee(employeeToUpdate);
+	        return ResponseEntity.status(HttpStatus.CREATED).body(employeeToUpdate);
+	    }  catch(Exception e) {
+	    	return ResponseEntity.badRequest().body(e.getMessage());
+	    }  
+  }	  
+}	  
+	  
+	  
+  	
 
-    } catch (Exception e) {
-      map.put("success", "false");
-      map.put("message", "Error: " + e.getMessage());
-    }
-    return map;
-  }
-}
