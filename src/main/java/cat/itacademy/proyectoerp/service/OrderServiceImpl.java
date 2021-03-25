@@ -138,6 +138,15 @@ public class OrderServiceImpl implements IOrderService{
 			return iOrderRepository.findOrdersByClientId(id);
 		}
 	}
+
+	@Override
+	public List<Order> findOrdersByEmployeeId(String employeeId) {
+		if(iOrderRepository.findOrdersByEmployeeId(employeeId) == null){
+			throw new ArgumentNotFoundException("The employee with id: " + employeeId + " does not have orders assigned");
+		} else{
+			return iOrderRepository.findOrdersByEmployeeId(employeeId);
+		}
+	}
 }
 
 
