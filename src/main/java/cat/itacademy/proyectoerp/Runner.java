@@ -135,13 +135,19 @@ public class Runner implements CommandLineRunner {
 
 			Date today = new Date();
 
-			Order orderOne = new Order(UUID.randomUUID(), "1", clientOne.getid().toString(), today, OrderStatus.COMPLETED,
+			Order orderOne = new Order(UUID.randomUUID(), employeeOne.getId().toString(), clientOne.getid().toString(), today, OrderStatus.COMPLETED,
 					productsId);
 			orderService.createOrder(orderOne);
 
-			Order orderTwo = new Order(UUID.randomUUID(), "1", clientTwo.getid().toString(), today, OrderStatus.IN_DELIVERY,
+			Order orderTwo = new Order(UUID.randomUUID(), employeeTwo.getId().toString(), clientTwo.getid().toString(), today, OrderStatus.IN_DELIVERY,
 					productsId);
 			orderService.createOrder(orderTwo);
+			Order orderThree = new Order(UUID.randomUUID(), employeeTwo.getId().toString(), clientOne.getid().toString(), today, OrderStatus.IN_DELIVERY,
+					productsId);
+			orderService.createOrder(orderThree);
+			Order orderFour = new Order(UUID.randomUUID(), employeeOne.getId().toString(), clientTwo.getid().toString(), today, OrderStatus.COMPLETED,
+					productsId);
+			orderService.createOrder(orderFour);
 		}
 		
 		
