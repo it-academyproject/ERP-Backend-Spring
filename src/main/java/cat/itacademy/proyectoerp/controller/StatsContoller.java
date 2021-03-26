@@ -1,6 +1,8 @@
 package cat.itacademy.proyectoerp.controller;
 
+import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Order;
+import cat.itacademy.proyectoerp.service.EmployeeServiceImpl;
 import cat.itacademy.proyectoerp.service.IOrderService;
 import cat.itacademy.proyectoerp.util.StringToOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/stats")
@@ -20,6 +23,9 @@ public class StatsContoller {
 
   @Autowired
   IOrderService orderService;
+  
+  @Autowired
+  EmployeeServiceImpl employeeService;
 
   @GetMapping("/status/{status}")
   public Map<String, Object> getOrderBySatus(@PathVariable(value = "status") String status) throws Exception{
@@ -62,6 +68,38 @@ public class StatsContoller {
       map.put("success", "false");
       map.put("message", "error: " + e.getMessage());
     }
+    return map;
+  }
+  
+  @GetMapping("/sales")
+  public Map<String, String> getEmployeeSales() throws Exception{
+    HashMap<String, String> map = new HashMap<>();
+    try {
+    	List<Employee> employees = employeeService.findAllEmployees();
+    	List<Order> orderList = orderService.findAllOrders();
+    	if(employees.isEmpty() || orderList.isEmpty()) {
+    		map.put("success", "true");
+            map.put("message", "no employees or orders founded");
+    	}else {
+    		map.put("success", "true");
+    	    map.put("message", "employees list found");
+    	    map.put("Employee DNI", "  Completed orders");
+    	    orderList.removeIf(o -> !o.getStatus().toString().equalsIgnoreCase("COMPLETED"));
+    	    for(Employee e : employees) {
+    	    	 List<Order> employeeOrders = orderList.stream()                
+    	                 .filter(order -> order.getEmployeeId().toString()
+    	                		 .equalsIgnoreCase(e.getId().toString()))//Put "1" to test.     
+    	                 .collect(Collectors.toList()); 
+    	    	map.put(e.getDni(), String.valueOf(employeeOrders.size()));
+    	    }
+    	    
+            
+    	}
+    } catch(Exception e) {
+    	 map.put("success", "false");
+         map.put("message", "error: " + e.getMessage());
+    }
+    
     return map;
   }
 }
