@@ -1,20 +1,21 @@
 package cat.itacademy.proyectoerp.domain;
 
+import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
-
 import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import cat.itacademy.proyectoerp.util.StringToListConverter;
 
 @Entity
 @Table(name = "orders")
-public class Order {
+public class Order implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+	
 	@Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -28,12 +29,11 @@ public class Order {
 	@Column
 	private String clientId;
 	@Column
+	@Temporal(TemporalType.DATE)
 	private Date date;
 	@Column
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status;
-	@Convert(converter = StringToListConverter.class)
-	private List<String> productsId;
 
 	/** @ManyToOne
 	@JsonIgnore
@@ -41,137 +41,95 @@ public class Order {
 	private Employee employee; */
 
 	public Order() {
-	}
-
-	/**
-	 * Constructor with all the parameters.
-	 * 
-	 * @param employeeId employee responsible
-	 * @param clientId   client id
-	 * @param date       date of the emitted order
-	 * @param status     order status
-	 * @param productsId products id included in order
-	 */
-	
-	
-	public Order(String employeeId, String clientId, Date date, OrderStatus status, List<String> productsId) {
-		this.employeeId = employeeId;
-		this.clientId = clientId;
-		this.date = date;
-		this.status = status;
-		this.productsId = productsId;
+		
 	}
 	
-	/**
-	 * Constructor with all the parameters.
-	 * 
-	 * @param id         order id
-	 * @param employeeId employee responsible
-	 * @param clientId   client id
-	 * @param date       date of the emitted order
-	 * @param status     order status
-	 * @param productsId products id included in order
-	 */
-
-
-	public Order(UUID id, String employeeId, String clientId, Date date, OrderStatus status, List<String> productsId) {
+	public Order(UUID id, String employeeId, String clientId, Date date, OrderStatus status, Set<Product> products) {
 		super();
 		this.id = id;
 		this.employeeId = employeeId;
 		this.clientId = clientId;
 		this.date = date;
 		this.status = status;
-		this.productsId = productsId;
+		this.products = products;
 	}
 	
-	/**
-	 * @return order id
-	 */
+	public Order(String employeeId, String clientId, Date date, OrderStatus status, Set<Product> products) {
+		super();
+		this.employeeId = employeeId;
+		this.clientId = clientId;
+		this.date = date;
+		this.status = status;
+		this.products = products;
+	}
+
+
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JsonBackReference
+	@JoinTable(name="orders_products",
+	joinColumns = @JoinColumn(name="order_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name="product_id", referencedColumnName= "id"))
+	private Set<Product> products = new HashSet<Product>();
+
+	
+	//Getters & Setters
 	public UUID getId() {
 		return id;
 	}
 
-	/**
-	 * @return employee id
-	 */
-	public String getEmployeeId() {
-		return employeeId;
-	}
-
-	/**
-	 * @return client id
-	 */
-	public String getClientId() {
-		return clientId;
-	}
-
-	/**
-	 * @return order date
-	 */
-	public Date getDate() {
-		return date;
-	}
-
-	/**
-	 * @return order status
-	 */
-	public OrderStatus getStatus() {
-		return status;
-	}
-
-	/**
-	 * @return order products by id
-	 */
-	public List<String> getProducts() {
-		return productsId;
-	}
-
-	/**
-	 * @param id to set order id
-	 */
 	public void setId(UUID id) {
 		this.id = id;
 	}
 
-	/**
-	 * @param employeeId to set responsible employee id
-	 */
+	public String getEmployeeId() {
+		return employeeId;
+	}
+
 	public void setEmployeeId(String employeeId) {
 		this.employeeId = employeeId;
 	}
 
-	/**
-	 * @param clientId to set client id
-	 */
+	public String getClientId() {
+		return clientId;
+	}
+
 	public void setClientId(String clientId) {
 		this.clientId = clientId;
 	}
+	
+	@PrePersist
+	public void prePersist() {
+		date = new Date();
+	}
 
-	/**
-	 * @param date to set order date
-	 */
+	public Date getDate() {
+		return date;
+	}
+
 	public void setDate(Date date) {
 		this.date = date;
 	}
 
-	/**
-	 * @param status to set order status
-	 */
+	public OrderStatus getStatus() {
+		return status;
+	}
+
 	public void setStatus(OrderStatus status) {
 		this.status = status;
 	}
 
-	/**
-	 * @param productsId to set order products id
-	 */
-	public void setProducts(List<String> productsId) {
-		this.productsId = productsId;
+	public Set<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(Set<Product> products) {
+		this.products = products;
 	}
 
 	@Override
 	public String toString() {
-		return "Order id=" + id + " [employeeId=" + employeeId + ", clientId=" + clientId + ", date=" + date
-				+ ", status=" + status + ", products=" + productsId + "]";
+		return "Order [id=" + id + ", employeeId=" + employeeId + ", clientId=" + clientId + ", date=" + date
+				+ ", status=" + status + ", products=" + products + "]";
 	}
 
 }

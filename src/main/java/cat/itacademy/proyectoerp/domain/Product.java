@@ -1,19 +1,28 @@
 package cat.itacademy.proyectoerp.domain;
 
 
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.JoinColumn;
 
 @Entity
 @Table(name = "products")
-public class Product {
+public class Product implements Serializable {
 
 	// Products entity attributes
 
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -28,30 +37,32 @@ public class Product {
 	private int wholesale_quantity;
 
 
-	// Constructors
+	// Constructor
 
 	/**
 	 * Constructor without parameters
 	 */
 	public Product() {
+		
 	}
-
-	/**
-	 * Constructor with parameters
-	 * 
-	 * @param id                product id
-	 * @param name              product name
-	 * @param stock             product stock
-	 * @param image             product image url
-	 * @param family            product family
-	 * @param price             product price
-	 * @param vat               product vat
-	 * @param wholesalePrice    product wholesale price
-	 * @param wholesaleQuantity product wholesale quantity
-	 */
+	
+	public Product(String name, int stock, String image, String family, double price, double vat,
+			double wholesale_price, int wholesale_quantity, Set<Order> orders) {
+		super();
+		this.name = name;
+		this.stock = stock;
+		this.image = image;
+		this.family = family;
+		this.price = price;
+		this.vat = vat;
+		this.wholesale_price = wholesale_price;
+		this.wholesale_quantity = wholesale_quantity;
+		this.orders = orders;
+	}
+	
 	public Product(int id, String name, int stock, String image, String family, double price, double vat,
-			double wholesale_price, int wholesale_quantity) {
-
+			double wholesale_price, int wholesale_quantity, Set<Order> orders) {
+		super();
 		this.id = id;
 		this.name = name;
 		this.stock = stock;
@@ -61,15 +72,31 @@ public class Product {
 		this.vat = vat;
 		this.wholesale_price = wholesale_price;
 		this.wholesale_quantity = wholesale_quantity;
+		this.orders = orders;
 	}
 
-	// Getters and Setters
 
+	@ManyToMany
+	@JoinTable(name="orders_products",
+	    joinColumns = @JoinColumn(name="product_id", referencedColumnName="id"),
+	    inverseJoinColumns = @JoinColumn(name="order_id", referencedColumnName = "id"))
+	private Set<Order>orders = new HashSet<Order>();
+
+
+	// Getters and Setters
 	/**
 	 * @return product id
 	 */
 	public int getId() {
 		return id;
+	}
+
+	public Set<Order> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(Set<Order> orders) {
+		this.orders = orders;
 	}
 
 	/**

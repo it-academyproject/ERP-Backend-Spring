@@ -1,9 +1,11 @@
 package cat.itacademy.proyectoerp;
 
-import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -123,28 +125,28 @@ public class Runner implements CommandLineRunner {
 			
 
 			// Initialize two products
-			Product productOne = new Product(1, "ejemplo 1", 100, "url image", "Bebidas", 3.00, 21.00, 2.50, 500);
+			Product productOne = new Product(1, "ejemplo 1", 100, "url image", "Bebidas", 3.00, 21.00, 2.50, 500, null);
 			productService.createProduct(productOne);
 
-			Product productTwo = new Product(2, "ejemplo 2", 100, "url image", "Bebidas", 3.00, 21.00, 2.50, 500);
+			Product productTwo = new Product(2, "ejemplo 2", 100, "url image", "Bebidas", 3.00, 21.00, 2.50, 500, null);
 			productService.createProduct(productTwo);
 
 			// Initialize two orders
+		    Product[] products = {productOne, productTwo};
 
-			List<String> productsId = new ArrayList<>(Arrays.asList("1", "2"));
-
+			List<Product> productList= Arrays.asList(products);
+			Set<Product> productsSet = new HashSet<Product>(productList);
+			
 			Date today = new Date();
 
 			Order orderOne = new Order(UUID.randomUUID(), "1", clientOne.getid().toString(), today, OrderStatus.COMPLETED,
-					productsId);
+					productsSet);
 			orderService.createOrder(orderOne);
 
 			Order orderTwo = new Order(UUID.randomUUID(), "1", clientTwo.getid().toString(), today, OrderStatus.IN_DELIVERY,
-					productsId);
+					productsSet);
 			orderService.createOrder(orderTwo);
 		}
-		
-		
 
 	}
 
