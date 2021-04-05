@@ -8,17 +8,14 @@ import cat.itacademy.proyectoerp.domain.OrderStatus;
 
 public interface IOrderService {
 
-	public Order createOrder(Order order);
 
 	public Order findOrderById(UUID id);
 
 	public List<Order> findAllOrders();
 	
-	public Order updateOrder(Order order);
+	public void updateOrder(Order order);
 
 	public void deleteOrder(UUID id);
-	
-	public boolean listIsValid(List<String> productsId);
 
 	public List<Order> findOrdersByStatus(OrderStatus status);
 

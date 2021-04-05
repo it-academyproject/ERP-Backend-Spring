@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,8 @@ import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 @RestController
 @RequestMapping("/api")
 public class OrderController {
+	
+	//ACORDARSE DE ACTUALIZAR EL RUNNER
 
 	@Autowired
 	OrderServiceImpl orderService;
@@ -30,39 +33,14 @@ public class OrderController {
 	String isFalse = "false";
 	String error = "Error: ";
 
-	/**
-	 * Create a new order
+
+	/*
+	 * @PostMapping("/orders") public ResponseEntity<?> createOrder(@RequestBody
+	 * Order order) {
 	 * 
-	 * @param order order
-	 * @return new order 
+	 * }
 	 */
-	@PostMapping("/orders")
-	public Map<String, Object> createOrder(@RequestBody Order order) {
-
-		HashMap<String, Object> map = new HashMap<>();
-
-		try {
-			orderService.createOrder(order);
-
-			map.put(success, "true");
-			map.put(message, "Order created");
-			map.put("order", order);
-
-		} catch (Exception e) {
-
-			map.put(success, isFalse);
-			map.put(message, error + e.getMessage());
-		}
-
-		return map;
-	}
-
-	/**
-	 * Get order by id
-	 * 
-	 * @param id order id
-	 * @return order by id
-	 */
+	
 	@GetMapping("/orders/{id}")
 	public Map<String, Object> findOrderById(@PathVariable(name = "id") UUID id) {
 		HashMap<String, Object> map = new HashMap<>();
@@ -105,26 +83,21 @@ public class OrderController {
 	 * @param order
 	 * @return order updated
 	 */
-	@PutMapping("/order")
-	public Map<String, Object> updateOrder(@RequestBody Order order) {
-
-		HashMap<String, Object> map = new HashMap<>();
-
-		try {
-			Order updatedOrder = orderService.updateOrder(order);
-
-			map.put(success, "true");
-			map.put(message, "order updated");
-			map.put("product", updatedOrder);
-		} catch (Exception e) {
-
-			map.put(success, isFalse);
-			map.put(message, error + e.getMessage());
-
-		}
-		return map;
-	}
-
+	/*
+	 * @PutMapping("/order") public Map<String, Object> updateOrder(@RequestBody
+	 * Order order) {
+	 * 
+	 * HashMap<String, Object> map = new HashMap<>();
+	 * 
+	 * try { Order updatedOrder = orderService.updateOrder(order);
+	 * 
+	 * map.put(success, "true"); map.put(message, "order updated");
+	 * map.put("product", updatedOrder); } catch (Exception e) {
+	 * 
+	 * map.put(success, isFalse); map.put(message, error + e.getMessage());
+	 * 
+	 * } return map; }
+	 */
 	/**
 	 * Delete order by id
 	 * 
