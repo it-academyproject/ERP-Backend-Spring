@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,12 +35,14 @@ public class OrderController {
 	String error = "Error: ";
 
 
-	/*
-	 * @PostMapping("/orders") public ResponseEntity<?> createOrder(@RequestBody
-	 * Order order) {
-	 * 
-	 * }
-	 */
+	
+	  @PostMapping("/orders") 
+	  public ResponseEntity<?> createOrder(@RequestBody Order order) {
+	        orderService.addOrder(order);
+	        return ResponseEntity.status(HttpStatus.CREATED).body(order);
+	    }
+	  
+	   
 	
 	@GetMapping("/orders/{id}")
 	public Map<String, Object> findOrderById(@PathVariable(name = "id") UUID id) {
@@ -57,11 +60,6 @@ public class OrderController {
 	}
 
 
-	/**
-	 * Get all orders
-	 *
-	 * @return list of orders
-	 */
 	@GetMapping("/orders")
 	public HashMap<String, Object> findOrders() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -77,12 +75,7 @@ public class OrderController {
 		return map;
 	}
 
-	/**
-	 * Update order
-	 * 
-	 * @param order
-	 * @return order updated
-	 */
+
 	/*
 	 * @PutMapping("/order") public Map<String, Object> updateOrder(@RequestBody
 	 * Order order) {
@@ -98,12 +91,7 @@ public class OrderController {
 	 * 
 	 * } return map; }
 	 */
-	/**
-	 * Delete order by id
-	 * 
-	 * @param order id
-	 * @return message
-	 */
+	
 	@DeleteMapping("/orders")
 	public Map<String, Object> deleteOrder(@RequestBody Order order) {
 

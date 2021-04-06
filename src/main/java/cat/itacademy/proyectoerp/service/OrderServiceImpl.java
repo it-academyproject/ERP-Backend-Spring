@@ -28,6 +28,12 @@ public class OrderServiceImpl implements IOrderService{
 
 	
 	@Override
+	public void addOrder(Order order) {
+		orderRepository.save(order);
+		
+	}
+	
+	@Override
 	public Order findOrderById(UUID id) {
 		return orderRepository.findById(id)
 				.orElseThrow(() -> new ArgumentNotFoundException("Order not found. The id " + id + " doesn't exist"));

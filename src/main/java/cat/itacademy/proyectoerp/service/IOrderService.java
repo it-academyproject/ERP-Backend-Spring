@@ -9,6 +9,8 @@ import cat.itacademy.proyectoerp.domain.OrderStatus;
 public interface IOrderService {
 
 
+	public void addOrder(Order order);
+	 
 	public Order findOrderById(UUID id);
 
 	public List<Order> findAllOrders();

@@ -1,7 +1,7 @@
 package cat.itacademy.proyectoerp.domain;
 
 
-public class Order_product {
+public class OrderProduct {
 	
 	private Order order;
 	private Product product;

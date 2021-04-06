@@ -125,6 +125,11 @@ public class Order implements Serializable{
 	public void setProducts(Set<Product> products) {
 		this.products = products;
 	}
+	
+	
+	public void addProduct(Product product) {
+		this.products.add(product);
+	}
 
 	@Override
 	public String toString() {
