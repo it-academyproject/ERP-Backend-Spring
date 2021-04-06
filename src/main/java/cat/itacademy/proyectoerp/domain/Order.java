@@ -34,11 +34,16 @@ public class Order implements Serializable{
 	@Column
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status;
+	
+	
+	@ManyToMany(cascade = CascadeType.ALL)
+	//@JsonBackReference
+	@JoinTable(name="orders_products",
+	joinColumns = @JoinColumn(name="order_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name="product_id", referencedColumnName= "id"))
+	private Set<Product> products = new HashSet<Product>();
 
-	/** @ManyToOne
-	@JsonIgnore
-	@JoinColumn(name="employee_id")
-	private Employee employee; */
+
 
 	public Order() {
 		
@@ -62,14 +67,6 @@ public class Order implements Serializable{
 		this.status = status;
 		this.products = products;
 	}
-
-
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JsonBackReference
-	@JoinTable(name="orders_products",
-	joinColumns = @JoinColumn(name="order_id", referencedColumnName = "id"),
-	inverseJoinColumns = @JoinColumn(name="product_id", referencedColumnName= "id"))
-	private Set<Product> products = new HashSet<Product>();
 
 	
 	//Getters & Setters

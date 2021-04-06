@@ -17,7 +17,7 @@ import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 import cat.itacademy.proyectoerp.service.ProductServiceImpl;
 
 @RestController
-@RequestMapping("api/orders_products")
+@RequestMapping("api")
 public class OrderProductController {
 	
 	
@@ -28,8 +28,8 @@ public class OrderProductController {
 	ProductServiceImpl productService;
 	
 	
-	@PostMapping
-	public ResponseEntity<?> listProductsFromOrder(@RequestBody Order order){
+	@PostMapping("/products_order")
+	public ResponseEntity<?> listProductsOrder(@RequestBody Order order){
 		Order orderDb = orderService.findOrderById(order.getId());
 		if(orderDb != null) {
 			Collection<Product> productList = orderDb.getProducts();
@@ -45,7 +45,7 @@ public class OrderProductController {
 		if(orderDb != null) {
 			Product productDb = productService.findProductById(orderProduct.getProduct().getId());
 			orderDb.addProduct(productDb);
-			orderService.addOrder(orderDb);
+			orderService.createOrder(orderDb);
 			return new ResponseEntity<Void>(HttpStatus.CREATED);
 		}
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);

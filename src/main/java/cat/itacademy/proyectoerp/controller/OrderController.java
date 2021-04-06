@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,7 +37,7 @@ public class OrderController {
 	
 	  @PostMapping("/orders") 
 	  public ResponseEntity<?> createOrder(@RequestBody Order order) {
-	        orderService.addOrder(order);
+	        orderService.createOrder(order);
 	        return ResponseEntity.status(HttpStatus.CREATED).body(order);
 	    }
 	  
@@ -76,21 +75,6 @@ public class OrderController {
 	}
 
 
-	/*
-	 * @PutMapping("/order") public Map<String, Object> updateOrder(@RequestBody
-	 * Order order) {
-	 * 
-	 * HashMap<String, Object> map = new HashMap<>();
-	 * 
-	 * try { Order updatedOrder = orderService.updateOrder(order);
-	 * 
-	 * map.put(success, "true"); map.put(message, "order updated");
-	 * map.put("product", updatedOrder); } catch (Exception e) {
-	 * 
-	 * map.put(success, isFalse); map.put(message, error + e.getMessage());
-	 * 
-	 * } return map; }
-	 */
 	
 	@DeleteMapping("/orders")
 	public Map<String, Object> deleteOrder(@RequestBody Order order) {

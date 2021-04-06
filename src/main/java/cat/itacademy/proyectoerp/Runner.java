@@ -125,10 +125,10 @@ public class Runner implements CommandLineRunner {
 			
 
 			// Initialize two products
-			Product productOne = new Product(1, "ejemplo 1", 100, "url image", "Bebidas", 3.00, 21.00, 2.50, 500, null);
+			Product productOne = new Product(1, "ejemplo 1", 100, "url image", "Bebidas", 3.00, 21.00, 2.50, 500);
 			productService.createProduct(productOne);
 
-			Product productTwo = new Product(2, "ejemplo 2", 100, "url image", "Bebidas", 3.00, 21.00, 2.50, 500, null);
+			Product productTwo = new Product(2, "ejemplo 2", 100, "url image", "Bebidas", 3.00, 21.00, 2.50, 500);
 			productService.createProduct(productTwo);
 
 			// Initialize two orders
@@ -139,13 +139,12 @@ public class Runner implements CommandLineRunner {
 			
 			Date today = new Date();
 
-			Order orderOne = new Order(UUID.randomUUID(), "1", clientOne.getid().toString(), today, OrderStatus.COMPLETED,
-					productsSet);
-			//orderService.createOrder(orderOne);
+			Order orderOne = new Order(UUID.randomUUID(), "2", clientOne.getid().toString(),today, OrderStatus.COMPLETED, productsSet);
+			orderService.createOrder(orderOne);
 
-			Order orderTwo = new Order(UUID.randomUUID(), "1", clientTwo.getid().toString(), today, OrderStatus.IN_DELIVERY,
+			Order orderTwo = new Order(UUID.randomUUID(), "19", clientTwo.getid().toString(), today, OrderStatus.IN_DELIVERY,
 					productsSet);
-			//orderService.createOrder(orderTwo);
+			orderService.createOrder(orderTwo);
 		}
 
 	}
