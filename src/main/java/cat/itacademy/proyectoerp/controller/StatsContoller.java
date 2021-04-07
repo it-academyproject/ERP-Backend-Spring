@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -71,9 +71,11 @@ public class StatsContoller {
     return map;
   }
   
-  @GetMapping("/sales")
-  public Map<String, String> getEmployeeSales() throws Exception{
-    HashMap<String, String> map = new HashMap<>();
+  @GetMapping("/employees/sells")
+  public Map<String,Object> getEmployeeSales() throws Exception{
+	  
+    HashMap<String, Object> map = new HashMap<>();
+   
     try {
     	List<Employee> employees = employeeService.findAllEmployees();
     	List<Order> orderList = orderService.findAllOrders();
@@ -83,14 +85,23 @@ public class StatsContoller {
     	}else {
     		map.put("success", "true");
     	    map.put("message", "employees list found");
-    	    map.put("Employee DNI", "  Completed orders");
     	    orderList.removeIf(o -> !o.getStatus().toString().equalsIgnoreCase("COMPLETED"));
     	    for(Employee e : employees) {
     	    	 List<Order> employeeOrders = orderList.stream()                
     	                 .filter(order -> order.getEmployeeId().toString()
-    	                		 .equalsIgnoreCase(e.getId().toString()))//Put "1" to test.     
+    	                		 .equalsIgnoreCase(e.getId().toString()))    
     	                 .collect(Collectors.toList()); 
-    	    	map.put(e.getDni(), String.valueOf(employeeOrders.size()));
+    	    	 List<Map<String,String>> list = new ArrayList();
+    	    	 Map<String, String> name = new HashMap<>();
+    	    	 name.put("name", e.getUser().getUsername());
+    	    	 Map<String, String> dni = new HashMap<>();
+    	    	 dni.put("dni" , e.getDni());
+    	    	 Map<String, String> orders = new HashMap<>();
+    	    	 orders.put("orders", String.valueOf(employeeOrders.size()));
+    	    	 list.add(name);
+    	    	 list.add(dni);
+    	    	 list.add(orders);
+    	    	 map.put("employee", list);
     	    }
     	    
             

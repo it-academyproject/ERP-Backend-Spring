@@ -129,7 +129,7 @@ public class Runner implements CommandLineRunner {
 			Product productTwo = new Product(2, "ejemplo 2", 100, "url image", "Bebidas", 3.00, 21.00, 2.50, 500);
 			productService.createProduct(productTwo);
 
-			// Initialize two orders
+			// Initialize four orders
 
 			List<String> productsId = new ArrayList<>(Arrays.asList("1", "2"));
 
