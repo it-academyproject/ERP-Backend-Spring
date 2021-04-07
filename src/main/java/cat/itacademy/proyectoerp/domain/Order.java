@@ -36,7 +36,7 @@ public class Order implements Serializable{
 	private OrderStatus status;
 	
 	
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany
 	//@JsonBackReference
 	@JoinTable(name="orders_products",
 	joinColumns = @JoinColumn(name="order_id", referencedColumnName = "id"),

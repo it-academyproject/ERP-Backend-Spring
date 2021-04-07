@@ -6,6 +6,8 @@ import java.util.UUID;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import cat.itacademy.proyectoerp.repository.IClientRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
@@ -28,18 +30,21 @@ public class OrderServiceImpl implements IOrderService{
 
 	
 	@Override
+	@Transactional
 	public void createOrder(Order order) {
 		orderRepository.save(order);
 		
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public Order findOrderById(UUID id) {
 		return orderRepository.findById(id)
 				.orElseThrow(() -> new ArgumentNotFoundException("Order not found. The id " + id + " doesn't exist"));
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Order> findAllOrders() {
 		if (orderRepository.findAll().isEmpty()) {
 			throw new ArgumentNotFoundException("No orders found");
@@ -49,6 +54,7 @@ public class OrderServiceImpl implements IOrderService{
 	}
 
 	@Override
+	@Transactional
 	public void updateOrder(Order order) {
 		//checks if it's an existing order
 				if (orderRepository.findById(order.getId()).isEmpty()) {
