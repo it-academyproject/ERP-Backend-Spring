@@ -86,25 +86,22 @@ public class StatsContoller {
     		map.put("success", "true");
     	    map.put("message", "employees list found");
     	    orderList.removeIf(o -> !o.getStatus().toString().equalsIgnoreCase("COMPLETED"));
+    	    List<Map<String,String>> list = new ArrayList();
     	    for(Employee e : employees) {
     	    	 List<Order> employeeOrders = orderList.stream()                
     	                 .filter(order -> order.getEmployeeId().toString()
     	                		 .equalsIgnoreCase(e.getId().toString()))    
     	                 .collect(Collectors.toList()); 
-    	    	 List<Map<String,String>> list = new ArrayList();
-    	    	 Map<String, String> name = new HashMap<>();
-    	    	 name.put("name", e.getUser().getUsername());
-    	    	 Map<String, String> dni = new HashMap<>();
-    	    	 dni.put("dni" , e.getDni());
-    	    	 Map<String, String> orders = new HashMap<>();
-    	    	 orders.put("orders", String.valueOf(employeeOrders.size()));
-    	    	 list.add(name);
-    	    	 list.add(dni);
-    	    	 list.add(orders);
-    	    	 map.put("employee", list);
+    	    	 
+    	    	 Map<String, String> employee = new HashMap<>();
+    	    	 employee.put("name", e.getUser().getUsername());
+    	    	 employee.put("dni" , e.getDni());
+    	    	 employee.put("orders", String.valueOf(employeeOrders.size()));
+    	    	 list.add(employee);
+    	    	 
     	    }
-    	    
-            
+    	    map.put("employee", list);
+    	      
     	}
     } catch(Exception e) {
     	 map.put("success", "false");
