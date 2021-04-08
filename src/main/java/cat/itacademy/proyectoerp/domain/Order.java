@@ -1,13 +1,17 @@
 package cat.itacademy.proyectoerp.domain;
 
 import java.io.Serializable;
-import java.util.Date;
+
+import java.time.LocalDateTime;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 
 @Entity
@@ -24,13 +28,17 @@ public class Order implements Serializable{
     )
 	@Column(name = "id", columnDefinition = "BINARY(16)")
 	private UUID id;
-	@Column
+	
+	@Column(name = "employee_id")
 	private String employeeId;
-	@Column
+	
+	@Column(name = "client_id")
 	private String clientId;
-	@Column
-	@Temporal(TemporalType.DATE)
-	private Date date;
+	
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+	@Column(name="date_created")
+    private LocalDateTime dateCreated;
+	
 	@Column
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status;
@@ -43,29 +51,34 @@ public class Order implements Serializable{
 	inverseJoinColumns = @JoinColumn(name="product_id", referencedColumnName= "id"))
 	private Set<Product> products = new HashSet<Product>();
 
-
-
+	
 	public Order() {
 		
 	}
 	
-	public Order(UUID id, String employeeId, String clientId, Date date, OrderStatus status, Set<Product> products) {
+	public Order(UUID id, String employeeId, String clientId,LocalDateTime dateCreated, OrderStatus status, Set<Product> products) {
 		super();
 		this.id = id;
 		this.employeeId = employeeId;
+		this.clientId= clientId;
+		this.dateCreated = dateCreated;
+		this.status = status;
+		this.products = products;
+		
+	}
+	
+	public Order(String employeeId, String clientId, LocalDateTime dateCreated, OrderStatus status, Set<Product> products) {
+		super();
+		this.employeeId = employeeId;
 		this.clientId = clientId;
-		this.date = date;
+		this.dateCreated = dateCreated;
 		this.status = status;
 		this.products = products;
 	}
 	
-	public Order(String employeeId, String clientId, Date date, OrderStatus status, Set<Product> products) {
-		super();
-		this.employeeId = employeeId;
-		this.clientId = clientId;
-		this.date = date;
-		this.status = status;
-		this.products = products;
+	@PrePersist
+	public void prePersist() {
+		dateCreated = LocalDateTime.now();
 	}
 
 	
@@ -82,7 +95,7 @@ public class Order implements Serializable{
 		return employeeId;
 	}
 
-	public void setEmployeeId(String employeeId) {
+	public void setEmployee_id(String employeeId) {
 		this.employeeId = employeeId;
 	}
 
@@ -90,21 +103,16 @@ public class Order implements Serializable{
 		return clientId;
 	}
 
-	public void setClientId(String clientId) {
+	public void setClient_id(String clientId) {
 		this.clientId = clientId;
 	}
 	
-	@PrePersist
-	public void prePersist() {
-		date = new Date();
+	public LocalDateTime getDateCreated() {
+		return dateCreated;
 	}
-
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
+	
+	public void setDateCreated(LocalDateTime dateCreated) {
+		this.dateCreated = dateCreated;
 	}
 
 	public OrderStatus getStatus() {
@@ -130,8 +138,10 @@ public class Order implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", employeeId=" + employeeId + ", clientId=" + clientId + ", date=" + date
-				+ ", status=" + status + ", products=" + products + "]";
+		return "Order [id=" + id + ", employeeId=" + employeeId + ", clientId=" + clientId + ", dateCreated="
+				+ dateCreated + ", status=" + status + ", products=" + products + "]";
 	}
+
+
 
 }

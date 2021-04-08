@@ -36,6 +36,7 @@ public class Product implements Serializable {
 	private double wholesale_price;
 	private int wholesale_quantity;
 
+	
 	/*
 	 * @ManyToMany
 	 * 
@@ -44,7 +45,7 @@ public class Product implements Serializable {
 	 * inverseJoinColumns = @JoinColumn(name="order_id", referencedColumnName =
 	 * "id")) private Set<Order>orders = new HashSet<Order>();
 	 */
-	
+	 
 	
 	public Product() {
 		

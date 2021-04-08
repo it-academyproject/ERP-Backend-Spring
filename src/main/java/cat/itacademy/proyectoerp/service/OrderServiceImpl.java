@@ -67,10 +67,10 @@ public class OrderServiceImpl implements IOrderService{
 				} else if (order.getClientId() == null) {
 					throw new ArgumentNotValidException("Invalid Client ID");
 				}
-				orderToUpdate.setClientId(order.getClientId());
+				orderToUpdate.setClient_id(order.getClientId());
 				
 				//TODO: Once Employee is implemented it should check if it exists.1
-				orderToUpdate.setEmployeeId(order.getEmployeeId());
+				orderToUpdate.setEmployee_id(order.getEmployeeId());
 				if (order.getStatus() == null) {
 					throw new ArgumentNotValidException("Status can't be null");
 				}

@@ -5,6 +5,7 @@ public class OrderProduct {
 	
 	private Order order;
 	private Product product;
+    private Integer quantity;
 	
 	
 	public Order getOrder() {
@@ -18,6 +19,12 @@ public class OrderProduct {
 	}
 	public void setProduct(Product product) {
 		this.product = product;
+	}
+	public Integer getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
 	}
 	
 	

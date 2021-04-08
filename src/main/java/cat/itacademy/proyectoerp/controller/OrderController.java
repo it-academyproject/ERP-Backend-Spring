@@ -3,6 +3,7 @@ package cat.itacademy.proyectoerp.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +38,13 @@ public class OrderController {
 	
 	  @PostMapping("/orders") 
 	  public ResponseEntity<?> createOrder(@RequestBody Order order) {
+		  try {
 	        orderService.createOrder(order);
 	        return ResponseEntity.status(HttpStatus.CREATED).body(order);
+	        
+		  }catch(NoSuchElementException k ) {
+			  return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+		  }
 	    }
 	  
 	   

@@ -1,8 +1,12 @@
 package cat.itacademy.proyectoerp;
 
 
+
+
+import java.time.LocalDateTime;
+
 import java.util.Arrays;
-import java.util.Date;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -137,12 +141,12 @@ public class Runner implements CommandLineRunner {
 			List<Product> productList= Arrays.asList(products);
 			Set<Product> productsSet = new HashSet<Product>(productList);
 			
-			Date today = new Date();
+			LocalDateTime today = LocalDateTime.now();
 
 			Order orderOne = new Order(UUID.randomUUID(), "2", clientOne.getid().toString(),today, OrderStatus.COMPLETED, productsSet);
 			orderService.createOrder(orderOne);
 
-			Order orderTwo = new Order(UUID.randomUUID(), "19", clientTwo.getid().toString(), today, OrderStatus.IN_DELIVERY,
+			Order orderTwo = new Order(UUID.randomUUID(), "19", clientTwo.getid().toString(),today, OrderStatus.IN_DELIVERY,
 					productsSet);
 			orderService.createOrder(orderTwo);
 		}
