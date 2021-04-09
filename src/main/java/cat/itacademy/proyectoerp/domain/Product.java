@@ -2,18 +2,15 @@ package cat.itacademy.proyectoerp.domain;
 
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 
 @Entity
 @Table(name = "products")
@@ -36,16 +33,6 @@ public class Product implements Serializable {
 	private double wholesale_price;
 	private int wholesale_quantity;
 
-	
-	/*
-	 * @ManyToMany
-	 * 
-	 * @JoinTable(name="orders_products", joinColumns
-	 * = @JoinColumn(name="product_id", referencedColumnName="id"),
-	 * inverseJoinColumns = @JoinColumn(name="order_id", referencedColumnName =
-	 * "id")) private Set<Order>orders = new HashSet<Order>();
-	 */
-	 
 	
 	public Product() {
 		

@@ -1,16 +1,12 @@
 package cat.itacademy.proyectoerp.domain;
 
 import java.io.Serializable;
-
 import java.time.LocalDateTime;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 
@@ -43,37 +39,35 @@ public class Order implements Serializable{
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status;
 	
-	
-	@ManyToMany
-	//@JsonBackReference
-	@JoinTable(name="orders_products",
-	joinColumns = @JoinColumn(name="order_id", referencedColumnName = "id"),
-	inverseJoinColumns = @JoinColumn(name="product_id", referencedColumnName= "id"))
-	private Set<Product> products = new HashSet<Product>();
-
+	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+    @JoinColumn(name = "order_id",referencedColumnName = "id",insertable = false,updatable = false)
+	 private Set<OrderProduct> orderProducts;
+	  
 	
 	public Order() {
 		
 	}
 	
-	public Order(UUID id, String employeeId, String clientId,LocalDateTime dateCreated, OrderStatus status, Set<Product> products) {
+	public Order(UUID id, String employeeId, String clientId,LocalDateTime dateCreated, OrderStatus status, Set<OrderProduct>orderProducts) {
 		super();
 		this.id = id;
 		this.employeeId = employeeId;
 		this.clientId= clientId;
 		this.dateCreated = dateCreated;
 		this.status = status;
-		this.products = products;
+		this.orderProducts = orderProducts;
+		
 		
 	}
 	
-	public Order(String employeeId, String clientId, LocalDateTime dateCreated, OrderStatus status, Set<Product> products) {
+	public Order(String employeeId, String clientId, OrderStatus status,Set<OrderProduct>orderProducts) {
 		super();
 		this.employeeId = employeeId;
 		this.clientId = clientId;
-		this.dateCreated = dateCreated;
+		this.dateCreated = LocalDateTime.now();
 		this.status = status;
-		this.products = products;
+		//this.orderProducts = orderProducts;
+		
 	}
 	
 	@PrePersist
@@ -122,26 +116,14 @@ public class Order implements Serializable{
 	public void setStatus(OrderStatus status) {
 		this.status = status;
 	}
-
-	public Set<Product> getProducts() {
-		return products;
-	}
-
-	public void setProducts(Set<Product> products) {
-		this.products = products;
-	}
 	
 	
-	public void addProduct(Product product) {
-		this.products.add(product);
-	}
-
-	@Override
-	public String toString() {
-		return "Order [id=" + id + ", employeeId=" + employeeId + ", clientId=" + clientId + ", dateCreated="
-				+ dateCreated + ", status=" + status + ", products=" + products + "]";
-	}
-
-
-
+	  public Set<OrderProduct> getOrderProducts() {
+		  return orderProducts;
+}
+	  
+	  public void setOrderProducts(Set<OrderProduct> orderProducts) {
+	      this.orderProducts = orderProducts;
+	  }
+	 
 }

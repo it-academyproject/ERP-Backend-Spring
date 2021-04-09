@@ -5,10 +5,10 @@ package cat.itacademy.proyectoerp;
 
 import java.time.LocalDateTime;
 
-import java.util.Arrays;
+
 
 import java.util.HashSet;
-import java.util.List;
+
 import java.util.Set;
 import java.util.UUID;
 
@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Order;
+import cat.itacademy.proyectoerp.domain.OrderProduct;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.domain.User;
@@ -136,19 +137,26 @@ public class Runner implements CommandLineRunner {
 			productService.createProduct(productTwo);
 
 			// Initialize two orders
-		    Product[] products = {productOne, productTwo};
-
-			List<Product> productList= Arrays.asList(products);
-			Set<Product> productsSet = new HashSet<Product>(productList);
 			
-			LocalDateTime today = LocalDateTime.now();
-
-			Order orderOne = new Order(UUID.randomUUID(), "2", clientOne.getid().toString(),today, OrderStatus.COMPLETED, productsSet);
-			orderService.createOrder(orderOne);
-
-			Order orderTwo = new Order(UUID.randomUUID(), "19", clientTwo.getid().toString(),today, OrderStatus.IN_DELIVERY,
-					productsSet);
-			orderService.createOrder(orderTwo);
+			
+			
+			  OrderProduct op1 = new OrderProduct(productOne,23);
+			  OrderProduct op2 = new OrderProduct(productTwo,4);
+			  
+			  Set<OrderProduct> productsSet = new HashSet<OrderProduct>();
+			  productsSet.add(op1);
+			  productsSet.add(op2);
+			  
+			  LocalDateTime today = LocalDateTime.now();
+			  
+			  Order orderOne = new Order(UUID.randomUUID(), "2",
+			  clientOne.getid().toString(),today, OrderStatus.COMPLETED,productsSet);
+			  orderService.createOrder(orderOne);
+			  
+			  Order orderTwo = new Order(UUID.randomUUID(), "19",
+			  clientTwo.getid().toString(),today, OrderStatus.IN_DELIVERY, productsSet);
+			  orderService.createOrder(orderTwo);
+			 
 		}
 
 	}

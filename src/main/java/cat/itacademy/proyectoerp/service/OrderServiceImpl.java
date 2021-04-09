@@ -1,7 +1,9 @@
 package cat.itacademy.proyectoerp.service;
 
 
+
 import java.util.List;
+
 import java.util.UUID;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cat.itacademy.proyectoerp.repository.IClientRepository;
+import cat.itacademy.proyectoerp.repository.IOrderProductRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
 import cat.itacademy.proyectoerp.domain.Order;
+
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 
@@ -26,13 +30,17 @@ public class OrderServiceImpl implements IOrderService{
 
 	@Autowired
 	IProductRepository productRepository;
+	
+	@Autowired
+	IOrderProductRepository orderProductRepository;
 
 
 	
 	@Override
 	@Transactional
-	public void createOrder(Order order) {
-		orderRepository.save(order);
+	public UUID createOrder(Order order) { 
+		 Order newOrder = orderRepository.save(order);
+		    return newOrder.getId();
 		
 	}
 	
@@ -75,8 +83,8 @@ public class OrderServiceImpl implements IOrderService{
 					throw new ArgumentNotValidException("Status can't be null");
 				}
 				orderToUpdate.setStatus(order.getStatus());
-				if(!order.getProducts().isEmpty()){
-					orderToUpdate.setProducts(order.getProducts());
+				if(!order.getOrderProducts().isEmpty()){
+					orderToUpdate.setOrderProducts(order.getOrderProducts());
 				} else {
 					throw new ArgumentNotValidException("Invalid products in the order");
 				}

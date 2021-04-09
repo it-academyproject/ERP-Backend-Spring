@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderProduct;
-import cat.itacademy.proyectoerp.domain.Product;
+
 import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 import cat.itacademy.proyectoerp.service.ProductServiceImpl;
 
@@ -32,7 +32,7 @@ public class OrderProductController {
 	public ResponseEntity<?> listProductsOrder(@RequestBody Order order){
 		Order orderDb = orderService.findOrderById(order.getId());
 		if(orderDb != null) {
-			Collection<Product> productList = orderDb.getProducts();
+			Collection<OrderProduct> productList = orderDb.getOrderProducts();
 				return new ResponseEntity<>(productList, HttpStatus.OK);
 		}
 		
@@ -43,8 +43,8 @@ public class OrderProductController {
 	public ResponseEntity<?> saveProductOrder(@RequestBody OrderProduct orderProduct){
 		Order orderDb = orderService.findOrderById(orderProduct.getOrder().getId());
 		if(orderDb != null) {
-			Product productDb = productService.findProductById(orderProduct.getProduct().getId());
-			orderDb.addProduct(productDb);
+			//Product productDb = productService.findProductById(orderProduct.getProduct().getId());
+			//orderDb.addProduct(productDb);
 			orderService.createOrder(orderDb);
 			return new ResponseEntity<Void>(HttpStatus.CREATED);
 		}
