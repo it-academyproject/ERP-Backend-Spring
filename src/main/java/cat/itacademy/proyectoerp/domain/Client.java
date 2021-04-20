@@ -26,7 +26,7 @@ public class Client {
 	private String address;
 	private String dni;
 	private String image;
-	private String nameAndSurname;
+	private String name_and_surname;
 	//private List<Order> orders;
 
 	@OneToOne(cascade = CascadeType.ALL)
@@ -46,7 +46,7 @@ public class Client {
 	 * @param address        client address
 	 * @param dni            client dni
 	 * @param image          client image
-	 * @param nameAndSurname client name
+	 * @param name_and_surname client name
 	 * @param orders         client orders
 	 */
 
@@ -54,7 +54,7 @@ public class Client {
 		this.address = address;
 		this.dni = dni; 
 		this.image = image;
-		this.nameAndSurname = name;
+		this.name_and_surname = name;
 		//this.orders = orders;
 	}
 
@@ -68,7 +68,7 @@ public class Client {
 	 */
 	public Client(String address, String dni, String image, String name, User user) {
 		//id = UUID.randomUUID();
-		this.nameAndSurname = name;
+		this.name_and_surname = name;
 		this.address = address;
 		this.dni = dni;
 		this.image = image;
@@ -93,6 +93,8 @@ public class Client {
 		this.id = id;
 	}
 
+		
+
 	/**
 	 * @return client address
 	 */
@@ -100,6 +102,8 @@ public class Client {
 	public String getAddress() {
 		return address;
 	}
+
+	
 
 	/**
 	 * @param address to set client address
@@ -148,21 +152,37 @@ public class Client {
 //		 public List<Order> getOrders() {
 //	 return orders;
 //	 }
-
+/*************************************************************************************/
 	/**
 	 * @param nameAndSurname  to set client Name
 	 */
 		 
-	public String getNameAndSurname() {
-		return nameAndSurname;
+/*	public String getNameAndSurname() {
+		return getName_and_surname();
+	}*/
+
+	/**
+	 * @param name_and_surname  to set client Name
+	 */
+		 
+	public String getName_and_surname() {
+		return name_and_surname;
 	}
 	
 	/**
 	 * @return client name
 	 */
-
+	
 	public void setNameAndSurname(String nameAndSurname) {
-		this.nameAndSurname = nameAndSurname;
+		setName_and_surname(nameAndSurname);
+	}
+
+	/**
+	 * @return client name
+	 */
+
+	public void setName_and_surname(String nameAndSurname) {
+		this.name_and_surname = nameAndSurname;
 	}
 
 	/**
