@@ -48,7 +48,7 @@ public class ClientController {
     }
     
     //Add client without giving user
-    @PostMapping("/fastClient")
+    @PostMapping("/fastclient") 
     public ResponseEntity<?> addFastClient(@RequestBody ClientDTO client) {
     	Client finalClient = service.createFastClient(client);
     	return ResponseEntity.ok().body(finalClient);
