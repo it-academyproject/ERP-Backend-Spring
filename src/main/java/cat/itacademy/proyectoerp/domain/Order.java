@@ -6,13 +6,15 @@ import java.util.UUID;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.hibernate.annotations.GenericGenerator;
 
 import cat.itacademy.proyectoerp.util.StringToListConverter;
 
 @Entity
 @Table(name = "orders")
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class Order {
 
 	@Id
