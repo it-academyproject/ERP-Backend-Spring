@@ -64,9 +64,25 @@ public class Runner implements CommandLineRunner {
 	@Transactional
 	public void run(String... args) throws Exception {
 		
-		//checks if there is already an admin created and if not it creates one.
-		if(!userRepository.existsByUsername("administrator@admin.com")){
-			userRepository.save(new User("administrator@admin.com", passwordEncoder.encode("administrator1."), UserType.ADMIN));
+		//checks if there is already an admin created, if not, it creates one.
+		if(!userRepository.existsByUsername("admin@erp.com")){
+			userRepository.save(new User("admin@erp.com", passwordEncoder.encode("ReW9a0&+TP"), UserType.ADMIN));
+		}
+		
+		//checks if there is already an employee created, if not, it creates one
+		if(!userRepository.existsByUsername("employee@erp.com")){
+			User userEmployee = new User("employee@erp.com", "ReW9a0&+TP", UserType.EMPLOYEE);
+			userService.registerNewUserAccount(userEmployee);
+			Employee employee = new Employee(18000.00, "employee@erp.com", "C1234567Z", 667999997, userEmployee);
+			employeeService.createEmployee(employee);
+		}
+		
+		//checks if there is already a client created, if not, it creates one
+		if(!userRepository.existsByUsername("client@erp.com")){
+			User userClient = new User("client@erp.com", "ReW9a0&+TP", UserType.CLIENT);
+			userService.registerNewUserAccount(userClient);
+			Client client = new Client("address example", "L1234567Z", "url image","Random Name", userClient);
+			clientService.createClient(client);
 		}
 		
 		//X is the variable of the amount of clients do you want to have. 
@@ -98,7 +114,7 @@ public class Runner implements CommandLineRunner {
 
 			User userClientTwo = new User("userclienttwo@example.com", "ReW9a0&+ET", UserType.CLIENT);
 			userService.registerNewUserAccount(userClientTwo);
-			
+						
 			// Initialize two Clients for the orders
 			Client clientOne = new Client("address example", "L1234567Z", "url image","Random Name", userClientOne);
 			clientService.createClient(clientOne);
@@ -148,9 +164,7 @@ public class Runner implements CommandLineRunner {
 			Order orderFour = new Order(UUID.randomUUID(), employeeOne.getId().toString(), clientTwo.getid().toString(), today, OrderStatus.COMPLETED,
 					productsId);
 			orderService.createOrder(orderFour);
-		}
-		
-		
+		}		
 
 	}
 
