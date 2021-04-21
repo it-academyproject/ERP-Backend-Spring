@@ -23,7 +23,7 @@ public class ClientDTO implements Serializable {
 	private String dni;
 	private String image;
 	private String username;
-	private String nameAndSurname;
+	private String name_and_surname;
 	// private Long id;
 
 	// SETERRS AND GETTERS
@@ -68,14 +68,19 @@ public class ClientDTO implements Serializable {
 		this.username = username;
 	}
 
-	public String getNameAndSurname() {
-		return nameAndSurname;
-	}
+	/*public String getNameAndSurname() {
+		return name_and_surname;
+	}*/
+
+	public String getName_and_surname() {
+		return name_and_surname;
+	} 
 
 	public void setNameAndSurname(String nameAndSurname) {
-		this.nameAndSurname = nameAndSurname;
+		this.name_and_surname = nameAndSurname;
 	}
-	
+
+
 	
 
 }
