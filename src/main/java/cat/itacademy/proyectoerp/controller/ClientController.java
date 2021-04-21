@@ -97,7 +97,7 @@ public class ClientController {
     }
 
     //Update a client by id
-    @PutMapping("/{id}")
+    @PutMapping()
     public ResponseEntity<?> updateClientById(@RequestBody Client clientUpdate) {
     	Client client = null;
         try {
