@@ -1,6 +1,5 @@
 package cat.itacademy.proyectoerp.domain;
 
-
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
