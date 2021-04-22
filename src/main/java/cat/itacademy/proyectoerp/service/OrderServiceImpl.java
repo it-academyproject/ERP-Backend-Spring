@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cat.itacademy.proyectoerp.repository.IClientRepository;
-import cat.itacademy.proyectoerp.repository.IOrderProductRepository;
+//import cat.itacademy.proyectoerp.repository.IOrderProductRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
 import cat.itacademy.proyectoerp.domain.Order;
@@ -31,9 +31,8 @@ public class OrderServiceImpl implements IOrderService{
 	@Autowired
 	IProductRepository productRepository;
 	
-	@Autowired
-	IOrderProductRepository orderProductRepository;
-
+//	@Autowired
+//	IOrderProductRepository orderProductRepository;
 
 	
 	@Override
@@ -82,13 +81,13 @@ public class OrderServiceImpl implements IOrderService{
 				if (order.getStatus() == null) {
 					throw new ArgumentNotValidException("Status can't be null");
 				}
-				orderToUpdate.setStatus(order.getStatus());
+/*				orderToUpdate.setStatus(order.getStatus());
 				if(!order.getOrderProducts().isEmpty()){
 					orderToUpdate.setOrderProducts(order.getOrderProducts());
 				} else {
 					throw new ArgumentNotValidException("Invalid products in the order");
 				}
-				
+*/				
 				orderRepository.save(orderToUpdate);
 	}
 
@@ -118,10 +117,10 @@ public class OrderServiceImpl implements IOrderService{
 
 	@Override
 	public List<Order> findOrdersByEmployeeId(String employeeId) {
-		if(iOrderRepository.findOrdersByEmployeeId(employeeId) == null){
+		if(orderRepository.findOrdersByEmployeeId(employeeId) == null){
 			throw new ArgumentNotFoundException("The employee with id: " + employeeId + " does not have orders assigned");
 		} else{
-			return iOrderRepository.findOrdersByEmployeeId(employeeId);
+			return orderRepository.findOrdersByEmployeeId(employeeId);
 		}
 	}
 }

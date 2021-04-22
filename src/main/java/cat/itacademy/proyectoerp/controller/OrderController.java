@@ -32,21 +32,34 @@ public class OrderController {
 	String success = "success";
 	String message = "message";
 	String isFalse = "false";
-	String error = "Error: ";
-
-
+	String error = "Error: ";	
 	
-	  @PostMapping("/orders") 
-	  public ResponseEntity<?> createOrder(@RequestBody Order order) {
-		  try {
-	        orderService.createOrder(order);
-	        return ResponseEntity.status(HttpStatus.CREATED).body(order);
-	        
-		  }catch(NoSuchElementException k ) {
-			  return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
-		  }
-	    }
-	  
+	/**
+	 * Create a new order
+	 * 
+	 * @param order order
+	 * @return new order 
+	 */
+	@PostMapping("/orders")
+	public Map<String, Object> createOrder(@RequestBody Order order) {
+
+		HashMap<String, Object> map = new HashMap<>();
+
+		try {
+			orderService.createOrder(order);
+
+			map.put(success, "true");
+			map.put(message, "Order created");
+			map.put("order", order);
+
+		} catch (Exception e) {
+
+			map.put(success, isFalse);
+			map.put(message, error + e.getMessage());
+		}
+
+		return map;
+	}
 	   
 	
 	@GetMapping("/orders/{id}")

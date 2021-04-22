@@ -2,14 +2,23 @@ package cat.itacademy.proyectoerp.domain;
 
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.springframework.data.annotation.Transient;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 @Entity
@@ -32,7 +41,11 @@ public class Product implements Serializable {
 	private double vat;
 	private double wholesale_price;
 	private int wholesale_quantity;
-
+	
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy ="orderProducts")
+//	@JsonBackReference  -> Does not work for ManyToMany
+	@JsonIgnoreProperties("products")
+	private Set <Order> orders = new HashSet<>();
 	
 	public Product() {
 		
@@ -66,8 +79,6 @@ public class Product implements Serializable {
 		this.wholesale_quantity = wholesale_quantity;
 	
 	}
-
-
 	
 	public int getId() {
 		return id;
@@ -142,7 +153,17 @@ public class Product implements Serializable {
 	public void setWholesale_quantity(int wholesale_quantity) {
 		this.wholesale_quantity = wholesale_quantity;
 	}
+	
 
+	public Set <Order> getOrders() {
+		return orders;
+	}
+	
+//	@Transient 
+	public void setOrders(Set <Order> orders) {
+		this.orders = orders;
+	}
+	
 	// Console data printing method
 	@Override
 	public String toString() {
@@ -150,4 +171,5 @@ public class Product implements Serializable {
 				+ ", price=" + price + ", vat=" + vat + ", wholesale_price=" + wholesale_price + ", wholesale_quantity="
 				+ wholesale_quantity + "]";
 	}
+	
 }
