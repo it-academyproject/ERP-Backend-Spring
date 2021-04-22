@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import cat.itacademy.proyectoerp.domain.User;
@@ -21,6 +22,7 @@ public class EmailServiceImpl implements IEmailService {
 	 * @throws MailException
 	 */
 	@Override
+	@Async
 	public void sendWelcomeEmail(User user) throws MailException {
 
 		SimpleMailMessage message = new SimpleMailMessage();

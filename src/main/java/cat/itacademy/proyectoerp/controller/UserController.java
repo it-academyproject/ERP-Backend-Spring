@@ -123,7 +123,7 @@ public class UserController {
 	    	} catch (ArgumentNotValidException e) {
 	    		return ResponseEntity.unprocessableEntity().body(e.getMessage());
 	    	}	        
-	        return ResponseEntity.status(HttpStatus.CREATED).body(standar);
+	        return ResponseEntity.status(HttpStatus.CREATED).body(userDTO);
 		}
 	
     }

@@ -1,11 +1,14 @@
 package cat.itacademy.proyectoerp.domain;
 
-import java.io.Serializable;
+//import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.hibernate.annotations.GenericGenerator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -13,7 +16,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "orders")
-public class Order implements Serializable{
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+public class Order {
 
 	private static final long serialVersionUID = 1L;
 	

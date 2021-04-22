@@ -1,8 +1,6 @@
 package cat.itacademy.proyectoerp;
 
 
-
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Order;
-//import cat.itacademy.proyectoerp.domain.OrderProduct;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.domain.User;
@@ -74,7 +71,7 @@ public class Runner implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		
 		//checks if there is already an admin created, if not, it creates one.
-		if(!userRepository.existsByUsername("admin@erp.com")) {
+		if(!userRepository.existsByUsername("admin@erp.com")){
 			userRepository.save(new User("admin@erp.com", passwordEncoder.encode("ReW9a0&+TP"), UserType.ADMIN));
 		}
 		
@@ -123,7 +120,7 @@ public class Runner implements CommandLineRunner {
 
 			User userClientTwo = new User("userclienttwo@example.com", "ReW9a0&+ET", UserType.CLIENT);
 			userService.registerNewUserAccount(userClientTwo);
-			
+						
 			// Initialize two Clients for the orders
 			Client clientOne = new Client("address example", "L1234567Z", "url image","Random Name", userClientOne);
 			clientService.createClient(clientOne);
@@ -185,7 +182,6 @@ public class Runner implements CommandLineRunner {
 			Order orderFour = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
 					clientOne.getid().toString(), LocalDateTime.now(), OrderStatus.ASSIGNED, productsOrder4);
 			orderService.createOrder(orderFour);
-
  
 		}
 

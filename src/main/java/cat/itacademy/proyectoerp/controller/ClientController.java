@@ -48,7 +48,7 @@ public class ClientController {
     }
     
     //Add client without giving user
-    @PostMapping("/fastClient")
+    @PostMapping("/fastclient") 
     public ResponseEntity<?> addFastClient(@RequestBody ClientDTO client) {
     	Client finalClient = service.createFastClient(client);
     	return ResponseEntity.ok().body(finalClient);
@@ -78,10 +78,10 @@ public class ClientController {
 			map.put("error", e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(map);
 		}
-    	map.put("totalClients", service.getAllClients().size());
-    	map.put("ClientsOfThePage", list);
+    
+		map.put("total_clients", service.getAllClients().size());
+    	map.put("clients_of_the_page", list);
     	return ResponseEntity.ok().body(map);
-    	
     }
 
     //get a client by id
