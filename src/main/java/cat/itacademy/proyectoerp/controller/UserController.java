@@ -101,7 +101,7 @@ public class UserController {
 	/**
 	 * Method for create a new user and client.
 	 * 
-	 * @param user JSON with StandarRegistration data
+	 * @param standar JSON with StandarRegistration data
 	 * @return Welcome String.
 	 */
 	@RequestMapping(value = "/users/clients", method = RequestMethod.POST)
@@ -131,26 +131,35 @@ public class UserController {
 	/**
 	 * Method for user login
 	 * 
-	 * @param user JSON with credentials.
+	 * @param jwtLogin JSON with credentials.
 	 * @return String with message: Success or unauthorized.
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<JwtResponse> loginUser(@RequestBody JwtLogin jwtLogin) throws Exception {
+	public ResponseEntity<?> loginUser(@Valid @RequestBody JwtLogin jwtLogin){
 
 		JwtResponse jwtResponse;
+		UserDetails userDetails;
 
-		SecurityContextHolder.getContext()
-				.setAuthentication(authenticate(jwtLogin.getUsername(), jwtLogin.getPassword()));
+		try {
+			/*
+			SecurityContextHolder.getContext()
+					.setAuthentication(authenticate(jwtLogin.getUsername(), jwtLogin.getPassword()));
+			 */
+			userDetails = userDetailService.loadUserByUsername(jwtLogin.getUsername());
 
-		UserDetails userDetails = userDetailService.loadUserByUsername(jwtLogin.getUsername());
+			SecurityContextHolder.getContext()
+					.setAuthentication(authenticate(jwtLogin.getUsername(), jwtLogin.getPassword()));
+
+		} catch (Exception e) {
+			MessageDTO messageDto = new MessageDTO("False", e.getMessage());
+			return ResponseEntity.unprocessableEntity().body(messageDto);
+		}
 
 		final String token = jwtUtil.generateToken(userDetails);
 		// Create JSON to Response to client.
 		jwtResponse = new JwtResponse(token, jwtLogin.getUsername(), userDetails.getAuthorities());
-
 		return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
-
 	}
 
 	/**
@@ -186,7 +195,7 @@ public class UserController {
 	/**
 	 * Method for delete user by user ID.
 	 * 
-	 * @param id user ID
+	 * @param user user ID
 	 * @return OK if user exist. Not OK if user don't exists.
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
@@ -204,9 +213,8 @@ public class UserController {
 
 	/**
 	 * Method for modify the type of user.
-	 * 
-	 * @param id     Id of user.
-	 * @param String new type of user.
+	 *
+	 * @param user new type of user.
 	 * @return OK if user exists.
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
@@ -248,12 +256,13 @@ public class UserController {
 	}
 
 	private Authentication authenticate(String username, String password) throws Exception {
+
 		try {
 			return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 		} catch (DisabledException e) {
-			throw new Exception("USER_DISABLED", e);
+			throw new DisabledException("User disabled");
 		} catch (BadCredentialsException e) {
-			throw new Exception("INVALID_CREDENTIALS", e);
+			throw new BadCredentialsException("Invalid user credentials");
 		}
 	}
 
