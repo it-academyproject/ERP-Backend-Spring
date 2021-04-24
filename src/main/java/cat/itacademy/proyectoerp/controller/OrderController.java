@@ -3,14 +3,16 @@ package cat.itacademy.proyectoerp.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +23,8 @@ import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 @RestController
 @RequestMapping("/api")
 public class OrderController {
+	
+	//ACORDARSE DE ACTUALIZAR EL RUNNER
 
 	@Autowired
 	OrderServiceImpl orderService;
@@ -28,8 +32,8 @@ public class OrderController {
 	String success = "success";
 	String message = "message";
 	String isFalse = "false";
-	String error = "Error: ";
-
+	String error = "Error: ";	
+	
 	/**
 	 * Create a new order
 	 * 
@@ -56,13 +60,8 @@ public class OrderController {
 
 		return map;
 	}
-
-	/**
-	 * Get order by id
-	 * 
-	 * @param id order id
-	 * @return order by id
-	 */
+	   
+	
 	@GetMapping("/orders/{id}")
 	public Map<String, Object> findOrderById(@PathVariable(name = "id") UUID id) {
 		HashMap<String, Object> map = new HashMap<>();
@@ -79,11 +78,6 @@ public class OrderController {
 	}
 
 
-	/**
-	 * Get all orders
-	 *
-	 * @return list of orders
-	 */
 	@GetMapping("/orders")
 	public HashMap<String, Object> findOrders() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -99,38 +93,8 @@ public class OrderController {
 		return map;
 	}
 
-	/**
-	 * Update order
-	 * 
-	 * @param order
-	 * @return order updated
-	 */
-	@PutMapping("/order")
-	public Map<String, Object> updateOrder(@RequestBody Order order) {
 
-		HashMap<String, Object> map = new HashMap<>();
-
-		try {
-			Order updatedOrder = orderService.updateOrder(order);
-
-			map.put(success, "true");
-			map.put(message, "order updated");
-			map.put("product", updatedOrder);
-		} catch (Exception e) {
-
-			map.put(success, isFalse);
-			map.put(message, error + e.getMessage());
-
-		}
-		return map;
-	}
-
-	/**
-	 * Delete order by id
-	 * 
-	 * @param order id
-	 * @return message
-	 */
+	
 	@DeleteMapping("/orders")
 	public Map<String, Object> deleteOrder(@RequestBody Order order) {
 

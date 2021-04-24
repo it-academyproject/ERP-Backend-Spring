@@ -24,13 +24,8 @@ public class ProductController {
 	@Autowired
 	ProductServiceImpl productService;
 
-	/**
-	 * Create a new product
-	 * 
-	 * @param product product data
-	 * @return new product data
-	 */
-	@PreAuthorize("hasRole('ADMIN')")
+	
+	//@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/products")
 	public HashMap<String, Object> createProduct(@RequestBody Product product) {
 
@@ -53,12 +48,7 @@ public class ProductController {
 		return map;
 	}
 
-	/**
-	 * Get product data according to id
-	 * 
-	 * @param id product id
-	 * @return product data according to id
-	 */
+	
 	@GetMapping("/products/{id}")
 	public HashMap<String, Object> findProductById(@PathVariable(name = "id") int id) {
 
@@ -81,11 +71,6 @@ public class ProductController {
 		return map;
 	}
 
-	/**
-	 * Get list of products
-	 * 
-	 * @return product list
-	 */
 	@GetMapping("/products")
 	public HashMap<String, Object> getProducts() {
 
@@ -107,13 +92,8 @@ public class ProductController {
 		return map;
 	}
 
-	/**
-	 * Update product data
-	 * 
-	 * @param product product new data
-	 * @return product updated
-	 */
-	@PreAuthorize("hasRole('ADMIN')")
+	
+	//@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/products")
 	public HashMap<String, Object> updateProduct(@RequestBody Product product) {
 
@@ -137,13 +117,8 @@ public class ProductController {
 		return map;
 	}
 
-	/**
-	 * Delete product according to id
-	 * 
-	 * @param product product id
-	 * @return message: product removed successfully
-	 */
-	@PreAuthorize("hasRole('ADMIN')")
+	
+	//@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/products")
 	public HashMap<String, Object> deleteProduct(@RequestBody Product product) {
 

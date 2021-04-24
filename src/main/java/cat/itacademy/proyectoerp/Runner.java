@@ -1,10 +1,16 @@
 package cat.itacademy.proyectoerp;
 
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +76,7 @@ public class Runner implements CommandLineRunner {
 		}
 		
 		//checks if there is already an employee created, if not, it creates one
-		if(!userRepository.existsByUsername("employee@erp.com")){
+		if(!userRepository.existsByUsername("employee@erp.com")) {
 			User userEmployee = new User("employee@erp.com", "ReW9a0&+TP", UserType.EMPLOYEE);
 			userService.registerNewUserAccount(userEmployee);
 			Employee employee = new Employee(18000.00, "employee@erp.com", "C1234567Z", 667999997, userEmployee);
@@ -78,7 +84,7 @@ public class Runner implements CommandLineRunner {
 		}
 		
 		//checks if there is already a client created, if not, it creates one
-		if(!userRepository.existsByUsername("client@erp.com")){
+		if(!userRepository.existsByUsername("client@erp.com")) {
 			User userClient = new User("client@erp.com", "ReW9a0&+TP", UserType.CLIENT);
 			userService.registerNewUserAccount(userClient);
 			Client client = new Client("address example", "L1234567Z", "url image","Random Name", userClient);
@@ -130,6 +136,7 @@ public class Runner implements CommandLineRunner {
 			User userEmployeeTwo = new User("useremployeetwo@example.com", "ReW9a0&+ET", UserType.EMPLOYEE);
 			userService.registerNewUserAccount(userEmployeeTwo);
 			
+			
 			// Initialize two Employees for the orders
 			Employee employeeOne = new Employee(24000.00,"employee1@company.com", "A1234567Z",667999999, userEmployeeOne);
 			employeeService.createEmployee(employeeOne);
@@ -138,33 +145,45 @@ public class Runner implements CommandLineRunner {
 			employeeService.createEmployee(employeeTwo);
 			
 
-			// Initialize two products
+			// Initialize 3 products
 			Product productOne = new Product(1, "ejemplo 1", 100, "url image", "Bebidas", 3.00, 21.00, 2.50, 500);
 			productService.createProduct(productOne);
 
 			Product productTwo = new Product(2, "ejemplo 2", 100, "url image", "Bebidas", 3.00, 21.00, 2.50, 500);
 			productService.createProduct(productTwo);
+			
+			Product productThree = new Product(3, "ejemplo 3", 100, "url image", "Bebidas", 3.00, 21.00, 2.50, 500);
+			productService.createProduct(productThree);
 
-			// Initialize four orders
-
-			List<String> productsId = new ArrayList<>(Arrays.asList("1", "2"));
-
-			Date today = new Date();
-
-			Order orderOne = new Order(UUID.randomUUID(), employeeOne.getId().toString(), clientOne.getid().toString(), today, OrderStatus.COMPLETED,
-					productsId);
+			
+			// Initialize four orders, we create 4 sets of products first
+			Set<Product> productsOrder1 = Stream.of(productOne, productTwo)
+					.collect(Collectors.toCollection(HashSet::new));
+			Set<Product> productsOrder2 = Stream.of(productTwo, productThree)
+					.collect(Collectors.toCollection(HashSet::new));
+			Set<Product> productsOrder3 = Stream.of(productOne, productThree)
+					.collect(Collectors.toCollection(HashSet::new));
+			Set<Product> productsOrder4 = Stream.of(productOne, productTwo, productThree)
+					.collect(Collectors.toCollection(HashSet::new));
+		
+			
+			Order orderOne = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
+					clientOne.getid().toString(), LocalDateTime.now(), OrderStatus.COMPLETED, productsOrder1);
 			orderService.createOrder(orderOne);
-
-			Order orderTwo = new Order(UUID.randomUUID(), employeeTwo.getId().toString(), clientTwo.getid().toString(), today, OrderStatus.IN_DELIVERY,
-					productsId);
+			
+			Order orderTwo = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
+					clientOne.getid().toString(), LocalDateTime.now(), OrderStatus.IN_DELIVERY, productsOrder2);
 			orderService.createOrder(orderTwo);
-			Order orderThree = new Order(UUID.randomUUID(), employeeTwo.getId().toString(), clientOne.getid().toString(), today, OrderStatus.IN_DELIVERY,
-					productsId);
+			
+			Order orderThree = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
+					clientOne.getid().toString(), LocalDateTime.now(), OrderStatus.PENDING_DELIVERY, productsOrder3);
 			orderService.createOrder(orderThree);
-			Order orderFour = new Order(UUID.randomUUID(), employeeOne.getId().toString(), clientTwo.getid().toString(), today, OrderStatus.COMPLETED,
-					productsId);
+			
+			Order orderFour = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
+					clientOne.getid().toString(), LocalDateTime.now(), OrderStatus.ASSIGNED, productsOrder4);
 			orderService.createOrder(orderFour);
-		}		
+ 
+		}
 
 	}
 
