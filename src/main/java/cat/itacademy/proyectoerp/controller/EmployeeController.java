@@ -84,7 +84,7 @@ public class EmployeeController {
       Employee employeeUpdated = iEmployeeService.updateEmployee(employee);
       map.put("success", "true");
       map.put("message", "Employee with id: " + employee.getId() + " has been updated");
-      map.put("employee", employee);
+      map.put("employee", employeeUpdated);
 
     } catch (Exception e) {
       map.put("success", "false");
