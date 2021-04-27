@@ -296,6 +296,7 @@ public class UserServiceImpl implements IUserService {
 		 
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+
 		// Verify if user exist
 		User updatedUser = userRepository.findByUsername(changeuserpassword.getUser().getUsername());
 		
