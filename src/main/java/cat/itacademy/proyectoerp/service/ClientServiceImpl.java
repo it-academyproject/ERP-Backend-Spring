@@ -44,9 +44,9 @@ public class ClientServiceImpl implements IClientService {
 		else if (client.getDni() == null || client.getDni().isEmpty()) {
 			throw new ArgumentNotValidException("Dni can't be empty");
 		}
-//		else if(repository.existsByDni(client.getDni())) {
-//			throw new ArgumentNotValidException("Dni already exists");
-//		}
+		else if(repository.existsByDni(client.getDni())) {
+			throw new ArgumentNotValidException("Dni already exists");
+		}
 		else if(client.getUser() == null) {
 			throw new ArgumentNotValidException("You have to assign this client to an user.");
 		} else {
