@@ -29,7 +29,6 @@ public class EmailServiceImpl implements IEmailService {
 
 		// set email properties/body
 		message.setTo(user.getUsername());
-		message.setFrom("bcnactivaitacademy01@gmail.com");
 		message.setSubject("Welcome to ProyectoERP");
 		message.setText("Welcome to ProyectoERP \n\nThanks for signing up!");
 
@@ -52,7 +51,7 @@ public class EmailServiceImpl implements IEmailService {
 
 		// set email properties/body
 		message.setTo(user.getUsername());
-		message.setFrom("example@gmail.com");
+	//	message.setFrom("example@gmail.com");
 		message.setSubject("Forgot Password");
 		message.setText("Your new password is: " + password
 				+ "\n\nNow you can login with your new password and navigate through the app, see you soon!");

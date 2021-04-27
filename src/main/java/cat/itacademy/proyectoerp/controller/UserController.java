@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import cat.itacademy.proyectoerp.domain.ChangeUserPassword;
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.StandarRegistration;
 import cat.itacademy.proyectoerp.domain.User;
@@ -273,12 +275,14 @@ public class UserController {
 	 * @return user updated
 	 */
 	@PutMapping("/users/resetpassword")
-	public HashMap<String, Object> resetPassword(@Valid @RequestBody User user) {
-
+		
+	public HashMap<String, Object> resetPassword(@Valid @RequestBody ChangeUserPassword changeuserpassword) {
+	
 		HashMap<String, Object> map = new HashMap<String, Object>();
-
+	
 		try {
-			userService.updatePassword(user);
+			
+			userService.updatePassword(changeuserpassword);
 
 			map.put("success", "true");
 			map.put("message", "User password updated");
