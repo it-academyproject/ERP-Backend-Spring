@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import cat.itacademy.proyectoerp.domain.*;
 import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
-import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 import cat.itacademy.proyectoerp.repository.UserRepository;
 
 import cat.itacademy.proyectoerp.util.PasswordGenerator;

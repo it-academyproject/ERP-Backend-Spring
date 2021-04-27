@@ -25,23 +25,19 @@ public class UserDetailServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		//final org.springframework.security.core.userdetails.User UserSecurity;
-		
 		Set<GrantedAuthority> authoritiesUser = new HashSet<GrantedAuthority>(UserType.values().length);
                //  new ArrayList<GrantedAuthority>();
 		
 		//final User user = userDao.findByUsername(username);
-				
-		if (userDao.findByUsername(username) == null)
-			 throw new UsernameNotFoundException(username);
-		
+
+		if (null == userDao.findByUsername(username)) {
+			throw new UsernameNotFoundException("Username not found");
+		}
+
 		//for (String role : user.getUserType())
 		authoritiesUser.add(new SimpleGrantedAuthority("ROLE_" + userDao.findByUsername(username).getUserType().toString()));
 
-		
 		UserDetails userDetails = User.withUsername(userDao.findByUsername(username).getUsername()).password(userDao.findByUsername(username).getPassword()).authorities(authoritiesUser).build();
-		
 		return userDetails;
 	}
-
-
 }

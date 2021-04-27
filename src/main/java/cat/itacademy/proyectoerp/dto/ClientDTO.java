@@ -68,10 +68,6 @@ public class ClientDTO implements Serializable {
 		this.username = username;
 	}
 
-	/*public String getNameAndSurname() {
-		return name_and_surname;
-	}*/
-
 	public String getName_and_surname() {
 		return name_and_surname;
 	} 

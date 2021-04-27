@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
@@ -17,6 +18,7 @@ public class ProductServiceImpl implements IProductService {
 	IProductRepository productRepo;
 
 	@Override
+	@Transactional
 	public Product createProduct(Product product) throws ArgumentNotValidException {
 
 		// Verify that the product name: is not null, not empty or already exists.
@@ -39,6 +41,7 @@ public class ProductServiceImpl implements IProductService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Product> getProducts() throws ArgumentNotFoundException {
 
 		// if there are no products, throw exception
@@ -51,6 +54,7 @@ public class ProductServiceImpl implements IProductService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Product findProductById(int id) throws ArgumentNotFoundException {
 
 		//if there is no product with that id throw exception
@@ -59,6 +63,7 @@ public class ProductServiceImpl implements IProductService {
 	}
 
 	@Override
+	@Transactional
 	public Product updateProduct(Product product) throws ArgumentNotValidException, ArgumentNotFoundException {
 
 		// verify if there is a product with that id.
@@ -132,6 +137,7 @@ public class ProductServiceImpl implements IProductService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteProduct(int id) {
 		productRepo.deleteById(id);
 	}
