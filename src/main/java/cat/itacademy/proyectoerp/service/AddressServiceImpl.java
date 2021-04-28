@@ -40,7 +40,7 @@ public class AddressServiceImpl implements IAddressService {
 	@Override
 	public Address updateAddress(Address address) {
 		if(iAddressRepository.findById(address.getId()) == null){
-		      throw new ArgumentNotFoundException("No employee found");
+		      throw new ArgumentNotFoundException("No address found");
 		    }
 		    return iAddressRepository.save(address);
 	}

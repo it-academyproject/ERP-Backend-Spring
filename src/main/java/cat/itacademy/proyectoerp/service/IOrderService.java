@@ -9,7 +9,7 @@ import cat.itacademy.proyectoerp.domain.OrderStatus;
 public interface IOrderService {
 
 
-	public UUID createOrder(Order order);
+	public Order createOrder(Order order);  //UUID
 	 
 	public Order findOrderById(UUID id);
 
