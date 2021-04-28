@@ -3,6 +3,7 @@ package cat.itacademy.proyectoerp;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -122,10 +123,13 @@ public class Runner implements CommandLineRunner {
 			
 			//Initialize the amount of users and clients marked by x
 			for (int i = 0;i < x; i++) {
+				Random rand = new Random();
+				String random = String.valueOf(rand.nextInt(10000000)); //beware of exception!
+				String dni = "L"+random+"Z";
 				String mail = "userclient"+i+"@example.com";
 				User userClient = new User(mail, "ReW9a0&+TP", UserType.CLIENT);
 				userService.registerNewUserAccount(userClient);
-				Client client = new Client(addressExample, "L1234567Z", "url image","Random Name", userClient);
+				Client client = new Client(addressExample, dni, "url image","Random Name", userClient);
 				clientService.createClient(client);
 			}
 						
@@ -137,10 +141,10 @@ public class Runner implements CommandLineRunner {
 			userService.registerNewUserAccount(userClientTwo);
 						
 			// Initialize two Clients for the orders
-			Client clientOne = new Client(address1, "L1234567Z", "url image","Random Name", userClientOne);
+			Client clientOne = new Client(address1, "L1554567Z", "url image","Random Name", userClientOne);
 			clientService.createClient(clientOne);
 
-			Client clientTwo = new Client(address3, "L7654321Z", "url image","Random Name", userClientTwo);
+			Client clientTwo = new Client(address3, "B7654321C", "url image","Random Name", userClientTwo);
 			clientService.createClient(clientTwo);
 			
 			
@@ -156,7 +160,7 @@ public class Runner implements CommandLineRunner {
 			Employee employeeOne = new Employee(24000.00,"employee1@company.com", "A1234567Z",667999999, userEmployeeOne);
 			employeeService.createEmployee(employeeOne);
 
-			Employee employeeTwo = new Employee(14000.00,"employee2@company.com", "B1234567Z",667999998, userEmployeeTwo);
+			Employee employeeTwo = new Employee(14000.00,"employee2@company.com", "B1236767Z",667999998, userEmployeeTwo);
 			employeeService.createEmployee(employeeTwo);
 			
 
