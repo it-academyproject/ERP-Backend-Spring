@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.sun.istack.Nullable;
+
 /**
  * @author Anton Lage & Rita Casiello
  *
@@ -23,10 +25,14 @@ public class Client {
 	@Id
 	@Column(name = "id", columnDefinition = "BINARY(16)")
 	private UUID id = UUID.randomUUID();
-	private String address;
 	private String dni;
 	private String image;
 	private String nameAndSurname;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "address_id", referencedColumnName = "id")
+	@Nullable
+	private Address address;
 	//private List<Order> orders;
 
 	@OneToOne(cascade = CascadeType.ALL)
@@ -38,7 +44,7 @@ public class Client {
 
 	}
 
-	public Client(String address, String dni, String image, String name) {
+	public Client(Address address, String dni, String image, String name) {
 		this.address = address;
 		this.dni = dni; 
 		this.image = image;
@@ -47,7 +53,7 @@ public class Client {
 	}
 
 
-	public Client(String address, String dni, String image, String name, User user) {
+	public Client(Address address, String dni, String image, String name, User user) {
 		//id = UUID.randomUUID();
 		this.nameAndSurname = name;
 		this.address = address;
@@ -65,11 +71,11 @@ public class Client {
 		this.id = id;
 	}
 
-	public String getAddress() {
+	public Address getAddress() {
 		return address;
 	}
 
-	public void setAddress(String address) {
+	public void setAddress(Address address) {
 		this.address = address;
 	}
 

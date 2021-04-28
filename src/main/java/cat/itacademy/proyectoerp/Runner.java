@@ -2,11 +2,8 @@ package cat.itacademy.proyectoerp;
 
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -20,14 +17,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import cat.itacademy.proyectoerp.domain.Address;
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
+import cat.itacademy.proyectoerp.domain.PaymentMethod;
 import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.domain.UserType;
 import cat.itacademy.proyectoerp.repository.UserRepository;
+import cat.itacademy.proyectoerp.service.AddressServiceImpl;
 import cat.itacademy.proyectoerp.service.ClientServiceImpl;
 import cat.itacademy.proyectoerp.service.EmployeeServiceImpl;
 import cat.itacademy.proyectoerp.service.OrderServiceImpl;
@@ -65,6 +65,9 @@ public class Runner implements CommandLineRunner {
 	
 	@Autowired
 	EmployeeServiceImpl employeeService;
+	
+	@Autowired
+	AddressServiceImpl addressService;
 
 	@Override
 	@Transactional
@@ -83,11 +86,25 @@ public class Runner implements CommandLineRunner {
 			employeeService.createEmployee(employee);
 		}
 		
+		// Initialize 5 addresses
+		
+		Address address1 = new Address ("Calle Maldivas", "1 C", "Barcelona", "Spain", "08016",null);
+		addressService.createAddress(address1);
+		Address address2 = new Address ("Calle Azores", "1 C", "Barcelona", "Spain", "08016",null);
+		addressService.createAddress(address2);
+		Address address3 = new Address ("Calle Canarias", "1 C", "Barcelona", "Spain", "08016",null);
+		addressService.createAddress(address3);
+		Address address4 = new Address ("Calle Bahamas", "1 C", "Barcelona", "Spain", "08016",null);
+		addressService.createAddress(address4);
+		
+		Address addressExample = new Address ("Calle Ejemplo", "1 A", "Barcelona", "Spain", "08018",null);
+		addressService.createAddress(addressExample);
+		
 		//checks if there is already a client created, if not, it creates one
 		if(!userRepository.existsByUsername("client@erp.com")) {
 			User userClient = new User("client@erp.com", "ReW9a0&+TP", UserType.CLIENT);
 			userService.registerNewUserAccount(userClient);
-			Client client = new Client("address example", "L1234567Z", "url image","Random Name", userClient);
+			Client client = new Client(addressExample, "L1234567Z", "url image","Random Name", userClient);
 			clientService.createClient(client);
 		}
 		
@@ -106,14 +123,16 @@ public class Runner implements CommandLineRunner {
 			
 			//Initialize the amount of users and clients marked by x
 			for (int i = 0;i < x; i++) {
+				Random rand = new Random();
+				String random = String.valueOf(rand.nextInt(10000000)); //beware of exception!
+				String dni = "L"+random+"Z";
 				String mail = "userclient"+i+"@example.com";
 				User userClient = new User(mail, "ReW9a0&+TP", UserType.CLIENT);
 				userService.registerNewUserAccount(userClient);
-				Client client = new Client("address example", "L1234567Z", "url image","Random Name", userClient);
+				Client client = new Client(addressExample, dni, "url image","Random Name", userClient);
 				clientService.createClient(client);
 			}
-			
-			
+						
 			//Initialize two users for the clients for the orders
 			User userClientOne = new User("userclientone@example.com", "ReW9a0&+TP", UserType.CLIENT);
 			userService.registerNewUserAccount(userClientOne);
@@ -122,10 +141,10 @@ public class Runner implements CommandLineRunner {
 			userService.registerNewUserAccount(userClientTwo);
 						
 			// Initialize two Clients for the orders
-			Client clientOne = new Client("address example", "L1234567Z", "url image","Random Name", userClientOne);
+			Client clientOne = new Client(address1, "L1554567Z", "url image","Random Name", userClientOne);
 			clientService.createClient(clientOne);
 
-			Client clientTwo = new Client("address example", "L7654321Z", "url image","Random Name", userClientTwo);
+			Client clientTwo = new Client(address3, "B7654321C", "url image","Random Name", userClientTwo);
 			clientService.createClient(clientTwo);
 			
 			
@@ -141,7 +160,7 @@ public class Runner implements CommandLineRunner {
 			Employee employeeOne = new Employee(24000.00,"employee1@company.com", "A1234567Z",667999999, userEmployeeOne);
 			employeeService.createEmployee(employeeOne);
 
-			Employee employeeTwo = new Employee(14000.00,"employee2@company.com", "B1234567Z",667999998, userEmployeeTwo);
+			Employee employeeTwo = new Employee(14000.00,"employee2@company.com", "B1236767Z",667999998, userEmployeeTwo);
 			employeeService.createEmployee(employeeTwo);
 			
 
@@ -168,19 +187,23 @@ public class Runner implements CommandLineRunner {
 		
 			
 			Order orderOne = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
-					clientOne.getid().toString(), LocalDateTime.now(), OrderStatus.COMPLETED, productsOrder1);
+					clientOne.getid().toString(), LocalDateTime.now(), OrderStatus.COMPLETED, 
+					PaymentMethod.CREDIT_CARD, address1, address1, productsOrder1);
 			orderService.createOrder(orderOne);
 			
 			Order orderTwo = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
-					clientOne.getid().toString(), LocalDateTime.now(), OrderStatus.IN_DELIVERY, productsOrder2);
+					clientOne.getid().toString(), LocalDateTime.now(), OrderStatus.IN_DELIVERY, 
+					PaymentMethod.CASH, address2, address1, productsOrder2);
 			orderService.createOrder(orderTwo);
 			
 			Order orderThree = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
-					clientOne.getid().toString(), LocalDateTime.now(), OrderStatus.PENDING_DELIVERY, productsOrder3);
+					clientTwo.getid().toString(), LocalDateTime.now(), OrderStatus.PENDING_DELIVERY,
+					PaymentMethod.PAYPAL, address3, address3, productsOrder3);
 			orderService.createOrder(orderThree);
 			
 			Order orderFour = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
-					clientOne.getid().toString(), LocalDateTime.now(), OrderStatus.ASSIGNED, productsOrder4);
+					clientTwo.getid().toString(), LocalDateTime.now(), OrderStatus.ASSIGNED,
+					PaymentMethod.PAYPAL, address4, address3, productsOrder4);
 			orderService.createOrder(orderFour);
  
 		}

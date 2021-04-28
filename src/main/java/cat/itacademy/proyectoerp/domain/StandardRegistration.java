@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
  *
  */
 
-public class StandarRegistration {
+public class StandardRegistration {
 	/**
 	 * Attributes.
 	 */
@@ -19,7 +19,7 @@ public class StandarRegistration {
 	private String username;
 	@Pattern(regexp = "^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%?&+=]).*$", message = "Password invalid. Minim 8 characters with 1 upercase, 1 lowercase, 1 special symbol, 1 number)")
 	private String password;
-	private String address;
+	private Address address;
 	private String dni;
 	private String image;
 	private String name_surname;
@@ -28,7 +28,7 @@ public class StandarRegistration {
 	 * Constructor.
 	 */
 	
-	private StandarRegistration() {}
+	private StandardRegistration() {}
 	
 	/**
 	 * Getters and setters.
@@ -40,7 +40,7 @@ public class StandarRegistration {
 	public String getPassword() {
 		return password;
 	}
-	public String getAddress() {
+	public Address getAddress() {
 		return address;
 	}
 	public String getDni() {
@@ -58,7 +58,7 @@ public class StandarRegistration {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public void setAddress(String address) {
+	public void setAddress(Address address) {
 		this.address = address;
 	}
 	public void setDni(String dni) {
@@ -74,7 +74,7 @@ public class StandarRegistration {
 
 	@Override
 	public String toString() {
-		return "StandarRegistration [username=" + username + ", password=" + password + ", address=" + address
+		return "StandardRegistration [username=" + username + ", password=" + password + ", address=" + address
 				+ ", dni=" + dni + ", image=" + image + ", name_surname=" + name_surname + "]";
 	}
 
