@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.NameTokenizers;
@@ -290,19 +292,32 @@ public class UserServiceImpl implements IUserService {
 	 * @throws ArgumentNotFoundException
 	 */
 	@Override
-	public User updatePassword(User user) throws ArgumentNotFoundException {
+	public User updatePassword(@Valid ChangeUserPassword changeuserpassword) throws ArgumentNotFoundException {
+		 
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 
 		// Verify if user exist
-		User updatedUser = userRepository.findByUsername(user.getUsername());
-
+		User updatedUser = userRepository.findByUsername(changeuserpassword.getUser().getUsername());
+		
 		if (updatedUser != null) {
+			//Check password
+			if (passwordEncoder.matches(changeuserpassword.getUser().getPassword(), updatedUser.getPassword())) {
 
-			// set user password (encrypted)
-			updatedUser.setPassword(passEconder(user.getPassword()));
-
-			return userRepository.save(updatedUser);
+				// set user password (encrypted)
+				
+				updatedUser.setPassword(passEconder(changeuserpassword.getNew_password()));
+	
+				return userRepository.save(updatedUser);
+			} else {
+				throw new ArgumentNotFoundException("wrong password");
+			}
 		} else {
 			throw new ArgumentNotFoundException("username not found");
 		}
 	}
+
+	
+
+	
 }

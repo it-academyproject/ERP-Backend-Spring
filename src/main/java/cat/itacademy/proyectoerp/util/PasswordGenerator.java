@@ -1,4 +1,4 @@
-package cat.itacademy.proyectoerp.util;
+ package cat.itacademy.proyectoerp.util;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,6 +37,8 @@ public class PasswordGenerator {
 
 		String password = pwdChars.stream().collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
 				.toString();
+		
+		password=password.replace("\"","@");
 
 		return password;
 	}

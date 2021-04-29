@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 
 import cat.itacademy.proyectoerp.domain.*;
 import cat.itacademy.proyectoerp.dto.EmployeeDTO;
@@ -31,6 +32,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import cat.itacademy.proyectoerp.domain.ChangeUserPassword;
+import cat.itacademy.proyectoerp.domain.Client;
+import cat.itacademy.proyectoerp.domain.StandardRegistration;
+import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
@@ -110,13 +115,14 @@ public class UserController {
 	/**
 	 * Method for create a new user and client.
 	 * 
-	 * @param standar JSON with StandarRegistration data
+	 * @param standard JSON with StandarRegistration data
 	 * @return Welcome String.
 	 */
 	@RequestMapping(value = "/users/clients", method = RequestMethod.POST)
-	public ResponseEntity<?> newUserAndClient(@Valid @RequestBody StandarRegistration standar) {
+	public ResponseEntity<?> newUserAndClient(@Valid @RequestBody StandardRegistration standard) {
 
-		User userRegistered = new User(standar.getUsername(),standar.getPassword());
+		User userRegistered = new User(standard.getUsername(),standard.getPassword());
+
 		UserDTO userDTO;
 
 		userDTO = userService.registerNewUserAccount(userRegistered);
@@ -126,8 +132,8 @@ public class UserController {
 			
 		} else {
 			try {
-				Client clientRegistered = new Client(standar.getAddress(),standar.getDni(),
-						standar.getImage(),standar.getName_surname(),userRegistered);
+				Client clientRegistered = new Client(standard.getAddress(),standard.getDni(),
+						standard.getImage(),standard.getName_surname(),userRegistered);
 	    		clientService.createClient(clientRegistered);
 	    	} catch (ArgumentNotValidException e) {
 	    		return ResponseEntity.unprocessableEntity().body(e.getMessage());
@@ -308,16 +314,18 @@ public class UserController {
 	/**
 	 * Method to reset password
 	 * 
-	 * @param user
+	 * @param changeuserpassword
 	 * @return user updated
 	 */
 	@PutMapping("/users/resetpassword")
-	public HashMap<String, Object> resetPassword(@Valid @RequestBody User user) {
-
+		
+	public HashMap<String, Object> resetPassword(@Valid @RequestBody ChangeUserPassword changeuserpassword) {
+	
 		HashMap<String, Object> map = new HashMap<String, Object>();
-
+	
 		try {
-			userService.updatePassword(user);
+			
+			userService.updatePassword(changeuserpassword);
 
 			map.put("success", "true");
 			map.put("message", "User password updated");
