@@ -1,16 +1,11 @@
 package cat.itacademy.proyectoerp.controller;
 
 import cat.itacademy.proyectoerp.domain.Employee;
-import cat.itacademy.proyectoerp.dto.EmployeeDTO;
-import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.service.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,25 +17,6 @@ public class EmployeeController {
 
   @Autowired
   IEmployeeService iEmployeeService;
-
-  /*
-  @PreAuthorize("hasRole('ADMIN')")
-  @PostMapping()
-  public ResponseEntity<?> createEmployee(@Valid @RequestBody Employee employee){
-
-    EmployeeDTO employeeDTO;
-    try {
-      employeeDTO = iEmployeeService.createEmployee(employee);
-      if (employeeDTO.getMessage().getSuccess() == "True"){
-        return new ResponseEntity<>(employeeDTO, HttpStatus.CREATED);
-      }
-    } catch (Exception e){
-      MessageDTO messageDto = new MessageDTO("False", e.getMessage());
-      return ResponseEntity.unprocessableEntity().body(messageDto);
-    }
-    return new ResponseEntity<>(employeeDTO.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
-  }
-   */
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping()
@@ -106,3 +82,4 @@ public class EmployeeController {
     return map;
   }
 }
+

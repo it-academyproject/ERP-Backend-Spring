@@ -1,17 +1,18 @@
 package cat.itacademy.proyectoerp.controller;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
-
 import cat.itacademy.proyectoerp.domain.*;
 import cat.itacademy.proyectoerp.dto.EmployeeDTO;
+import cat.itacademy.proyectoerp.dto.MessageDTO;
+import cat.itacademy.proyectoerp.dto.UserDTO;
+import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 import cat.itacademy.proyectoerp.repository.UserRepository;
+import cat.itacademy.proyectoerp.security.entity.JwtLogin;
+import cat.itacademy.proyectoerp.security.entity.JwtResponse;
+import cat.itacademy.proyectoerp.security.jwt.JwtUtil;
+import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
+import cat.itacademy.proyectoerp.service.ClientServiceImpl;
 import cat.itacademy.proyectoerp.service.IEmployeeService;
+import cat.itacademy.proyectoerp.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,28 +24,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import cat.itacademy.proyectoerp.domain.ChangeUserPassword;
-import cat.itacademy.proyectoerp.domain.Client;
-import cat.itacademy.proyectoerp.domain.StandardRegistration;
-import cat.itacademy.proyectoerp.domain.User;
-import cat.itacademy.proyectoerp.dto.MessageDTO;
-import cat.itacademy.proyectoerp.dto.UserDTO;
-import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
-import cat.itacademy.proyectoerp.security.entity.JwtLogin;
-import cat.itacademy.proyectoerp.security.entity.JwtResponse;
-import cat.itacademy.proyectoerp.security.jwt.JwtUtil;
-import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
-import cat.itacademy.proyectoerp.service.ClientServiceImpl;
-import cat.itacademy.proyectoerp.service.UserServiceImpl;
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Class of User Controller

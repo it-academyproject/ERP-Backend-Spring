@@ -2,8 +2,6 @@ package cat.itacademy.proyectoerp.service;
 
 import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.dto.EmployeeDTO;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 
 import java.util.List;
 import java.util.UUID;
