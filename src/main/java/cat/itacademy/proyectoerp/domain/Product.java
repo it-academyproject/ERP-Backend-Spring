@@ -5,20 +5,16 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.springframework.data.annotation.Transient;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 @Entity
@@ -31,6 +27,7 @@ public class Product implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "product_id")
 	private int id;
 	@Column(unique=true)
 	private String name;
@@ -42,10 +39,10 @@ public class Product implements Serializable {
 	private double wholesale_price;
 	private int wholesale_quantity;
 	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy ="orderProducts")
-//	@JsonBackReference  -> Does not work for ManyToMany
-	@JsonIgnoreProperties("products")
-	private Set <Order> orders = new HashSet<>();
+	//@JsonIgnoreProperties("products")
+	@OneToMany (mappedBy = "product")
+	@JsonManagedReference
+	private Set <OrderDetail> orderDetails = new HashSet<>();
 	
 	public Product() {
 		
@@ -53,7 +50,6 @@ public class Product implements Serializable {
 	
 	public Product(String name, int stock, String image, String family, double price, double vat,
 			double wholesale_price, int wholesale_quantity) {
-		super();
 		this.name = name;
 		this.stock = stock;
 		this.image = image;
@@ -63,21 +59,6 @@ public class Product implements Serializable {
 		this.wholesale_price = wholesale_price;
 		this.wholesale_quantity = wholesale_quantity;
 		
-	}
-	
-	public Product(int id, String name, int stock, String image, String family, double price, double vat,
-			double wholesale_price, int wholesale_quantity) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.stock = stock;
-		this.image = image;
-		this.family = family;
-		this.price = price;
-		this.vat = vat;
-		this.wholesale_price = wholesale_price;
-		this.wholesale_quantity = wholesale_quantity;
-	
 	}
 	
 	public int getId() {
@@ -153,17 +134,16 @@ public class Product implements Serializable {
 	public void setWholesale_quantity(int wholesale_quantity) {
 		this.wholesale_quantity = wholesale_quantity;
 	}
+		
+	public Set<OrderDetail> getOrderDetails() {
+		return orderDetails;
+	}
 	
+//	@Transient
+	public void setOrderDetails(Set<OrderDetail> orderDetails) {
+		this.orderDetails = orderDetails;
+	}
 
-	public Set <Order> getOrders() {
-		return orders;
-	}
-	
-//	@Transient 
-	public void setOrders(Set <Order> orders) {
-		this.orders = orders;
-	}
-	
 	// Console data printing method
 	@Override
 	public String toString() {

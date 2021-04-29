@@ -14,7 +14,8 @@ import com.sun.istack.Nullable;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 @Entity
@@ -22,22 +23,19 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class Order {
 
-	private static final long serialVersionUID = 1L;
+	//private static final long serialVersionUID = 1L;
 	
 	@Id
     @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-        name = "UUID",
-        strategy = "org.hibernate.id.UUIDGenerator"
-    )
-	@Column(name = "id", columnDefinition = "BINARY(16)")
+    @GenericGenerator( name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+	@Column(name = "order_id", columnDefinition = "BINARY(16)")
 	private UUID id;
 	
 	@Column(name = "employee_id")
-	private String employeeId;
+	private UUID employeeId;
 	
 	@Column(name = "client_id")
-	private String clientId;
+	private UUID clientId;
 	
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	@Column(name="date_created")
@@ -59,21 +57,19 @@ public class Order {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "billing_address_id", referencedColumnName = "id")
 	private Address billingAddress;
-		
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable (name = "order_products", joinColumns = { @JoinColumn(name = "order_id")},
-			inverseJoinColumns = { @JoinColumn(name = "product_id")})
-	@JsonIgnoreProperties("orders")
-	private Set<Product> orderProducts = new HashSet<>();
+	
+	private double total;
+	
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+	@JsonManagedReference
+	private Set<OrderDetail> orderDetails = new HashSet<>();
 		
 	public Order() {
 		
 	}	
 	
-	public Order(UUID id, String employeeId, String clientId, LocalDateTime dateCreated, OrderStatus status,
-			PaymentMethod paymentMethod, Address shippingAddress, Address billingAddress, Set<Product> orderProducts) {
-		super();
-		this.id = id;
+	public Order(UUID employeeId, UUID clientId, LocalDateTime dateCreated, OrderStatus status,
+			PaymentMethod paymentMethod, Address shippingAddress, Address billingAddress, double total) {
 		this.employeeId = employeeId;
 		this.clientId = clientId;
 		this.dateCreated = LocalDateTime.now();
@@ -81,21 +77,7 @@ public class Order {
 		this.paymentMethod = paymentMethod;
 		this.shippingAddress = shippingAddress;
 		this.billingAddress = billingAddress;
-		this.orderProducts = orderProducts;
-	}
-
-	
-	public Order(String employeeId, String clientId, LocalDateTime dateCreated, OrderStatus status,
-			PaymentMethod paymentMethod, Address shippingAddress, Address billingAddress, Set<Product> orderProducts) {
-		super();
-		this.employeeId = employeeId;
-		this.clientId = clientId;
-		this.dateCreated = LocalDateTime.now();
-		this.status = status;
-		this.paymentMethod = paymentMethod;
-		this.shippingAddress = shippingAddress;
-		this.billingAddress = billingAddress;
-		this.orderProducts = orderProducts;
+		this.setTotal(total);
 	}
 	
 	@PrePersist
@@ -112,19 +94,19 @@ public class Order {
 		this.id = id;
 	}
 
-	public String getEmployeeId() {
+	public UUID getEmployeeId() {
 		return employeeId;
 	}
 
-	public void setEmployee_id(String employeeId) {
+	public void setEmployee_id(UUID employeeId) {
 		this.employeeId = employeeId;
 	}
 
-	public String getClientId() {
+	public UUID getClientId() {
 		return clientId;
 	}
 
-	public void setClient_id(String clientId) {
+	public void setClient_id(UUID clientId) {
 		this.clientId = clientId;
 	}
 	
@@ -168,12 +150,25 @@ public class Order {
 		this.billingAddress = billingAddress;
 	}
 
-	public Set<Product> getOrderProducts() {
-		return orderProducts;
+	public Set<OrderDetail> getOrderDetails() {
+		return orderDetails;
 	}
 
-	public void setOrderProducts(Set<Product> orderProducts) {
-		this.orderProducts = orderProducts;
+	public void setOrderDetails(Set<OrderDetail> orderDetails) {
+		this.orderDetails = orderDetails;
+	}
+	
+	public double getTotal() {
+		return total;
+	}
+
+	public void setTotal(double total) {
+		this.total = total;
+	}
+	
+	//Method to add orderDetails to order
+	public void addOrderDetail(OrderDetail orderDetail) {
+		this.orderDetails.add(orderDetail);
 	}
 	
 }
