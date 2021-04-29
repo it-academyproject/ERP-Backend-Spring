@@ -14,6 +14,7 @@ import cat.itacademy.proyectoerp.repository.IClientRepository;
 //import cat.itacademy.proyectoerp.repository.IOrderProductRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
+import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.Order;
 
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
@@ -69,12 +70,14 @@ public class OrderServiceImpl implements IOrderService{
 				}
 				Order orderToUpdate = findOrderById(order.getId());
 				//checks if parameters are valid and updates them
-				if (clientRepository.findById(UUID.fromString(order.getClientId())).isEmpty()) {
-					throw new ArgumentNotFoundException("The client doesn't exist. The client with the id " + order.getClientId() + "doesn't exist");
-				} else if (order.getClientId() == null) {
+				//if (clientRepository.findById(order.getClientId()).isEmpty()) {  //@Dapser75
+				if (clientRepository.findById(order.getClient().getid()).isEmpty()) {  //@Dapser75
+					throw new ArgumentNotFoundException("The client doesn't exist. The client with the id " + order.getClient() + "doesn't exist");
+				} else if (order.getClient() == null) {
 					throw new ArgumentNotValidException("Invalid Client ID");
 				}
-				orderToUpdate.setClient_id(order.getClientId());
+				//orderToUpdate.setClient_id(order.getClient()); //julia
+				orderToUpdate.setClient(order.getClient());
 				
 				//TODO: Once Employee is implemented it should check if it exists.1
 				orderToUpdate.setEmployee_id(order.getEmployeeId());
@@ -107,7 +110,8 @@ public class OrderServiceImpl implements IOrderService{
 	}
 
 	@Override
-	public List<Order> findOrdersByClient(String id) {
+	public List<Order> findOrdersByClient(String id) {  //julia
+	//public List<Order> findOrdersByClient(Client id) {
 		if(orderRepository.findOrdersByClientId(id) == null){
 			throw new ArgumentNotFoundException("No orders with client " + id + " found");
 		} else{

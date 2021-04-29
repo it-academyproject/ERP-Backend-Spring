@@ -167,20 +167,36 @@ public class Runner implements CommandLineRunner {
 					.collect(Collectors.toCollection(HashSet::new));
 		
 			
-			Order orderOne = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
-					clientOne.getid().toString(), LocalDateTime.now(), OrderStatus.COMPLETED, productsOrder1);
+		/*	Order orderOne = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
+					clientOne.getid(), LocalDateTime.now(), OrderStatus.COMPLETED, productsOrder1);
 			orderService.createOrder(orderOne);
 			
 			Order orderTwo = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
-					clientOne.getid().toString(), LocalDateTime.now(), OrderStatus.IN_DELIVERY, productsOrder2);
+					clientOne.getid(), LocalDateTime.now(), OrderStatus.IN_DELIVERY, productsOrder2);
 			orderService.createOrder(orderTwo);
 			
 			Order orderThree = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
-					clientOne.getid().toString(), LocalDateTime.now(), OrderStatus.PENDING_DELIVERY, productsOrder3);
+					clientOne.getid(), LocalDateTime.now(), OrderStatus.PENDING_DELIVERY, productsOrder3);
 			orderService.createOrder(orderThree);
 			
 			Order orderFour = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
-					clientOne.getid().toString(), LocalDateTime.now(), OrderStatus.ASSIGNED, productsOrder4);
+					clientOne.getid(), LocalDateTime.now(), OrderStatus.ASSIGNED, productsOrder4);
+			orderService.createOrder(orderFour);*/
+			//juliaaaa
+			Order orderOne = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
+					clientOne, LocalDateTime.now(), OrderStatus.COMPLETED, productsOrder1);
+			orderService.createOrder(orderOne);
+			
+			Order orderTwo = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
+					clientOne, LocalDateTime.now(), OrderStatus.IN_DELIVERY, productsOrder2);
+			orderService.createOrder(orderTwo);
+			
+			Order orderThree = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
+					clientOne, LocalDateTime.now(), OrderStatus.PENDING_DELIVERY, productsOrder3);
+			orderService.createOrder(orderThree);
+			
+			Order orderFour = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
+					clientOne, LocalDateTime.now(), OrderStatus.ASSIGNED, productsOrder4);
 			orderService.createOrder(orderFour);
  
 		}

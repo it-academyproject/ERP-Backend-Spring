@@ -7,8 +7,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import antlr.collections.List;
 
 /**
  * @author Anton Lage & Rita Casiello
@@ -27,11 +30,14 @@ public class Client {
 	private String dni;
 	private String image;
 	private String nameAndSurname;
-	//private List<Order> orders;
+	
+	//@OneToMany(cascade = CascadeType.ALL)
+	//private List orders;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	private User user;
+
 
 
 	public Client() {

@@ -33,9 +33,13 @@ public class Order {
 	@Column(name = "employee_id")
 	private String employeeId;
 	
-	@Column(name = "client_id")
-	private String clientId;
+	//@OneToOne(cascade = CascadeType.ALL)
+	//@JoinColumn(name = "user_id", referencedColumnName = "id")
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "client_id", referencedColumnName = "id", nullable=false)
+	private Client client;  //	private UUID client;
+		
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	@Column(name="date_created")
     private LocalDateTime dateCreated;
@@ -55,24 +59,26 @@ public class Order {
 	  
 	
 	public Order() {
-		
+	 System.out.println();
 	}
 	
-	public Order(UUID id, String employeeId, String clientId,LocalDateTime dateCreated, OrderStatus status, Set<Product> orderProducts) { 
+	//public Order(UUID id, String employeeId, UUID client,LocalDateTime dateCreated, OrderStatus status, Set<Product> orderProducts) {  //@Dapser75
+	public Order(UUID id, String employeeId, Client client,LocalDateTime dateCreated, OrderStatus status, Set<Product> orderProducts) { 
 		super();
 		this.id = id;
 		this.employeeId = employeeId;
-		this.clientId= clientId;
+		this.client= client;
 		this.dateCreated = dateCreated;
 		this.status = status;
 		this.orderProducts = orderProducts;		
 		
 	}
 	
-	public Order(String employeeId, String clientId, OrderStatus status, Set<Product> orderProducts) { 
+	//public Order(String employeeId, UUID client, OrderStatus status, Set<Product> orderProducts) { //@Dapser75
+	public Order(String employeeId, Client client, OrderStatus status, Set<Product> orderProducts) { 
 		super();
 		this.employeeId = employeeId;
-		this.clientId = clientId;
+		this.client = client;
 		this.dateCreated = LocalDateTime.now();
 		this.status = status;
 		this.orderProducts = orderProducts;
@@ -102,13 +108,24 @@ public class Order {
 		this.employeeId = employeeId;
 	}
 
-	public String getClientId() {
-		return clientId;
+	//public UUID getClientId() { //julia
+/*	public Client getClientId() {
+		return getClient();
+	}
+*/
+	//public UUID getClientId() { //julia
+	public Client getClient() {
+			return client;
 	}
 
-	public void setClient_id(String clientId) {
-		this.clientId = clientId;
+	public void setClient(Client client) {
+		this.client = client;
 	}
+
+	//	public void setClient_id(UUID client) { //julia
+	/*public void setClient_id(Client clientId) {
+		this.client = clientId;
+	}*/
 	
 	public LocalDateTime getDateCreated() {
 		return dateCreated;
