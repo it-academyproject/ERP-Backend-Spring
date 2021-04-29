@@ -1,6 +1,7 @@
 package cat.itacademy.proyectoerp.service;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -86,15 +87,11 @@ public class ClientServiceImpl implements IClientService {
 	}
 
 	@Override
-	public Optional<Client> findClientById(UUID id) throws ArgumentNotFoundException {
-		Optional<Client> tempClient = repository.findById(id);
-		if (tempClient == null) {
-			throw new ArgumentNotFoundException("The client with id " + id + "doesn't exists");
-		} else {
-			return tempClient;
-		}
-	}
-
+	public Client findClientById(UUID id) throws ArgumentNotFoundException {
+		return repository.findById(id)
+	            .orElseThrow(() -> new ArgumentNotFoundException("Client not found. The id " + id + " doesn't exist"));
+	  }	 
+	  
 	@Override
 	public Client updateClient(Client client) {
 		return repository.findById(client.getid()).map(clientDB -> {
