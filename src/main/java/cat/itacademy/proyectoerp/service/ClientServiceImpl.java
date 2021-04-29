@@ -38,7 +38,7 @@ public class ClientServiceImpl implements IClientService {
 		if(client.getid() == null) {
 			throw new ArgumentNotValidException("You need to add the UUID manually.For ideas go to: https://www.uuidgenerator.net/ ");
 		}
-		else if (client.getAddress() == null || client.getAddress().isEmpty()) {
+		else if (client.getAddress() == null || client.getAddress().toString().isEmpty()) {
 			throw new ArgumentNotValidException("Address can't be empty");
 		}
 		else if (client.getDni() == null || client.getDni().isEmpty()) {

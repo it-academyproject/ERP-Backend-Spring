@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cat.itacademy.proyectoerp.repository.IClientRepository;
-//import cat.itacademy.proyectoerp.repository.IOrderProductRepository;
+import cat.itacademy.proyectoerp.repository.IOrderDetailRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
 import cat.itacademy.proyectoerp.domain.Client;
@@ -32,16 +32,15 @@ public class OrderServiceImpl implements IOrderService{
 	@Autowired
 	IProductRepository productRepository;
 	
-//	@Autowired
-//	IOrderProductRepository orderProductRepository;
+	@Autowired
+	IOrderDetailRepository orderDetailRepository;
 
 	
 	@Override
-	@Transactional
-	public UUID createOrder(Order order) { 
-		 Order newOrder = orderRepository.save(order);
-		    return newOrder.getId();
-		
+	//@Transactional
+	public Order createOrder(Order order) {  //UUID
+		// Order newOrder = orderRepository.save(order);
+		    return orderRepository.save(order); // newOrder.getId();
 	}
 	
 	@Override
@@ -74,6 +73,11 @@ public class OrderServiceImpl implements IOrderService{
 				if (clientRepository.findById(order.getClient().getid()).isEmpty()) {  //@Dapser75
 					throw new ArgumentNotFoundException("The client doesn't exist. The client with the id " + order.getClient() + "doesn't exist");
 				} else if (order.getClient() == null) {
+
+/*				if (clientRepository.findById((order.getClientId())).isEmpty()) {  //UUID.fromString //Codigo B49.
+					throw new ArgumentNotFoundException("The client doesn't exist. The client with the id " + order.getClientId() + "doesn't exist");
+				} else if (order.getClientId() == null) {*/
+
 					throw new ArgumentNotValidException("Invalid Client ID");
 				}
 				//orderToUpdate.setClient_id(order.getClient()); //julia

@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cat.itacademy.proyectoerp.domain.ChangeUserPassword;
 import cat.itacademy.proyectoerp.domain.Client;
-import cat.itacademy.proyectoerp.domain.StandarRegistration;
+import cat.itacademy.proyectoerp.domain.StandardRegistration;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.dto.UserDTO;
@@ -107,9 +107,9 @@ public class UserController {
 	 * @return Welcome String.
 	 */
 	@RequestMapping(value = "/users/clients", method = RequestMethod.POST)
-	public ResponseEntity<?> newUserAndClient(@Valid @RequestBody StandarRegistration standar) {
+	public ResponseEntity<?> newUserAndClient(@Valid @RequestBody StandardRegistration standard) {
 		
-		User userRegistered = new User(standar.getUsername(),standar.getPassword());
+		User userRegistered = new User(standard.getUsername(),standard.getPassword());
 		UserDTO userDTO;
 		
 		userDTO = userService.registerNewUserAccount(userRegistered);
@@ -119,8 +119,8 @@ public class UserController {
 			
 		} else {
 			try {
-				Client clientRegistered = new Client(standar.getAddress(),standar.getDni(),
-						standar.getImage(),standar.getName_surname(),userRegistered);
+				Client clientRegistered = new Client(standard.getAddress(),standard.getDni(),
+						standard.getImage(),standard.getName_surname(),userRegistered);
 	    		clientService.createClient(clientRegistered);
 	    	} catch (ArgumentNotValidException e) {
 	    		return ResponseEntity.unprocessableEntity().body(e.getMessage());
