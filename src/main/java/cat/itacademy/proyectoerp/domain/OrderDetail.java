@@ -2,7 +2,6 @@ package cat.itacademy.proyectoerp.domain;
 
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,9 +13,11 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table (name = "order_details")
+@JsonIgnoreProperties("order")
 public class OrderDetail {
 	
 	@Id
@@ -25,14 +26,14 @@ public class OrderDetail {
 	@Column(name = "id", columnDefinition = "BINARY(16)")
 	private UUID id;
 	
-	@ManyToOne (cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "product_id")
-	@JsonBackReference
+	@JsonBackReference (value="order_details-product") //Without value -> 415 in Post Order
 	private Product product;
 	
 	@ManyToOne
 	@JoinColumn(name = "order_id")
-	@JsonBackReference
+	@JsonBackReference (value="order_details-order") //Without value -> 415 in Post Order
 	private Order order;
 	
 	private int quantity;

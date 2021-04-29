@@ -3,12 +3,9 @@ package cat.itacademy.proyectoerp.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cat.itacademy.proyectoerp.domain.Order;
+import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 
 @RestController
@@ -40,12 +38,14 @@ public class OrderController {
 	 * @param order order
 	 * @return new order 
 	 */
-	@PostMapping("/orders")
+	@PostMapping("/orders") // path = , consumes = MediaType.APPLICATION_JSON_VALUE , produces = MediaType.APPLICATION_JSON_VALUE)
 	public Map<String, Object> createOrder(@RequestBody Order order) {
 
 		HashMap<String, Object> map = new HashMap<>();
 
 		try {
+			
+			order.setStatus(OrderStatus.UNASSIGNED);
 			orderService.createOrder(order);
 
 			map.put(success, "true");

@@ -1,6 +1,6 @@
 package cat.itacademy.proyectoerp.domain;
 
-//import java.io.Serializable;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,21 +14,22 @@ import com.sun.istack.Nullable;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 @Entity
 @Table(name = "orders")
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class Order {
+//@JsonIgnoreProperties("orderDetails")
+public class Order implements Serializable {
 
-	//private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	
 	@Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator( name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
 	@Column(name = "order_id", columnDefinition = "BINARY(16)")
+	@JsonProperty("id")
 	private UUID id;
 	
 	@Column(name = "employee_id")
@@ -49,19 +50,19 @@ public class Order {
 	@Enumerated(EnumType.STRING)
 	private PaymentMethod paymentMethod;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
 	@JoinColumn(name = "shipping_address_id", referencedColumnName = "id")
 	@Nullable
 	private Address shippingAddress;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
 	@JoinColumn(name = "billing_address_id", referencedColumnName = "id")
 	private Address billingAddress;
 	
 	private double total;
 	
-	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-	@JsonManagedReference
+	@OneToMany(mappedBy = "order", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+	//@JsonManagedReference (gives 415 Unsupported Media Exception with Post order)
 	private Set<OrderDetail> orderDetails = new HashSet<>();
 		
 	public Order() {
