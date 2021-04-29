@@ -10,6 +10,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 
 import cat.itacademy.proyectoerp.domain.UserType;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 /**
  * DTO Class for Users
@@ -17,6 +19,7 @@ import cat.itacademy.proyectoerp.domain.UserType;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class UserDTO implements Serializable{
 
 	@Override

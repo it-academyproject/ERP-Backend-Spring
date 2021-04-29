@@ -1,10 +1,16 @@
 package cat.itacademy.proyectoerp.controller;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
+import cat.itacademy.proyectoerp.domain.*;
+import cat.itacademy.proyectoerp.dto.EmployeeDTO;
+import cat.itacademy.proyectoerp.repository.UserRepository;
+import cat.itacademy.proyectoerp.service.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import cat.itacademy.proyectoerp.domain.Client;
-import cat.itacademy.proyectoerp.domain.StandarRegistration;
-import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
@@ -63,6 +66,12 @@ public class UserController {
 	
 	@Autowired
 	ClientServiceImpl clientService;
+
+	@Autowired
+	IEmployeeService iEmployeeService;
+
+	@Autowired
+	UserRepository userRepository;
 
 	/**
 	 * Method for all url which don't exist
@@ -106,10 +115,10 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/users/clients", method = RequestMethod.POST)
 	public ResponseEntity<?> newUserAndClient(@Valid @RequestBody StandarRegistration standar) {
-		
+
 		User userRegistered = new User(standar.getUsername(),standar.getPassword());
 		UserDTO userDTO;
-		
+
 		userDTO = userService.registerNewUserAccount(userRegistered);
 		
 		if (userDTO.getSuccess() == "False") {
@@ -127,6 +136,36 @@ public class UserController {
 		}
 	
     }
+
+	/**
+	 * Create a new user and employee
+	 * @param employee
+	 * @return
+	 */
+	@PreAuthorize("hasRole('ADMIN')")
+	@RequestMapping(value = "/users/employees", method = RequestMethod.POST)
+	public ResponseEntity<?> newUserAndEmployee(@Valid @RequestBody Employee employee) {
+		EmployeeDTO employeeDTO;
+
+		User user = new User(employee.getUser().getUsername(),employee.getUser().getPassword(), UserType.EMPLOYEE);
+		userService.registerNewUserAccount(user);
+
+		employee.setOutDate(null != employee.getOutDate()?employee.getOutDate():null);
+		Employee newEmployee = new Employee(employee.getSalary(), employee.getDni(),
+				employee.getPhone(), employee.getInDate(), employee.getOutDate(), user);
+		try {
+			employeeDTO = iEmployeeService.createEmployee(newEmployee);
+		} catch (Exception e) {
+			//MessageDTO messageDTO = new MessageDTO("False", "Unexpected error");
+			MessageDTO messageDTO = new MessageDTO("False", e.getMessage());
+			return ResponseEntity.unprocessableEntity().body(messageDTO);
+		}
+
+		if (employeeDTO.getMessage().getSuccess().equalsIgnoreCase("True")) {
+			return ResponseEntity.status(HttpStatus.CREATED).body(employeeDTO);
+		}
+		return new ResponseEntity<>(employeeDTO, HttpStatus.UNPROCESSABLE_ENTITY);
+	}
 
 	/**
 	 * Method for user login

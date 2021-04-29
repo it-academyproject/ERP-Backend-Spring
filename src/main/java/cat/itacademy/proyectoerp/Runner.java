@@ -1,6 +1,7 @@
 package cat.itacademy.proyectoerp;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -79,7 +80,7 @@ public class Runner implements CommandLineRunner {
 		if(!userRepository.existsByUsername("employee@erp.com")) {
 			User userEmployee = new User("employee@erp.com", "ReW9a0&+TP", UserType.EMPLOYEE);
 			userService.registerNewUserAccount(userEmployee);
-			Employee employee = new Employee(18000.00, "employee@erp.com", "C1234567Z", 667999997, userEmployee);
+			Employee employee = new Employee(18000.00, "C1234567Z", 667999997, LocalDate.now(),null, userEmployee);
 			employeeService.createEmployee(employee);
 		}
 		
@@ -130,18 +131,18 @@ public class Runner implements CommandLineRunner {
 			
 			
 			//Initialize two users for the employees for the orders
-			User userEmployeeOne = new User("useremployeeone@example.com", "ReW9a0&+TP", UserType.EMPLOYEE);
+			User userEmployeeOne = new User("employee1@company.com", "ReW9a0&+TP", UserType.EMPLOYEE);
 			userService.registerNewUserAccount(userEmployeeOne);
 
-			User userEmployeeTwo = new User("useremployeetwo@example.com", "ReW9a0&+ET", UserType.EMPLOYEE);
+			User userEmployeeTwo = new User("employee2@company.com", "ReW9a0&+ET", UserType.EMPLOYEE);
 			userService.registerNewUserAccount(userEmployeeTwo);
 			
 			
 			// Initialize two Employees for the orders
-			Employee employeeOne = new Employee(24000.00,"employee1@company.com", "A1234567Z",667999999, userEmployeeOne);
+			Employee employeeOne = new Employee(24000.00,"A1234567Z",667999999, LocalDate.now(),null,userEmployeeOne);
 			employeeService.createEmployee(employeeOne);
 
-			Employee employeeTwo = new Employee(14000.00,"employee2@company.com", "B1234567Z",667999998, userEmployeeTwo);
+			Employee employeeTwo = new Employee(14000.00,"B1234567Z",667999998, LocalDate.now(),null, userEmployeeTwo);
 			employeeService.createEmployee(employeeTwo);
 			
 

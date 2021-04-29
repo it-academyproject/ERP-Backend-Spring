@@ -1,20 +1,13 @@
 package cat.itacademy.proyectoerp.domain;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 
 
 /**
@@ -39,13 +32,14 @@ public class User {
   private Long id;
 
   @Email(message = "email incorrect")
-  @Column(length = 50)
+  @Column(length = 50, unique = true)
   @Size(min = 6, max = 50)
-
+  @NotBlank(message = "Username is mandatory")
   private String username;
 
   @Pattern(regexp = "^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%?&+=_]).*$", message = "Password invalid. Minim 8 characters with 1 upercase, 1 lowercase, 1 special symbol, 1 number)")
   @Column(length = 106)
+  @NotBlank(message = "Password is mandatory")
   private String password;
 
   @JsonProperty("user_type")
@@ -121,15 +115,17 @@ public class User {
     this.userType = user_type;
   }
 
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
 
   @Override
   public String toString() {
     return "User [id=" + id + ", username=" + username + ", password=" + password + ", userType=" + userType + "]";
-  }
-
-
-  public Long getId() {
-    return id;
   }
 
 }
