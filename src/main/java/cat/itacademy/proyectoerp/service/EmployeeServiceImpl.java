@@ -71,10 +71,24 @@ public class EmployeeServiceImpl implements IEmployeeService {
     Employee employeeById = iEmployeeRepository.findById(employee.getId()).orElseThrow(
             () -> new ArgumentNotFoundException("Employee not found. The id " + employee.getId() + " doesn't exist"));
 
-    employee.setSalary(null == employee.getSalary()?employeeById.getSalary():employee.getSalary());
-    employee.setDni(null == employee.getDni()?employeeById.getDni():employee.getDni());
-    employee.setPhone(null == employee.getPhone()?employeeById.getPhone():employee.getPhone());
-    employee.setInDate(null == employee.getInDate()?employeeById.getInDate():employee.getInDate());
+    validateEmployeeToUpdate(employee, employeeById);
+
+    validateUserEmployeeToUpdate(employee, employeeById);
+
+    Employee employeeUpdated;
+    try {
+      employeeUpdated = iEmployeeRepository.save(employee);
+    }catch (Exception e){
+      throw new Exception("The username already exists. Please, choose another.");
+    }
+    return employeeUpdated;
+  }
+
+  private void validateEmployeeToUpdate(Employee employee, Employee employeeById) {
+    employee.setSalary(null == employee.getSalary()? employeeById.getSalary(): employee.getSalary());
+    employee.setDni(null == employee.getDni()? employeeById.getDni(): employee.getDni());
+    employee.setPhone(null == employee.getPhone()? employeeById.getPhone(): employee.getPhone());
+    employee.setInDate(null == employee.getInDate()? employeeById.getInDate(): employee.getInDate());
 
     if(employeeById.getOutDate() != null && employee.getOutDate() == null){
       employee.setOutDate(employeeById.getOutDate());
@@ -82,25 +96,21 @@ public class EmployeeServiceImpl implements IEmployeeService {
     else{
       employee.setOutDate(employee.getOutDate());
     }
+  }
 
+  private void validateUserEmployeeToUpdate(Employee employee, Employee employeeById) {
     if(employee.getUser() != null){
-      employee.getUser().setUsername(null == employee.getUser().getUsername()?employeeById.getUser().getUsername():
+      employee.getUser().setId(employeeById.getUser().getId());
+      employee.getUser().setUsername(null == employee.getUser().getUsername()? employeeById.getUser().getUsername():
               employee.getUser().getUsername());
-      employee.getUser().setPassword(null == employee.getUser().getPassword()?employeeById.getUser().getPassword():
+      employee.getUser().setPassword(null == employee.getUser().getPassword()? employeeById.getUser().getPassword():
               employee.getUser().getPassword());
-      employee.getUser().setUserType(null == employee.getUser().getUserType()?employeeById.getUser().getUserType():
-              employee.getUser().getUserType());
+      employee.getUser().setUserType(employeeById.getUser().getUserType());
     }else{
-      throw new Exception("You have to assign this employee to an user. Please, check user_id");
+      User user = new User(employeeById.getUser().getUsername(), employeeById.getUser().getPassword(), UserType.EMPLOYEE);
+      user.setId(employeeById.getUser().getId());
+      employee.setUser(user);
     }
-
-    Employee employeeUpdated;
-    try {
-      employeeUpdated = iEmployeeRepository.save(employee);
-    }catch (Exception e){
-      throw new Exception("Employee exist. Please, check user_id and username");
-    }
-    return employeeUpdated;
   }
 
   @Override
