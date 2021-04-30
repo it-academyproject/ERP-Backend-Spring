@@ -24,5 +24,13 @@ public class DatesTopEmployeePOJO {
 		this.end_date = end_date;
 	}
 
+	public DatesTopEmployeePOJO(LocalDateTime begin_date, LocalDateTime end_date) {
+		this.begin_date = begin_date;
+		this.end_date = end_date;
+	}
+
+	public DatesTopEmployeePOJO() {
+	}
+
 
 }

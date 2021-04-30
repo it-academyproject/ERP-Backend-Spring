@@ -120,18 +120,13 @@ public class StatsContoller {
   }
   
   @PreAuthorize("hasRole('ADMIN')")
-  @GetMapping("/employees/toptenemployeessales")
-  //@RequestMapping(value = "/employees/toptenemployeessales", method = RequestMethod.POST)
-  public Map <String,Object> getTopTenEmployeesSales(DatesTopEmployeePOJO datestopemployee) {
+  //@GetMapping("/employees/toptenemployeessales")
+  @RequestMapping(value = "/employees/toptenemployeessales", method = RequestMethod.POST)
+  public Map <String,Object> getTopTenEmployeesSales(@RequestBody DatesTopEmployeePOJO datestopemployee) {
     
 	  HashMap<String, Object> map = new HashMap<>();
 	    
-	/*  if (datestopemployee.getBegin_date().isAfter(datestopemployee.getEnd_date())) {
-	  	  map.put("success","false");
-		  map.put("message","the begin_date is upper than end_date");
-	  }*/
-	
-	try {  
+	  try {  
 			  List<TopEmployeeDTO> employeeList = orderService.findAllTopTen(datestopemployee);  
 			  
 			  if(employeeList.isEmpty()) {
@@ -144,10 +139,10 @@ public class StatsContoller {
 				  map.put("employees", employeeList);
 			  }
 				  
-		  } catch(Exception e) {
+	  } catch(Exception e) {
 	    	 map.put("success", "false");
 	         map.put("message", "error: " + e.getMessage());//Pdte tratar error "legible"
-		  }
+	  }
 	  
 	  
     return map;

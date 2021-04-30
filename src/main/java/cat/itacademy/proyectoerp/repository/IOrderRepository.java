@@ -1,5 +1,6 @@
 package cat.itacademy.proyectoerp.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,9 +22,13 @@ public interface IOrderRepository extends JpaRepository<Order, UUID>{
   
   List<Order> findOrdersByEmployeeId(String employeeId);
   
-  @Query(value = "select employee_id,sum(total) as total from orders where (orders.status like 'COMPLETED')group by employee_id order by total desc limit 10", nativeQuery = true)
-		//+ "where (orders.status like 'COMPLETED') "  
-  List<Object[]> findEmployeesSalesBetweenDates();
+//  @Query(value = "select employee_id,sum(total) as total from orders where (orders.status like 'COMPLETED')group by employee_id order by total desc limit 10", nativeQuery = true)
+  
+  @Query(value = "select employee_id,sum(total) as total from orders " 
+                  +"where (orders.status like 'COMPLETED') "		
+                  +" and (orders.date_created between :begin_date and :end_date) "
+		          +"group by employee_id order by total desc limit 10", nativeQuery = true)
+  List<Object[]> findEmployeesSalesBetweenDates(LocalDateTime begin_date, LocalDateTime end_date);
   
 
 

@@ -142,11 +142,11 @@ public class OrderServiceImpl implements IOrderService{
 	@Override
 	public List<TopEmployeeDTO> findAllTopTen(DatesTopEmployeePOJO topemployeepojo) {
 		
-	//	if (topemployee.getBegin_date() == null) topemployee.setBegin_date(LocalDateTime.of(2020,01,01,00,01)); 
+		if (topemployeepojo.getBegin_date() == null) topemployeepojo.setBegin_date(LocalDateTime.of(2020,01,01,00,01)); 
 		
-	//	if (topemployee.getEnd_date() == null ) topemployee.setEnd_date(LocalDateTime.now());
+		if (topemployeepojo.getEnd_date() == null ) topemployeepojo.setEnd_date(LocalDateTime.now());
 		
-		List<Object[]> TopEmpl = orderRepository.findEmployeesSalesBetweenDates();  //Busqueda en BD
+		List<Object[]> TopEmpl = orderRepository.findEmployeesSalesBetweenDates(topemployeepojo.getBegin_date(),topemployeepojo.getEnd_date());  //Busqueda en BD
 	
 		TopEmployeeDTO TopEmployDTO = new TopEmployeeDTO();
 	
