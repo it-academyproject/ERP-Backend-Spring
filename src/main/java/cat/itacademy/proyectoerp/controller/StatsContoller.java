@@ -12,7 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -117,16 +120,17 @@ public class StatsContoller {
   }
   
   @PreAuthorize("hasRole('ADMIN')")
-  @GetMapping("/employees/toptenemployeessells")
-  public Map <String,Object> getTopTenEmployeesSells(DatesTopEmployeePOJO datestopemployee) {
+  @GetMapping("/employees/toptenemployeessales")
+  //@RequestMapping(value = "/employees/toptenemployeessales", method = RequestMethod.POST)
+  public Map <String,Object> getTopTenEmployeesSales(DatesTopEmployeePOJO datestopemployee) {
     
 	  HashMap<String, Object> map = new HashMap<>();
-	  /*  
-	  if (datestopemployee.getBegin_date().isAfter(datestopemployee.getEnd_date())) {
-		  map.put("success","false");
+	    
+	/*  if (datestopemployee.getBegin_date().isAfter(datestopemployee.getEnd_date())) {
+	  	  map.put("success","false");
 		  map.put("message","the begin_date is upper than end_date");
-	  }
-	*/
+	  }*/
+	
 	try {  
 			  List<TopEmployeeDTO> employeeList = orderService.findAllTopTen(datestopemployee);  
 			  

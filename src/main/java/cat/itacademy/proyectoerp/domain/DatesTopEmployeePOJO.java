@@ -8,8 +8,6 @@ public class DatesTopEmployeePOJO {
 	
 	private LocalDateTime end_date;
 	
-	private OrderStatus status;
-
 	public LocalDateTime getBegin_date() {
 		return begin_date;
 	}
@@ -26,15 +24,5 @@ public class DatesTopEmployeePOJO {
 		this.end_date = end_date;
 	}
 
-	public OrderStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(OrderStatus status) {
-		this.status = status;
-	}
-	
-	
-	
 
 }

@@ -21,15 +21,6 @@ public interface IOrderRepository extends JpaRepository<Order, UUID>{
   
   List<Order> findOrdersByEmployeeId(String employeeId);
   
-  /*@Query(value = "select orders.employee_id as employee_id, "
-  		+ "sum(orders.total) as total_sales from orders group by orders.employee_id ", nativeQuery = true)*/ //ok
-
- // @Query(value = "select new cat.itacademy.proyectoerp.dto.EmployeeDTO(o.employee_id, "
-		/*@Query(value = "select new cat.itacademy.proyectoerp.domain.TopEmployee(employee_id, "
-  		+ "sum(o.total)) from orders as o group by o.employee_id", nativeQuery = true)  */
-  
-  
-  
   @Query(value = "select employee_id,sum(total) as total from orders where (orders.status like 'COMPLETED')group by employee_id order by total desc limit 10", nativeQuery = true)
 		//+ "where (orders.status like 'COMPLETED') "  
   List<Object[]> findEmployeesSalesBetweenDates();
