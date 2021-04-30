@@ -146,22 +146,18 @@ public class OrderServiceImpl implements IOrderService{
 		
 	//	if (topemployee.getEnd_date() == null ) topemployee.setEnd_date(LocalDateTime.now());
 		
-		List<Object[]> TopEmpl = orderRepository.findEmployeesSalesBetweenDates(topemployeepojo);  //Busqueda en BD
+		List<Object[]> TopEmpl = orderRepository.findEmployeesSalesBetweenDates();  //Busqueda en BD
 	
 		TopEmployeeDTO TopEmployDTO = new TopEmployeeDTO();
 	
 		List<TopEmployeeDTO> topemployeelist = new ArrayList();
 		
-		Object pepe = new ArrayList();
 		for (Object[] object : TopEmpl) {
 			TopEmployDTO.setEmployee_id( object[0].toString());
 			TopEmployDTO.setTotal(Double.parseDouble(object[1].toString()));
 			topemployeelist.add(TopEmployDTO);
 			TopEmployDTO = new TopEmployeeDTO();
-			
-
 		}
-		
 
 		return topemployeelist; 
 	}

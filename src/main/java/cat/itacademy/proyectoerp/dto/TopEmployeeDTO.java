@@ -1,9 +1,6 @@
 package cat.itacademy.proyectoerp.dto;
 
-import java.io.Serializable;
-import java.util.UUID;
 
-//public class TopEmployeeDTO implements Serializable{
 
 public class TopEmployeeDTO {
 
