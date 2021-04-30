@@ -2,10 +2,14 @@ package cat.itacademy.proyectoerp.controller;
 
 import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Order;
+import cat.itacademy.proyectoerp.domain.TopEmployee;
+import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
+import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
 import cat.itacademy.proyectoerp.service.EmployeeServiceImpl;
 import cat.itacademy.proyectoerp.service.IOrderService;
 import cat.itacademy.proyectoerp.util.StringToOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -111,4 +115,40 @@ public class StatsContoller {
     
     return map;
   }
+  
+  @PreAuthorize("hasRole('ADMIN')")
+  @GetMapping("/employees/toptenemployeessells")
+  public Map <String,Object> getTopTenEmployeesSells(DatesTopEmployeePOJO datestopemployee) {
+    
+	  HashMap<String, Object> map = new HashMap<>();
+	  /*  
+	  if (datestopemployee.getBegin_date().isAfter(datestopemployee.getEnd_date())) {
+		  map.put("success","false");
+		  map.put("message","the begin_date is upper than end_date");
+	  }
+	*/
+	try {  
+			  List<TopEmployeeDTO> employeeList = orderService.findAllTopTen(datestopemployee);  
+			  
+			  if(employeeList.isEmpty()) {
+		    		map.put("success", "true");
+		            map.put("message", "no employees or orders found between the dates");
+			  } 
+			  else {
+				  map.put("succes","true");
+				  map.put("message","top 10 employees found");
+				  map.put("employees", employeeList);
+			  }
+				  
+		  } catch(Exception e) {
+	    	 map.put("success", "false");
+	         map.put("message", "error: " + e.getMessage());//Pdte tratar error "legible"
+		  }
+	  
+	  
+    return map;
+	  
+  }
+
+  
 }

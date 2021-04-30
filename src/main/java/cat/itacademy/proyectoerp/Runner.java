@@ -156,6 +156,9 @@ public class Runner implements CommandLineRunner {
 			User userEmployeeTwo = new User("useremployeetwo@example.com", "ReW9a0&+ET", UserType.EMPLOYEE);
 			userService.registerNewUserAccount(userEmployeeTwo);
 			
+			User userEmployeeThree = new User("useremployeethree@example.com", "ReW9a0&+ET", UserType.EMPLOYEE);
+			userService.registerNewUserAccount(userEmployeeThree);
+			
 			
 			// Initialize two Employees for the orders
 			Employee employeeOne = new Employee(24000.00,"employee1@company.com", "A1234567Z",667999999, userEmployeeOne);
@@ -163,6 +166,9 @@ public class Runner implements CommandLineRunner {
 
 			Employee employeeTwo = new Employee(14000.00,"employee2@company.com", "B1236767Z",667999998, userEmployeeTwo);
 			employeeService.createEmployee(employeeTwo);
+			
+			Employee employeeThree = new Employee(14000.00,"employee3@company.com", "C1236767Z",667999996, userEmployeeThree);
+			employeeService.createEmployee(employeeThree);
 			
 
 			// Initialize 3 products
@@ -176,40 +182,9 @@ public class Runner implements CommandLineRunner {
 			productService.createProduct(productThree);
 
 			
-			// Initialize 3 orders, we need to create lines of orderDetails with products
+			// Initialize 5 orders, we need to create lines of orderDetails with products
 			
-		/*	Order orderOne = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
-					clientOne.getid(), LocalDateTime.now(), OrderStatus.COMPLETED, productsOrder1);
-			orderService.createOrder(orderOne);
-			
-			Order orderTwo = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
-					clientOne.getid(), LocalDateTime.now(), OrderStatus.IN_DELIVERY, productsOrder2);
-			orderService.createOrder(orderTwo);
-			
-			Order orderThree = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
-					clientOne.getid(), LocalDateTime.now(), OrderStatus.PENDING_DELIVERY, productsOrder3);
-			orderService.createOrder(orderThree);
-			
-			Order orderFour = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
-					clientOne.getid(), LocalDateTime.now(), OrderStatus.ASSIGNED, productsOrder4);
-			orderService.createOrder(orderFour);*/
-			//Dapser75
-		/*	Order orderOne = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
-					clientOne, LocalDateTime.now(), OrderStatus.COMPLETED, productsOrder1);
-			orderService.createOrder(orderOne);
-			
-			Order orderTwo = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
-					clientOne, LocalDateTime.now(), OrderStatus.IN_DELIVERY, productsOrder2);
-			orderService.createOrder(orderTwo);
-			
-			Order orderThree = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
-					clientOne, LocalDateTime.now(), OrderStatus.PENDING_DELIVERY, productsOrder3);
-			orderService.createOrder(orderThree);
-			
-			Order orderFour = new Order(UUID.randomUUID(), employeeOne.getId().toString(), 
-					clientOne, LocalDateTime.now(), OrderStatus.ASSIGNED, productsOrder4);
-			orderService.createOrder(orderFour);*/
- 
+		 
 			//Order1
 			Order orderOne = new Order(employeeOne.getId().toString(), clientOne, LocalDateTime.now(), 
 					OrderStatus.COMPLETED, PaymentMethod.CREDIT_CARD, address1, address1, 550.00);
@@ -254,10 +229,43 @@ public class Runner implements CommandLineRunner {
 			orderThree.addOrderDetail(orderDetail6);	
 			
 			orderService.createOrder(orderThree);
+			
+			//Order4
+			Order orderFour = new Order(employeeTwo.getId().toString(), 
+					clientTwo, LocalDateTime.now(), OrderStatus.COMPLETED,
+					PaymentMethod.PAYPAL, address3, address3, 1200.00);
+			
+			OrderDetail orderDetail7 = new OrderDetail (productOne, orderThree, 1, 150.00);
+			OrderDetail orderDetail8 = new OrderDetail (productThree, orderThree, 3, 1050.00);
+			
+			orderTwo.addOrderDetail(orderDetail7);
+			orderTwo.addOrderDetail(orderDetail8);	
+			
+			orderThree.addOrderDetail(orderDetail7);
+			orderThree.addOrderDetail(orderDetail8);	
+			
+			orderService.createOrder(orderFour);
+			
+			//Order5
+			Order orderFive = new Order(employeeThree.getId().toString(), 
+					clientTwo, LocalDateTime.now(), OrderStatus.COMPLETED,
+					PaymentMethod.PAYPAL, address3, address3, 1200.00);
+			
+			OrderDetail orderDetail9 = new OrderDetail (productOne, orderThree, 1, 150.00);
+			OrderDetail orderDetail10 = new OrderDetail (productTwo, orderThree, 3, 1050.00);
+			
+			orderFive.addOrderDetail(orderDetail9);
+			orderFive.addOrderDetail(orderDetail10);	
+			
+			orderThree.addOrderDetail(orderDetail9);
+			orderThree.addOrderDetail(orderDetail10);	
+			
+			orderService.createOrder(orderFive);
 			 
 
 		}
 
 	}
+	
 
 }

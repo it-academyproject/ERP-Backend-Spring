@@ -36,7 +36,7 @@ public class Order {
 	
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "client_id", referencedColumnName = "id", nullable=false)
+	@JoinColumn(name = "client_id", referencedColumnName = "id", nullable=true)
 	private Client client;  //	private UUID client;
 		
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")

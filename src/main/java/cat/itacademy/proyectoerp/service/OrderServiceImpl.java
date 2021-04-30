@@ -2,10 +2,16 @@ package cat.itacademy.proyectoerp.service;
 
 
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.UUID;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
+import cat.itacademy.proyectoerp.domain.TopEmployee;
+import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
+import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +21,7 @@ import cat.itacademy.proyectoerp.repository.IOrderDetailRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
 import cat.itacademy.proyectoerp.domain.Client;
+import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Order;
 
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
@@ -80,7 +87,7 @@ public class OrderServiceImpl implements IOrderService{
 
 					throw new ArgumentNotValidException("Invalid Client ID");
 				}
-				//orderToUpdate.setClient_id(order.getClient()); //julia
+				//orderToUpdate.setClient_id(order.getClient()); //
 				orderToUpdate.setClient(order.getClient());
 				
 				//TODO: Once Employee is implemented it should check if it exists.1
@@ -114,8 +121,8 @@ public class OrderServiceImpl implements IOrderService{
 	}
 
 	@Override
-	public List<Order> findOrdersByClient(String id) {  //julia
-	//public List<Order> findOrdersByClient(Client id) {
+	public List<Order> findOrdersByClient(String id) { 
+	//public List<Order> findOrdersByClient(Client id) { //Dapser75
 		if(orderRepository.findOrdersByClientId(id) == null){
 			throw new ArgumentNotFoundException("No orders with client " + id + " found");
 		} else{
@@ -130,6 +137,33 @@ public class OrderServiceImpl implements IOrderService{
 		} else{
 			return orderRepository.findOrdersByEmployeeId(employeeId);
 		}
+	}
+
+	@Override
+	public List<TopEmployeeDTO> findAllTopTen(DatesTopEmployeePOJO topemployeepojo) {
+		
+	//	if (topemployee.getBegin_date() == null) topemployee.setBegin_date(LocalDateTime.of(2020,01,01,00,01)); 
+		
+	//	if (topemployee.getEnd_date() == null ) topemployee.setEnd_date(LocalDateTime.now());
+		
+		List<Object[]> TopEmpl = orderRepository.findEmployeesSalesBetweenDates(topemployeepojo);  //Busqueda en BD
+	
+		TopEmployeeDTO TopEmployDTO = new TopEmployeeDTO();
+	
+		List<TopEmployeeDTO> topemployeelist = new ArrayList();
+		
+		Object pepe = new ArrayList();
+		for (Object[] object : TopEmpl) {
+			TopEmployDTO.setEmployee_id( object[0].toString());
+			TopEmployDTO.setTotal(Double.parseDouble(object[1].toString()));
+			topemployeelist.add(TopEmployDTO);
+			TopEmployDTO = new TopEmployeeDTO();
+			
+
+		}
+		
+
+		return topemployeelist; 
 	}
 }
 

@@ -3,9 +3,10 @@ package cat.itacademy.proyectoerp.service;
 import java.util.List;
 import java.util.UUID;
 
-import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
+import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
+import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
 
 public interface IOrderService {
 
@@ -25,5 +26,7 @@ public interface IOrderService {
 	public List<Order> findOrdersByClient(String id);
 	
 	public List<Order> findOrdersByEmployeeId(String employeeId);
-
+	
+	public List<TopEmployeeDTO> findAllTopTen(DatesTopEmployeePOJO topemployee);
+	
 }
