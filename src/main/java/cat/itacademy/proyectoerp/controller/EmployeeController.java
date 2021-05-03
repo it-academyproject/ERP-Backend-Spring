@@ -3,6 +3,7 @@ package cat.itacademy.proyectoerp.controller;
 import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.service.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -17,22 +18,7 @@ public class EmployeeController {
   @Autowired
   IEmployeeService iEmployeeService;
 
-  @PostMapping()
-  public Map<String, Object> createEmployee(@RequestBody Employee employee){
-    HashMap<String, Object> map = new HashMap<>();
-
-    try {
-      iEmployeeService.createEmployee(employee);
-      map.put("success", "true");
-      map.put("message", "Employee created");
-      map.put("employee", employee);
-    } catch (Exception e){
-      map.put("success", "false");
-      map.put("message", "error: " + e.getMessage());
-    }
-    return map;
-  }
-
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping()
   public Map<String, Object> getEmployees(){
     HashMap<String, Object> map = new HashMap<String, Object>();
@@ -43,11 +29,12 @@ public class EmployeeController {
       map.put("employee", employeeList);
     } catch (Exception e) {
       map.put("success", "false");
-      map.put("message", "Error: " + e.getMessage());
+      map.put("message", e.getMessage());
     }
     return map;
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/{id}")
   public Map<String, Object> getEmployeeById(@PathVariable(name="id") UUID id){
     HashMap<String, Object> map = new HashMap<>();
@@ -58,11 +45,12 @@ public class EmployeeController {
       map.put("employee", employee);
     } catch (Exception e){
       map.put("success", "false");
-      map.put("message", "error: " + e.getMessage());
+      map.put("message", e.getMessage());
     }
     return map;
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @DeleteMapping("/{id}")
   public Map<String, Object> deleteEmployee(@PathVariable(name="id") UUID id) {
     HashMap<String, Object> map = new HashMap<>();
@@ -72,11 +60,12 @@ public class EmployeeController {
       map.put("message", "Employee with id: " + id + " has been deleted");
     } catch (Exception e) {
       map.put("success", "false");
-      map.put("message", "error: " + e.getMessage());
+      map.put("message", e.getMessage());
     }
     return map;
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @PutMapping()
   public HashMap<String, Object> updateEmployee(@RequestBody Employee employee){
     HashMap<String, Object> map = new HashMap<String, Object>();
@@ -88,8 +77,9 @@ public class EmployeeController {
 
     } catch (Exception e) {
       map.put("success", "false");
-      map.put("message", "Error: " + e.getMessage());
+      map.put("message", e.getMessage());
     }
     return map;
   }
 }
+

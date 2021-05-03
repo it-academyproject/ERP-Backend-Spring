@@ -1,42 +1,67 @@
 package cat.itacademy.proyectoerp.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Employee {
 
   @Id
   @Column(name = "id", columnDefinition = "BINARY(16)")
   private UUID id = UUID.randomUUID();
 
-  private double salary;
-  private String email;
+  @NotNull(message = "Salary is mandatory")
+  private Double salary;
+  @NotBlank(message = "DNI is mandatory")
   private String dni;
-  private int phone;
+  @NotNull(message = "Phone is mandatory")
+  private Integer phone;
+
+  @JsonFormat(pattern = "dd-MM-yyyy")
+  @NotNull(message = "in_date is mandatory")
+  @Column(name="in_date")
+  private LocalDate inDate;
+
+  @JsonFormat(pattern = "dd-MM-yyyy")
+  @Column(name="out_date")
+  private LocalDate outDate;
 
   @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "user_id", referencedColumnName = "id")
+  @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true, nullable = false)
+  @NotNull(message = "You have to assign this employee to an user")
+  @Valid
   private User user;
-
 
   public Employee(){};
 
-  public Employee(double salary, String email, String dni, int phone, List<Order> orders, User user) {
-    this.id = UUID.randomUUID();
+  public Employee(UUID id, Double salary, String dni, Integer phone, LocalDate inDate, LocalDate outDate,
+                  List<Order> orders, User user) {
+    this.id = id;
     this.salary = salary;
-    this.email = email;
     this.dni = dni;
     this.phone = phone;
+    this.inDate = inDate;
+    this.outDate = outDate;
     this.user = user;
   }
 
-  public Employee(double salary, String email, String dni, int phone, User user) {
+  public Employee(Double salary, String dni, Integer phone, LocalDate inDate, LocalDate outDate, User user) {
     this.salary = salary;
-    this.email = email;
     this.dni = dni;
     this.phone = phone;
+    this.inDate = inDate;
+    this.outDate = outDate;
     this.user = user;
   }
 
@@ -48,20 +73,12 @@ public class Employee {
     this.id = id;
   }
 
-  public double getSalary() {
+  public Double getSalary() {
     return salary;
   }
 
-  public void setSalary(double salary) {
+  public void setSalary(Double salary) {
     this.salary = salary;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
   }
 
   public String getDni() {
@@ -72,12 +89,28 @@ public class Employee {
     this.dni = dni;
   }
 
-  public int getPhone() {
+  public Integer getPhone() {
     return phone;
   }
 
-  public void setPhone(int phone) {
+  public void setPhone(Integer phone) {
     this.phone = phone;
+  }
+
+  public LocalDate getInDate() {
+    return inDate;
+  }
+
+  public void setInDate(LocalDate inDate) {
+    this.inDate = inDate;
+  }
+
+  public LocalDate getOutDate() {
+    return outDate;
+  }
+
+  public void setOutDate(LocalDate outDate) {
+    this.outDate = outDate;
   }
 
   public User getUser() {

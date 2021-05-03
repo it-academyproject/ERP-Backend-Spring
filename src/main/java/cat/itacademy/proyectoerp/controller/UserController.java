@@ -1,11 +1,18 @@
 package cat.itacademy.proyectoerp.controller;
 
-import java.util.HashMap;
-import java.util.List;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
-
+import cat.itacademy.proyectoerp.domain.*;
+import cat.itacademy.proyectoerp.dto.EmployeeDTO;
+import cat.itacademy.proyectoerp.dto.MessageDTO;
+import cat.itacademy.proyectoerp.dto.UserDTO;
+import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
+import cat.itacademy.proyectoerp.repository.UserRepository;
+import cat.itacademy.proyectoerp.security.entity.JwtLogin;
+import cat.itacademy.proyectoerp.security.entity.JwtResponse;
+import cat.itacademy.proyectoerp.security.jwt.JwtUtil;
+import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
+import cat.itacademy.proyectoerp.service.ClientServiceImpl;
+import cat.itacademy.proyectoerp.service.IEmployeeService;
+import cat.itacademy.proyectoerp.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,28 +24,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import cat.itacademy.proyectoerp.domain.ChangeUserPassword;
-import cat.itacademy.proyectoerp.domain.Client;
-import cat.itacademy.proyectoerp.domain.StandardRegistration;
-import cat.itacademy.proyectoerp.domain.User;
-import cat.itacademy.proyectoerp.dto.MessageDTO;
-import cat.itacademy.proyectoerp.dto.UserDTO;
-import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
-import cat.itacademy.proyectoerp.security.entity.JwtLogin;
-import cat.itacademy.proyectoerp.security.entity.JwtResponse;
-import cat.itacademy.proyectoerp.security.jwt.JwtUtil;
-import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
-import cat.itacademy.proyectoerp.service.ClientServiceImpl;
-import cat.itacademy.proyectoerp.service.UserServiceImpl;
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Class of User Controller
@@ -65,6 +55,12 @@ public class UserController {
 	
 	@Autowired
 	ClientServiceImpl clientService;
+
+	@Autowired
+	IEmployeeService iEmployeeService;
+
+	@Autowired
+	UserRepository userRepository;
 
 	/**
 	 * Method for all url which don't exist
@@ -103,15 +99,16 @@ public class UserController {
 	/**
 	 * Method for create a new user and client.
 	 * 
-	 * @param standar JSON with StandarRegistration data
+	 * @param standard JSON with StandarRegistration data
 	 * @return Welcome String.
 	 */
 	@RequestMapping(value = "/users/clients", method = RequestMethod.POST)
 	public ResponseEntity<?> newUserAndClient(@Valid @RequestBody StandardRegistration standard) {
-		
+
 		User userRegistered = new User(standard.getUsername(),standard.getPassword());
+
 		UserDTO userDTO;
-		
+
 		userDTO = userService.registerNewUserAccount(userRegistered);
 		
 		if (userDTO.getSuccess() == "False") {
@@ -129,6 +126,36 @@ public class UserController {
 		}
 	
     }
+
+	/**
+	 * Create a new user and employee
+	 * @param employee
+	 * @return
+	 */
+	@PreAuthorize("hasRole('ADMIN')")
+	@RequestMapping(value = "/users/employees", method = RequestMethod.POST)
+	public ResponseEntity<?> newUserAndEmployee(@Valid @RequestBody Employee employee) {
+		EmployeeDTO employeeDTO;
+
+		User user = new User(employee.getUser().getUsername(),employee.getUser().getPassword(), UserType.EMPLOYEE);
+		userService.registerNewUserAccount(user);
+
+		employee.setOutDate(null != employee.getOutDate()?employee.getOutDate():null);
+		Employee newEmployee = new Employee(employee.getSalary(), employee.getDni(),
+				employee.getPhone(), employee.getInDate(), employee.getOutDate(), user);
+		try {
+			employeeDTO = iEmployeeService.createEmployee(newEmployee);
+		} catch (Exception e) {
+			//MessageDTO messageDTO = new MessageDTO("False", "Unexpected error");
+			MessageDTO messageDTO = new MessageDTO("False", e.getMessage());
+			return ResponseEntity.unprocessableEntity().body(messageDTO);
+		}
+
+		if (employeeDTO.getMessage().getSuccess().equalsIgnoreCase("True")) {
+			return ResponseEntity.status(HttpStatus.CREATED).body(employeeDTO);
+		}
+		return new ResponseEntity<>(employeeDTO, HttpStatus.UNPROCESSABLE_ENTITY);
+	}
 
 	/**
 	 * Method for user login
@@ -271,7 +298,7 @@ public class UserController {
 	/**
 	 * Method to reset password
 	 * 
-	 * @param user
+	 * @param changeuserpassword
 	 * @return user updated
 	 */
 	@PutMapping("/users/resetpassword")
