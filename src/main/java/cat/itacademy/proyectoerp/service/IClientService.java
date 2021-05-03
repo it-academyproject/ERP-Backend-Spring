@@ -17,8 +17,8 @@ public interface IClientService {
 	
 	public List<ClientDTO> getPageOfClients(int page, int amount); // READ - Get a page of X clients
 	
-	public Optional<Client> findClientById(UUID id); //READ - finds the client by Id
-	
+	public Client findClientById(UUID id); //READ - finds the client by Id
+		
 	public Client updateClient(Client client); //UPDATE - Updates clients info
 	
 	public void deleteClient(UUID id); //DELETE - deletes client
