@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import cat.itacademy.proyectoerp.domain.OrderStatus;
-import cat.itacademy.proyectoerp.domain.TopEmployee;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -2,7 +2,6 @@ package cat.itacademy.proyectoerp.controller;
 
 import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Order;
-import cat.itacademy.proyectoerp.domain.TopEmployee;
 import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
 import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
 import cat.itacademy.proyectoerp.service.EmployeeServiceImpl;
