@@ -2,13 +2,13 @@ package cat.itacademy.proyectoerp.service;
 
 
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import java.util.UUID;
+
+
 import cat.itacademy.proyectoerp.domain.OrderStatus;
-import cat.itacademy.proyectoerp.domain.TopEmployee;
 import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
 import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
 
@@ -20,8 +20,6 @@ import cat.itacademy.proyectoerp.repository.IClientRepository;
 import cat.itacademy.proyectoerp.repository.IOrderDetailRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
-import cat.itacademy.proyectoerp.domain.Client;
-import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Order;
 
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
@@ -140,16 +138,12 @@ public class OrderServiceImpl implements IOrderService{
 	}
 
 	@Override
-	public List<TopEmployeeDTO> findAllTopTen(DatesTopEmployeePOJO topemployeepojo) {
-		
-		if (topemployeepojo.getBegin_date() == null) topemployeepojo.setBegin_date(LocalDateTime.of(2020,01,01,00,01)); 
-		
-		if (topemployeepojo.getEnd_date() == null ) topemployeepojo.setEnd_date(LocalDateTime.now());
-		
-		List<Object[]> TopEmpl = orderRepository.findEmployeesSalesBetweenDates(topemployeepojo.getBegin_date(),topemployeepojo.getEnd_date());  //Busqueda en BD
-	
+	public List<TopEmployeeDTO> findAllTopTen(DatesTopEmployeePOJO datestopemployee) {
+			
+		List<Object[]> TopEmpl = orderRepository.findEmployeesSalesBetweenDates(datestopemployee.getBegin_date(),datestopemployee.getEnd_date());  //Busqueda en BD
 		TopEmployeeDTO TopEmployDTO = new TopEmployeeDTO();
-	
+				
+		
 		List<TopEmployeeDTO> topemployeelist = new ArrayList();
 		
 		for (Object[] object : TopEmpl) {
@@ -159,7 +153,9 @@ public class OrderServiceImpl implements IOrderService{
 			TopEmployDTO = new TopEmployeeDTO();
 		}
 
-		return topemployeelist; 
+		return topemployeelist;
+	
+		
 	}
 }
 

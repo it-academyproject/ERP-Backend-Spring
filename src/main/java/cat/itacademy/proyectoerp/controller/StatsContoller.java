@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -120,28 +121,38 @@ public class StatsContoller {
   }
   
   @PreAuthorize("hasRole('ADMIN')")
-  //@GetMapping("/employees/toptenemployeessales")
-  @RequestMapping(value = "/employees/toptenemployeessales", method = RequestMethod.POST)
+  @RequestMapping(value = "/employees/toptensales", method = RequestMethod.GET)
   public Map <String,Object> getTopTenEmployeesSales(@RequestBody DatesTopEmployeePOJO datestopemployee) {
     
 	  HashMap<String, Object> map = new HashMap<>();
-	    
-	  try {  
-			  List<TopEmployeeDTO> employeeList = orderService.findAllTopTen(datestopemployee);  
+	  
+	  if (datestopemployee.getBegin_date() == null) datestopemployee.setBegin_date(LocalDateTime.of(2020,01,01,00,01)); 
+		
+	  if (datestopemployee.getEnd_date() == null ) datestopemployee.setEnd_date(LocalDateTime.now());
+	  
+	  if (datestopemployee.getBegin_date().isBefore(datestopemployee.getEnd_date())) {
+    
+		  try {  
+			List<TopEmployeeDTO> employeeList = orderService.findAllTopTen(datestopemployee);
+							  
+				  if(employeeList.isEmpty()) {
+			    		map.put("success", "true");
+			            map.put("message", "no employees or orders found between the dates");
+				  } 
+				  else {
+					  map.put("succes","true");
+					  map.put("message","top 10 employees found");
+					  map.put("employees", employeeList);
+				  }
+					  
+		  } catch(Exception e) {
+		    	 map.put("success", "false");
+		         map.put("message", "error: " + e.getMessage());
+		  }
 			  
-			  if(employeeList.isEmpty()) {
-		    		map.put("success", "true");
-		            map.put("message", "no employees or orders found between the dates");
-			  } 
-			  else {
-				  map.put("succes","true");
-				  map.put("message","top 10 employees found");
-				  map.put("employees", employeeList);
-			  }
-				  
-	  } catch(Exception e) {
-	    	 map.put("success", "false");
-	         map.put("message", "error: " + e.getMessage());//Pdte tratar error "legible"
+	  }else {
+		  map.put("success", "false");
+	      map.put("message", "_error: invalid date ranges"); 
 	  }
 	  
 	  
