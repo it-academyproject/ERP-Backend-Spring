@@ -1,6 +1,8 @@
 package cat.itacademy.proyectoerp.domain;
 
 
+import java.time.LocalDateTime;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -17,6 +19,7 @@ import com.fasterxml.jackson.annotation.*;
  * - Id : Auto <br>
  * - username : max length = 12 <br>
  * - password: max length = 16<br>
+ * - last_session: <br>
  * - userType: Enum type for role type.<br>
  *
  * @author IAcademy
@@ -41,6 +44,9 @@ public class User {
   @Column(length = 106)
   @NotBlank(message = "Password is mandatory")
   private String password;
+  
+  @Column
+  private LocalDateTime last_session;
 
   @JsonProperty("user_type")
   @Column(length = 16)
