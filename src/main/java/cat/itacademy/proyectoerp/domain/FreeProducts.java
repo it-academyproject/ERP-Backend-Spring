@@ -25,5 +25,31 @@ public class FreeProducts {
 
 	
 	
+	//GETTER & SETTERS
+	public int getProducts_to_buy() {
+		return products_to_buy;
+	}
+
+	public void setProducts_to_buy(int products_to_buy) {
+		this.products_to_buy = products_to_buy;
+	}
+
+	public int getProducts_to_pay() {
+		return products_to_pay;
+	}
+
+	public void setProducts_to_pay(int products_to_pay) {
+		this.products_to_pay = products_to_pay;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	
+	
+	
+	
+	
 	
 }
