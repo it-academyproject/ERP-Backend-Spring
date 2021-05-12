@@ -24,6 +24,7 @@ public interface IUserService {
 	public Optional<UserDTO> deleteUserById(Long id);
 	public Optional<UserDTO> modifyUser(Long id, User user);
 	public User updatePassword(ChangeUserPassword changeuserpassword);
+	public void updateLastSession(String username);
 
 
 
