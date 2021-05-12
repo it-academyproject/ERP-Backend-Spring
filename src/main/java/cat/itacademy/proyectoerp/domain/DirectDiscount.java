@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "direct_discount")
-public class Direct_discount {
+public class DirectDiscount {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
