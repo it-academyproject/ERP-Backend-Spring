@@ -51,8 +51,8 @@ public class EmployeeController {
   }
 
   @PreAuthorize("hasRole('ADMIN')")
-  @DeleteMapping("/{id}")
-  public Map<String, Object> deleteEmployee(@PathVariable(name="id") UUID id) {
+  @DeleteMapping()
+  public Map<String, Object> deleteEmployee(@RequestBody UUID id) {
     HashMap<String, Object> map = new HashMap<>();
     try {
       iEmployeeService.deleteEmployee(id);
