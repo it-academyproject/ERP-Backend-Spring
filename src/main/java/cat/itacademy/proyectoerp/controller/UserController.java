@@ -179,6 +179,9 @@ public class UserController {
 
 			SecurityContextHolder.getContext()
 					.setAuthentication(authenticate(jwtLogin.getUsername(), jwtLogin.getPassword()));
+			
+			// Update User lastSession after successful login
+			userService.updateLastSession(userDetails.getUsername());
 
 		} catch (Exception e) {
 			MessageDTO messageDto = new MessageDTO("False", e.getMessage());

@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.*;
  * - Id : Auto <br>
  * - username : max length = 12 <br>
  * - password: max length = 16<br>
- * - last_session: <br>
+ * - lastSession: LocalDateTime<br>
  * - userType: Enum type for role type.<br>
  *
  * @author IAcademy
@@ -46,7 +46,7 @@ public class User {
   private String password;
   
   @Column
-  private LocalDateTime last_session;
+  private LocalDateTime lastSession;
 
   @JsonProperty("user_type")
   @Column(length = 16)
@@ -111,6 +111,14 @@ public class User {
   }
 
 
+  public LocalDateTime getLastSession() {
+	return lastSession;
+  }
+
+  public void setLastSession(LocalDateTime lastSession) {
+	this.lastSession = lastSession;
+  }
+
   public UserType getUserType() {
     return userType;
   }
@@ -129,8 +137,9 @@ public class User {
   }
 
   @Override
-  public String toString() {
-    return "User [id=" + id + ", username=" + username + ", password=" + password + ", userType=" + userType + "]";
-  }
+public String toString() {
+	return "User [id=" + id + ", username=" + username + ", password=" + password + ", lastSession=" + lastSession
+			+ ", userType=" + userType + "]";
+}
 
 }
