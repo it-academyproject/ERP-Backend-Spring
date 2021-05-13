@@ -9,7 +9,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.sun.istack.Nullable;
 
 /**
@@ -18,6 +23,7 @@ import com.sun.istack.Nullable;
  */
 @Entity
 @Table(name = "clients")
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class Client {
 
 	// Client Attributes
@@ -25,18 +31,34 @@ public class Client {
 	@Id
 	@Column(name = "id", columnDefinition = "BINARY(16)")
 	private UUID id = UUID.randomUUID();
+
+	@NotBlank(message = "DNI is mandatory")
+	@Column(unique = true)
 	private String dni;
+
 	private String image;
+
+	@NotBlank(message = "Name and surname is mandatory")
 	private String nameAndSurname;
-	
+
+	//address_id se corresponde con billing_address_id, de la clase Order.java
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "address_id", referencedColumnName = "id")
-	@Nullable
+	@JoinColumn(name = "address_id", referencedColumnName = "id", unique = true)
+	@NotNull(message = "You have to assign this client to an address")
+	@Valid
 	private Address address;
-	//private List<Order> orders;
+
+	//se corresponde con shipping_address_id, de la clase Order.java
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "shipping_address_id", referencedColumnName = "id")
+	@Nullable
+	@Valid
+	private Address shippingAddress;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_id", referencedColumnName = "id")
+	@JoinColumn(name = "user_id", referencedColumnName = "id", unique = true, nullable = false)
+	@NotNull(message = "You have to assign this client to an user")
+	@Valid
 	private User user;
 
 
@@ -44,39 +66,29 @@ public class Client {
 
 	}
 
-	public Client(Address address, String dni, String image, String name) {
-		this.address = address;
-		this.dni = dni; 
-		this.image = image;
-		this.nameAndSurname = name;
-		//this.orders = orders;
-	}
-
-
-	public Client(Address address, String dni, String image, String name, User user) {
-		//id = UUID.randomUUID();
-		this.nameAndSurname = name;
-		this.address = address;
+	public Client(String dni, String image, String nameAndSurname, Address address, User user) {
 		this.dni = dni;
 		this.image = image;
+		this.nameAndSurname = nameAndSurname;
+		this.address = address;
 		this.user = user;
 	}
 
+	public Client(String dni, String image, String nameAndSurname, Address address, Address shippingAddress, User user) {
+		this.dni = dni;
+		this.image = image;
+		this.nameAndSurname = nameAndSurname;
+		this.address = address;
+		this.shippingAddress = shippingAddress;
+		this.user = user;
+	}
 
-	public UUID getid() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setid(UUID id) {
+	public void setId(UUID id) {
 		this.id = id;
-	}
-
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
 	}
 
 	public String getDni() {
@@ -101,6 +113,22 @@ public class Client {
 
 	public void setNameAndSurname(String nameAndSurname) {
 		this.nameAndSurname = nameAndSurname;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+	public Address getShippingAddress() {
+		return shippingAddress;
+	}
+
+	public void setShippingAddress(Address shippingAddress) {
+		this.shippingAddress = shippingAddress;
 	}
 
 	public User getUser() {

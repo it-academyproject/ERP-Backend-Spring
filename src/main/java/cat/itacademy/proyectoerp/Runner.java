@@ -3,7 +3,10 @@ package cat.itacademy.proyectoerp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Random;
+
+import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,26 +88,34 @@ public class Runner implements CommandLineRunner {
 			Employee employee = new Employee(18000.00, "C1234567Z", 667999997, LocalDate.now(),null, userEmployee);
 			employeeService.createEmployee(employee);
 		}
-		
-		// Initialize 5 addresses
-		
-		Address address1 = new Address ("Calle Maldivas", "1 C", "Barcelona", "Spain", "08016",null);
-		addressService.createAddress(address1);
-		Address address2 = new Address ("Calle Azores", "1 C", "Barcelona", "Spain", "08016",null);
-		addressService.createAddress(address2);
-		Address address3 = new Address ("Calle Canarias", "1 C", "Barcelona", "Spain", "08016",null);
-		addressService.createAddress(address3);
-		Address address4 = new Address ("Calle Bahamas", "1 C", "Barcelona", "Spain", "08016",null);
-		addressService.createAddress(address4);
-		
-		Address addressExample = new Address ("Calle Ejemplo", "1 A", "Barcelona", "Spain", "08018",null);
-		addressService.createAddress(addressExample);
-		
+
+		Address address1 = null;
+		Address address2 = null;
+		Address address3 = null;
+		Address address4 = null;
+		Address addressExample = null;
+
+		try{
+			List<Address> adresses =  addressService.findAllAddresses();
+		}catch(ArgumentNotFoundException ex){
+			address1 = new Address("Calle Maldivas", "1 C", "Barcelona", "Spain", "08016");
+			addressService.createAddress(address1);
+			address2 = new Address("Calle Azores", "1 C", "Barcelona", "Spain", "08016");
+			addressService.createAddress(address2);
+			address3 = new Address("Calle Canarias", "1 C", "Barcelona", "Spain", "08016");
+			addressService.createAddress(address3);
+			address4 = new Address("Calle Bahamas", "1 C", "Barcelona", "Spain", "08016");
+			addressService.createAddress(address4);
+
+			addressExample = new Address("Calle Ejemplo", "1 A", "Barcelona", "Spain", "08018");
+			addressService.createAddress(addressExample);
+		}
+
 		//checks if there is already a client created, if not, it creates one
 		if(!userRepository.existsByUsername("client@erp.com")) {
 			User userClient = new User("client@erp.com", "ReW9a0&+TP", UserType.CLIENT);
 			userService.registerNewUserAccount(userClient);
-			Client client = new Client(addressExample, "L1234567Z", "url image","Random Name", userClient);
+			Client client = new Client("L1234567Z", "url image","Random Name", addressExample, userClient);
 			clientService.createClient(client);
 		}
 		
@@ -129,7 +140,9 @@ public class Runner implements CommandLineRunner {
 				String mail = "userclient"+i+"@example.com";
 				User userClient = new User(mail, "ReW9a0&+TP", UserType.CLIENT);
 				userService.registerNewUserAccount(userClient);
-				Client client = new Client(addressExample, dni, "url image","Random Name", userClient);
+				addressExample = new Address ("Otra Calle Ejemplo", "1 A", "Barcelona", "Spain", "08018");
+				addressService.createAddress(addressExample);
+				Client client = new Client(dni, "url image","Random Name", addressExample, userClient);
 				clientService.createClient(client);
 			}
 						
@@ -141,10 +154,10 @@ public class Runner implements CommandLineRunner {
 			userService.registerNewUserAccount(userClientTwo);
 						
 			// Initialize two Clients for the orders
-			Client clientOne = new Client(address1, "L1554567Z", "url image","Random Name", userClientOne);
+			Client clientOne = new Client("L1554567Z", "url image","Random Name", address1, address2, userClientOne);
 			clientService.createClient(clientOne);
 
-			Client clientTwo = new Client(address3, "B7654321C", "url image","Random Name", userClientTwo);
+			Client clientTwo = new Client("B7654321C", "url image","Random Name", address3, address3, userClientTwo);
 			clientService.createClient(clientTwo);
 			
 			
@@ -179,7 +192,7 @@ public class Runner implements CommandLineRunner {
 			// Initialize 3 orders, we need to create lines of orderDetails with products
 			
 			//Order1
-			Order orderOne = new Order(employeeOne.getId(), clientOne.getid(), LocalDateTime.now(), 
+			Order orderOne = new Order(employeeOne.getId(), clientOne.getId(), LocalDateTime.now(),
 					OrderStatus.COMPLETED, PaymentMethod.CREDIT_CARD, address1, address1, 550.00);
 						
 			OrderDetail orderDetail1 = new OrderDetail (productOne, orderOne, 2, 300.00);
@@ -193,7 +206,7 @@ public class Runner implements CommandLineRunner {
 			orderService.createOrder(orderOne);	
 			
 			//Order2
-			Order orderTwo = new Order(employeeOne.getId(), clientOne.getid(), LocalDateTime.now(), 
+			Order orderTwo = new Order(employeeOne.getId(), clientOne.getId(), LocalDateTime.now(),
 					OrderStatus.IN_DELIVERY, PaymentMethod.CASH, address2, address1, 1200.00);
 			
 			OrderDetail orderDetail3 = new OrderDetail (productTwo, orderTwo, 2, 500.00);
@@ -209,7 +222,7 @@ public class Runner implements CommandLineRunner {
 			
 			//Order3
 			Order orderThree = new Order(employeeTwo.getId(), 
-					clientTwo.getid(), LocalDateTime.now(), OrderStatus.PENDING_DELIVERY,
+					clientTwo.getId(), LocalDateTime.now(), OrderStatus.PENDING_DELIVERY,
 					PaymentMethod.PAYPAL, address3, address3, 1200.00);
 			
 			OrderDetail orderDetail5 = new OrderDetail (productOne, orderThree, 1, 150.00);

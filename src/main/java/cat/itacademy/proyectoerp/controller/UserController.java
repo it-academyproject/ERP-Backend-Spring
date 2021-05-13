@@ -1,9 +1,7 @@
 package cat.itacademy.proyectoerp.controller;
 
 import cat.itacademy.proyectoerp.domain.*;
-import cat.itacademy.proyectoerp.dto.EmployeeDTO;
-import cat.itacademy.proyectoerp.dto.MessageDTO;
-import cat.itacademy.proyectoerp.dto.UserDTO;
+import cat.itacademy.proyectoerp.dto.*;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 import cat.itacademy.proyectoerp.repository.UserRepository;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
@@ -59,9 +57,6 @@ public class UserController {
 	@Autowired
 	IEmployeeService iEmployeeService;
 
-	@Autowired
-	UserRepository userRepository;
-
 	/**
 	 * Method for all url which don't exist
 	 * 
@@ -104,28 +99,36 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/users/clients", method = RequestMethod.POST)
 	public ResponseEntity<?> newUserAndClient(@Valid @RequestBody StandardRegistration standard) {
+		ClientDTO clientDTO;
+		MessageDTO messageDTO;
+
+		if (clientService.existsByDni(standard.getDni())) {
+			messageDTO = new MessageDTO("False", "Dni already exists");
+			return new ResponseEntity<>(messageDTO, HttpStatus.UNPROCESSABLE_ENTITY);
+		}
 
 		User userRegistered = new User(standard.getUsername(),standard.getPassword());
+		Client clientRegistered = new Client(standard.getDni(), standard.getImage(),standard.getNameAndSurname(),
+				standard.getAddress(),standard.getShippingAddress(),userRegistered);
 
-		UserDTO userDTO;
+		try {
+			UserDTO userDTO = userService.registerNewUserAccount(userRegistered);
 
-		userDTO = userService.registerNewUserAccount(userRegistered);
-		
-		if (userDTO.getSuccess() == "False") {
-			return new ResponseEntity<>(userDTO, HttpStatus.UNPROCESSABLE_ENTITY);
-			
-		} else {
-			try {
-				Client clientRegistered = new Client(standard.getAddress(),standard.getDni(),
-						standard.getImage(),standard.getName_surname(),userRegistered);
-	    		clientService.createClient(clientRegistered);
-	    	} catch (ArgumentNotValidException e) {
-	    		return ResponseEntity.unprocessableEntity().body(e.getMessage());
-	    	}	        
-	        return ResponseEntity.status(HttpStatus.CREATED).body(userDTO);
+			if (userDTO.getSuccess().equalsIgnoreCase("False")) {
+				return new ResponseEntity<>(userDTO, HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+
+			clientDTO = clientService.createClient(clientRegistered);
+			clientDTO.setUser(userDTO);
+
+		} catch (Exception e) {
+			// rollback
+			userService.deleteUserById(clientRegistered.getUser().getId());
+			messageDTO = new MessageDTO("False", e.getMessage().concat("User not created."));
+			return new ResponseEntity<>(messageDTO, HttpStatus.UNPROCESSABLE_ENTITY);
 		}
-	
-    }
+		return new ResponseEntity<>(clientDTO, HttpStatus.CREATED);
+	}
 
 	/**
 	 * Create a new user and employee

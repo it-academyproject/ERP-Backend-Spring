@@ -3,7 +3,11 @@ package cat.itacademy.proyectoerp.dto;
 import java.io.Serializable;
 import java.util.UUID;
 
+import cat.itacademy.proyectoerp.domain.Address;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.sun.istack.Nullable;
 
 /**
  * DTO Class for Clients. This class return id, adress, dni, image and username
@@ -14,17 +18,21 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ClientDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private UUID id;
-	private String address;
-	private String dni;
 	private String image;
 	private String username;
-	private String name_and_surname;
-	// private Long id;
+	private String nameAndSurname;
+
+	private AddressDTO address;
+	private AddressDTO shippingAddress;
+	private UserDTO user;
+	private MessageDTO message;
+
 
 	// SETERRS AND GETTERS
 
@@ -34,22 +42,6 @@ public class ClientDTO implements Serializable {
 
 	public void setId(UUID id) {
 		this.id = id;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getDni() {
-		return dni;
-	}
-
-	public void setDni(String dni) {
-		this.dni = dni;
 	}
 
 	public String getImage() {
@@ -68,15 +60,44 @@ public class ClientDTO implements Serializable {
 		this.username = username;
 	}
 
-	public String getName_and_surname() {
-		return name_and_surname;
-	} 
-
-	public void setNameAndSurname(String nameAndSurname) {
-		this.name_and_surname = nameAndSurname;
+	public String getNameAndSurname() {
+		return nameAndSurname;
 	}
 
+	public void setNameAndSurname(String nameAndSurname) {
+		this.nameAndSurname = nameAndSurname;
+	}
 
-	
+	public AddressDTO getAddress() {
+		return address;
+	}
+
+	public void setAddress(AddressDTO address) {
+		this.address = address;
+	}
+
+	public AddressDTO getShippingAddress() {
+		return shippingAddress;
+	}
+
+	public void setShippingAddress(AddressDTO shippingAddress) {
+		this.shippingAddress = shippingAddress;
+	}
+
+	public UserDTO getUser() {
+		return user;
+	}
+
+	public void setUser(UserDTO user) {
+		this.user = user;
+	}
+
+	public MessageDTO getMessage() {
+		return message;
+	}
+
+	public void setMessage(MessageDTO message) {
+		this.message = message;
+	}
 
 }

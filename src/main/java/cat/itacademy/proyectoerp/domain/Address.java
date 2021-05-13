@@ -2,11 +2,9 @@ package cat.itacademy.proyectoerp.domain;
 
 import java.util.UUID;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -24,31 +22,46 @@ public class Address {
     )
 	@Column(name = "id", columnDefinition = "BINARY(16)")
 	private UUID id;
-	
-	private String street;	 
+
+	@NotBlank(message = "Street name is mandatory")
+	private String street;
+
+	@NotBlank(message = "Floor number is mandatory")
 	private String number;
+
+	@NotBlank(message = "City is mandatory")
 	private String city;
+
+	@NotBlank(message = "Country is mandatory")
 	private String country;
-	 
+
+	@NotBlank(message = "Zipcode is mandatory")
+	@Pattern(regexp = "^\\d{5}([-]|\\s*)?(\\d{4})?$", message = "Zipcode format is not valid. Valid formats: 08018, 08018 1234, 08018-1234, 080181234")
 	@Column(name = "zip_code")
 	private String zipcode;
-	
-	@Column(name = "client_id")
-	@Nullable
-	private String clientId;
+
+	@OneToOne(mappedBy = "address")
+	private Client client;
 
 	public Address() {
-		
 	}
-	
-	public Address(String street, String number, String city, String country, String zipcode, String clientId) {
+
+	public Address(String street, String number, String city, String country, String zipcode) {
 		this.street = street;
 		this.number = number;
 		this.city = city;
 		this.country = country;
 		this.zipcode = zipcode;
-		this.clientId = clientId;
-		
+	}
+
+	public Address(UUID id, String street, String number, String city, String country, String zipcode, Client client) {
+		this.id = id;
+		this.street = street;
+		this.number = number;
+		this.city = city;
+		this.country = country;
+		this.zipcode = zipcode;
+		this.client = client;
 	}
 
 	public UUID getId() {
@@ -99,12 +112,11 @@ public class Address {
 		this.zipcode = zipcode;
 	}
 
-	public String getClientId() {
-		return clientId;
+	public Client getClient() {
+		return client;
 	}
 
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}	
-	 
+	public void setClient(Client client) {
+		this.client = client;
+	}
 }

@@ -3,6 +3,7 @@ package cat.itacademy.proyectoerp.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -64,6 +65,16 @@ public class UserServiceImpl implements IUserService {
 		userDTO.setSuccess("True");
 		return Optional.of(userDTO);
 
+	}
+
+	@Override
+	public User findByUsername(String username) {
+		return userRepository.findByUsername(username);
+	}
+
+	@Override
+	public boolean existsByUsername(String username) {
+		return userRepository.existsByUsername(username);
 	}
 
 	/**
@@ -189,7 +200,6 @@ public class UserServiceImpl implements IUserService {
 			userDto.setMessage("User Don't Exist");
 			return Optional.of(userDto);
 		}
-
 		userRepository.deleteById(id);
 
 		userDto.setSuccess("True");
@@ -287,7 +297,7 @@ public class UserServiceImpl implements IUserService {
 	/**
 	 * Method to update user password
 	 * 
-	 * @param user
+	 * @param changeuserpassword
 	 * @return user with new password
 	 * @throws ArgumentNotFoundException
 	 */
@@ -317,7 +327,7 @@ public class UserServiceImpl implements IUserService {
 		}
 	}
 
-	
 
-	
+
+
 }
