@@ -28,5 +28,7 @@ public interface IUserService {
 	public User updatePassword(ChangeUserPassword changeuserpassword);
 	public User findByUsername(String username);
 	public boolean existsByUsername(String username);
+	public void updateLastSession(String username);
+
 
 }

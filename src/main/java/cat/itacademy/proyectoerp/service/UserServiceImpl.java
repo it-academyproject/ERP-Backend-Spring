@@ -1,5 +1,6 @@
 package cat.itacademy.proyectoerp.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -327,7 +328,15 @@ public class UserServiceImpl implements IUserService {
 		}
 	}
 
-
-
+	/**
+	 * 
+	 * Method to update User lastSession with the current LocalDateTime.
+	 * 
+	 * @param username
+	 */
+	public void updateLastSession(String username) {
+		User user = userRepository.findByUsername(username);
+		user.setLastSession(LocalDateTime.now());
+	}
 
 }
