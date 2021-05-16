@@ -53,7 +53,7 @@ public class EmployeeController {
   }
 
   @PreAuthorize("hasRole('ADMIN')")
-  @DeleteMapping("/")
+  @DeleteMapping()
   public Map<String, Object> deleteEmployee(@RequestBody ObjectNode objectNode) {
 	  UUID id =UUID.fromString( objectNode.get("id").asText());
     HashMap<String, Object> map = new HashMap<>();
