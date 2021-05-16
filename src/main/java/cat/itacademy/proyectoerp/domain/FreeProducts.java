@@ -22,6 +22,17 @@ public class FreeProducts {
 	
 	@Column(name = "products_to_pay", nullable = false, updatable = false)
 	private int products_to_pay;
+	
+	
+	public FreeProducts() {
+		
+	}
+	
+	public FreeProducts(int products_to_buy, int products_to_pay) {
+		this.products_to_buy = products_to_buy;
+		this.products_to_pay = products_to_pay;
+			
+	}
 
 	
 	
@@ -46,9 +57,6 @@ public class FreeProducts {
 		return id;
 	}
 
-	
-	
-	
 	
 	
 	
