@@ -1,8 +1,8 @@
 package cat.itacademy.proyectoerp.controller;
 
 import cat.itacademy.proyectoerp.domain.Employee;
-import cat.itacademy.proyectoerp.domain.EmployeeNoPassword;
 import cat.itacademy.proyectoerp.dto.EmployeeDTO;
+import cat.itacademy.proyectoerp.dto.EmployeeNoPasswordDTO;
 import cat.itacademy.proyectoerp.service.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,9 +29,9 @@ public class EmployeeController {
     HashMap<String, Object> map = new HashMap<String, Object>();
     try {
       List<Employee> employeeList = iEmployeeService.findAllEmployees();
-      List<EmployeeNoPassword> employeeNoPasswordList = new ArrayList<EmployeeNoPassword>();
+      List<EmployeeNoPasswordDTO> employeeNoPasswordList = new ArrayList<EmployeeNoPasswordDTO>();
       for (Employee e :employeeList) {
-    	  employeeNoPasswordList.add(new EmployeeNoPassword(e));
+    	  employeeNoPasswordList.add(new EmployeeNoPasswordDTO(e));
       }
       map.put("success", "true");
       map.put("message", "employee found");
@@ -50,10 +50,10 @@ public class EmployeeController {
     try {
       Employee employee = iEmployeeService.findEmployeeById(id);
       //we use a class that does not give a password back
-      EmployeeNoPassword employeeNoPassword = new EmployeeNoPassword(employee);
+      EmployeeNoPasswordDTO employeeNoPasswordDTO = new EmployeeNoPasswordDTO(employee);
       map.put("success", "true");
       map.put("message", "employee found");
-      map.put("employee", employeeNoPassword);
+      map.put("employee", employeeNoPasswordDTO);
     } catch (Exception e){
       map.put("success", "false");
       map.put("message", e.getMessage());
@@ -84,11 +84,11 @@ public class EmployeeController {
     try {
       Employee employeeUpdated = iEmployeeService.updateEmployee(employee);
       //we use a class that does not give a password back
-      EmployeeNoPassword employeeNoPassword = new EmployeeNoPassword(employeeUpdated);
+      EmployeeNoPasswordDTO employeeNoPasswordDTO = new EmployeeNoPasswordDTO(employeeUpdated);
       
       map.put("success", "true");
       map.put("message", "Employee with id: " + employee.getId() + " has been updated");
-      map.put("employee", employeeNoPassword);
+      map.put("employee", employeeNoPasswordDTO);
 
     } catch (Exception e) {
       map.put("success", "false");

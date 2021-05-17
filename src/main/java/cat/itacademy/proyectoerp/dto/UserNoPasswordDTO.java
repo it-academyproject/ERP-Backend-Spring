@@ -1,4 +1,4 @@
-package cat.itacademy.proyectoerp.domain;
+package cat.itacademy.proyectoerp.dto;
 
 import java.time.LocalDateTime;
 
@@ -16,13 +16,16 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class UserNoPassword {
+import cat.itacademy.proyectoerp.domain.User;
+import cat.itacademy.proyectoerp.domain.UserType;
+
+public class UserNoPasswordDTO {
 	  private Long id;
 	  private String username;
 	  
 	  private UserType userType;
 	  
-	  public UserNoPassword(User user) {
+	  public UserNoPasswordDTO(User user) {
 		  this.id = user.getId();
 		  this.username = user.getUsername();
 		  this.userType = user.getUserType();
