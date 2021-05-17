@@ -211,9 +211,8 @@ public class Runner implements CommandLineRunner {
 			orderRepository.save(orderTwo);
 			
 			//Order3
-			Order orderThree = new Order(employeeTwo.getId(), 
-					clientTwo.getid(), LocalDateTime.now(), OrderStatus.PENDING_DELIVERY,
-					PaymentMethod.PAYPAL, address2, address1, 1200.00);
+			Order orderThree = new Order(employeeTwo.getId(), clientTwo.getid(), LocalDateTime.now(), 
+					OrderStatus.PENDING_DELIVERY,PaymentMethod.PAYPAL, address2, address1, 1200.00);
 			
 			OrderDetail orderDetail5 = new OrderDetail (productOne, orderThree, 1, 150.00);
 			OrderDetail orderDetail6 = new OrderDetail (productThree, orderThree, 3, 1050.00);
