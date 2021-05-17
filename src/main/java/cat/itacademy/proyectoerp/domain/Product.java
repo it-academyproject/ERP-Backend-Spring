@@ -13,9 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 
 @Entity
 @Table(name = "products")
@@ -41,8 +38,8 @@ public class Product implements Serializable {
 	
 	//@JsonIgnoreProperties("products")
 	@OneToMany (mappedBy = "product")
-	@JsonManagedReference
-	private Set <OrderDetail> orderDetails = new HashSet<>();
+	// @JsonManagedReference (gives 415 Unsupported Media Exception with Post order)
+	private Set <OrderDetail> order_details = new HashSet<>();
 	
 	public Product() {
 		
@@ -136,12 +133,12 @@ public class Product implements Serializable {
 	}
 		
 	public Set<OrderDetail> getOrderDetails() {
-		return orderDetails;
+		return order_details;
 	}
 	
 //	@Transient
-	public void setOrderDetails(Set<OrderDetail> orderDetails) {
-		this.orderDetails = orderDetails;
+	public void setOrderDetails(Set<OrderDetail> order_details) {
+		this.order_details = order_details;
 	}
 
 	// Console data printing method

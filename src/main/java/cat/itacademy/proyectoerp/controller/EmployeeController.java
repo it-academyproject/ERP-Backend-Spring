@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +53,9 @@ public class EmployeeController {
   }
 
   @PreAuthorize("hasRole('ADMIN')")
-  @DeleteMapping("/{id}")
-  public Map<String, Object> deleteEmployee(@PathVariable(name="id") UUID id) {
+  @DeleteMapping("/")
+  public Map<String, Object> deleteEmployee(@RequestBody ObjectNode objectNode) {
+	  UUID id =UUID.fromString( objectNode.get("id").asText());
     HashMap<String, Object> map = new HashMap<>();
     try {
       iEmployeeService.deleteEmployee(id);
