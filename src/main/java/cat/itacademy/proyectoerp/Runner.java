@@ -1,10 +1,9 @@
 package cat.itacademy.proyectoerp;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Random;
-import java.util.UUID;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +82,7 @@ public class Runner implements CommandLineRunner {
 		if(!userRepository.existsByUsername("employee@erp.com")) {
 			User userEmployee = new User("employee@erp.com", "ReW9a0&+TP", UserType.EMPLOYEE);
 			userService.registerNewUserAccount(userEmployee);
-			Employee employee = new Employee(18000.00, "employee@erp.com", "C1234567Z", 667999997, userEmployee);
+			Employee employee = new Employee(18000.00, "C1234567Z", 667999997, LocalDate.now(),null, userEmployee);
 			employeeService.createEmployee(employee);
 		}
 		
@@ -150,25 +149,20 @@ public class Runner implements CommandLineRunner {
 			
 			
 			//Initialize two users for the employees for the orders
-			User userEmployeeOne = new User("useremployeeone@example.com", "ReW9a0&+TP", UserType.EMPLOYEE);
+			User userEmployeeOne = new User("employee1@company.com", "ReW9a0&+TP", UserType.EMPLOYEE);
 			userService.registerNewUserAccount(userEmployeeOne);
 
-			User userEmployeeTwo = new User("useremployeetwo@example.com", "ReW9a0&+ET", UserType.EMPLOYEE);
+			User userEmployeeTwo = new User("employee2@company.com", "ReW9a0&+ET", UserType.EMPLOYEE);
 			userService.registerNewUserAccount(userEmployeeTwo);
-			
-			User userEmployeeThree = new User("useremployeethree@example.com", "ReW9a0&+ET", UserType.EMPLOYEE);
-			userService.registerNewUserAccount(userEmployeeThree);
 			
 			
 			// Initialize two Employees for the orders
-			Employee employeeOne = new Employee(24000.00,"employee1@company.com", "A1234567Z",667999999, userEmployeeOne);
+			Employee employeeOne = new Employee(24000.00,"A1234567Z",667999999, LocalDate.now(),null,userEmployeeOne);
 			employeeService.createEmployee(employeeOne);
 
-			Employee employeeTwo = new Employee(14000.00,"employee2@company.com", "B1236767Z",667999998, userEmployeeTwo);
+			Employee employeeTwo = new Employee(14000.00,"B1234567Z",667999998, LocalDate.now(),null, userEmployeeTwo);
+
 			employeeService.createEmployee(employeeTwo);
-			
-			Employee employeeThree = new Employee(14000.00,"employee3@company.com", "C1236767Z",667999996, userEmployeeThree);
-			employeeService.createEmployee(employeeThree);
 			
 
 			// Initialize 3 products
@@ -182,11 +176,10 @@ public class Runner implements CommandLineRunner {
 			productService.createProduct(productThree);
 
 			
-			// Initialize 5 orders, we need to create lines of orderDetails with products
+			// Initialize 3 orders, we need to create lines of orderDetails with products
 			
-		 
 			//Order1
-			Order orderOne = new Order(employeeOne.getId().toString(), clientOne, LocalDateTime.now(), 
+			Order orderOne = new Order(employeeOne.getId(), clientOne.getid(), LocalDateTime.now(), 
 					OrderStatus.COMPLETED, PaymentMethod.CREDIT_CARD, address1, address1, 550.00);
 						
 			OrderDetail orderDetail1 = new OrderDetail (productOne, orderOne, 2, 300.00);
@@ -200,7 +193,7 @@ public class Runner implements CommandLineRunner {
 			orderService.createOrder(orderOne);	
 			
 			//Order2
-			Order orderTwo = new Order(employeeOne.getId().toString(), clientOne, LocalDateTime.now(), 
+			Order orderTwo = new Order(employeeOne.getId(), clientOne.getid(), LocalDateTime.now(), 
 					OrderStatus.IN_DELIVERY, PaymentMethod.CASH, address2, address1, 1200.00);
 			
 			OrderDetail orderDetail3 = new OrderDetail (productTwo, orderTwo, 2, 500.00);
@@ -215,8 +208,8 @@ public class Runner implements CommandLineRunner {
 			orderService.createOrder(orderTwo);
 			
 			//Order3
-			Order orderThree = new Order(employeeTwo.getId().toString(), 
-					clientTwo, LocalDateTime.now(), OrderStatus.PENDING_DELIVERY,
+			Order orderThree = new Order(employeeTwo.getId(), 
+					clientTwo.getid(), LocalDateTime.now(), OrderStatus.PENDING_DELIVERY,
 					PaymentMethod.PAYPAL, address3, address3, 1200.00);
 			
 			OrderDetail orderDetail5 = new OrderDetail (productOne, orderThree, 1, 150.00);
@@ -229,43 +222,9 @@ public class Runner implements CommandLineRunner {
 			orderThree.addOrderDetail(orderDetail6);	
 			
 			orderService.createOrder(orderThree);
-			
-			//Order4
-			Order orderFour = new Order(employeeTwo.getId().toString(), 
-					clientTwo, LocalDateTime.now(), OrderStatus.COMPLETED,
-					PaymentMethod.PAYPAL, address3, address3, 1200.00);
-			
-			OrderDetail orderDetail7 = new OrderDetail (productOne, orderThree, 1, 150.00);
-			OrderDetail orderDetail8 = new OrderDetail (productThree, orderThree, 3, 1050.00);
-			
-			orderTwo.addOrderDetail(orderDetail7);
-			orderTwo.addOrderDetail(orderDetail8);	
-			
-			orderThree.addOrderDetail(orderDetail7);
-			orderThree.addOrderDetail(orderDetail8);	
-			
-			orderService.createOrder(orderFour);
-			
-			//Order5
-			Order orderFive = new Order(employeeThree.getId().toString(), 
-					clientTwo, LocalDateTime.now(), OrderStatus.COMPLETED,
-					PaymentMethod.PAYPAL, address3, address3, 1200.00);
-			
-			OrderDetail orderDetail9 = new OrderDetail (productOne, orderThree, 1, 150.00);
-			OrderDetail orderDetail10 = new OrderDetail (productTwo, orderThree, 3, 1050.00);
-			
-			orderFive.addOrderDetail(orderDetail9);
-			orderFive.addOrderDetail(orderDetail10);	
-			
-			orderThree.addOrderDetail(orderDetail9);
-			orderThree.addOrderDetail(orderDetail10);	
-			
-			orderService.createOrder(orderFive);
 			 
-
 		}
 
 	}
-	
 
 }
