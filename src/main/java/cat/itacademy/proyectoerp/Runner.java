@@ -218,23 +218,29 @@ public class Runner implements CommandLineRunner {
 			OrderDetail orderDetail5 = new OrderDetail (productOne, orderThree, 1, 150.00);
 			OrderDetail orderDetail6 = new OrderDetail (productThree, orderThree, 3, 1050.00);
 			
+			orderDetailService.createOrderDetail(orderDetail5);
+			orderDetailService.createOrderDetail(orderDetail6);
+			
 			orderThree.addOrderDetail(orderDetail5);
 			orderThree.addOrderDetail(orderDetail6);	
 			
 			orderRepository.save(orderThree);
 			
 			//Order4
-			Order orderFour = new Order(employeeOne.getId(), 
+			Order orderFour = new Order(employeeTwo.getId(), 
 					clientTwo.getid(), LocalDateTime.now(), OrderStatus.COMPLETED,
 					PaymentMethod.PAYPAL, address2, address1, 1200.00);
 			
-			OrderDetail orderDetail7 = new OrderDetail (productOne, orderThree, 1, 150.00);
-			OrderDetail orderDetail8 = new OrderDetail (productThree, orderThree, 3, 1050.00);
+			OrderDetail orderDetail7 = new OrderDetail (productOne, orderFour, 1, 150.00);
+			OrderDetail orderDetail8 = new OrderDetail (productThree, orderFour, 3, 1050.00);
 			
-			orderThree.addOrderDetail(orderDetail5);
-			orderThree.addOrderDetail(orderDetail6);	
+			orderDetailService.createOrderDetail(orderDetail7);
+			orderDetailService.createOrderDetail(orderDetail8);
 			
-			orderRepository.save(orderThree);
+			orderFour.addOrderDetail(orderDetail7);
+			orderFour.addOrderDetail(orderDetail8);	
+			
+			orderRepository.save(orderFour);
 			 
 		}
 

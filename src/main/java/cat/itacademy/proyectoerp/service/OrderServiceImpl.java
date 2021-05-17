@@ -174,15 +174,15 @@ public class OrderServiceImpl implements IOrderService{
 			
 		List<Object[]> TopEmpl = orderRepository.findEmployeesSalesBetweenDates(datestopemployee.getBegin_date(),datestopemployee.getEnd_date());  //Busqueda en BD
 
-		TopEmployeeDTO TopEmployDTO = new TopEmployeeDTO();
+		TopEmployeeDTO topEmployDTO = new TopEmployeeDTO();
 	
 		List<TopEmployeeDTO> topemployeelist = new ArrayList();
 		
 		for (Object[] object : TopEmpl) {
-			TopEmployDTO.setId( object[0].toString());
-			TopEmployDTO.setTotal(Double.parseDouble(object[1].toString()));
-			topemployeelist.add(TopEmployDTO);
-			TopEmployDTO = new TopEmployeeDTO();
+			topEmployDTO.setId( object[0].toString());
+			topEmployDTO.setTotal(Double.parseDouble(object[1].toString()));
+			topemployeelist.add(topEmployDTO);
+			topEmployDTO = new TopEmployeeDTO();
 		}
 
 		return topemployeelist;
