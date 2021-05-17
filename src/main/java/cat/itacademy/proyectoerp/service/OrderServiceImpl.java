@@ -6,14 +6,22 @@ import java.util.List;
 
 import java.util.UUID;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
+import cat.itacademy.proyectoerp.domain.User;
+import cat.itacademy.proyectoerp.dto.EmployeeDTO;
+import cat.itacademy.proyectoerp.dto.MessageDTO;
+import cat.itacademy.proyectoerp.dto.OrderDTO;
+import cat.itacademy.proyectoerp.dto.UserDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cat.itacademy.proyectoerp.repository.IAddressRepository;
 import cat.itacademy.proyectoerp.repository.IClientRepository;
 import cat.itacademy.proyectoerp.repository.IOrderDetailRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
+import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Order;
 
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
@@ -33,15 +41,41 @@ public class OrderServiceImpl implements IOrderService{
 	
 	@Autowired
 	IOrderDetailRepository orderDetailRepository;
+	
+	@Autowired
+	IAddressRepository addressRepository;
 
 	
 	@Override
 	//@Transactional
 	public Order createOrder(Order order) {  //UUID
-		// Order newOrder = orderRepository.save(order);
-		    return orderRepository.save(order); // newOrder.getId();
+		
+		Order new_order = new Order();
+		new_order = order;
+		
+		//registered clients, they can ommit to put the shipping address in JSON (billing address won't be in JSON),
+		//or they can put a new shipping address in the JSON
+		if (order.getClientId() != null) { // if registered
+			
+			if (order.getBillingAddress() == null && order.getShippingAddress() == null) {
+						
+				new_order.setBillingAddress(clientRepository.findById(order.getClientId()).get().getAddress());
+				new_order.setShippingAddress(clientRepository.findById(order.getClientId()).get().getAddress());
+							
+			//If shipping address is a new one:	
+			}	else if (order.getShippingAddress() != clientRepository.findById(order.getClientId()).get().getAddress()){
+				
+				new_order.setBillingAddress(clientRepository.findById(order.getClientId()).get().getAddress());
+				
+				}
+			
+		} else if (order.getBillingAddress() == null) {
+			throw new ArgumentNotValidException("The Billing address must be filled");							
+		}
+		
+		return orderRepository.save(new_order);		
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public Order findOrderById(UUID id) {
@@ -73,7 +107,7 @@ public class OrderServiceImpl implements IOrderService{
 				} else if (order.getClientId() == null) {
 					throw new ArgumentNotValidException("Invalid Client ID");
 				}
-				orderToUpdate.setClient_id(order.getClientId());
+				orderToUpdate.setclientId(order.getClientId());
 				
 				//TODO: Once Employee is implemented it should check if it exists.1
 				orderToUpdate.setEmployee_id(order.getEmployeeId());
@@ -122,8 +156,5 @@ public class OrderServiceImpl implements IOrderService{
 			return orderRepository.findOrdersByEmployeeId(employeeId);
 		}
 	}
+	
 }
-
-
-
-
