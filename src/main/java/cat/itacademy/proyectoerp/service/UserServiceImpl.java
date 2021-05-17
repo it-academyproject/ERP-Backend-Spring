@@ -1,5 +1,6 @@
 package cat.itacademy.proyectoerp.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -47,20 +48,21 @@ public class UserServiceImpl implements IUserService {
 	 * @param username username to Search
 	 * @return Optional<UserDTO> a userDTO object
 	 */
+
 	public Optional<UserDTO> getByUsername(String username) {
 		UserDTO userDTO = new UserDTO();
 
 		// Verify if user Exist.
 		User user = userRepository.findByUsername(username);
 		if (user == null) {
-			userDTO.setSuccess("Failed");
+			userDTO.setSuccess("False");
 			userDTO.setMessage("User don't exist");
 			return Optional.of(userDTO);
 		}
 
 		userDTO = modelMapper.map(user, UserDTO.class);
 		userDTO.setMessage("User found");
-		userDTO.setSuccess("Success");
+		userDTO.setSuccess("True");
 		return Optional.of(userDTO);
 
 	}
@@ -314,6 +316,17 @@ public class UserServiceImpl implements IUserService {
 		} else {
 			throw new ArgumentNotFoundException("username not found");
 		}
+	}
+
+	/**
+	 * 
+	 * Method to update User lastSession with the current LocalDateTime.
+	 * 
+	 * @param username
+	 */
+	public void updateLastSession(String username) {
+		User user = userRepository.findByUsername(username);
+		user.setLastSession(LocalDateTime.now());
 	}
 
 	

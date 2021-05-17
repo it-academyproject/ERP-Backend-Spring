@@ -1,9 +1,16 @@
 package cat.itacademy.proyectoerp.service;
 
+
 import cat.itacademy.proyectoerp.domain.Employee;
+import cat.itacademy.proyectoerp.domain.User;
+import cat.itacademy.proyectoerp.domain.UserType;
+import cat.itacademy.proyectoerp.dto.EmployeeDTO;
+import cat.itacademy.proyectoerp.dto.MessageDTO;
+import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
-import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 import cat.itacademy.proyectoerp.repository.IEmployeeRepository;
+import cat.itacademy.proyectoerp.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,30 +23,40 @@ public class EmployeeServiceImpl implements IEmployeeService {
   @Autowired
   IEmployeeRepository iEmployeeRepository;
 
-  @Override
-  public Employee createEmployee(Employee employee) throws ArgumentNotValidException {
+  @Autowired
+  UserRepository userRepository;
 
-    if (employee.equals(null)) {
-      throw new ArgumentNotValidException("The employee is null");
-    } else if (employee.getEmail().isEmpty()) {
-      throw new ArgumentNotValidException("Employee mail is empty");
-    } else if (String.valueOf(employee.getPhone()).isEmpty()) {
-      throw new ArgumentNotValidException("Employee phone is empty");
-    } else if (String.valueOf(employee.getSalary()).isEmpty()) {
-      throw new ArgumentNotValidException("Employee salary is empty");
-    } else if (employee.getDni().isEmpty()) {
-      throw new ArgumentNotValidException("Employee DNI is empty");
-    } else if (employee.getDni().isEmpty()) {
-      throw new ArgumentNotValidException("Employee DNI is empty");
-    } else {
-      return iEmployeeRepository.save(employee);
+  ModelMapper modelMapper = new ModelMapper();
+
+  @Override
+  public EmployeeDTO createEmployee(Employee employee){
+    EmployeeDTO employeeDTO = new EmployeeDTO();
+    UserDTO userDTO;
+    MessageDTO messageDTO;
+    Employee savedEmployee;
+
+    User user = userRepository.findByUsername(employee.getUser().getUsername());
+    try {
+      savedEmployee = iEmployeeRepository.save(employee);
+    }catch (Exception e){
+      messageDTO = new MessageDTO("False", "Employee exist. Please, check the username");
+      employeeDTO.setMessage(messageDTO);
+      userDTO = modelMapper.map(user, UserDTO.class);
+      employeeDTO.setUser(userDTO);
+      return employeeDTO;
     }
+
+    messageDTO = new MessageDTO("True","Employee created");
+    employeeDTO = modelMapper.map(savedEmployee, EmployeeDTO.class);
+    employeeDTO.setMessage(messageDTO);
+
+    return employeeDTO;
   }
 
   @Override
   public Employee findEmployeeById(UUID id) throws ArgumentNotFoundException  {
     return iEmployeeRepository.findById(id)
-            .orElseThrow(() -> new ArgumentNotFoundException("Order not found. The id " + id + " doesn't exist"));
+            .orElseThrow(() -> new ArgumentNotFoundException("Employee not found. The id " + id + " doesn't exist"));
   }
 
   @Override
@@ -51,15 +68,57 @@ public class EmployeeServiceImpl implements IEmployeeService {
   }
 
   @Override
-  public Employee updateEmployee(Employee employee) {
-    if(iEmployeeRepository.findById(employee.getId()) == null){
-      throw new ArgumentNotFoundException("No employee found");
+  public Employee updateEmployee(Employee employee) throws Exception {
+    Employee employeeById = iEmployeeRepository.findById(employee.getId()).orElseThrow(
+            () -> new ArgumentNotFoundException("Employee not found. The id " + employee.getId() + " doesn't exist"));
+
+    validateEmployeeToUpdate(employee, employeeById);
+
+    validateUserEmployeeToUpdate(employee, employeeById);
+
+    Employee employeeUpdated;
+    try {
+      employeeUpdated = iEmployeeRepository.save(employee);
+    }catch (Exception e){
+      throw new Exception("The username already exists. Please, choose another.");
     }
-    return iEmployeeRepository.save(employee);
+    return employeeUpdated;
+  }
+
+  private void validateEmployeeToUpdate(Employee employee, Employee employeeById) {
+    employee.setSalary(null == employee.getSalary()? employeeById.getSalary(): employee.getSalary());
+    employee.setDni(null == employee.getDni()? employeeById.getDni(): employee.getDni());
+    employee.setPhone(null == employee.getPhone()? employeeById.getPhone(): employee.getPhone());
+    employee.setInDate(null == employee.getInDate()? employeeById.getInDate(): employee.getInDate());
+
+    if(employeeById.getOutDate() != null && employee.getOutDate() == null){
+      employee.setOutDate(employeeById.getOutDate());
+    }
+    else{
+      employee.setOutDate(employee.getOutDate());
+    }
+  }
+
+  private void validateUserEmployeeToUpdate(Employee employee, Employee employeeById) {
+    if(employee.getUser() != null){
+      employee.getUser().setId(employeeById.getUser().getId());
+      employee.getUser().setUsername(null == employee.getUser().getUsername()? employeeById.getUser().getUsername():
+              employee.getUser().getUsername());
+      employee.getUser().setPassword(null == employee.getUser().getPassword()? employeeById.getUser().getPassword():
+              employee.getUser().getPassword());
+      employee.getUser().setUserType(employeeById.getUser().getUserType());
+    }else{
+      User user = new User(employeeById.getUser().getUsername(), employeeById.getUser().getPassword(), UserType.EMPLOYEE);
+      user.setId(employeeById.getUser().getId());
+      employee.setUser(user);
+    }
   }
 
   @Override
-  public void deleteEmployee(UUID id) {
+  public void deleteEmployee(UUID id) throws ArgumentNotFoundException {
+    iEmployeeRepository.findById(id).orElseThrow(
+            () -> new ArgumentNotFoundException("Employee not found. The id " + id + " doesn't exist"));
+
     iEmployeeRepository.deleteById(id);
   }
 }

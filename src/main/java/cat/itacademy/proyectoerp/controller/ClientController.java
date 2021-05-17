@@ -1,10 +1,16 @@
 package cat.itacademy.proyectoerp.controller;
 
 import java.util.ArrayList;
+
+
+
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.dto.ClientDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
@@ -84,18 +89,23 @@ public class ClientController {
     	return ResponseEntity.ok().body(map);
     }
 
-    //get a client by id
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getClientById(@PathVariable UUID id) {
-        Optional<Client> client = null;
+    //get a client by id 
+    @GetMapping("/{id}")   
+    public Map<String, Object> getClientById(@PathVariable(name="id") UUID id) {
+    	HashMap<String, Object> map = new HashMap<>();
     	try {
-			client = service.findClientById(id);
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-    	return ResponseEntity.ok().body(client);
+    		Client client = service.findClientById(id);
+            map.put("success", "true");
+            map.put("message", "client found");
+            map.put("client", client);
+            return map;
+    	} catch (Exception e) {
+            map.put("success", "false");
+            map.put("message", "error: " + e.getMessage());
+    	}
+    	return map;
     }
-
+       
     //Update a client by id
     @PutMapping()
     public ResponseEntity<?> updateClientById(@RequestBody Client clientUpdate) {

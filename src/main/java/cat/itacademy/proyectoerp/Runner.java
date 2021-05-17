@@ -22,12 +22,13 @@ import cat.itacademy.proyectoerp.domain.PaymentMethod;
 import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.domain.UserType;
+import cat.itacademy.proyectoerp.repository.IAddressRepository;
+import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.UserRepository;
 import cat.itacademy.proyectoerp.service.AddressServiceImpl;
 import cat.itacademy.proyectoerp.service.ClientServiceImpl;
 import cat.itacademy.proyectoerp.service.EmployeeServiceImpl;
 import cat.itacademy.proyectoerp.service.OrderDetailServiceImpl;
-import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 import cat.itacademy.proyectoerp.service.ProductServiceImpl;
 import cat.itacademy.proyectoerp.service.UserServiceImpl;
 
@@ -52,9 +53,6 @@ public class Runner implements CommandLineRunner {
 	ClientServiceImpl clientService;
 
 	@Autowired
-	OrderServiceImpl orderService;
-	
-	@Autowired
 	PasswordEncoder passwordEncoder;
 	
 	@Autowired
@@ -67,7 +65,13 @@ public class Runner implements CommandLineRunner {
 	AddressServiceImpl addressService;
 	
 	@Autowired
+	IAddressRepository addressRepository;
+	
+	@Autowired
 	OrderDetailServiceImpl orderDetailService;
+	
+	@Autowired
+	IOrderRepository orderRepository;
 
 	@Override
 	@Transactional
@@ -83,35 +87,29 @@ public class Runner implements CommandLineRunner {
 			User userEmployee = new User("employee@erp.com", "ReW9a0&+TP", UserType.EMPLOYEE);
 			userService.registerNewUserAccount(userEmployee);
 			Employee employee = new Employee(18000.00, "C1234567Z", 667999997, LocalDate.now(),null, userEmployee);
+
 			employeeService.createEmployee(employee);
-		}
-		
-		// Initialize 5 addresses
-		
-		Address address1 = new Address ("Calle Maldivas", "1 C", "Barcelona", "Spain", "08016",null);
-		addressService.createAddress(address1);
-		Address address2 = new Address ("Calle Azores", "1 C", "Barcelona", "Spain", "08016",null);
-		addressService.createAddress(address2);
-		Address address3 = new Address ("Calle Canarias", "1 C", "Barcelona", "Spain", "08016",null);
-		addressService.createAddress(address3);
-		Address address4 = new Address ("Calle Bahamas", "1 C", "Barcelona", "Spain", "08016",null);
-		addressService.createAddress(address4);
-		
-		Address addressExample = new Address ("Calle Ejemplo", "1 A", "Barcelona", "Spain", "08018",null);
-		addressService.createAddress(addressExample);
-		
-		//checks if there is already a client created, if not, it creates one
-		if(!userRepository.existsByUsername("client@erp.com")) {
-			User userClient = new User("client@erp.com", "ReW9a0&+TP", UserType.CLIENT);
-			userService.registerNewUserAccount(userClient);
-			Client client = new Client(addressExample, "L1234567Z", "url image","Random Name", userClient);
-			clientService.createClient(client);
 		}
 		
 		//X is the variable of the amount of clients do you want to have. 
         //that excludes two separate clients that are made to create two test orders.
 		int x = 5;
 		
+		// Initialize 5 addresses
+		if (addressRepository.findAll().isEmpty()) {
+			for (int i = 0; i < x; i++) {
+				Address address = new Address ("Calle Ejemplo", "1 C", "Barcelona", "Spain", "08016");
+				addressService.createAddress(address);				
+			}
+		}
+		
+		//checks if there is already a client created, if not, it creates one
+		if(!userRepository.existsByUsername("client@erp.com")) {
+			User userClient = new User("client@erp.com", "ReW9a0&+TP", UserType.CLIENT);
+			userService.registerNewUserAccount(userClient);
+			Client client = new Client(addressRepository.findAll().get(0), "L1234567Z", "url image","Random Name", userClient);
+			clientService.createClient(client);
+		}		
 		
 		//Checks if there is less data than the asked about and adds the amount left.
 		if(userService.listAllUsers().size() < x+1) {
@@ -129,7 +127,7 @@ public class Runner implements CommandLineRunner {
 				String mail = "userclient"+i+"@example.com";
 				User userClient = new User(mail, "ReW9a0&+TP", UserType.CLIENT);
 				userService.registerNewUserAccount(userClient);
-				Client client = new Client(addressExample, dni, "url image","Random Name", userClient);
+				Client client = new Client(addressRepository.findAll().get(1), dni, "url image","Random Name", userClient);
 				clientService.createClient(client);
 			}
 						
@@ -141,10 +139,10 @@ public class Runner implements CommandLineRunner {
 			userService.registerNewUserAccount(userClientTwo);
 						
 			// Initialize two Clients for the orders
-			Client clientOne = new Client(address1, "L1554567Z", "url image","Random Name", userClientOne);
+			Client clientOne = new Client(addressRepository.findAll().get(2), "L1554567Z", "url image","Random Name", userClientOne);
 			clientService.createClient(clientOne);
 
-			Client clientTwo = new Client(address3, "B7654321C", "url image","Random Name", userClientTwo);
+			Client clientTwo = new Client(addressRepository.findAll().get(3), "B7654321C", "url image","Random Name", userClientTwo);
 			clientService.createClient(clientTwo);
 			
 			
@@ -152,17 +150,15 @@ public class Runner implements CommandLineRunner {
 			User userEmployeeOne = new User("employee1@company.com", "ReW9a0&+TP", UserType.EMPLOYEE);
 			userService.registerNewUserAccount(userEmployeeOne);
 
-			User userEmployeeTwo = new User("employee2@company.com", "ReW9a0&+ET", UserType.EMPLOYEE);
-			userService.registerNewUserAccount(userEmployeeTwo);
-			
+			User userEmployeeTwo = new User("useremployeetwo@example.com", "ReW9a0&+ET", UserType.EMPLOYEE);
+			userService.registerNewUserAccount(userEmployeeTwo);			
 			
 			// Initialize two Employees for the orders
-			Employee employeeOne = new Employee(24000.00,"A1234567Z",667999999, LocalDate.now(),null,userEmployeeOne);
+			Employee employeeOne = new Employee(24000.00, "A1234567Z", 667999999, LocalDate.now(), null, userEmployeeOne);
 			employeeService.createEmployee(employeeOne);
 
-			Employee employeeTwo = new Employee(14000.00,"B1234567Z",667999998, LocalDate.now(),null, userEmployeeTwo);
-
-			employeeService.createEmployee(employeeTwo);
+			Employee employeeTwo = new Employee(14000.00, "B1236767Z", 667999998, LocalDate.now(), null, userEmployeeTwo);
+			employeeService.createEmployee(employeeTwo);	
 			
 
 			// Initialize 3 products
@@ -174,9 +170,15 @@ public class Runner implements CommandLineRunner {
 			
 			Product productThree = new Product("ejemplo 3", 50, "url image", "Souvenirs", 350.00, 21.00, 250, 100);
 			productService.createProduct(productThree);
-
+			
 			
 			// Initialize 3 orders, we need to create lines of orderDetails with products
+			
+			Address address1 = new Address ("Calle Maldivas", "1 C", "Barcelona", "Spain", "08016");
+			addressService.createAddress(address1);
+			Address address2 = new Address ("Calle Azores", "1 C", "Barcelona", "Spain", "08016");
+			addressService.createAddress(address2);
+			
 			
 			//Order1
 			Order orderOne = new Order(employeeOne.getId(), clientOne.getid(), LocalDateTime.now(), 
@@ -189,9 +191,10 @@ public class Runner implements CommandLineRunner {
 			orderDetailService.createOrderDetail(orderDetail2);
 			
 			orderOne.addOrderDetail(orderDetail1);
-			orderOne.addOrderDetail(orderDetail2);			
-			orderService.createOrder(orderOne);	
+			orderOne.addOrderDetail(orderDetail2);
 			
+			orderRepository.save(orderOne);
+						
 			//Order2
 			Order orderTwo = new Order(employeeOne.getId(), clientOne.getid(), LocalDateTime.now(), 
 					OrderStatus.IN_DELIVERY, PaymentMethod.CASH, address2, address1, 1200.00);
@@ -205,23 +208,33 @@ public class Runner implements CommandLineRunner {
 			orderTwo.addOrderDetail(orderDetail3);
 			orderTwo.addOrderDetail(orderDetail4);	
 			
-			orderService.createOrder(orderTwo);
+			orderRepository.save(orderTwo);
 			
 			//Order3
 			Order orderThree = new Order(employeeTwo.getId(), 
 					clientTwo.getid(), LocalDateTime.now(), OrderStatus.PENDING_DELIVERY,
-					PaymentMethod.PAYPAL, address3, address3, 1200.00);
+					PaymentMethod.PAYPAL, address2, address1, 1200.00);
 			
 			OrderDetail orderDetail5 = new OrderDetail (productOne, orderThree, 1, 150.00);
 			OrderDetail orderDetail6 = new OrderDetail (productThree, orderThree, 3, 1050.00);
 			
-			orderTwo.addOrderDetail(orderDetail5);
-			orderTwo.addOrderDetail(orderDetail6);	
+			orderThree.addOrderDetail(orderDetail5);
+			orderThree.addOrderDetail(orderDetail6);	
+			
+			orderRepository.save(orderThree);
+			
+			//Order4
+			Order orderFour = new Order(employeeOne.getId(), 
+					clientTwo.getid(), LocalDateTime.now(), OrderStatus.COMPLETED,
+					PaymentMethod.PAYPAL, address2, address1, 1200.00);
+			
+			OrderDetail orderDetail7 = new OrderDetail (productOne, orderThree, 1, 150.00);
+			OrderDetail orderDetail8 = new OrderDetail (productThree, orderThree, 3, 1050.00);
 			
 			orderThree.addOrderDetail(orderDetail5);
 			orderThree.addOrderDetail(orderDetail6);	
 			
-			orderService.createOrder(orderThree);
+			orderRepository.save(orderThree);
 			 
 		}
 

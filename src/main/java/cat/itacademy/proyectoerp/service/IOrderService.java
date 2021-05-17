@@ -3,10 +3,13 @@ package cat.itacademy.proyectoerp.service;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
 import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
+import cat.itacademy.proyectoerp.dto.OrderDTO;
 
 public interface IOrderService {
 

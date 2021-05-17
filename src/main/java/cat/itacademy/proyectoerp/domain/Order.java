@@ -1,12 +1,10 @@
 package cat.itacademy.proyectoerp.domain;
 
-//import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.*;
-
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.sun.istack.Nullable;
@@ -14,34 +12,35 @@ import com.sun.istack.Nullable;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 @Entity
 @Table(name = "orders")
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class Order {
-
-	//private static final long serialVersionUID = 1L;
+//@JsonIgnoreProperties("orderDetails")
+public class Order  {  
 	
 	@Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator( name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
 	@Column(name = "order_id", columnDefinition = "BINARY(16)")
+	@JsonProperty("id")
 	private UUID id;
 	
 	@Column(name = "employee_id")
-	private String employeeId;
+	private UUID employeeId;
 	
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "client_id", referencedColumnName = "id", nullable=true)
-	private Client client;  //	private UUID client;
-		
+	//@ManyToOne(fetch = FetchType.LAZY)
+	//@JoinColumn(name = "client_id", referencedColumnName = "id", nullable=true)
+	//private Client client;  //	private UUID client;
+	private UUID clientId;
+
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+
 	@Column(name="date_created")
-    private LocalDateTime dateCreated;
+    private LocalDateTime date_created;
 	
 	@Column
 	@Enumerated(EnumType.STRING)
@@ -49,57 +48,46 @@ public class Order {
 	
 	@Column
 	@Enumerated(EnumType.STRING)
-	private PaymentMethod paymentMethod;
+	private PaymentMethod payment_method;
 	
-	public Order() {
-	 System.out.println(); //Check dapser75
-	}
 	
-	@OneToOne(cascade = CascadeType.ALL)
+
+	@OneToOne(cascade = CascadeType.ALL) //{CascadeType.MERGE, CascadeType.REFRESH}
 	@JoinColumn(name = "shipping_address_id", referencedColumnName = "id")
 	@Nullable
-	private Address shippingAddress;
+	private Address shipping_address;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)   //{CascadeType.MERGE, CascadeType.REFRESH}
 	@JoinColumn(name = "billing_address_id", referencedColumnName = "id")
-	private Address billingAddress;
+	//@NotNull
+	private Address billing_address;
 	
-	private double total;
+	private Double total;
 	
-	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-	@JsonManagedReference
-	private Set<OrderDetail> orderDetails = new HashSet<>();
+	@OneToMany(mappedBy = "order", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+	//@JsonManagedReference (gives 415 Unsupported Media Exception with Post order)
+	private Set<OrderDetail> order_details = new HashSet<>();
 		
-	//Version anterior mezcla B-49 y B48
-	//public Order(UUID id, String employeeId, UUID client,LocalDateTime dateCreated, OrderStatus status, Set<Product> orderProducts) {  //@Dapser75
-	/*	public Order(UUID id, String employeeId, Client client,LocalDateTime dateCreated, OrderStatus status, Set<Product> orderProducts) { 
-			super();
-			this.id = id;
-			this.employeeId = employeeId;
-			this.client= client;
-			this.dateCreated = dateCreated;
-			this.status = status;
-			this.orderProducts = orderProducts;		*/
+
+	public Order() {
+		
+	}	
 	
-	
-	//public Order(String employeeId, UUID client, OrderStatus status, Set<Product> orderProducts) { //@Dapser75
-	//	public Order(String employeeId, Client client, OrderStatus status, Set<Product> orderProducts) { 
-	public Order(String employeeId, Client client, LocalDateTime dateCreated, OrderStatus status,
-			PaymentMethod paymentMethod, Address shippingAddress, Address billingAddress, double total) {
-		//super();
+	public Order(UUID employeeId, UUID clientId, LocalDateTime date_created, OrderStatus status,
+			PaymentMethod payment_method, Address shipping_address, Address billing_address, Double total) {
 		this.employeeId = employeeId;
-		this.client = client;
-		this.dateCreated = LocalDateTime.now();
+		this.clientId = clientId;
+		this.date_created = LocalDateTime.now();
 		this.status = status;
-		this.paymentMethod = paymentMethod;
-		this.shippingAddress = shippingAddress;
-		this.billingAddress = billingAddress;
+		this.payment_method = payment_method;
+		this.shipping_address = shipping_address;
+		this.billing_address = billing_address;
 		this.setTotal(total);
 	}
 	
 	@PrePersist
 	public void prePersist() {
-		dateCreated = LocalDateTime.now();
+		date_created = LocalDateTime.now();
 	}
 	
 	//Getters & Setters
@@ -111,33 +99,29 @@ public class Order {
 		this.id = id;
 	}
 
-	public String getEmployeeId() {
+	public UUID getEmployeeId() {
 		return employeeId;
 	}
 
-	public void setEmployee_id(String employeeId) {
+	public void setEmployee_id(UUID employeeId) {
 		this.employeeId = employeeId;
 	}
 
-	public Client getClient() {
-			return client;
+	public UUID getClientId() {
+			return clientId;
 	}
 
-	public void setClient(Client client) {
-		this.client = client;
+
+	public void setclientId(UUID clientId) {
+		this.clientId = clientId;
 	}
-
-/*	public void setClient_id(UUID client) {
-		this.client = clientId;
-	}*/
-
 	
 	public LocalDateTime getDateCreated() {
-		return dateCreated;
+		return date_created;
 	}
 	
-	public void setDateCreated(LocalDateTime dateCreated) {
-		this.dateCreated = dateCreated;
+	public void setDateCreated(LocalDateTime date_created) {
+		this.date_created = date_created;
 	}
 
 	public OrderStatus getStatus() {
@@ -149,48 +133,48 @@ public class Order {
 	}	
 
 	public PaymentMethod getPaymentMethod() {
-		return paymentMethod;
+		return payment_method;
 	}
 
-	public void setPaymentMethod(PaymentMethod paymentMethod) {
-		this.paymentMethod = paymentMethod;
+	public void setPaymentMethod(PaymentMethod payment_method) {
+		this.payment_method = payment_method;
 	}
 
 	public Address getShippingAddress() {
-		return shippingAddress;
+		return shipping_address;
 	}
 
-	public void setShippingAddress(Address shippingAddress) {
-		this.shippingAddress = shippingAddress;
+	public void setShippingAddress(Address shipping_address) {
+		this.shipping_address = shipping_address;
 	}
 
 	public Address getBillingAddress() {
-		return billingAddress;
+		return billing_address;
 	}
 
-	public void setBillingAddress(Address billingAddress) {
-		this.billingAddress = billingAddress;
+	public void setBillingAddress(Address billing_address) {
+		this.billing_address = billing_address;
 	}
 
 	public Set<OrderDetail> getOrderDetails() {
-		return orderDetails;
+		return order_details;
 	}
 
-	public void setOrderDetails(Set<OrderDetail> orderDetails) {
-		this.orderDetails = orderDetails;
+	public void setOrderDetails(Set<OrderDetail> order_details) {
+		this.order_details = order_details;
 	}
 	
-	public double getTotal() {
+	public Double getTotal() {
 		return total;
 	}
 
-	public void setTotal(double total) {
+	public void setTotal(Double total) {
 		this.total = total;
 	}
 	
 	//Method to add orderDetails to order
-	public void addOrderDetail(OrderDetail orderDetail) {
-		this.orderDetails.add(orderDetail);
+	public void addOrderDetail(OrderDetail order_details) {
+		this.order_details.add(order_details);
 	}
 	
 }
