@@ -2,7 +2,6 @@ package cat.itacademy.proyectoerp.domain;
 
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,9 +13,11 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table (name = "order_details")
+@JsonIgnoreProperties("order")
 public class OrderDetail {
 	
 	@Id
@@ -25,24 +26,24 @@ public class OrderDetail {
 	@Column(name = "id", columnDefinition = "BINARY(16)")
 	private UUID id;
 	
-	@ManyToOne (cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "product_id")
-	@JsonBackReference
+	@JsonBackReference (value="order_details-product") //Without value -> 415 in Post Order
 	private Product product;
 	
 	@ManyToOne
 	@JoinColumn(name = "order_id")
-	@JsonBackReference
+	@JsonBackReference (value="order_details-order") //Without value -> 415 in Post Order
 	private Order order;
 	
-	private int quantity;
-	private double subtotal;
+	private Integer quantity;
+	private Double subtotal;
 	
 	public OrderDetail() {
 		
 	}
 		
-	public OrderDetail(Product product, Order order, int quantity, double subtotal) {
+	public OrderDetail(Product product, Order order, Integer quantity, Double subtotal) {
 		this.product = product;
 		this.order = order;
 		this.quantity = quantity;
@@ -67,16 +68,16 @@ public class OrderDetail {
 	public void setOrder(Order order) {
 		this.order = order;
 	}
-	public int getQuantity() {
+	public Integer getQuantity() {
 		return quantity;
 	}
-	public void setQuantity(int quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
-	public double getSubtotal() {
+	public Double getSubtotal() {
 		return subtotal;
 	}
-	public void setSubtotal(double subtotal) {
+	public void setSubtotal(Double subtotal) {
 		this.subtotal = subtotal;
 	}	
 	

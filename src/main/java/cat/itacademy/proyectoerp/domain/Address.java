@@ -16,10 +16,7 @@ public class Address {
 
 	@Id
     @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-        name = "UUID",
-        strategy = "org.hibernate.id.UUIDGenerator"
-    )
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
 	@Column(name = "id", columnDefinition = "BINARY(16)")
 	private UUID id;
 
@@ -43,8 +40,10 @@ public class Address {
 	@OneToOne(mappedBy = "address")
 	private Client client;
 
+
 	public Address() {
 	}
+
 
 	public Address(String street, String number, String city, String country, String zipcode) {
 		this.street = street;
@@ -112,6 +111,7 @@ public class Address {
 		this.zipcode = zipcode;
 	}
 
+
 	public Client getClient() {
 		return client;
 	}
@@ -120,3 +120,4 @@ public class Address {
 		this.client = client;
 	}
 }
+

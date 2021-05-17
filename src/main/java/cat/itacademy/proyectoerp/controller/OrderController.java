@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cat.itacademy.proyectoerp.domain.Order;
+import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 
 @RestController
@@ -46,6 +47,8 @@ public class OrderController {
 		HashMap<String, Object> map = new HashMap<>();
 
 		try {
+			
+			order.setStatus(OrderStatus.UNASSIGNED);
 			orderService.createOrder(order);
 
 			map.put(success, "true");
@@ -117,5 +120,3 @@ public class OrderController {
 	}
 
 }
-
-
