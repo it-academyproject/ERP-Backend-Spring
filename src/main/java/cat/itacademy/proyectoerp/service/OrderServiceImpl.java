@@ -2,10 +2,15 @@ package cat.itacademy.proyectoerp.service;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.UUID;
+
+
 import cat.itacademy.proyectoerp.domain.OrderStatus;
+import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
+import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.dto.EmployeeDTO;
 import cat.itacademy.proyectoerp.dto.MessageDTO;
@@ -102,11 +107,17 @@ public class OrderServiceImpl implements IOrderService{
 				}
 				Order orderToUpdate = findOrderById(order.getId());
 				//checks if parameters are valid and updates them
-				if (clientRepository.findById((order.getClientId())).isEmpty()) {  //UUID.fromString
+				if (clientRepository.findById(order.getClientId()).isEmpty()) {  
 					throw new ArgumentNotFoundException("The client doesn't exist. The client with the id " + order.getClientId() + "doesn't exist");
 				} else if (order.getClientId() == null) {
+
+/*				if (clientRepository.findById((order.getClientId())).isEmpty()) {  //UUID.fromString //Codigo B49.
+					throw new ArgumentNotFoundException("The client doesn't exist. The client with the id " + order.getClientId() + "doesn't exist");
+				} else if (order.getClientId() == null) {*/
+
 					throw new ArgumentNotValidException("Invalid Client ID");
 				}
+
 				orderToUpdate.setclientId(order.getClientId());
 				
 				//TODO: Once Employee is implemented it should check if it exists.1
@@ -140,7 +151,8 @@ public class OrderServiceImpl implements IOrderService{
 	}
 
 	@Override
-	public List<Order> findOrdersByClient(String id) {
+	public List<Order> findOrdersByClient(String id) { 
+	//public List<Order> findOrdersByClient(Client id) { //Dapser75
 		if(orderRepository.findOrdersByClientId(id) == null){
 			throw new ArgumentNotFoundException("No orders with client " + id + " found");
 		} else{
@@ -156,5 +168,31 @@ public class OrderServiceImpl implements IOrderService{
 			return orderRepository.findOrdersByEmployeeId(employeeId);
 		}
 	}
+
+	@Override
+	public List<TopEmployeeDTO> findAllTopTen(DatesTopEmployeePOJO datestopemployee) {
+			
+		List<Object[]> TopEmpl = orderRepository.findEmployeesSalesBetweenDates(datestopemployee.getBegin_date(),datestopemployee.getEnd_date());  //Busqueda en BD
+
+		TopEmployeeDTO topEmployDTO = new TopEmployeeDTO();
 	
+		List<TopEmployeeDTO> topemployeelist = new ArrayList();
+		
+		for (Object[] object : TopEmpl) {
+			topEmployDTO.setId( object[0].toString());
+			topEmployDTO.setTotal(Double.parseDouble(object[1].toString()));
+			topemployeelist.add(topEmployDTO);
+			topEmployDTO = new TopEmployeeDTO();
+		}
+
+		return topemployeelist;
+	
+		
+	}
 }
+
+
+
+
+	
+

@@ -43,9 +43,10 @@ public class OrderController {
 	 */
 	@PostMapping("/orders")
 	public Map<String, Object> createOrder(@RequestBody Order order) {
+	//public Map<String, Object> createOrder(@RequestBody orderPOJO neworder) {
 
 		HashMap<String, Object> map = new HashMap<>();
-
+//
 		try {
 			
 			order.setStatus(OrderStatus.UNASSIGNED);

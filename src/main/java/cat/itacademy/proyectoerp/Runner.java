@@ -86,7 +86,8 @@ public class Runner implements CommandLineRunner {
 		if(!userRepository.existsByUsername("employee@erp.com")) {
 			User userEmployee = new User("employee@erp.com", "ReW9a0&+TP", UserType.EMPLOYEE);
 			userService.registerNewUserAccount(userEmployee);
-			Employee employee = new Employee(18000.00, "C1234567Z", 667999997, LocalDate.now(), null, userEmployee);
+			Employee employee = new Employee(18000.00, "C1234567Z", 667999997, LocalDate.now(),null, userEmployee);
+
 			employeeService.createEmployee(employee);
 		}
 		
@@ -146,7 +147,7 @@ public class Runner implements CommandLineRunner {
 			
 			
 			//Initialize two users for the employees for the orders
-			User userEmployeeOne = new User("useremployeeone@example.com", "ReW9a0&+TP", UserType.EMPLOYEE);
+			User userEmployeeOne = new User("employee1@company.com", "ReW9a0&+TP", UserType.EMPLOYEE);
 			userService.registerNewUserAccount(userEmployeeOne);
 
 			User userEmployeeTwo = new User("useremployeetwo@example.com", "ReW9a0&+ET", UserType.EMPLOYEE);
@@ -210,17 +211,35 @@ public class Runner implements CommandLineRunner {
 			orderRepository.save(orderTwo);
 			
 			//Order3
-			Order orderThree = new Order(employeeTwo.getId(), 
-					clientTwo.getid(), LocalDateTime.now(), OrderStatus.PENDING_DELIVERY,
-					PaymentMethod.PAYPAL, address2, address1, 1200.00);
+			Order orderThree = new Order(employeeTwo.getId(), clientTwo.getid(), LocalDateTime.now(), 
+					OrderStatus.PENDING_DELIVERY,PaymentMethod.PAYPAL, address2, address1, 1200.00);
 			
 			OrderDetail orderDetail5 = new OrderDetail (productOne, orderThree, 1, 150.00);
 			OrderDetail orderDetail6 = new OrderDetail (productThree, orderThree, 3, 1050.00);
+			
+			orderDetailService.createOrderDetail(orderDetail5);
+			orderDetailService.createOrderDetail(orderDetail6);
 			
 			orderThree.addOrderDetail(orderDetail5);
 			orderThree.addOrderDetail(orderDetail6);	
 			
 			orderRepository.save(orderThree);
+			
+			//Order4
+			Order orderFour = new Order(employeeTwo.getId(), 
+					clientTwo.getid(), LocalDateTime.now(), OrderStatus.COMPLETED,
+					PaymentMethod.PAYPAL, address2, address1, 1200.00);
+			
+			OrderDetail orderDetail7 = new OrderDetail (productOne, orderFour, 1, 150.00);
+			OrderDetail orderDetail8 = new OrderDetail (productThree, orderFour, 3, 1050.00);
+			
+			orderDetailService.createOrderDetail(orderDetail7);
+			orderDetailService.createOrderDetail(orderDetail8);
+			
+			orderFour.addOrderDetail(orderDetail7);
+			orderFour.addOrderDetail(orderDetail8);	
+			
+			orderRepository.save(orderFour);
 			 
 		}
 

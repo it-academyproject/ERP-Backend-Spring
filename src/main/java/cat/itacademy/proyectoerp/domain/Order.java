@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.sun.istack.Nullable;
@@ -33,10 +31,14 @@ public class Order  {
 	@Column(name = "employee_id")
 	private UUID employeeId;
 	
-	@Column(name = "client_id")
+
+	//@ManyToOne(fetch = FetchType.LAZY)
+	//@JoinColumn(name = "client_id", referencedColumnName = "id", nullable=true)
+	//private Client client;  //	private UUID client;
 	private UUID clientId;
-	
-	//@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+
 	@Column(name="date_created")
     private LocalDateTime date_created;
 	
@@ -48,6 +50,8 @@ public class Order  {
 	@Enumerated(EnumType.STRING)
 	private PaymentMethod payment_method;
 	
+	
+
 	@OneToOne(cascade = CascadeType.ALL) //{CascadeType.MERGE, CascadeType.REFRESH}
 	@JoinColumn(name = "shipping_address_id", referencedColumnName = "id")
 	@Nullable
@@ -64,6 +68,7 @@ public class Order  {
 	//@JsonManagedReference (gives 415 Unsupported Media Exception with Post order)
 	private Set<OrderDetail> order_details = new HashSet<>();
 		
+
 	public Order() {
 		
 	}	
@@ -103,8 +108,9 @@ public class Order  {
 	}
 
 	public UUID getClientId() {
-		return clientId;
+			return clientId;
 	}
+
 
 	public void setclientId(UUID clientId) {
 		this.clientId = clientId;
