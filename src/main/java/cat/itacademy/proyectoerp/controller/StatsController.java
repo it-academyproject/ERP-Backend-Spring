@@ -2,10 +2,12 @@ package cat.itacademy.proyectoerp.controller;
 
 import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Order;
+import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 import cat.itacademy.proyectoerp.service.EmployeeServiceImpl;
 import cat.itacademy.proyectoerp.service.IOrderService;
 import cat.itacademy.proyectoerp.util.StringToOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -87,7 +89,7 @@ public class StatsContoller {
     		map.put("success", "true");
     	    map.put("message", "employees list found");
     	    orderList.removeIf(o -> !o.getStatus().toString().equalsIgnoreCase("COMPLETED"));
-    	    List<Map<String,String>> list = new ArrayList();
+    	    List<Map<String,String>> list = new ArrayList<>();
     	    for(Employee e : employees) {
     	    	 List<Order> employeeOrders = orderList.stream()                
     	                 .filter(order -> order.getEmployeeId().toString()
@@ -111,4 +113,37 @@ public class StatsContoller {
     
     return map;
   }
+  
+  @PreAuthorize("hasRole('ADMIN')")
+  @GetMapping("/employees/bestsales")
+  public Map<String, Object> getBestEmployeeByTotalSales() {
+	  HashMap<String, Object> map = new HashMap<>();
+	  try {
+		  EmployeeSalesDTO bestEmployee = orderService.getBestEmployeeByTotalSales();
+		  map.put("success", "true");
+		  map.put("message", "best employee found");
+		  map.put("employee", bestEmployee);
+	  }catch(Exception e) {
+		  map.put("success", "false");
+		  map.put("message", "error: " + e.getMessage());
+	  }
+	  return map;
+  }
+  
+  @PreAuthorize("hasRole('ADMIN')")
+  @GetMapping("/employees/worstsales")
+  public Map<String, Object> getWorstEmployeeBySalesRate() {
+	  HashMap<String, Object> map = new HashMap<>();
+	  try {
+		  EmployeeSalesDTO worstEmployee = orderService.getWorstEmployeeByTotalSales();
+		  map.put("success", "true");
+		  map.put("message", "worst employee found");
+		  map.put("employee", worstEmployee);
+	  }catch(Exception e) {
+		  map.put("success", "false");
+		  map.put("message", "error: " + e.getMessage());
+	  }
+	  return map;
+  }
+  
 }
