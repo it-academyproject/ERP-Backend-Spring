@@ -4,18 +4,20 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+
+import cat.itacademy.proyectoerp.domain.Offer;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OfferDTO implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private UUID id;
 	private String description;
+	@JsonFormat(pattern = "dd-MM-yyyy :: HH:mm:ss")
 	private LocalDateTime start_date;
+	@JsonFormat(pattern = "dd-MM-yyyy :: HH:mm:ss")
 	private LocalDateTime end_date;
 	private String offer_type;
 	private String applied;
@@ -23,6 +25,17 @@ public class OfferDTO implements Serializable{
 	private int direct_discount_id;
 	
 	
+	public OfferDTO(Offer offer) {
+		super();
+		this.id = offer.getId();
+		this.description = offer.getDescription();
+		this.start_date = offer.getStartDate();
+		this.end_date = offer.getEndDate();
+		this.offer_type = offer.getOffertype().toString();
+		this.applied = offer.getApplied().toString();
+		this.direct_discount_id = offer.getDirectdiscount();
+		this.free_products_id = offer.getFreeproducts();		
+	}
 	
 	//GETTER & SETTERS
 

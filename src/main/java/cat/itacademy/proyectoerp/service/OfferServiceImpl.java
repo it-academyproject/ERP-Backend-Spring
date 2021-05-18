@@ -54,7 +54,7 @@ public class OfferServiceImpl implements IOfferService{
 		}
 		offerRepository.save(offer);
 		
-		OfferDTO offerDto = modelMapper.map(offer, OfferDTO.class);
+		OfferDTO offerDto = new OfferDTO(offer);
 
 		return offerDto;
 	
