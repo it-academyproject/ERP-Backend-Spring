@@ -1,10 +1,13 @@
 package cat.itacademy.proyectoerp.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cat.itacademy.proyectoerp.domain.DirectDiscount;
 import cat.itacademy.proyectoerp.domain.Offer;
@@ -13,6 +16,7 @@ import cat.itacademy.proyectoerp.domain.OfferType;
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.dto.OfferDTO;
 import cat.itacademy.proyectoerp.dto.UserDTO;
+import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 import cat.itacademy.proyectoerp.repository.IOfferRepository;
 
@@ -58,6 +62,22 @@ public class OfferServiceImpl implements IOfferService{
 
 		return offerDto;
 	
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<OfferDTO> findAllOffers() {
+		List <Offer> offerlist =  offerRepository.findAll();
+		if (offerlist.isEmpty()) {
+			throw new ArgumentNotFoundException("No offers found");
+		}else {
+			List<OfferDTO> offerlistDTO = new ArrayList<OfferDTO>();
+			for (Offer o : offerlist) {
+				offerlistDTO.add(new OfferDTO(o));
+			}
+			return offerlistDTO;
+		}
+		
 	}
 
 }

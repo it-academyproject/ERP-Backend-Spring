@@ -51,19 +51,22 @@ public class OfferController {
 		return map;
 	}
 	
-	
+	//Methos to return all offers
 	@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	public Map <String, Object> getAllOffer(){
 		HashMap<String, Object> map = new HashMap<>();
 		try {
+			List<OfferDTO> offersList = service.findAllOffers();
+			map.put("success", "true");
+			map.put("message", "order found");
+			map.put("order", offersList);
 		
 		}catch (Exception e) {
 			map.put("success", "false");
 		    map.put("message", "_error: " + e.getMessage());
 		    
 		}
-		
 		
 		return map;
 		
