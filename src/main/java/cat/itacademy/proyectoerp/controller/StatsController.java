@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/stats")
-public class StatsContoller {
+public class StatsController {
 
   @Autowired
   IOrderService orderService;
