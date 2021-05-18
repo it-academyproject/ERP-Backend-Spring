@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -39,12 +40,14 @@ public class Offer {
 	private OfferType offertype;
 	
 	
-	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+	//@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+	@NotNull(message = "begin_date is mandatory")
 	@Column(name="start_date")
     private LocalDateTime startDate;
 	
 	
-	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+	//products@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+	@NotNull(message = "end_date is mandatory")
 	@Column(name="end_date")
     private LocalDateTime endDate;
 	
@@ -52,45 +55,69 @@ public class Offer {
 	@Enumerated(EnumType.STRING)
 	private OfferApplied applied;
 	
-	@ManyToOne
-	@JoinColumn(name = "freeproducts_id", referencedColumnName = "id")
-	@Nullable
-	private FreeProducts freeproducts;
+//	@ManyToOne
+//	@JoinColumn(name = "freeproducts_id", referencedColumnName = "id")
+//	@Nullable
+//	private FreeProducts freeproducts;
+	private int freeproducts;
 	
 	
-	@ManyToOne
-	@JoinColumn(name = "directdiscount_id", referencedColumnName = "id")
-	@Nullable
-	private DirectDiscount directdiscount;
+//	@ManyToOne
+//	@JoinColumn(name = "directdiscount_id", referencedColumnName = "id")
+//  @Nullable
+//	private DirectDiscount directdiscount;
+	private int directdiscount;
 
+	
+	/* To implement in a future
+	@ManyToOne
+	@JoinColumn(name = "family_id", referencedColumnName = "id")
+	@Nullable
+	private Family family;
+
+	@ManyToOne
+	@JoinColumn(name = "brand_id", referencedColumnName = "id")
+	@Nullable
+	private Brand brand;	
+	*/
+	
+	
 	//Constructors
 	public Offer() {
 		
 	}
 	
-	public Offer(String description, OfferType offertype, LocalDateTime startDate, LocalDateTime endDate, 
-			OfferApplied applied,FreeProducts freeproducts) {
+	//To implement when BD contains information
+/*	public Offer(String description, OfferType offertype, LocalDateTime startDate, LocalDateTime endDate, 
+			OfferApplied applied,FreeProducts freeproducts,DirectDiscount directdiscount) {
 		this.description = description;
 		this.offertype = offertype;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.applied = applied;
 		this.freeproducts = freeproducts;
-		this.directdiscount = null;
-	}
+		this.directdiscount = directdiscount;
+	}*/
 	
 	public Offer(String description, OfferType offertype, LocalDateTime startDate, LocalDateTime endDate, 
-			OfferApplied applied,DirectDiscount directdiscount) {
+		OfferApplied applied,int freeproducts,int directdiscount) {
 		this.description = description;
 		this.offertype = offertype;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.applied = applied;
+		this.freeproducts = freeproducts;
 		this.directdiscount = directdiscount;
-		this.freeproducts = null;
 	}
+
 	
 	
+	
+	public Offer(String description2, String offer_type, LocalDateTime start_date, LocalDateTime end_date,
+			int direct_discount_id, int free_products_id) {
+		// TODO Auto-generated constructor stub
+	}
+
 	//Getters & Setters
 	public String getDescription() {
 		return description;
@@ -132,7 +159,8 @@ public class Offer {
 		this.applied = applied;
 	}
 
-	public FreeProducts getFreeproducts() {
+	
+	/*public FreeProducts getFreeproducts() {
 		return freeproducts;
 	}
 
@@ -146,6 +174,26 @@ public class Offer {
 
 	public void setDirectdiscount(DirectDiscount directdiscount) {
 		this.directdiscount = directdiscount;
+	}*/
+
+	public int getFreeproducts() {
+		return freeproducts;
+	}
+
+	public void setFreeproducts(int freeproducts) {
+		this.freeproducts = freeproducts;
+	}
+
+	public int getDirectdiscount() {
+		return directdiscount;
+	}
+
+	public void setDirectdiscount(int directdiscount) {
+		this.directdiscount = directdiscount;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
 	}
 
 	public UUID getId() {
