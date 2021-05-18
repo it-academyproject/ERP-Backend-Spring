@@ -52,6 +52,9 @@ public class User {
   @Column(length = 16)
   @Enumerated(EnumType.STRING)
   UserType userType;
+  
+  @Column(nullable=false, columnDefinition = "boolean default true")
+  private Boolean active = true;
 
   @OneToOne(mappedBy = "user")
   private Client client;
@@ -134,12 +137,20 @@ public class User {
 
   public void setId(Long id) {
     this.id = id;
+  }  
+
+  public Boolean getActive() {
+	return active;
+  }
+
+  public void setActive(Boolean active) {
+	this.active = active;
   }
 
   @Override
-public String toString() {
+  public String toString() {
 	return "User [id=" + id + ", username=" + username + ", password=" + password + ", lastSession=" + lastSession
 			+ ", userType=" + userType + "]";
-}
+  }
 
 }

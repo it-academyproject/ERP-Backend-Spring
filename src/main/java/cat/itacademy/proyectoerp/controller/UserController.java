@@ -262,6 +262,23 @@ public class UserController {
 	}
 
 	/**
+	 * Method to set user subscription to inactive
+	 * 
+	 * @param user
+	 * @return user "active" field updated
+	 */
+	@PutMapping("/users/unsubscribe")
+	public ResponseEntity<UserDTO> unsubscribeUser(@Valid @RequestBody User user) {
+
+		UserDTO userDto;
+		Long id = user.getId();
+		userDto = userService.modifySubscription(id, user).get();
+		if (userDto.getSuccess() == "False")
+			return new ResponseEntity<>(userDto, HttpStatus.UNPROCESSABLE_ENTITY);
+		return new ResponseEntity<>(userDto, HttpStatus.OK);
+	}
+	
+	/**
 	 * Method to recover password (Generate a new password and send it by email to
 	 * the user)
 	 * 
@@ -324,4 +341,5 @@ public class UserController {
 
 		return map;
 	}
+		
 }

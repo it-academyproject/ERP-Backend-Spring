@@ -214,7 +214,7 @@ public class UserServiceImpl implements IUserService {
 
 		if (user.getPassword() != null)
 			password = user.getPassword();
-
+		
 		UserDTO userDto = modelMapper.map(user, UserDTO.class);
 		// Verify if user id exist
 		if (!userRepository.existsById(id)) {
@@ -248,6 +248,59 @@ public class UserServiceImpl implements IUserService {
 		return Optional.of(userDto);
 
 	}
+	
+	/**
+	 * Method to set active field of user to "false".
+	 * 
+	 * @param id      id of user to modify.
+	 * @param user user data to modify.
+	 */	
+	@Transactional
+	@Override
+	public Optional<UserDTO> modifySubscription(Long id, @Valid User user) {
+		
+		String password = null;
+
+		if (user.getPassword() != null)
+			password = user.getPassword();
+		
+		UserDTO userDto = modelMapper.map(user, UserDTO.class);
+		
+		// Verify if user id exist
+		if (!userRepository.existsById(id)) {
+			userDto.setSuccess("False");
+			userDto.setMessage("User Don't Exist");
+			return Optional.of(userDto);
+		}
+		
+		//Verify if user password is correct
+		if (!(userRepository.findById(id).get().getPassword().equals(password))) { 
+			userDto.setSuccess("False");
+			userDto.setMessage("User password is incorrect");
+			return Optional.of(userDto);			
+		} 
+		
+		//Verify if user's username is correct
+		if (!(userRepository.findById(id).get().getUsername()).equals(user.getUsername())) {
+			userDto.setSuccess("False");
+			userDto.setMessage("Username seems to be incorrect, please double check again");
+			return Optional.of(userDto);			
+		}
+		
+		//Verify if user is already unsubscribed
+		if (userRepository.findById(id).get().getActive() == false) {
+			userDto.setSuccess("False");
+			userDto.setMessage("User is already Unsubscribed");
+			return Optional.of(userDto);			
+		}
+		
+		emailService.sendFarewellEmail(user);		
+		user.setActive(false);
+		userRepository.save(user);
+		userDto.setSuccess("True");
+		userDto.setMessage("User is now unsubscribed");
+		return Optional.of(userDto);
+	}	
 
 	/**
 	 * Method to recover password. Generate a new password and send it by email to
@@ -328,8 +381,5 @@ public class UserServiceImpl implements IUserService {
 		User user = userRepository.findByUsername(username);
 		user.setLastSession(LocalDateTime.now());
 	}
-
-	
-
 	
 }
