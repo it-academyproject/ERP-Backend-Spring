@@ -1,10 +1,12 @@
 package cat.itacademy.proyectoerp.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
+import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 
 public interface IOrderService {
 
@@ -25,4 +27,8 @@ public interface IOrderService {
 	
 	public List<Order> findOrdersByEmployeeId(String employeeId);
 
+	EmployeeSalesDTO getBestEmployeeByTotalSales();
+
+	EmployeeSalesDTO getWorstEmployeeByTotalSales();
+	
 }

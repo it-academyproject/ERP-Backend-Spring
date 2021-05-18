@@ -17,5 +17,6 @@ public interface IOrderRepository extends JpaRepository<Order, UUID>{
   List<Order> findOrdersByClientId(String clientId);
   
   List<Order> findOrdersByEmployeeId(String employeeId);
-
+  
+  List<Order> findAllByStatus(OrderStatus status);
 }
