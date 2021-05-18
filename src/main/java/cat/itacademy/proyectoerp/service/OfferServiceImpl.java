@@ -3,6 +3,7 @@ package cat.itacademy.proyectoerp.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,23 @@ public class OfferServiceImpl implements IOfferService{
 			return offerlistDTO;
 		}
 		
+	}
+	
+	/*
+	 * @Override
+	@Transactional(readOnly = true)
+	public Order findOrderById(UUID id) {
+		return orderRepository.findById(id)
+				.orElseThrow(() -> new ArgumentNotFoundException("Order not found. The id " + id + " doesn't exist"));
+	}*/
+
+	@Override
+	@Transactional(readOnly = true)
+	public OfferDTO findOfferById(UUID id) {
+		OfferDTO offerdto = new OfferDTO(offerRepository.findById(id)
+				.orElseThrow(() -> new ArgumentNotFoundException("Offer not found. The id " + id + " doesn't exist")));
+		
+		return offerdto;
 	}
 
 }
