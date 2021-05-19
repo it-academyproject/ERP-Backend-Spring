@@ -10,7 +10,7 @@ public interface IEmployeeService {
 
   public EmployeeDTO createEmployee(Employee employee);
 
-  public Employee findEmployeeById(UUID id);
+  public EmployeeDTO findEmployeeById(UUID id);
 
   public List<Employee> findAllEmployees();
 

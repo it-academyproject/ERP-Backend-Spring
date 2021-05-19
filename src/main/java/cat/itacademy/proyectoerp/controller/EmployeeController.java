@@ -1,6 +1,7 @@
 package cat.itacademy.proyectoerp.controller;
 
 import cat.itacademy.proyectoerp.domain.Employee;
+import cat.itacademy.proyectoerp.dto.EmployeeDTO;
 import cat.itacademy.proyectoerp.service.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,10 +42,10 @@ public class EmployeeController {
   public Map<String, Object> getEmployeeById(@PathVariable(name="id") UUID id){
     HashMap<String, Object> map = new HashMap<>();
     try {
-      Employee employee = iEmployeeService.findEmployeeById(id);
+      EmployeeDTO employeeDTO = iEmployeeService.findEmployeeById(id);
       map.put("success", "true");
       map.put("message", "employee found");
-      map.put("employee", employee);
+      map.put("employee", employeeDTO);
     } catch (Exception e){
       map.put("success", "false");
       map.put("message", e.getMessage());

@@ -54,9 +54,9 @@ public class EmployeeServiceImpl implements IEmployeeService {
   }
 
   @Override
-  public Employee findEmployeeById(UUID id) throws ArgumentNotFoundException  {
-    return iEmployeeRepository.findById(id)
-            .orElseThrow(() -> new ArgumentNotFoundException("Employee not found. The id " + id + " doesn't exist"));
+  public EmployeeDTO findEmployeeById(UUID id) throws ArgumentNotFoundException  {
+	Employee employee = iEmployeeRepository.findById(id).orElseThrow(() -> new ArgumentNotFoundException("Employee not found. The id " + id + " doesn't exist"));
+	return modelMapper.map(employee, EmployeeDTO.class);
   }
 
   @Override
