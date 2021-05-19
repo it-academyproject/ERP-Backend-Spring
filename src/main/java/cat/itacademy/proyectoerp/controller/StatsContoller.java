@@ -2,6 +2,8 @@ package cat.itacademy.proyectoerp.controller;
 
 import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Order;
+import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
+import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
 import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 import cat.itacademy.proyectoerp.service.EmployeeServiceImpl;
 import cat.itacademy.proyectoerp.service.IOrderService;
@@ -10,9 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -113,6 +119,48 @@ public class StatsContoller {
     
     return map;
   }
+  
+  @PreAuthorize("hasRole('ADMIN')")
+  @RequestMapping(value = "/employees/toptensales", method = RequestMethod.GET)
+  public Map <String,Object> getTopTenEmployeesSales(@RequestBody DatesTopEmployeePOJO datestopemployee) {
+    
+	  HashMap<String, Object> map = new HashMap<>();
+	  
+	  if (datestopemployee.getBegin_date() == null) datestopemployee.setBegin_date(LocalDateTime.of(2020,01,01,00,01)); 
+		
+	  if (datestopemployee.getEnd_date() == null ) datestopemployee.setEnd_date(LocalDateTime.now());
+	  
+	  if (datestopemployee.getBegin_date().isBefore(datestopemployee.getEnd_date())) {
+    
+		  try {  
+			List<TopEmployeeDTO> employeeList = orderService.findAllTopTen(datestopemployee);
+							  
+				  if(employeeList.isEmpty()) {
+			    		map.put("success", "true");
+			            map.put("message", "no employees or orders found between the dates");
+				  } 
+				  else {
+					  map.put("succes","true");
+					  map.put("message","top 10 employees found");
+					  map.put("employees", employeeList);
+				  }
+					  
+		  } catch(Exception e) {
+		    	 map.put("success", "false");
+		         map.put("message", "error: " + e.getMessage());
+		  }
+			  
+	  }else {
+		  map.put("success", "false");
+	      map.put("message", "_error: invalid date ranges"); 
+	  }
+	  
+	  
+    return map;
+	  
+  }
+
+  
   
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/employees/bestsales")

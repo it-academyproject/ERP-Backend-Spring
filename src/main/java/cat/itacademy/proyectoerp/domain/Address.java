@@ -18,10 +18,7 @@ public class Address {
 
 	@Id
     @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-        name = "UUID",
-        strategy = "org.hibernate.id.UUIDGenerator"
-    )
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
 	@Column(name = "id", columnDefinition = "BINARY(16)")
 	private UUID id;
 	
@@ -32,22 +29,17 @@ public class Address {
 	 
 	@Column(name = "zip_code")
 	private String zipcode;
-	
-	@Column(name = "client_id")
-	@Nullable
-	private String clientId;
 
 	public Address() {
 		
 	}
 	
-	public Address(String street, String number, String city, String country, String zipcode, String clientId) {
+	public Address(String street, String number, String city, String country, String zipcode) {
 		this.street = street;
 		this.number = number;
 		this.city = city;
 		this.country = country;
 		this.zipcode = zipcode;
-		this.clientId = clientId;
 		
 	}
 
@@ -99,12 +91,4 @@ public class Address {
 		this.zipcode = zipcode;
 	}
 
-	public String getClientId() {
-		return clientId;
-	}
-
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}	
-	 
 }

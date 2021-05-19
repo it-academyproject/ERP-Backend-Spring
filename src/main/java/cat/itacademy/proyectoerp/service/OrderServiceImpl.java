@@ -2,23 +2,37 @@ package cat.itacademy.proyectoerp.service;
 
 
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import java.util.UUID;
+
+
 import cat.itacademy.proyectoerp.domain.OrderStatus;
+import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
+import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
+import cat.itacademy.proyectoerp.domain.User;
+import cat.itacademy.proyectoerp.dto.EmployeeDTO;
+import cat.itacademy.proyectoerp.dto.MessageDTO;
+import cat.itacademy.proyectoerp.dto.OrderDTO;
+import cat.itacademy.proyectoerp.dto.UserDTO;
+
 import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cat.itacademy.proyectoerp.repository.IAddressRepository;
 import cat.itacademy.proyectoerp.repository.IClientRepository;
 import cat.itacademy.proyectoerp.repository.IOrderDetailRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
+import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Order;
 
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
@@ -40,16 +54,42 @@ public class OrderServiceImpl implements IOrderService{
 	IOrderDetailRepository orderDetailRepository;
 	
 	@Autowired
+	IAddressRepository addressRepository;
+	
+	@Autowired
 	IEmployeeService employeeService;
 
 	
 	@Override
 	//@Transactional
 	public Order createOrder(Order order) {  //UUID
-		// Order newOrder = orderRepository.save(order);
-		    return orderRepository.save(order); // newOrder.getId();
+		
+		Order new_order = new Order();
+		new_order = order;
+		
+		//registered clients, they can ommit to put the shipping address in JSON (billing address won't be in JSON),
+		//or they can put a new shipping address in the JSON
+		if (order.getClientId() != null) { // if registered
+			
+			if (order.getBillingAddress() == null && order.getShippingAddress() == null) {
+						
+				new_order.setBillingAddress(clientRepository.findById(order.getClientId()).get().getAddress());
+				new_order.setShippingAddress(clientRepository.findById(order.getClientId()).get().getAddress());
+							
+			//If shipping address is a new one:	
+			}	else if (order.getShippingAddress() != clientRepository.findById(order.getClientId()).get().getAddress()){
+				
+				new_order.setBillingAddress(clientRepository.findById(order.getClientId()).get().getAddress());
+				
+				}
+			
+		} else if (order.getBillingAddress() == null) {
+			throw new ArgumentNotValidException("The Billing address must be filled");							
+		}
+		
+		return orderRepository.save(new_order);		
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public Order findOrderById(UUID id) {
@@ -76,12 +116,18 @@ public class OrderServiceImpl implements IOrderService{
 				}
 				Order orderToUpdate = findOrderById(order.getId());
 				//checks if parameters are valid and updates them
-				if (clientRepository.findById((order.getClientId())).isEmpty()) {  //UUID.fromString
+				if (clientRepository.findById(order.getClientId()).isEmpty()) {  
 					throw new ArgumentNotFoundException("The client doesn't exist. The client with the id " + order.getClientId() + "doesn't exist");
 				} else if (order.getClientId() == null) {
+
+/*				if (clientRepository.findById((order.getClientId())).isEmpty()) {  //UUID.fromString //Codigo B49.
+					throw new ArgumentNotFoundException("The client doesn't exist. The client with the id " + order.getClientId() + "doesn't exist");
+				} else if (order.getClientId() == null) {*/
+
 					throw new ArgumentNotValidException("Invalid Client ID");
 				}
-				orderToUpdate.setClient_id(order.getClientId());
+
+				orderToUpdate.setclientId(order.getClientId());
 				
 				//TODO: Once Employee is implemented it should check if it exists.1
 				orderToUpdate.setEmployee_id(order.getEmployeeId());
@@ -113,7 +159,8 @@ public class OrderServiceImpl implements IOrderService{
 	}
 
 	@Override
-	public List<Order> findOrdersByClient(String id) {
+	public List<Order> findOrdersByClient(String id) { 
+	//public List<Order> findOrdersByClient(Client id) { //Dapser75
 		if(orderRepository.findOrdersByClientId(id) == null){
 			throw new ArgumentNotFoundException("No orders with client " + id + " found");
 		} else{
@@ -128,6 +175,27 @@ public class OrderServiceImpl implements IOrderService{
 		} else{
 			return orderRepository.findOrdersByEmployeeId(employeeId);
 		}
+	}
+
+	@Override
+	public List<TopEmployeeDTO> findAllTopTen(DatesTopEmployeePOJO datestopemployee) {
+			
+		List<Object[]> TopEmpl = orderRepository.findEmployeesSalesBetweenDates(datestopemployee.getBegin_date(),datestopemployee.getEnd_date());  //Busqueda en BD
+
+		TopEmployeeDTO topEmployDTO = new TopEmployeeDTO();
+	
+		List<TopEmployeeDTO> topemployeelist = new ArrayList();
+		
+		for (Object[] object : TopEmpl) {
+			topEmployDTO.setId( object[0].toString());
+			topEmployDTO.setTotal(Double.parseDouble(object[1].toString()));
+			topemployeelist.add(topEmployDTO);
+			topEmployDTO = new TopEmployeeDTO();
+		}
+
+		return topemployeelist;
+	
+		
 	}
 	
 	/**
@@ -184,4 +252,6 @@ public class OrderServiceImpl implements IOrderService{
 
 
 
+
+	
 

@@ -29,15 +29,19 @@ public class Client {
 	private String image;
 	private String nameAndSurname;
 	
+	//@OneToMany(cascade = CascadeType.ALL)
+	//private List orders;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "address_id", referencedColumnName = "id")
 	@Nullable
 	private Address address;
 	//private List<Order> orders;
 
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	private User user;
+
 
 
 	public Client() {
