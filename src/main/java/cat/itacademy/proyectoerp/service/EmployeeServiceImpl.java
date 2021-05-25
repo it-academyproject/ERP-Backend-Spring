@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeServiceImpl implements IEmployeeService {
@@ -60,15 +61,16 @@ public class EmployeeServiceImpl implements IEmployeeService {
   }
 
   @Override
-  public List<Employee> findAllEmployees() throws ArgumentNotFoundException {
+  public List<EmployeeDTO> findAllEmployees() throws ArgumentNotFoundException {
     if(iEmployeeRepository.findAll().isEmpty()){
       throw new ArgumentNotFoundException("No employees found");
     }
-    return iEmployeeRepository.findAll();
+    List<EmployeeDTO> employeesDTO = iEmployeeRepository.findAll().stream().map(employee -> modelMapper.map(employee, EmployeeDTO.class)).collect(Collectors.toList());
+    return employeesDTO;
   }
 
   @Override
-  public Employee updateEmployee(Employee employee) throws Exception {
+  public EmployeeDTO updateEmployee(Employee employee) throws Exception {
     Employee employeeById = iEmployeeRepository.findById(employee.getId()).orElseThrow(
             () -> new ArgumentNotFoundException("Employee not found. The id " + employee.getId() + " doesn't exist"));
 
@@ -82,7 +84,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
     }catch (Exception e){
       throw new Exception("The username already exists. Please, choose another.");
     }
-    return employeeUpdated;
+    return modelMapper.map(employeeUpdated, EmployeeDTO.class);
   }
 
   private void validateEmployeeToUpdate(Employee employee, Employee employeeById) {

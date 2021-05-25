@@ -26,7 +26,7 @@ public class EmployeeController {
   public Map<String, Object> getEmployees(){
     HashMap<String, Object> map = new HashMap<String, Object>();
     try {
-      List<Employee> employeeList = iEmployeeService.findAllEmployees();
+      List<EmployeeDTO> employeeList = iEmployeeService.findAllEmployees();
       map.put("success", "true");
       map.put("message", "employee found");
       map.put("employee", employeeList);
@@ -74,7 +74,7 @@ public class EmployeeController {
   public HashMap<String, Object> updateEmployee(@RequestBody Employee employee){
     HashMap<String, Object> map = new HashMap<String, Object>();
     try {
-      Employee employeeUpdated = iEmployeeService.updateEmployee(employee);
+      EmployeeDTO employeeUpdated = iEmployeeService.updateEmployee(employee);
       map.put("success", "true");
       map.put("message", "Employee with id: " + employee.getId() + " has been updated");
       map.put("employee", employeeUpdated);

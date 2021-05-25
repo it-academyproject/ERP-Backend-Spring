@@ -1,9 +1,9 @@
 package cat.itacademy.proyectoerp.controller;
 
-import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
 import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
+import cat.itacademy.proyectoerp.dto.EmployeeDTO;
 import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 import cat.itacademy.proyectoerp.service.EmployeeServiceImpl;
 import cat.itacademy.proyectoerp.service.IOrderService;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -86,7 +85,7 @@ public class StatsContoller {
     HashMap<String, Object> map = new HashMap<>();
    
     try {
-    	List<Employee> employees = employeeService.findAllEmployees();
+    	List<EmployeeDTO> employees = employeeService.findAllEmployees();
     	List<Order> orderList = orderService.findAllOrders();
     	if(employees.isEmpty() || orderList.isEmpty()) {
     		map.put("success", "true");
@@ -96,7 +95,7 @@ public class StatsContoller {
     	    map.put("message", "employees list found");
     	    orderList.removeIf(o -> !o.getStatus().toString().equalsIgnoreCase("COMPLETED"));
     	    List<Map<String,String>> list = new ArrayList<>();
-    	    for(Employee e : employees) {
+    	    for(EmployeeDTO e : employees) {
     	    	 List<Order> employeeOrders = orderList.stream()                
     	                 .filter(order -> order.getEmployeeId().toString()
     	                		 .equalsIgnoreCase(e.getId().toString()))    
