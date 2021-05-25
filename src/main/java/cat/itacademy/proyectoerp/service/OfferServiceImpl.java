@@ -57,6 +57,16 @@ public class OfferServiceImpl implements IOfferService{
 		}else if (offer.getStartDate().isBefore(LocalDateTime.now())) {
 			
 			throw new ArgumentNotValidException("The begin date cannot be earlier than the current date.");
+		
+		}else if ((offer.getOffertype().name() == "DIRECT_DISCOUNT") && (offer.getFreeproducts() != 0) && 
+				(offer.getDirectdiscount() ==0)){
+			
+			throw new ArgumentNotValidException("Types offer and application no compatible.");
+ 
+		}else if ((offer.getOffertype().name() == "FREE_PRODUCTS") && (offer.getFreeproducts() == 0) && 
+				(offer.getDirectdiscount() !=0)){
+			
+			throw new ArgumentNotValidException("Types offer and application no compatible.");	
 		}
 		offerRepository.save(offer);
 		
@@ -120,7 +130,6 @@ public class OfferServiceImpl implements IOfferService{
 		}
 	}
 	
-	//Pendiente review
 	@Override
 	@Transactional(readOnly = true)
 	public List<OfferDTO> findAllCurrentOffers() {
@@ -136,6 +145,25 @@ public class OfferServiceImpl implements IOfferService{
 	}
 	
 	
+	@Override
+	public void delOfferById(UUID id) {
+		Offer offertodelete = offerRepository.findById(id)
+					.orElseThrow(() -> new ArgumentNotFoundException("Offer not found. The id " + id + " doesn't exist"));
+
+		if (offertodelete.getStartDate().isAfter(LocalDateTime.now())) {
+			offerRepository.delete(offertodelete); 
+			
+		} else {
+			throw new ArgumentNotFoundException("You can't delete this offer because the offer has expired o is currently.");
+
+		}
+		
+		
+		/*COMENTARIOS -> pendiente revisar y borrar productos afectados*/
+	}
+	
+	
+	
 
 	//Auxiliar Methods
 	public List<OfferDTO> offerToOfferDTO(List <Offer> offerlist){
@@ -146,5 +174,8 @@ public class OfferServiceImpl implements IOfferService{
 		return offerlistDTO;
 		
 	}
+
+
+	
 	
 }
