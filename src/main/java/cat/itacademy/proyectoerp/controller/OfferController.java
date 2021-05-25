@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import cat.itacademy.proyectoerp.domain.Offer;
 import cat.itacademy.proyectoerp.dto.OfferDTO;
 import cat.itacademy.proyectoerp.service.IOfferService;
-import cat.itacademy.proyectoerp.service.OfferServiceImpl;
 
 @RestController
 @RequestMapping("/api/offers")
@@ -72,7 +71,7 @@ public class OfferController {
 	//Method to return a specific offer	
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/{id}")
-	public Map<String, Object> findOrderById(@PathVariable(name = "id") UUID id) {
+	public Map<String, Object> findOfferById(@PathVariable(name = "id") UUID id) {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
 			OfferDTO offerFinded = offerService.findOfferById(id);
@@ -148,6 +147,7 @@ public class OfferController {
 		}
 		return map;
 	}
+	
 	
 
 
