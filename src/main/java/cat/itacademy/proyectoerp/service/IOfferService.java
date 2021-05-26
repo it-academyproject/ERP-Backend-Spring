@@ -28,5 +28,7 @@ public interface IOfferService {
 	OfferDTO updateOffer(Offer offer);//UPDATE - Method to UPDATE an Offer
 
 	FreeProductDTO createFreeProduct(FreeProducts freeproduct); // CREATE - create a new free product
+
+	List<FreeProductDTO> findAllFreeProduct(); // READ - Method to return all freeproducts
 	
 }

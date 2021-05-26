@@ -36,7 +36,7 @@ public class OfferServiceImpl implements IOfferService{
 	IOfferRepository offerRepository;
 	
 	@Autowired
-	IFreeProductRepository freeprodcutRepository;
+	IFreeProductRepository freeproductRepository;
 	
 	
 	@Override
@@ -203,17 +203,30 @@ public class OfferServiceImpl implements IOfferService{
 			throw new ArgumentNotValidException("Products to buy can't be 0");
 					
 		else {
-			freeprodcutRepository.save(freeproduct);
+			freeproductRepository.save(freeproduct);
 		
 		}
 				
 		return new FreeProductDTO(freeproduct);
 	}
 	
+	//Method to get  all FreeProduct
+	@Override
+	public List <FreeProductDTO> findAllFreeProduct() {
+		List <FreeProducts> freeproductslist =  freeproductRepository.findAll();
+		if (freeproductslist.isEmpty()) {
+			throw new ArgumentNotFoundException("No free product found");
+		}else {
+			List<FreeProductDTO> freeproductlistDTO = new ArrayList<FreeProductDTO>(freeProductTofreeProductDTO(freeproductslist));
+			return freeproductlistDTO;
+		}
+	}
 
+	
+	//List<OfferDTO> offerlistDTO = new ArrayList<OfferDTO>(offerToOfferDTO(offerlist));
 	//-----------------------------------  Complementary Methods  ----------------------------------------
 	
-	//Method to convert to DTO
+	//Method to convert OFFER to DTO
 	public List<OfferDTO> offerToOfferDTO(List <Offer> offerlist){
 		List<OfferDTO> offerlistDTO = new ArrayList<OfferDTO>();
 		for (Offer o : offerlist) {
@@ -222,6 +235,16 @@ public class OfferServiceImpl implements IOfferService{
 		return offerlistDTO;
 		
 	}
+	
+	//Method to convert FREE PRODUCT to DTO
+		public List<FreeProductDTO> freeProductTofreeProductDTO(List <FreeProducts> freeproductlist){
+			List<FreeProductDTO> freeproductlistDTO = new ArrayList<FreeProductDTO>();
+			for (FreeProducts fp : freeproductlist) {
+				freeproductlistDTO.add(new FreeProductDTO(fp));
+			}
+			return freeproductlistDTO;
+			
+		}
 
 	//Method to control all parameters in a new/update offer
 	private boolean checkOfferIsOk(Offer offer) {
@@ -263,7 +286,6 @@ public class OfferServiceImpl implements IOfferService{
 		
 		else return true;
 	}
-
 
 	
 	

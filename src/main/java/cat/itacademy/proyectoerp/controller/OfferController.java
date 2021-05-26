@@ -210,13 +210,13 @@ public class OfferController {
 	
 	
 	@RequestMapping(value = "/freeproduct/all", method = RequestMethod.GET)
-	public Map<String, Object> getAllFreeDiscount(@RequestBody FreeProducts freeproduct) {
+	public Map<String, Object> getAllFreeDiscount() {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
-			FreeProductDTO finalfreeproduct = offerService.findAllFreeProduct(freeproduct);
+			List<FreeProductDTO> listfreeproducts = offerService.findAllFreeProduct();
 			map.put("success", "true");
-			map.put("message", "free product added");
-			map.put("freeproduct:", finalfreeproduct);									
+			map.put("message", "free products found");
+			map.put("freeproduct:", listfreeproducts);									
 		} catch (Exception e) {
 			map.put("success", "false");
 			map.put("message", "_error " + e.getMessage());
