@@ -61,7 +61,6 @@ public class Client {
 	@Valid
 	private User user;
 
-
 	public Client() {
 
 	}

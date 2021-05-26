@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
+import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
+import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
 import cat.itacademy.proyectoerp.dto.OrderDTO;
 
 public interface IOrderService {
@@ -27,5 +29,7 @@ public interface IOrderService {
 	public List<Order> findOrdersByClient(String id);
 	
 	public List<Order> findOrdersByEmployeeId(String employeeId);
-
+	
+	public List<TopEmployeeDTO> findAllTopTen(DatesTopEmployeePOJO topemployee);
+	
 }
