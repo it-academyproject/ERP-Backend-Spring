@@ -1,13 +1,7 @@
 package cat.itacademy.proyectoerp.controller;
 
-import java.util.ArrayList;
+import java.util.*;
 
-
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -26,7 +20,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.dto.ClientDTO;
 import cat.itacademy.proyectoerp.service.IClientService;
@@ -40,47 +33,65 @@ public class ClientController {
 
 	@Autowired
 	IUserService userService;
-	
-	
+
 	 //Add a new Client
     @PostMapping
-    public ResponseEntity<?> addNewClient(@Valid @RequestBody Client client) throws MethodArgumentTypeMismatchException{
+    public ResponseEntity<?> addNewClient(@Valid @RequestBody Client client) {
+		UserDTO userDTO = null;
 		ClientDTO clientDTO = new ClientDTO();
-		MessageDTO messageDTO;
-		UserDTO userDTO = new UserDTO();
-
-		if (service.existsByDni(client.getDni())) {
-			messageDTO = new MessageDTO("False", "Dni already exists");
-			return new ResponseEntity<>(messageDTO, HttpStatus.UNPROCESSABLE_ENTITY);
-		}
-
 		try {
-			userDTO = userService.getByUsername(client.getUser().getUsername()).get();
-			if(userDTO.getSuccess().equalsIgnoreCase("False")){
-				userDTO = userService.registerNewUserAccount(client.getUser());
+			MessageDTO errorMessage = service.getErrorMessageDniExists(client.getDni());
+			if(null != errorMessage){
+				return new ResponseEntity<>(errorMessage, HttpStatus.UNPROCESSABLE_ENTITY);
 			}
-			User userRegistered = userService.findByUsername(userDTO.getUsername());
 
-			Client newClient = new Client(client.getDni(),client.getImage(),client.getNameAndSurname(),
-					client.getAddress(),client.getShippingAddress(),userRegistered);
+			userDTO = getUser(client);
+
+			Client newClient = getClient(client, userDTO.getUsername());
 			clientDTO = service.createClient(newClient);
-    	} catch (Exception e) {
-			messageDTO = new MessageDTO("False", e.getMessage().concat("User already assigned to other client. " +
-					"Please, select another username."));
-			clientDTO.setMessage(messageDTO);
-			userDTO.setSuccess("False");
+		} catch (Exception e) {
 			clientDTO.setUser(userDTO);
 			return ResponseEntity.unprocessableEntity().body(clientDTO);
-    	}
-
+		}
         return ResponseEntity.status(HttpStatus.CREATED).body(clientDTO);
     }
-    
+
+	private UserDTO getUser(Client client) {
+		UserDTO userDTO;
+		if(userService.existsByUsername(client.getUser().getUsername())){
+			System.out.println("userService.getByUsername()");
+			userDTO = userService.getByUsername(client.getUser().getUsername()).get();
+			setErrorMessageUsernameExists(userDTO);
+		}
+		else{
+			System.out.println("userService.registerNewUserAccount()");
+			userDTO = userService.registerNewUserAccount(client.getUser());
+		}
+		return userDTO;
+	}
+
+	private void setErrorMessageUsernameExists(UserDTO userDTO) {
+		MessageDTO errorMessage = new MessageDTO("False", "Username Exists. ");
+		userDTO.setSuccess(errorMessage.getSuccess());
+		userDTO.setMessage(errorMessage.getMessage());
+	}
+
+	private Client getClient(Client client, String username) {
+		User user = userService.findByUsername(username);
+		Client newClient = new Client(client.getDni(),client.getImage(),client.getNameAndSurname(),
+				client.getAddress(),client.getShippingAddress(),user);
+		return newClient;
+	}
+
     //Add client without giving user
     @PostMapping("/fastclient") 
     public ResponseEntity<?> addFastClient(@RequestBody ClientDTO client) {
 		ClientDTO finalClient;
-		MessageDTO messageDTO;
+
+		MessageDTO messageDTO = getErrorMessageNameAndSurname(client.getNameAndSurname());
+		if(null != messageDTO){
+			return ResponseEntity.unprocessableEntity().body(messageDTO);
+		}
 
 		try {
 			finalClient = service.createFastClient(client);
@@ -88,11 +99,19 @@ public class ClientController {
 			messageDTO = new MessageDTO("False", e.getMessage());
 			return ResponseEntity.unprocessableEntity().body(messageDTO);
 		}
-
     	return ResponseEntity.ok().body(finalClient);
     }
-    
-    //Get all the clients
+
+	private MessageDTO getErrorMessageNameAndSurname(String nameAndSurname) {
+		MessageDTO errorMessage = null;
+		if (null == nameAndSurname || nameAndSurname.isBlank()){
+			errorMessage = new MessageDTO("False", "name_and_surname is mandatory. ");
+
+		}
+		return errorMessage;
+	}
+
+	//Get all the clients
     @GetMapping
     public ResponseEntity<?> getAllClients() {
         List<Client> list = new ArrayList<>();
@@ -142,39 +161,14 @@ public class ClientController {
     //Update a client by id
     @PutMapping()
     public ResponseEntity<?> updateClientById(@RequestBody Client clientUpdate) {
-
-		ClientDTO clientDTO = checkClientErrors(clientUpdate);
-
-		if (null != clientDTO && clientDTO.getMessage().getSuccess().equalsIgnoreCase("False")){
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(clientDTO.getMessage());
-		}
-
-        try {
+		ClientDTO clientDTO;
+		try {
 			clientDTO = service.updateClient(clientUpdate);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(clientDTO);
-
     }
-
-	private ClientDTO checkClientErrors(Client client) {
-		if (null != client.getDni() && service.existsByDni(client.getDni())) {
-			MessageDTO messageDTO = new MessageDTO("False", "Dni already exists");
-			ClientDTO clientDTO = new ClientDTO();
-			clientDTO.setMessage(messageDTO);
-			return clientDTO;
-		}
-		else if (null != client.getUser() && null != client.getUser().getUsername()
-				&& userService.existsByUsername(client.getUser().getUsername())) {
-			MessageDTO messageDTO = new MessageDTO("False", "User already assigned to other client. " +
-					"Please, select another username.");
-			ClientDTO clientDTO = new ClientDTO();
-			clientDTO.setMessage(messageDTO);
-			return clientDTO;
-		}
-		return null;
-	}
 
     //Delete a client
     @DeleteMapping("/{id}")
@@ -185,7 +179,6 @@ public class ClientController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
         return ResponseEntity.ok().build();
-
     }	
     
     //pruebaDTO

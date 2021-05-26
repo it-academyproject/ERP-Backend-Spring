@@ -9,9 +9,7 @@ public class MessageDTO {
 	
 	private String success;
 	private String message;
-	
-	
-	
+
 	public MessageDTO(String success, String message) {
 		super();
 		this.success = success;

@@ -1,10 +1,13 @@
 package cat.itacademy.proyectoerp.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import cat.itacademy.proyectoerp.domain.Client;
+import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.dto.ClientDTO;
+import cat.itacademy.proyectoerp.dto.MessageDTO;
 
 public interface IClientService {
 	
@@ -24,8 +27,10 @@ public interface IClientService {
 
 	List<ClientDTO> listAllUsers();
 
-	public boolean existsByDni(String dni);
+	Client findByDni(String dni);
 
-	public boolean existsByUsername(String username);
+	boolean existsByDni(String dni);
+
+	MessageDTO getErrorMessageDniExists(String dni);
 
 }

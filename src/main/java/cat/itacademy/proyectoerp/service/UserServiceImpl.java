@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
+import cat.itacademy.proyectoerp.dto.MessageDTO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.NameTokenizers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +76,20 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public boolean existsByUsername(String username) {
-		return userRepository.existsByUsername(username);
+		boolean existsByUsername = false;
+		if (userRepository.existsByUsername(username)) {
+			existsByUsername = true;
+		}
+		return existsByUsername;
+	}
+
+	@Override
+	public MessageDTO getErrorMessageUsernameExists(String username) {
+		MessageDTO errorMessage=null;
+		if(existsByUsername(username)){
+			errorMessage = new MessageDTO("False", "Username Exists: '"+ username +"'");
+		}
+		return errorMessage;
 	}
 
 	/**

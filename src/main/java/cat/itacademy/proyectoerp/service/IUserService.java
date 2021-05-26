@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import cat.itacademy.proyectoerp.domain.ChangeUserPassword;
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.User;
+import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.dto.UserDTO;
 
 /**
@@ -27,8 +28,8 @@ public interface IUserService {
 	public Optional<UserDTO> modifyUser(Long id, User user);
 	public User updatePassword(ChangeUserPassword changeuserpassword);
 	public User findByUsername(String username);
-	public boolean existsByUsername(String username);
+	boolean existsByUsername(String username);
+	MessageDTO getErrorMessageUsernameExists(String username);
 	public void updateLastSession(String username);
-
 
 }

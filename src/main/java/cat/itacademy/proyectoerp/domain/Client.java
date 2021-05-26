@@ -139,11 +139,4 @@ public class Client {
 		this.user = user;
 	}
 
-	@Override
-	public String toString() {
-		return "Client [id=" + id + ", address=" + address + ", dni=" + dni + ", image=" + image + ", user=" + user
-				+ "]";
-	}
-
-
 }

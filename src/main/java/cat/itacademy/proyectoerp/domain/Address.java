@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.sun.istack.Nullable;
@@ -20,10 +21,10 @@ public class Address {
 	@Column(name = "id", columnDefinition = "BINARY(16)")
 	private UUID id;
 
-	@NotBlank(message = "Street name is mandatory")
+	@NotBlank(message = "Street is mandatory")
 	private String street;
 
-	@NotBlank(message = "Floor number is mandatory")
+	@NotBlank(message = "Number is mandatory")
 	private String number;
 
 	@NotBlank(message = "City is mandatory")
@@ -40,10 +41,8 @@ public class Address {
 	@OneToOne(mappedBy = "address")
 	private Client client;
 
-
 	public Address() {
 	}
-
 
 	public Address(String street, String number, String city, String country, String zipcode) {
 		this.street = street;
@@ -61,6 +60,14 @@ public class Address {
 		this.country = country;
 		this.zipcode = zipcode;
 		this.client = client;
+	}
+
+	public Address(Address address) {
+		this.street = address.getStreet();
+		this.number = address.getNumber();
+		this.city = address.getCity();
+		this.country = address.getCountry();
+		this.zipcode = address.getZipcode();
 	}
 
 	public UUID getId() {

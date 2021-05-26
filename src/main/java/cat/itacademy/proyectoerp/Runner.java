@@ -94,11 +94,7 @@ public class Runner implements CommandLineRunner {
 		}
 
 
-		Address address1 = null;
-		Address address2 = null;
-		Address address3 = null;
-		Address address4 = null;
-		Address addressExample = null;
+		Address address1 = null, address2 = null, address3 = null, address4 = null,addressExample = null;
 
 		try{
 			List<Address> adresses =  addressService.findAllAddresses();
