@@ -22,5 +22,6 @@ public interface IOfferService {
 
 	void delOfferById(UUID id);   //DEL - Method to delete an Offer by ID
 
+	OfferDTO updateOffer(Offer offer);//UPDATE - Method to UPDATE an Offer
 	
 }

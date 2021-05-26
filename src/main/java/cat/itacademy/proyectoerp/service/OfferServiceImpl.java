@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import cat.itacademy.proyectoerp.domain.DirectDiscount;
 import cat.itacademy.proyectoerp.domain.Offer;
 import cat.itacademy.proyectoerp.domain.OfferApplied;
 import cat.itacademy.proyectoerp.domain.OfferType;
+import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.dto.OfferDTO;
 
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
@@ -30,53 +32,22 @@ public class OfferServiceImpl implements IOfferService{
 	@Autowired
 	IOfferRepository offerRepository;
 	
+	
 	@Override
 	@Transactional
-	public OfferDTO createOffer(Offer offer) {  
+	public OfferDTO createOffer(Offer offer) { 
 		
-		if ((offer.getFreeproducts() != 0) && (offer.getDirectdiscount() !=0)){
+		if (checkOfferIsOk(offer)) {
 
-			throw new ArgumentNotValidException("Fields directdiscount and freeproducts cannot filled");
-		 
-		}else if ((offer.getFreeproducts() == 0) && (offer.getDirectdiscount() == 0)) {
-		
-			throw new ArgumentNotValidException("The directdiscount and freeproducts fields cannot be concurrent null");
-		
-		} else if ((offer.getDescription() == "") || (offer.getDescription() == null)) {
-			
-			throw new ArgumentNotValidException("The offer must have a description");
-		
-		}else if (offer.getStartDate().isAfter(offer.getEndDate())) {
-
-			throw new ArgumentNotValidException("The start_date cannot be later than the End_date.");
-				
-		}else if (offer.getEndDate().isBefore(LocalDateTime.now())) {
-			
-			throw new ArgumentNotValidException("The end date cannot be earlier than the current date.");
-			
-		}else if (offer.getStartDate().isBefore(LocalDateTime.now())) {
-			
-			throw new ArgumentNotValidException("The begin date cannot be earlier than the current date.");
-		
-		}else if ((offer.getOffertype().name() == "DIRECT_DISCOUNT") && (offer.getFreeproducts() != 0) && 
-				(offer.getDirectdiscount() ==0)){
-			
-			throw new ArgumentNotValidException("Types offer and application no compatible.");
- 
-		}else if ((offer.getOffertype().name() == "FREE_PRODUCTS") && (offer.getFreeproducts() == 0) && 
-				(offer.getDirectdiscount() !=0)){
-			
-			throw new ArgumentNotValidException("Types offer and application no compatible.");	
+			offerRepository.save(offer);
 		}
-		offerRepository.save(offer);
-		
 		OfferDTO offerDto = new OfferDTO(offer);
 
 		return offerDto;
 	
 	}
 
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<OfferDTO> findAllOffers() {
@@ -99,7 +70,7 @@ public class OfferServiceImpl implements IOfferService{
 		
 		return offerdto;
 	}
-	
+
 	
 	@Override
 	@Transactional(readOnly = true)
@@ -157,15 +128,66 @@ public class OfferServiceImpl implements IOfferService{
 			throw new ArgumentNotFoundException("You can't delete this offer because the offer has expired o is currently.");
 
 		}
-		
-		
-		/*COMENTARIOS -> pendiente revisar y borrar productos afectados*/
+			
+		/*COMENTARIOS internos @Dapser75 -> No IMPLEMENTADA pendiente revisar.  
+		 * No IMPLEMENTADA relación oferta y producto 25/05/21*/
 	}
 	
 	
+	@Override
+	public OfferDTO updateOffer(Offer offertoupdate) {
+
+		Offer offer = offerRepository.findById(offertoupdate.getId())
+				.orElseThrow(() -> new ArgumentNotFoundException("Offer not found. The id " + offertoupdate.getId() + " doesn't exist"));
+
+		//	check dates 
+		if ((offer.getStartDate().isAfter(LocalDateTime.now())) 
+				&& (offer.getEndDate().isAfter(LocalDateTime.now()))){
+			//check if all parametres to update are ok
+			if (checkOfferIsOk(offertoupdate)) {
+				
+				//Pdte agrupar estos if en un metodo externo para limpiar codigo
+				if ((offertoupdate.getDescription() != "") || (offertoupdate.getDescription() != null))
+					offer.setDescription(offertoupdate.getDescription());
+				
+				if ((offertoupdate.getApplied().toString() != "") || (offertoupdate.getApplied().toString() != null))
+					offer.setApplied(offertoupdate.getApplied());
+				
+				if ((offertoupdate.getOffertype().toString() != "") || (offertoupdate.getOffertype().toString() != null))	
+					offer.setOffertype(offertoupdate.getOffertype());
+				
+				if (offertoupdate.getDirectdiscount() != 0)
+					offer.setDirectdiscount(offertoupdate.getDirectdiscount());
+				
+				if (offertoupdate.getFreeproducts() != 0)
+					offer.setFreeproducts(offertoupdate.getFreeproducts());
+				
+				if (offertoupdate.getStartDate() != null)	
+					offer.setStartDate(offertoupdate.getStartDate());
+				
+				if (offertoupdate.getEndDate() != null)
+					offer.setEndDate(offertoupdate.getEndDate());
+								
+				offerRepository.save(offer);
+				
+				/*COMENTARIOS internos @Dapser75 -> No IMPLEMENTADA pendiente revisar y 
+				 * borrar productos afectados.  No IMPLEMENTADA relación oferta y producto 25/05/21*/
+				
+			}
+	
+		} else {
+			throw new ArgumentNotFoundException("You can't update this offer because the offer has expired o is currently.");
+		}		
+		
+		return new OfferDTO(offer);
+		
+	}
 	
 
-	//Auxiliar Methods
+	//-----------------------------------  Complementary Methods  ----------------------------------------
+	
+
+	//Method to convert to DTO
 	public List<OfferDTO> offerToOfferDTO(List <Offer> offerlist){
 		List<OfferDTO> offerlistDTO = new ArrayList<OfferDTO>();
 		for (Offer o : offerlist) {
@@ -175,7 +197,46 @@ public class OfferServiceImpl implements IOfferService{
 		
 	}
 
+	//Method to control all parameters in a new/update offer
+	private boolean checkOfferIsOk(Offer offer) {
+		
+		if ((offer.getFreeproducts() != 0) && (offer.getDirectdiscount() !=0)){
 
+			throw new ArgumentNotValidException("Fields directdiscount and freeproducts cannot filled");
+		 
+		}else if ((offer.getFreeproducts() == 0) && (offer.getDirectdiscount() == 0)) {
+		
+			throw new ArgumentNotValidException("The directdiscount and freeproducts fields cannot be concurrent null");
+		
+		} else if ((offer.getDescription() == "") || (offer.getDescription() == null)) {
+			
+			throw new ArgumentNotValidException("The offer must have a description");
+		
+		}else if (offer.getStartDate().isAfter(offer.getEndDate())) {
+
+			throw new ArgumentNotValidException("The start_date cannot be later than the End_date.");
+				
+		}else if (offer.getEndDate().isBefore(LocalDateTime.now())) {
+			
+			throw new ArgumentNotValidException("The end date cannot be earlier than the current date.");
+			
+		}else if (offer.getStartDate().isBefore(LocalDateTime.now())) {
+			
+			throw new ArgumentNotValidException("The begin date cannot be earlier than the current date.");
+		
+		}else if ((offer.getOffertype().name() == "DIRECT_DISCOUNT") && (offer.getFreeproducts() != 0) && 
+				(offer.getDirectdiscount() ==0)){
+			
+			throw new ArgumentNotValidException("Types offer and application no compatible.");
+ 
+		}else if ((offer.getOffertype().name() == "FREE_PRODUCTS") && (offer.getFreeproducts() == 0) && 
+				(offer.getDirectdiscount() !=0)){
+			
+			throw new ArgumentNotValidException("Types offer and application no compatible.");	
+		}
+		
+		else return true;
+	}
 	
 	
 }
