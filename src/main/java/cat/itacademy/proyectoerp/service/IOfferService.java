@@ -30,5 +30,7 @@ public interface IOfferService {
 	FreeProductDTO createFreeProduct(FreeProducts freeproduct); // CREATE - create a new free product
 
 	List<FreeProductDTO> findAllFreeProduct(); // READ - Method to return all freeproducts
+
+	FreeProductDTO findFreeProductById(int id); //READ - Method to return 1 offer by ID
 	
 }

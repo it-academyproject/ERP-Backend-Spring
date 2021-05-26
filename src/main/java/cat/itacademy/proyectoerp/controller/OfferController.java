@@ -208,7 +208,7 @@ public class OfferController {
 		return map;
 	}
 	
-	
+	//Method to return all free product 
 	@RequestMapping(value = "/freeproduct/all", method = RequestMethod.GET)
 	public Map<String, Object> getAllFreeDiscount() {
 		HashMap<String, Object> map = new HashMap<>();
@@ -225,5 +225,25 @@ public class OfferController {
 		return map;
 	}
 	
+	//Method to return a free product by I.
+	@RequestMapping(value = "/freeproduct/{id}", method = RequestMethod.GET)
+	public Map<String, Object> getFreeDiscountByID(@PathVariable(name = "id") int id) { //findOfferById
+		HashMap<String, Object> map = new HashMap<>();
+		
+		try {
+			FreeProductDTO freeproductfinded = offerService.findFreeProductById(id);
+			map.put("success", "true");
+			map.put("message", "free product found");
+			map.put("freeproduct:", freeproductfinded);									
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "_error " + e.getMessage());
+		}
 
+		return map;
+	}
+	
+
+	
+	
 }

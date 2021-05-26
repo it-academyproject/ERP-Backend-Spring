@@ -222,11 +222,18 @@ public class OfferServiceImpl implements IOfferService{
 		}
 	}
 
+	@Override
+	public FreeProductDTO findFreeProductById(int id) {
+		FreeProductDTO freeproductdto = new FreeProductDTO(freeproductRepository.findById(id)
+				.orElseThrow(() -> new ArgumentNotFoundException("FreeProduct not found. The id " + id + " doesn't exist")));
 	
-	//List<OfferDTO> offerlistDTO = new ArrayList<OfferDTO>(offerToOfferDTO(offerlist));
+		return freeproductdto;
+	}
+	
+	
 	//-----------------------------------  Complementary Methods  ----------------------------------------
 	
-	//Method to convert OFFER to DTO
+	//Method to convert list OFFER to DTO
 	public List<OfferDTO> offerToOfferDTO(List <Offer> offerlist){
 		List<OfferDTO> offerlistDTO = new ArrayList<OfferDTO>();
 		for (Offer o : offerlist) {
@@ -236,7 +243,7 @@ public class OfferServiceImpl implements IOfferService{
 		
 	}
 	
-	//Method to convert FREE PRODUCT to DTO
+	//Method to convert list FREE PRODUCT to DTO
 		public List<FreeProductDTO> freeProductTofreeProductDTO(List <FreeProducts> freeproductlist){
 			List<FreeProductDTO> freeproductlistDTO = new ArrayList<FreeProductDTO>();
 			for (FreeProducts fp : freeproductlist) {
@@ -287,6 +294,5 @@ public class OfferServiceImpl implements IOfferService{
 		else return true;
 	}
 
-	
 	
 }
