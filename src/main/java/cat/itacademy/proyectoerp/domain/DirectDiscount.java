@@ -12,14 +12,22 @@ import javax.persistence.Table;
 public class DirectDiscount {
 	
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
    	@Column(name = "id")
 	private int id;
 	
 	@Column(name = "discount", nullable = false, unique = true, scale = 2, updatable = false)
 	private double discount;
 	
+	public DirectDiscount() {
+		
+	}
 	
+	public DirectDiscount(double i) {
+		this.discount = i;
+	}
+
+	// GETTERS
 	public int getId() {
 		return id;
 	}

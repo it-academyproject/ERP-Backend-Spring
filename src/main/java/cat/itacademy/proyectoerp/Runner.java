@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cat.itacademy.proyectoerp.domain.Address;
 import cat.itacademy.proyectoerp.domain.Client;
+import cat.itacademy.proyectoerp.domain.DirectDiscount;
 import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderDetail;
@@ -23,6 +24,7 @@ import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.domain.UserType;
 import cat.itacademy.proyectoerp.repository.IAddressRepository;
+import cat.itacademy.proyectoerp.repository.IDirectDiscountRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.UserRepository;
 import cat.itacademy.proyectoerp.service.AddressServiceImpl;
@@ -72,6 +74,11 @@ public class Runner implements CommandLineRunner {
 	
 	@Autowired
 	IOrderRepository orderRepository;
+	
+	@Autowired
+	IDirectDiscountRepository directDiscountRepository;
+	
+	
 
 	@Override
 	@Transactional
@@ -238,11 +245,25 @@ public class Runner implements CommandLineRunner {
 			
 			orderFour.addOrderDetail(orderDetail7);
 			orderFour.addOrderDetail(orderDetail8);	
-			
+
 			orderRepository.save(orderFour);
+			
+			
+			addirectdiscount();
 			 
 		}
 
+	}
+	//Method to insert values in table direct_discount
+	private void addirectdiscount() {
+
+		for (int i=0; i<=100;) {
+			DirectDiscount dd = new DirectDiscount((double)i);
+			directDiscountRepository.save(dd);
+			i= i+5;
+			System.out.println("\ndirect discount" + i);
+		}
+		
 	}
 	
 	
