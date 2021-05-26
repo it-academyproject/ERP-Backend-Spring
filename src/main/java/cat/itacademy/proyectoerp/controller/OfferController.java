@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import cat.itacademy.proyectoerp.domain.FreeProducts;
 import cat.itacademy.proyectoerp.domain.Offer;
+import cat.itacademy.proyectoerp.dto.FreeProductDTO;
 import cat.itacademy.proyectoerp.dto.OfferDTO;
 import cat.itacademy.proyectoerp.service.IOfferService;
 
@@ -169,10 +171,9 @@ public class OfferController {
 		return map;
 	}
 		
-	
+	//Method to update offer
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping
-		
 	public Map<String, Object> updateOffer(@RequestBody Offer offer) {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
@@ -189,5 +190,40 @@ public class OfferController {
 		return map;
 	} 
 
+	//Method to create a new free product 
+	@PreAuthorize("hasRole('ADMIN')")
+	@RequestMapping(value = "/freeproduct", method = RequestMethod.POST)
+	public Map<String, Object> createFreeDiscount(@RequestBody FreeProducts freeproduct) {
+		HashMap<String, Object> map = new HashMap<>();
+		try {
+			FreeProductDTO finalfreeproduct = offerService.createFreeProduct(freeproduct);
+			map.put("success", "true");
+			map.put("message", "free product added");
+			map.put("freeproduct:", finalfreeproduct);									
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "_error " + e.getMessage());
+		}
+
+		return map;
+	}
+	
+	
+	@RequestMapping(value = "/freeproduct/all", method = RequestMethod.GET)
+	public Map<String, Object> getAllFreeDiscount(@RequestBody FreeProducts freeproduct) {
+		HashMap<String, Object> map = new HashMap<>();
+		try {
+			FreeProductDTO finalfreeproduct = offerService.findAllFreeProduct(freeproduct);
+			map.put("success", "true");
+			map.put("message", "free product added");
+			map.put("freeproduct:", finalfreeproduct);									
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "_error " + e.getMessage());
+		}
+
+		return map;
+	}
+	
 
 }

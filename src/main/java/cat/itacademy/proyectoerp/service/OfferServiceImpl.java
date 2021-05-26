@@ -14,14 +14,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cat.itacademy.proyectoerp.domain.DirectDiscount;
+import cat.itacademy.proyectoerp.domain.FreeProducts;
 import cat.itacademy.proyectoerp.domain.Offer;
 import cat.itacademy.proyectoerp.domain.OfferApplied;
 import cat.itacademy.proyectoerp.domain.OfferType;
 import cat.itacademy.proyectoerp.domain.Product;
+import cat.itacademy.proyectoerp.dto.FreeProductDTO;
 import cat.itacademy.proyectoerp.dto.OfferDTO;
 
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
+import cat.itacademy.proyectoerp.repository.IFreeProductRepository;
 import cat.itacademy.proyectoerp.repository.IOfferRepository;
 
 @Service
@@ -31,6 +34,9 @@ public class OfferServiceImpl implements IOfferService{
 	
 	@Autowired
 	IOfferRepository offerRepository;
+	
+	@Autowired
+	IFreeProductRepository freeprodcutRepository;
 	
 	
 	@Override
@@ -183,10 +189,30 @@ public class OfferServiceImpl implements IOfferService{
 		
 	}
 	
+	//Method to create a new FreeProduct
+	@Override
+	public FreeProductDTO createFreeProduct(FreeProducts freeproduct) {
+		
+		if (freeproduct.getProducts_to_buy() <= freeproduct.getProducts_to_pay()) 
+			throw new ArgumentNotValidException("Products to buy needs >= Products to pay");
+		
+		else if (freeproduct.getProducts_to_pay() <= 0)
+			throw new ArgumentNotValidException("Products to pay can't be 0");
+		
+		else if (freeproduct.getProducts_to_buy() <= 0)
+			throw new ArgumentNotValidException("Products to buy can't be 0");
+					
+		else {
+			freeprodcutRepository.save(freeproduct);
+		
+		}
+				
+		return new FreeProductDTO(freeproduct);
+	}
+	
 
 	//-----------------------------------  Complementary Methods  ----------------------------------------
 	
-
 	//Method to convert to DTO
 	public List<OfferDTO> offerToOfferDTO(List <Offer> offerlist){
 		List<OfferDTO> offerlistDTO = new ArrayList<OfferDTO>();
@@ -214,7 +240,7 @@ public class OfferServiceImpl implements IOfferService{
 		
 		}else if (offer.getStartDate().isAfter(offer.getEndDate())) {
 
-			throw new ArgumentNotValidException("The start_date cannot be later than the End_date.");
+			throw new ArgumentNotValidException("The Start_date cannot be later than the End_date.");
 				
 		}else if (offer.getEndDate().isBefore(LocalDateTime.now())) {
 			
@@ -237,6 +263,8 @@ public class OfferServiceImpl implements IOfferService{
 		
 		else return true;
 	}
+
+
 	
 	
 }
