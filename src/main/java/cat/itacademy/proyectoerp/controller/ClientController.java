@@ -59,12 +59,10 @@ public class ClientController {
 	private UserDTO getUser(Client client) {
 		UserDTO userDTO;
 		if(userService.existsByUsername(client.getUser().getUsername())){
-			System.out.println("userService.getByUsername()");
 			userDTO = userService.getByUsername(client.getUser().getUsername()).get();
 			setErrorMessageUsernameExists(userDTO);
 		}
 		else{
-			System.out.println("userService.registerNewUserAccount()");
 			userDTO = userService.registerNewUserAccount(client.getUser());
 		}
 		return userDTO;
@@ -165,7 +163,8 @@ public class ClientController {
 		try {
 			clientDTO = service.updateClient(clientUpdate);
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
+			MessageDTO messageDTO = new MessageDTO("False", e.getMessage());
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(messageDTO);
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(clientDTO);
     }
