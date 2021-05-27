@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +29,7 @@ public class EmployeeController {
       List<EmployeeDTO> employeeList = iEmployeeService.findAllEmployees();
       map.put("success", "true");
       map.put("message", "employee found");
-      map.put("employee", employeeNoPasswordList);
+      map.put("employee", employeeList);
     } catch (Exception e) {
       map.put("success", "false");
       map.put("message", e.getMessage());
@@ -78,7 +77,7 @@ public class EmployeeController {
       EmployeeDTO employeeUpdated = iEmployeeService.updateEmployee(employee);
       map.put("success", "true");
       map.put("message", "Employee with id: " + employee.getId() + " has been updated");
-      map.put("employee", employeeNoPasswordDTO);
+      map.put("employee", employeeUpdated);
 
     } catch (Exception e) {
       map.put("success", "false");

@@ -288,14 +288,14 @@ public class Runner implements CommandLineRunner {
 			
 			// Add new User, Employee and Order
 			// Order5
-			Order orderFive = new Order(employeeOne.getId(), clientOne.getid(), LocalDateTime.now(), 
+			Order orderFive = new Order(employeeOne.getId(), clientOne.getId(), LocalDateTime.now(), 
 					OrderStatus.COMPLETED, PaymentMethod.CREDIT_CARD, address1, address1, 1200.00);
 			orderFive.addOrderDetail(orderDetail5);
 			orderFive.addOrderDetail(orderDetail6);	
 			orderService.createOrder(orderFive);
 			
 			// Order6
-			Order orderSix = new Order(employeeTwo.getId(), clientTwo.getid(), LocalDateTime.now(), 
+			Order orderSix = new Order(employeeTwo.getId(), clientTwo.getId(), LocalDateTime.now(), 
 					OrderStatus.COMPLETED, PaymentMethod.CREDIT_CARD, address1, address1, 550.00);
 			orderSix.addOrderDetail(orderDetail1);
 			orderSix.addOrderDetail(orderDetail2);
@@ -306,7 +306,7 @@ public class Runner implements CommandLineRunner {
 			userService.registerNewUserAccount(userEmployeeThree);
 			Employee employeeThree = new Employee(14000.00,"B1235467Z",667999998, LocalDate.now(),null, userEmployeeThree);
 			employeeService.createEmployee(employeeThree);
-			Order orderSeven = new Order(employeeThree.getId(), clientTwo.getid(), LocalDateTime.now(), 
+			Order orderSeven = new Order(employeeThree.getId(), clientTwo.getId(), LocalDateTime.now(), 
 					OrderStatus.COMPLETED, PaymentMethod.CREDIT_CARD, address1, address1, 550.00);
 			orderSeven.addOrderDetail(orderDetail1);
 			orderSeven.addOrderDetail(orderDetail2);
