@@ -200,6 +200,16 @@ public class Runner implements CommandLineRunner {
 			productService.createProduct(productThree);
 			
 			
+			
+			//initialize 20 products
+			
+			Product p;
+			for (int i= 0; i<20; i++) {
+				int price = (int)Math.random()*1000;
+				p = new Product("ejemplo "+(int)(i+4) ,price , "imagen nº"+ (int)(i+3),"brahim", price*0.40, 21.00 ,(int)(price+0.40), price);
+				productService.createProduct(p);
+			}
+			
 			// Initialize 3 orders, we need to create lines of orderDetails with products
 			
 			address1 = new Address ("Calle Maldivas", "1 C", "Barcelona", "Spain", "08016");
