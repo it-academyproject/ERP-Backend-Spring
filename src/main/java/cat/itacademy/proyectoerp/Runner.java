@@ -16,6 +16,7 @@ import cat.itacademy.proyectoerp.domain.Address;
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.DirectDiscount;
 import cat.itacademy.proyectoerp.domain.Employee;
+import cat.itacademy.proyectoerp.domain.FreeProducts;
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderDetail;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
@@ -25,6 +26,7 @@ import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.domain.UserType;
 import cat.itacademy.proyectoerp.repository.IAddressRepository;
 import cat.itacademy.proyectoerp.repository.IDirectDiscountRepository;
+import cat.itacademy.proyectoerp.repository.IFreeProductRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.UserRepository;
 import cat.itacademy.proyectoerp.service.AddressServiceImpl;
@@ -77,6 +79,9 @@ public class Runner implements CommandLineRunner {
 	
 	@Autowired
 	IDirectDiscountRepository directDiscountRepository;
+	
+	@Autowired
+	IFreeProductRepository freeProductsRepository;
 	
 	
 
@@ -249,11 +254,22 @@ public class Runner implements CommandLineRunner {
 			orderRepository.save(orderFour);
 			
 			
-			addirectdiscount();
-			 
+			addirectdiscount(); //Insert values in table free_products
+			
+			addfreeproducts();  //Insert values in table direct_discount
+		 
 		}
 
 	}
+	
+	//Method to insert values in table free_products
+	private void addfreeproducts() {
+		for (int i=2; i<=5;i++) {
+			FreeProducts fp = new FreeProducts(i,i-1);
+			freeProductsRepository.save(fp);
+		}
+	}
+
 	//Method to insert values in table direct_discount
 	private void addirectdiscount() {
 
@@ -261,7 +277,6 @@ public class Runner implements CommandLineRunner {
 			DirectDiscount dd = new DirectDiscount((double)i);
 			directDiscountRepository.save(dd);
 			i= i+5;
-			System.out.println("\ndirect discount" + i);
 		}
 		
 	}
