@@ -7,8 +7,6 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
-
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.NameTokenizers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +25,7 @@ import cat.itacademy.proyectoerp.util.PasswordGenerator;
  * Class Service for User entity
  * 
  * @author ITAcademy
- *
- */
+ **/
 @Transactional
 @Service
 public class UserServiceImpl implements IUserService {
@@ -43,7 +40,7 @@ public class UserServiceImpl implements IUserService {
 	ModelMapper modelMapper = new ModelMapper();
 
 	/**
-	 * Method for search a entity by username.
+	 * Method to search an entity by username.
 	 * 
 	 * @param username username to Search
 	 * @return Optional<UserDTO> a userDTO object
@@ -66,7 +63,7 @@ public class UserServiceImpl implements IUserService {
 		return Optional.of(userDTO);
 
 	}
-
+	
 	/**
 	 * Method for create a new user. If user
 	 * 
@@ -159,7 +156,7 @@ public class UserServiceImpl implements IUserService {
 	/**
 	 * Method for list all Client users with DTO format.
 	 * 
-	 * @return list of all Cloient users.
+	 * @return list of all Client users.
 	 * 
 	 */
 	@Override
@@ -199,14 +196,14 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	/**
-	 * Method for modify data of User.
+	 * Method to set data of User.
 	 * 
 	 * @param id      id of user to modify.
 	 * @param user user data to modify.
 	 */
 	@Transactional
 	@Override
-	public Optional<UserDTO> modifyUser(Long id, User user) {
+	public Optional<UserDTO> setUser(Long id, User user) {
 		// UserDTO don't have a password property.
 		// For this reason we need save password in a variable for add to user object.
 		// Obviously, if password have been send.
@@ -235,7 +232,7 @@ public class UserServiceImpl implements IUserService {
 		 * We Verified what properties has received.
 		 */
 
-		if (userDto.getUsername() != null)
+	if (userDto.getUsername() != null)
 			user.setUsername(userDto.getUsername());
 		if (password != null)
 			user.setPassword(passEconder(password));
@@ -247,7 +244,7 @@ public class UserServiceImpl implements IUserService {
 		userDto.setMessage("User modified");
 		return Optional.of(userDto);
 
-	}
+	} 
 	
 	/**
 	 * Method to set active field of user to "false".
@@ -255,52 +252,69 @@ public class UserServiceImpl implements IUserService {
 	 * @param id      id of user to modify.
 	 * @param user user data to modify.
 	 */	
-	@Transactional
+	//@Transactional
 	@Override
-	public Optional<UserDTO> modifySubscription(Long id, @Valid User user) {
+	public UserDTO setSubscription(@Valid User user) {
 		
-		String password = null;
-
-		if (user.getPassword() != null)
-			password = user.getPassword();
+		UserDTO userDto = verifyUser(user);
+		
+		if (!(userDto.getSuccess()=="False")) {
+		
+			userDto = verifySubscription(user);
+		}
+	
+		if (!(userDto.getSuccess()=="False")) {
+			emailService.sendFarewellEmail(user);
+			user.setUserType(userRepository.findById(user.getId()).get().getUserType());
+			user.setPassword(userRepository.findById(user.getId()).get().getPassword());
+			user.setActive(false);
+			userRepository.save(user);
+			userDto.setMessage("User is now unsubscribed");
+			return userDto;
+		}
+		
+		return userDto;
+	}	
+	
+	public UserDTO verifyUser (User user) {
 		
 		UserDTO userDto = modelMapper.map(user, UserDTO.class);
 		
-		// Verify if user id exist
-		if (!userRepository.existsById(id)) {
+		if (!userRepository.existsById(user.getId())) {
 			userDto.setSuccess("False");
-			userDto.setMessage("User Don't Exist");
-			return Optional.of(userDto);
+			userDto.setMessage("User doesn't exist");
+			return userDto;
 		}
 		
-		//Verify if user password is correct
-		if (!(userRepository.findById(id).get().getPassword().equals(password))) { 
-			userDto.setSuccess("False");
-			userDto.setMessage("User password is incorrect");
-			return Optional.of(userDto);			
-		} 
-		
-		//Verify if user's username is correct
-		if (!(userRepository.findById(id).get().getUsername()).equals(user.getUsername())) {
-			userDto.setSuccess("False");
-			userDto.setMessage("Username seems to be incorrect, please double check again");
-			return Optional.of(userDto);			
+		// Verifies if username matches
+		if (!(userDto.getSuccess()=="False")) {
+			
+			String usernamerepo = userRepository.findById(user.getId()).get().getUsername();
+			
+			if ( !usernamerepo.equals(user.getUsername())) {
+				userDto.setSuccess("False");
+				userDto.setMessage("The username does not match, please check it again");
+				return userDto;
+			}	
 		}
 		
-		//Verify if user is already unsubscribed
-		if (userRepository.findById(id).get().getActive() == false) {
-			userDto.setSuccess("False");
-			userDto.setMessage("User is already Unsubscribed");
-			return Optional.of(userDto);			
-		}
-		
-		emailService.sendFarewellEmail(user);		
-		user.setActive(false);
-		userRepository.save(user);
 		userDto.setSuccess("True");
-		userDto.setMessage("User is now unsubscribed");
-		return Optional.of(userDto);
-	}	
+		return userDto;
+	}
+	
+	public UserDTO verifySubscription (User user) {
+		
+		UserDTO userDto = modelMapper.map(user, UserDTO.class);
+		
+		if (userRepository.findById(user.getId()).get().getActive() == false) {
+			userDto.setSuccess("False");
+			userDto.setMessage("User is already unsubscribed");
+			return userDto;			
+		}
+		
+		userDto.setSuccess("True");		
+		return userDto;
+	}
 
 	/**
 	 * Method to recover password. Generate a new password and send it by email to
@@ -337,7 +351,6 @@ public class UserServiceImpl implements IUserService {
 		return password;
 	}
 
-
 	/**
 	 * Method to update user password
 	 * 
@@ -349,7 +362,6 @@ public class UserServiceImpl implements IUserService {
 	public User updatePassword(@Valid ChangeUserPassword changeuserpassword) throws ArgumentNotFoundException {
 		 
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
 
 		// Verify if user exist
 		User updatedUser = userRepository.findByUsername(changeuserpassword.getUser().getUsername());

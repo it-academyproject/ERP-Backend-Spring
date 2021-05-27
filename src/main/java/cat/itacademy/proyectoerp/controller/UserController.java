@@ -255,7 +255,7 @@ public class UserController {
 
 		UserDTO userDto;
 		Long id = user.getId();
-		userDto = userService.modifyUser(id, user).get();
+		userDto = userService.setUser(id, user).get();
 		if (userDto.getSuccess() == "False")
 			return new ResponseEntity<>(userDto, HttpStatus.UNPROCESSABLE_ENTITY);
 		return new ResponseEntity<>(userDto, HttpStatus.OK);
@@ -267,12 +267,11 @@ public class UserController {
 	 * @param user
 	 * @return user "active" field updated
 	 */
+	
 	@PutMapping("/users/unsubscribe")
-	public ResponseEntity<UserDTO> unsubscribeUser(@Valid @RequestBody User user) {
-
-		UserDTO userDto;
-		Long id = user.getId();
-		userDto = userService.modifySubscription(id, user).get();
+	public ResponseEntity<UserDTO> unsubscribeUser(@RequestBody User user) {
+		
+		UserDTO userDto = userService.setSubscription(user);
 		if (userDto.getSuccess() == "False")
 			return new ResponseEntity<>(userDto, HttpStatus.UNPROCESSABLE_ENTITY);
 		return new ResponseEntity<>(userDto, HttpStatus.OK);

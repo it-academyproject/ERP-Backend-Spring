@@ -1,6 +1,7 @@
 package cat.itacademy.proyectoerp.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -18,13 +19,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	
 	
 	/**
-	 * Method for search a usename
+	 * Method to search a username
 	 * @return boolean if username exists.
 	 */
 	boolean existsByUsername(String username);
 	
 	/**
-	 * Method for search user by username.
+	 * Method to search user by username.
 	 * @param username
 	 * @return User if user exist or null.
 	 */

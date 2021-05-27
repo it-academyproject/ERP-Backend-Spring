@@ -93,6 +93,10 @@ public class User {
     this.password = password;
     this.userType = user_type;
   }
+  
+  public User (String username) {
+	  this.username = username;
+  }
 
 
   public String getUsername() {

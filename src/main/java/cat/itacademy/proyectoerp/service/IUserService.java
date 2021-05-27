@@ -22,8 +22,8 @@ public interface IUserService {
 	public List<UserDTO> listAllEmployees();
 	public List<UserDTO> listAllClients();
 	public Optional<UserDTO> deleteUserById(Long id);
-	public Optional<UserDTO> modifyUser(Long id, User user);
-	public Optional<UserDTO> modifySubscription (Long id, User user);
+	public Optional<UserDTO> setUser(Long id, User user);
+	public UserDTO setSubscription (User user);
 	public User updatePassword(ChangeUserPassword changeuserpassword);
 	public void updateLastSession(String username);
 
