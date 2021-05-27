@@ -24,12 +24,11 @@ import cat.itacademy.proyectoerp.dto.OfferDTO;
 
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
+import cat.itacademy.proyectoerp.repository.IDirectDiscountRepository;
 import cat.itacademy.proyectoerp.repository.IFreeProductRepository;
 import cat.itacademy.proyectoerp.repository.IOfferRepository;
 
 @Service
-//@Transactional
-//@ComponentScan({"cat.itacademy.proyectoerp.repository"})
 public class OfferServiceImpl implements IOfferService{
 	
 	@Autowired
@@ -37,6 +36,9 @@ public class OfferServiceImpl implements IOfferService{
 	
 	@Autowired
 	IFreeProductRepository freeproductRepository;
+	
+	@Autowired
+	IDirectDiscountRepository directdiscountRepository;
 	
 	
 	@Override
@@ -289,8 +291,18 @@ public class OfferServiceImpl implements IOfferService{
 				(offer.getDirectdiscount() !=0)){
 			
 			throw new ArgumentNotValidException("Types offer and application no compatible.");	
-		}
 		
+		}else if ((!freeproductRepository.existsById(offer.getFreeproducts()) &&
+				(offer.getFreeproducts() !=0))){
+			
+			throw new ArgumentNotValidException("This free product not exist.");
+			
+		}else if ((!directdiscountRepository.existsById(offer.getDirectdiscount()) &&
+				(offer.getDirectdiscount() !=0))){
+			
+			throw new ArgumentNotValidException("This free product not exist.");
+			
+		}
 		else return true;
 	}
 

@@ -254,9 +254,9 @@ public class Runner implements CommandLineRunner {
 			orderRepository.save(orderFour);
 			
 			
-			addirectdiscount(); //Insert values in table free_products
+			addirectdiscount(); //Insert values in table direct_discount
 			
-			addfreeproducts();  //Insert values in table direct_discount
+			addfreeproducts();  //Insert values in table  free_products 
 		 
 		}
 
