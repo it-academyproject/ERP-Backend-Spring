@@ -32,7 +32,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	
 	/**
 	 * Method for search list of users by userType.
-	 * @param userType
+	 * @param user_type
 	 * @return list of users by userType.
 	 */
 	List<User> findByUserType(UserType user_type);
