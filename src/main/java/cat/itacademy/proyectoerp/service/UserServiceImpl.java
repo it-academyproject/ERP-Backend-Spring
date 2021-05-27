@@ -4,9 +4,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import cat.itacademy.proyectoerp.dto.MessageDTO;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.NameTokenizers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,30 @@ public class UserServiceImpl implements IUserService {
 		return Optional.of(userDTO);
 
 	}
-	
+
+	@Override
+	public User findByUsername(String username) {
+		return userRepository.findByUsername(username);
+	}
+
+	@Override
+	public boolean existsByUsername(String username) {
+		boolean existsByUsername = false;
+		if (userRepository.existsByUsername(username)) {
+			existsByUsername = true;
+		}
+		return existsByUsername;
+	}
+
+	@Override
+	public MessageDTO getErrorMessageUsernameExists(String username) {
+		MessageDTO errorMessage=null;
+		if(existsByUsername(username)){
+			errorMessage = new MessageDTO("False", "Username Exists: '"+ username +"'");
+		}
+		return errorMessage;
+	}
+
 	/**
 	 * Method for create a new user. If user
 	 * 
@@ -187,7 +211,6 @@ public class UserServiceImpl implements IUserService {
 			userDto.setMessage("User Don't Exist");
 			return Optional.of(userDto);
 		}
-
 		userRepository.deleteById(id);
 
 		userDto.setSuccess("True");
@@ -252,7 +275,6 @@ public class UserServiceImpl implements IUserService {
 	 * @param id      id of user to modify.
 	 * @param user user data to modify.
 	 */	
-	//@Transactional
 	@Override
 	public UserDTO setSubscription(@Valid User user) {
 		
@@ -354,7 +376,7 @@ public class UserServiceImpl implements IUserService {
 	/**
 	 * Method to update user password
 	 * 
-	 * @param user
+	 * @param changeuserpassword
 	 * @return user with new password
 	 * @throws ArgumentNotFoundException
 	 */
@@ -393,5 +415,4 @@ public class UserServiceImpl implements IUserService {
 		User user = userRepository.findByUsername(username);
 		user.setLastSession(LocalDateTime.now());
 	}
-	
 }

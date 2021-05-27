@@ -151,10 +151,12 @@ public class User {
 	this.active = active;
   }
 
+
   @Override
   public String toString() {
 	return "User [id=" + id + ", username=" + username + ", password=" + password + ", lastSession=" + lastSession
 			+ ", userType=" + userType + "]";
   }
+
 
 }

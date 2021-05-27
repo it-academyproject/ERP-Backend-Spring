@@ -5,13 +5,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 import cat.itacademy.proyectoerp.domain.Client;
+import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.dto.ClientDTO;
+import cat.itacademy.proyectoerp.dto.MessageDTO;
 
 public interface IClientService {
 	
-	public Client createClient(Client client); //CREATE - Adds new client to the Database
+	public ClientDTO createClient(Client client) throws Exception; //CREATE - Adds new client to the Database
 	
-	public Client createFastClient(ClientDTO client); // CREATE - Adds a new client without needing an username. Only for admin purposes.
+	public ClientDTO createFastClient(ClientDTO client) throws Exception; // CREATE - Adds a new client without needing an username. Only for admin purposes.
 	
 	public List<Client> getAllClients(); // READ - full list of all clients
 	
@@ -19,10 +21,16 @@ public interface IClientService {
 	
 	public Client findClientById(UUID id); //READ - finds the client by Id
 		
-	public Client updateClient(Client client); //UPDATE - Updates clients info
+	public ClientDTO updateClient(Client client) throws Exception; //UPDATE - Updates clients info
 	
 	public void deleteClient(UUID id); //DELETE - deletes client
 
 	List<ClientDTO> listAllUsers();
+
+	Client findByDni(String dni);
+
+	boolean existsByDni(String dni);
+
+	MessageDTO getErrorMessageDniExists(String dni);
 
 }

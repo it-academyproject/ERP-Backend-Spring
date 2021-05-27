@@ -2,12 +2,11 @@ package cat.itacademy.proyectoerp.domain;
 
 import java.util.UUID;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.sun.istack.Nullable;
@@ -21,26 +20,54 @@ public class Address {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
 	@Column(name = "id", columnDefinition = "BINARY(16)")
 	private UUID id;
-	
-	private String street;	 
+
+	@NotBlank(message = "Street is mandatory")
+	private String street;
+
+	@NotBlank(message = "Number is mandatory")
 	private String number;
+
+	@NotBlank(message = "City is mandatory")
 	private String city;
+
+	@NotBlank(message = "Country is mandatory")
 	private String country;
-	 
+
+	@NotBlank(message = "Zipcode is mandatory")
+	@Pattern(regexp = "^\\d{5}([-]|\\s*)?(\\d{4})?$", message = "Zipcode format is not valid. Valid formats: 08018, 08018 1234, 08018-1234, 080181234")
 	@Column(name = "zip_code")
 	private String zipcode;
 
+	@OneToOne(mappedBy = "address")
+	private Client client;
+
 	public Address() {
-		
 	}
-	
+
 	public Address(String street, String number, String city, String country, String zipcode) {
 		this.street = street;
 		this.number = number;
 		this.city = city;
 		this.country = country;
 		this.zipcode = zipcode;
-		
+	}
+
+	public Address(UUID id, String street, String number, String city, String country, String zipcode, Client client) {
+		this.id = id;
+		this.street = street;
+		this.number = number;
+		this.city = city;
+		this.country = country;
+		this.zipcode = zipcode;
+		this.client = client;
+	}
+
+	public Address(Address address) {
+		this.street = address.getStreet();
+		this.number = address.getNumber();
+		this.city = address.getCity();
+		this.country = address.getCountry();
+		this.zipcode = address.getZipcode();
 	}
 
 	public UUID getId() {
@@ -91,4 +118,13 @@ public class Address {
 		this.zipcode = zipcode;
 	}
 
+
+	public Client getClient() {
+		return client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
+	}
 }
+

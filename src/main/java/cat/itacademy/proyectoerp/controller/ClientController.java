@@ -1,17 +1,14 @@
 package cat.itacademy.proyectoerp.controller;
 
-import java.util.ArrayList;
+import java.util.*;
 
-
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 
 import javax.validation.Valid;
 
+import cat.itacademy.proyectoerp.domain.User;
+import cat.itacademy.proyectoerp.dto.MessageDTO;
+import cat.itacademy.proyectoerp.dto.UserDTO;
+import cat.itacademy.proyectoerp.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +20,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.dto.ClientDTO;
-import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 import cat.itacademy.proyectoerp.service.IClientService;
 
 @RestController
@@ -35,31 +30,88 @@ public class ClientController {
 	
 	@Autowired
 	IClientService service;
-	
-	
+
+	@Autowired
+	IUserService userService;
+
 	 //Add a new Client
     @PostMapping
-    public ResponseEntity<?> addNewClient(@RequestBody Client client) throws MethodArgumentTypeMismatchException{
-//    	if(!client.getid().toString().matches("^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")){
-//			throw new MethodArgumentTypeMismatchException("Invalid UUID", null, null, null, null);
-//		}
-    	try {
-    		service.createClient(client);
-    	} catch (ArgumentNotValidException e) {
-    		return ResponseEntity.unprocessableEntity().body(e.getMessage());
-    	}
-        
-        return ResponseEntity.status(HttpStatus.CREATED).body(client);
+    public ResponseEntity<?> addNewClient(@Valid @RequestBody Client client) {
+		UserDTO userDTO = null;
+		ClientDTO clientDTO = new ClientDTO();
+		try {
+			MessageDTO errorMessage = service.getErrorMessageDniExists(client.getDni());
+			if(null != errorMessage){
+				return new ResponseEntity<>(errorMessage, HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+
+			userDTO = getUser(client);
+
+			Client newClient = getClient(client, userDTO.getUsername());
+			clientDTO = service.createClient(newClient);
+		} catch (Exception e) {
+			clientDTO.setUser(userDTO);
+			return ResponseEntity.unprocessableEntity().body(clientDTO);
+		}
+        return ResponseEntity.status(HttpStatus.CREATED).body(clientDTO);
     }
-    
+
+	private UserDTO getUser(Client client) {
+		UserDTO userDTO;
+		if(userService.existsByUsername(client.getUser().getUsername())){
+			System.out.println("userService.getByUsername()");
+			userDTO = userService.getByUsername(client.getUser().getUsername()).get();
+			setErrorMessageUsernameExists(userDTO);
+		}
+		else{
+			System.out.println("userService.registerNewUserAccount()");
+			userDTO = userService.registerNewUserAccount(client.getUser());
+		}
+		return userDTO;
+	}
+
+	private void setErrorMessageUsernameExists(UserDTO userDTO) {
+		MessageDTO errorMessage = new MessageDTO("False", "Username Exists. ");
+		userDTO.setSuccess(errorMessage.getSuccess());
+		userDTO.setMessage(errorMessage.getMessage());
+	}
+
+	private Client getClient(Client client, String username) {
+		User user = userService.findByUsername(username);
+		Client newClient = new Client(client.getDni(),client.getImage(),client.getNameAndSurname(),
+				client.getAddress(),client.getShippingAddress(),user);
+		return newClient;
+	}
+
     //Add client without giving user
     @PostMapping("/fastclient") 
     public ResponseEntity<?> addFastClient(@RequestBody ClientDTO client) {
-    	Client finalClient = service.createFastClient(client);
+		ClientDTO finalClient;
+
+		MessageDTO messageDTO = getErrorMessageNameAndSurname(client.getNameAndSurname());
+		if(null != messageDTO){
+			return ResponseEntity.unprocessableEntity().body(messageDTO);
+		}
+
+		try {
+			finalClient = service.createFastClient(client);
+		} catch (Exception e) {
+			messageDTO = new MessageDTO("False", e.getMessage());
+			return ResponseEntity.unprocessableEntity().body(messageDTO);
+		}
     	return ResponseEntity.ok().body(finalClient);
     }
-    
-    //Get all the clients
+
+	private MessageDTO getErrorMessageNameAndSurname(String nameAndSurname) {
+		MessageDTO errorMessage = null;
+		if (null == nameAndSurname || nameAndSurname.isBlank()){
+			errorMessage = new MessageDTO("False", "name_and_surname is mandatory. ");
+
+		}
+		return errorMessage;
+	}
+
+	//Get all the clients
     @GetMapping
     public ResponseEntity<?> getAllClients() {
         List<Client> list = new ArrayList<>();
@@ -109,13 +161,13 @@ public class ClientController {
     //Update a client by id
     @PutMapping()
     public ResponseEntity<?> updateClientById(@RequestBody Client clientUpdate) {
-    	Client client = null;
-        try {
-			client = service.updateClient(clientUpdate);
+		ClientDTO clientDTO;
+		try {
+			clientDTO = service.updateClient(clientUpdate);
 		} catch (Exception e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
 		}
-        return ResponseEntity.status(HttpStatus.CREATED).body(client);
+		return ResponseEntity.status(HttpStatus.CREATED).body(clientDTO);
     }
 
     //Delete a client
@@ -127,7 +179,6 @@ public class ClientController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
         return ResponseEntity.ok().build();
-
     }	
     
     //pruebaDTO
