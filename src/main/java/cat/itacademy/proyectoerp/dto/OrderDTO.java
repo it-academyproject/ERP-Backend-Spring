@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-import cat.itacademy.proyectoerp.domain.Address;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.domain.PaymentMethod;
 
@@ -18,6 +17,8 @@ import cat.itacademy.proyectoerp.domain.PaymentMethod;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class OrderDTO implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private UUID id;
 	private UUID employee_id;
 	private UUID client_id;
@@ -25,8 +26,8 @@ public class OrderDTO implements Serializable {
 	private LocalDateTime date_created;
 	private OrderStatus status;
 	private PaymentMethod payment_method;
-	private Address shipping_address;
-	private Address billing_address;
+	private AddressDTO shipping_address;
+	private AddressDTO billing_address;
 	private Double total;
 	
 	private Set<OrderDetailDTO> order_details;
@@ -81,19 +82,19 @@ public class OrderDTO implements Serializable {
 		this.payment_method = payment_method;
 	}
 
-	public Address getShipping_address() {
+	public AddressDTO getShipping_address() {
 		return shipping_address;
 	}
 
-	public void setShipping_address(Address shipping_address) {
+	public void setShipping_address(AddressDTO shipping_address) {
 		this.shipping_address = shipping_address;
 	}
 
-	public Address getBilling_address() {
+	public AddressDTO getBilling_address() {
 		return billing_address;
 	}
 
-	public void setBilling_address(Address billing_address) {
+	public void setBilling_address(AddressDTO billing_address) {
 		this.billing_address = billing_address;
 	}
 
