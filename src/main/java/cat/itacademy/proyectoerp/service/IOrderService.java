@@ -1,10 +1,7 @@
 package cat.itacademy.proyectoerp.service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-
-import org.springframework.stereotype.Service;
 
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
@@ -16,7 +13,7 @@ import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 public interface IOrderService {
 
 
-	public Order createOrder(Order order);  //UUID
+	public OrderDTO createOrder(Order order);
 	 
 	public Order findOrderById(UUID id);
 
