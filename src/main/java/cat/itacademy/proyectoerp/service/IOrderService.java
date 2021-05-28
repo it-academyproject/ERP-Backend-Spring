@@ -28,8 +28,9 @@ public interface IOrderService {
 
 	public List<Order> findOrdersByClient(String id);
 	
-	public List<Order> findOrdersByEmployeeId(String employeeId);
+	public List<Order> findOrdersByEmployeeId(UUID employeeId);
 	
 	public List<TopEmployeeDTO> findAllTopTen(DatesTopEmployeePOJO topemployee);
+
 	
 }

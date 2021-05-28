@@ -19,7 +19,7 @@ public interface IOrderRepository extends JpaRepository<Order, UUID>{
 
   List<Order> findOrdersByClientId(String clientId);  
   
-  List<Order> findOrdersByEmployeeId(String employeeId);
+  List<Order> findOrdersByEmployeeId(UUID employeeId);
   
   
   @Query(value = "select employee_id,sum(total) as total from orders " 
