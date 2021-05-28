@@ -21,6 +21,7 @@ import cat.itacademy.proyectoerp.domain.FreeProducts;
 import cat.itacademy.proyectoerp.domain.Offer;
 import cat.itacademy.proyectoerp.dto.FreeProductDTO;
 import cat.itacademy.proyectoerp.dto.OfferDTO;
+import cat.itacademy.proyectoerp.dto.OfferFullDTO;
 import cat.itacademy.proyectoerp.service.IOfferService;
 
 @RestController
@@ -51,6 +52,26 @@ public class OfferController {
 		
 		return map;
 	}
+	//////////////////////////////////////////////////begin
+	//not implemented yet, only for find by ID, and return all information about 1 offer; to replace another method 
+	@RequestMapping(value = "/full", method = RequestMethod.GET)
+	public Map <String, Object> getAllFullOffer() {
+		HashMap<String, Object> map = new HashMap<>();
+		
+		try {
+			List<OfferFullDTO> offersList = offerService.findFullAllOffers();
+			map.put("offers", offersList);
+		 
+		}catch (Exception e) {
+			map.put("success", "false");
+		    map.put("message", "_error: " + e.getMessage());
+		    
+		}
+		return map;
+		
+	}
+	////////////////////////////end
+	
 	
 	//Method to return all offers
 	@PreAuthorize("hasRole('ADMIN')")

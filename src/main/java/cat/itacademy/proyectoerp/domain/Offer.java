@@ -1,3 +1,4 @@
+
 package cat.itacademy.proyectoerp.domain;
 
 import java.time.LocalDateTime;

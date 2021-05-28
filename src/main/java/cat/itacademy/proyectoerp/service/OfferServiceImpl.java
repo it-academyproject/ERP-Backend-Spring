@@ -21,7 +21,8 @@ import cat.itacademy.proyectoerp.domain.OfferType;
 import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.dto.FreeProductDTO;
 import cat.itacademy.proyectoerp.dto.OfferDTO;
-
+import cat.itacademy.proyectoerp.dto.OfferFullDTO;
+import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 import cat.itacademy.proyectoerp.repository.IDirectDiscountRepository;
@@ -55,7 +56,35 @@ public class OfferServiceImpl implements IOfferService{
 	
 	}
 
+	///////////////////////////////////////////////////////////////////////////////
+	@Override
+	public List<OfferFullDTO> findFullAllOffers() {
+		List<Object[]> offerob =  offerRepository.findFullAllOffers();
+		System.out.println("hola");
+		List<OfferFullDTO> offerlist = new ArrayList<OfferFullDTO>();
+		for (Object[] object : offerob) {
+			OfferFullDTO fulloffer = new OfferFullDTO((UUID)object[0],
+									(String)object[1],
+									(LocalDateTime ) object[2],
+									(LocalDateTime ) object[3],
+									(String)object[4],
+									(String)object[5],
+									(Integer)object[6],
+									(Double)object[6],
+									(Integer)object[7],
+									(Integer)object[8],
+									(Integer)object[9]);	
 
+			offerlist.add(fulloffer);
+		}		
+		
+		return offerlist;
+	}
+
+	
+	//////////////////////////////////
+	
+	
 	@Override
 	@Transactional(readOnly = true)
 	public List<OfferDTO> findAllOffers() {
@@ -151,6 +180,7 @@ public class OfferServiceImpl implements IOfferService{
 		//	check dates 
 		if ((offer.getStartDate().isAfter(LocalDateTime.now())) 
 				&& (offer.getEndDate().isAfter(LocalDateTime.now()))){
+			
 			//check if all parametres to update are ok
 			if (checkOfferIsOk(offertoupdate)) {
 				
@@ -255,7 +285,7 @@ public class OfferServiceImpl implements IOfferService{
 			
 		}
 
-	//Method to control all parameters in a new/update offer
+	//Method to control all parameters in a new/update offer are OK.
 	private boolean checkOfferIsOk(Offer offer) {
 		
 		if ((offer.getFreeproducts() != 0) && (offer.getDirectdiscount() !=0)){
@@ -306,5 +336,7 @@ public class OfferServiceImpl implements IOfferService{
 		else return true;
 	}
 
+
+	
 	
 }

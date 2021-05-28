@@ -17,6 +17,9 @@ import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.DirectDiscount;
 import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.FreeProducts;
+import cat.itacademy.proyectoerp.domain.Offer;
+import cat.itacademy.proyectoerp.domain.OfferApplied;
+import cat.itacademy.proyectoerp.domain.OfferType;
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderDetail;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
@@ -27,11 +30,13 @@ import cat.itacademy.proyectoerp.domain.UserType;
 import cat.itacademy.proyectoerp.repository.IAddressRepository;
 import cat.itacademy.proyectoerp.repository.IDirectDiscountRepository;
 import cat.itacademy.proyectoerp.repository.IFreeProductRepository;
+import cat.itacademy.proyectoerp.repository.IOfferRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.UserRepository;
 import cat.itacademy.proyectoerp.service.AddressServiceImpl;
 import cat.itacademy.proyectoerp.service.ClientServiceImpl;
 import cat.itacademy.proyectoerp.service.EmployeeServiceImpl;
+import cat.itacademy.proyectoerp.service.OfferServiceImpl;
 import cat.itacademy.proyectoerp.service.OrderDetailServiceImpl;
 import cat.itacademy.proyectoerp.service.ProductServiceImpl;
 import cat.itacademy.proyectoerp.service.UserServiceImpl;
@@ -66,6 +71,9 @@ public class Runner implements CommandLineRunner {
 	EmployeeServiceImpl employeeService;
 	
 	@Autowired
+	OfferServiceImpl offerService;
+	
+	@Autowired
 	AddressServiceImpl addressService;
 	
 	@Autowired
@@ -82,6 +90,9 @@ public class Runner implements CommandLineRunner {
 	
 	@Autowired
 	IFreeProductRepository freeProductsRepository;
+	
+	@Autowired
+	IOfferRepository offerRepository;
 	
 	
 
@@ -257,9 +268,20 @@ public class Runner implements CommandLineRunner {
 			addirectdiscount(); //Insert values in table direct_discount
 			
 			addfreeproducts();  //Insert values in table  free_products 
-		 
+			
+			addoffers(); //Insert values in table  offers
 		}
 
+	}
+	
+	//Method to insert values in table direct_discount
+	private void addirectdiscount() {
+ 		for (int i=0; i<=100;) {
+			DirectDiscount dd = new DirectDiscount((double)i);
+			directDiscountRepository.save(dd);
+			i= i+5;
+		}
+		
 	}
 	
 	//Method to insert values in table free_products
@@ -269,17 +291,21 @@ public class Runner implements CommandLineRunner {
 			freeProductsRepository.save(fp);
 		}
 	}
-
-	//Method to insert values in table direct_discount
-	private void addirectdiscount() {
-
-		for (int i=0; i<=100;) {
-			DirectDiscount dd = new DirectDiscount((double)i);
-			directDiscountRepository.save(dd);
-			i= i+5;
-		}
-		
-	}
 	
+	//Method to insert values in table offers
+	private void addoffers() {
+		Offer offerone = new Offer ("Summer Special Day's",OfferType.FREE_PRODUCTS,LocalDateTime.of(2021,06,19,00,00,00),LocalDateTime.of(2021,06,23,23,59,59),
+				OfferApplied.PRODUCT,3,0);
+		offerService.createOffer(offerone);
+
+		Offer offertwo = new Offer ("Judas week",OfferType.DIRECT_DISCOUNT,LocalDateTime.of(2021,05,29,00,00,00),LocalDateTime.of(2021,06,04,00,00,00),
+				OfferApplied.PRODUCT,0,10);
+		offerService.createOffer(offertwo);
+		Offer offerthree = new Offer ("Hoy lo petamos",OfferType.DIRECT_DISCOUNT,LocalDateTime.of(2021,05,29,00,00,00),LocalDateTime.of(2021,05,29,23,59,59),
+				OfferApplied.PRODUCT,0,10);
+		offerService.createOffer(offerthree);
+	
+	}
+
 	
 }

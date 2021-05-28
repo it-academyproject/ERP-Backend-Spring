@@ -3,11 +3,11 @@ package cat.itacademy.proyectoerp.service;
 import java.util.List;
 import java.util.UUID;
 
-
 import cat.itacademy.proyectoerp.domain.FreeProducts;
 import cat.itacademy.proyectoerp.domain.Offer;
 import cat.itacademy.proyectoerp.dto.FreeProductDTO;
 import cat.itacademy.proyectoerp.dto.OfferDTO;
+import cat.itacademy.proyectoerp.dto.OfferFullDTO;
 
 public interface IOfferService {
 
@@ -32,5 +32,8 @@ public interface IOfferService {
 	List<FreeProductDTO> findAllFreeProduct(); // READ - Method to return all freeproducts
 
 	FreeProductDTO findFreeProductById(int id); //READ - Method to return 1 offer by ID
+
+	List<OfferFullDTO> findFullAllOffers();
+
 	
 }
