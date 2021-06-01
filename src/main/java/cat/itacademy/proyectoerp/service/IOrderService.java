@@ -1,6 +1,7 @@
 package cat.itacademy.proyectoerp.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
 import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
 import cat.itacademy.proyectoerp.dto.OrderDTO;
+import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 
 public interface IOrderService {
 
@@ -31,5 +33,10 @@ public interface IOrderService {
 	public List<Order> findOrdersByEmployeeId(String employeeId);
 	
 	public List<TopEmployeeDTO> findAllTopTen(DatesTopEmployeePOJO topemployee);
+	
+
+	EmployeeSalesDTO getBestEmployeeByTotalSales();
+
+	EmployeeSalesDTO getWorstEmployeeByTotalSales();
 	
 }

@@ -3,7 +3,11 @@ package cat.itacademy.proyectoerp.service;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import java.util.UUID;
 
@@ -16,6 +20,8 @@ import cat.itacademy.proyectoerp.dto.EmployeeDTO;
 import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.dto.OrderDTO;
 import cat.itacademy.proyectoerp.dto.UserDTO;
+
+import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,6 +55,9 @@ public class OrderServiceImpl implements IOrderService{
 	
 	@Autowired
 	IAddressRepository addressRepository;
+	
+	@Autowired
+	IEmployeeService employeeService;
 
 	
 	@Override
@@ -138,7 +147,6 @@ public class OrderServiceImpl implements IOrderService{
 	@Override
 	public void deleteOrder(UUID id) {
 		orderRepository.deleteById(id);
-		
 	}
 
 	@Override
@@ -189,6 +197,57 @@ public class OrderServiceImpl implements IOrderService{
 	
 		
 	}
+	
+	/**
+	 * This method gets the best Employee by the sum of all completed sales and returns it's EmployeeSalesDTO
+	 */
+	@Override
+	public EmployeeSalesDTO getBestEmployeeByTotalSales() {
+		Map<UUID, Double> mapEmployeesTotalSales = getMapOfEmployeesIdAndTotalSales();
+		UUID bestEmployeeId = Collections.max(mapEmployeesTotalSales.entrySet(), Map.Entry.comparingByValue()).getKey();
+		Double totalSales = mapEmployeesTotalSales.get(bestEmployeeId);
+		return mapEmployeeSalesDTO(bestEmployeeId, totalSales);
+	}
+	
+	/**
+	 * This method gets the worst Employee by the sum of all completed sales and returns it's EmployeeSalesDTO
+	 */
+	@Override
+	public EmployeeSalesDTO getWorstEmployeeByTotalSales() {
+		Map<UUID, Double> mapEmployeesTotalSales = getMapOfEmployeesIdAndTotalSales();
+		UUID worstEmployeeId = Collections.min(mapEmployeesTotalSales.entrySet(), Map.Entry.comparingByValue()).getKey();
+		Double totalSales = mapEmployeesTotalSales.get(worstEmployeeId);
+		return mapEmployeeSalesDTO(worstEmployeeId, totalSales);
+	}	
+	
+	/**
+	 * This method returns a map of Employee Id as key and the sum of all completed sales by that employee as value
+	 * @throws ArgumentNotFoundException if there are no orders completed
+	 * @return Map<UUID, Double>
+	 */
+	private Map<UUID, Double> getMapOfEmployeesIdAndTotalSales() {
+		OrderStatus status = OrderStatus.COMPLETED;
+		if(orderRepository.findAllByStatus(status).isEmpty()) throw new ArgumentNotFoundException("There are no completed orders");
+		Map<UUID, Double> mapEmployeesTotalSales = orderRepository.findAllByStatus(status).stream()
+				.collect(
+						Collectors.groupingBy(Order::getEmployeeId,
+								Collectors.summingDouble(Order::getTotal)));
+		return mapEmployeesTotalSales;
+	}
+	
+	/**
+	 * This method maps an Employee (from it's Id) and the total value of that employee's sales to an EmployeeSalesDTO
+	 * @param employeeId Id of the Employee to map
+	 * @param totalSales Sum of all of employee's completed sales
+	 * @return EmployeeSalesDTO
+	 */
+	private EmployeeSalesDTO mapEmployeeSalesDTO(UUID employeeId, Double totalSales) {
+		EmployeeSalesDTO employeeSalesDTO = new EmployeeSalesDTO();
+		employeeSalesDTO.setEmployee(employeeService.findEmployeeById(employeeId));
+		employeeSalesDTO.setTotalSales(totalSales);
+		return employeeSalesDTO;
+	}
+
 }
 
 

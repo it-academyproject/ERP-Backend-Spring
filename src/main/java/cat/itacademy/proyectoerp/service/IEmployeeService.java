@@ -10,11 +10,11 @@ public interface IEmployeeService {
 
   public EmployeeDTO createEmployee(Employee employee);
 
-  public Employee findEmployeeById(UUID id);
+  public EmployeeDTO findEmployeeById(UUID id);
 
-  public List<Employee> findAllEmployees();
+  public List<EmployeeDTO> findAllEmployees();
 
-  public Employee updateEmployee(Employee employee) throws Exception;
+  public EmployeeDTO updateEmployee(Employee employee) throws Exception;
 
   public void deleteEmployee(UUID id);
 

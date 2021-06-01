@@ -31,6 +31,7 @@ import cat.itacademy.proyectoerp.repository.UserRepository;
 import cat.itacademy.proyectoerp.service.AddressServiceImpl;
 import cat.itacademy.proyectoerp.service.ClientServiceImpl;
 import cat.itacademy.proyectoerp.service.EmployeeServiceImpl;
+import cat.itacademy.proyectoerp.service.IOrderService;
 import cat.itacademy.proyectoerp.service.OrderDetailServiceImpl;
 import cat.itacademy.proyectoerp.service.ProductServiceImpl;
 import cat.itacademy.proyectoerp.service.UserServiceImpl;
@@ -75,6 +76,9 @@ public class Runner implements CommandLineRunner {
 	
 	@Autowired
 	IOrderRepository orderRepository;
+	
+	@Autowired
+	IOrderService orderService;
 
 	@Override
 	@Transactional
@@ -279,7 +283,34 @@ public class Runner implements CommandLineRunner {
 			orderFour.addOrderDetail(orderDetail8);	
 			
 			orderRepository.save(orderFour);
-
+			 
+			orderService.createOrder(orderThree);
+			
+			// Add new User, Employee and Order
+			// Order5
+			Order orderFive = new Order(employeeOne.getId(), clientOne.getId(), LocalDateTime.now(), 
+					OrderStatus.COMPLETED, PaymentMethod.CREDIT_CARD, address1, address1, 1200.00);
+			orderFive.addOrderDetail(orderDetail5);
+			orderFive.addOrderDetail(orderDetail6);	
+			orderService.createOrder(orderFive);
+			
+			// Order6
+			Order orderSix = new Order(employeeTwo.getId(), clientTwo.getId(), LocalDateTime.now(), 
+					OrderStatus.COMPLETED, PaymentMethod.CREDIT_CARD, address1, address1, 550.00);
+			orderSix.addOrderDetail(orderDetail1);
+			orderSix.addOrderDetail(orderDetail2);
+			orderService.createOrder(orderSix);
+			
+			// User3 & Employee3 & Order7
+			User userEmployeeThree = new User("employee3@company.com", "ReW9a0&+TP", UserType.EMPLOYEE);
+			userService.registerNewUserAccount(userEmployeeThree);
+			Employee employeeThree = new Employee(14000.00,"B1235467Z",667999998, LocalDate.now(),null, userEmployeeThree);
+			employeeService.createEmployee(employeeThree);
+			Order orderSeven = new Order(employeeThree.getId(), clientTwo.getId(), LocalDateTime.now(), 
+					OrderStatus.COMPLETED, PaymentMethod.CREDIT_CARD, address1, address1, 550.00);
+			orderSeven.addOrderDetail(orderDetail1);
+			orderSeven.addOrderDetail(orderDetail2);
+			orderService.createOrder(orderSeven);
 		}
 	}
 }
