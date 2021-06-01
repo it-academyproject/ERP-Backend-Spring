@@ -60,5 +60,26 @@ public class EmailServiceImpl implements IEmailService {
 		javaMailSender.send(message);
 
 	}
+	
+	/**
+	 * Method to send a farewell email to user when they wish to unsubscribe
+	 * 
+	 * @param user
+	 * @throws MailException
+	 */	
+	@Override
+	public void sendFarewellEmail(User user) throws MailException {
+
+		SimpleMailMessage message = new SimpleMailMessage();
+		
+		message.setTo(user.getUsername());
+		message.setSubject("Subscription updates have been successfully made.");
+		message.setText("We already miss how close we used to be.");
+		
+		// send email
+		javaMailSender.send(message);
+		
+	}
+
 
 }
