@@ -269,12 +269,28 @@ public class UserController {
 
 		UserDTO userDto;
 		Long id = user.getId();
-		userDto = userService.modifyUser(id, user).get();
+		userDto = userService.setUser(id, user).get();
 		if (userDto.getSuccess() == "False")
 			return new ResponseEntity<>(userDto, HttpStatus.UNPROCESSABLE_ENTITY);
 		return new ResponseEntity<>(userDto, HttpStatus.OK);
 	}
 
+	/**
+	 * Method to set user subscription to inactive
+	 * 
+	 * @param user
+	 * @return user "active" field updated
+	 */
+	
+	@PutMapping("/users/unsubscribe")
+	public ResponseEntity<UserDTO> unsubscribeUser(@RequestBody User user) {
+		
+		UserDTO userDto = userService.setSubscription(user);
+		if (userDto.getSuccess() == "False")
+			return new ResponseEntity<>(userDto, HttpStatus.UNPROCESSABLE_ENTITY);
+		return new ResponseEntity<>(userDto, HttpStatus.OK);
+	}
+	
 	/**
 	 * Method to recover password (Generate a new password and send it by email to
 	 * the user)
@@ -338,4 +354,5 @@ public class UserController {
 
 		return map;
 	}
+		
 }

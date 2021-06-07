@@ -246,7 +246,7 @@ public class ClientServiceImpl implements IClientService {
 		if(null != client.getDni()){
 			Client clientByDni = findByDni(client.getDni());
 			if(null != clientByDni && !clientByDni.getId().equals(clientDB.getId())){
-				exceptionMessage = exceptionMessage + "Dni Exists: '"+client.getDni()+"' ";
+				exceptionMessage = exceptionMessage + "Dni Exists: '"+client.getDni()+"'. ";
 			}
 		}
 		return exceptionMessage;
@@ -258,7 +258,7 @@ public class ClientServiceImpl implements IClientService {
 			User userByUsername = userService.findByUsername(client.getUser().getUsername());
 			if(null != userByUsername && !userByUsername.getId().equals(client.getUser().getId())){
 				exceptionMessage = exceptionMessage +
-						"User Exists: '"+client.getUser().getUsername()+"' ";
+						"User Exists: '"+client.getUser().getUsername()+"'. ";
 			}
 		}
 		return exceptionMessage;

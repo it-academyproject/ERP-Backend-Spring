@@ -18,4 +18,7 @@ public interface IEmailService {
 	 */
 	void sendOrderConfirmationEmail(Client client);
 	
+	
+	// method to send farewell email to user when unsubscribing
+	public void sendFarewellEmail(User user);
 }
