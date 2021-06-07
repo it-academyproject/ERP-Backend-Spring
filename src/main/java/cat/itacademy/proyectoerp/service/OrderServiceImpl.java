@@ -9,20 +9,16 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import java.util.UUID;
-
 
 import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
 import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
-import cat.itacademy.proyectoerp.domain.User;
-import cat.itacademy.proyectoerp.dto.EmployeeDTO;
-import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.dto.OrderDTO;
-import cat.itacademy.proyectoerp.dto.UserDTO;
 
 import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.NameTokenizers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +28,6 @@ import cat.itacademy.proyectoerp.repository.IClientRepository;
 import cat.itacademy.proyectoerp.repository.IOrderDetailRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
-import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Order;
 
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
@@ -59,13 +54,16 @@ public class OrderServiceImpl implements IOrderService{
 	@Autowired
 	IEmployeeService employeeService;
 
+	@Autowired
+	EmailServiceImpl emailService;
+	
+	ModelMapper modelMapper = new ModelMapper();
 	
 	@Override
 	//@Transactional
-	public Order createOrder(Order order) {  //UUID
+	public OrderDTO createOrder(Order order) {  //UUID
 		
-		Order new_order = new Order();
-		new_order = order;
+		order.setStatus(OrderStatus.UNASSIGNED);
 		
 		//registered clients, they can ommit to put the shipping address in JSON (billing address won't be in JSON),
 		//or they can put a new shipping address in the JSON
@@ -73,21 +71,25 @@ public class OrderServiceImpl implements IOrderService{
 			
 			if (order.getBillingAddress() == null && order.getShippingAddress() == null) {
 						
-				new_order.setBillingAddress(clientRepository.findById(order.getClientId()).get().getAddress());
-				new_order.setShippingAddress(clientRepository.findById(order.getClientId()).get().getAddress());
+				order.setBillingAddress(clientRepository.findById(order.getClientId()).get().getAddress());
+				order.setShippingAddress(clientRepository.findById(order.getClientId()).get().getAddress());
 							
 			//If shipping address is a new one:	
 			}	else if (order.getShippingAddress() != clientRepository.findById(order.getClientId()).get().getAddress()){
 				
-				new_order.setBillingAddress(clientRepository.findById(order.getClientId()).get().getAddress());
+				order.setBillingAddress(clientRepository.findById(order.getClientId()).get().getAddress());
 				
-				}
+			}
 			
+			emailService.sendOrderConfirmationEmail(clientRepository.getOne(order.getClientId()));
+		
 		} else if (order.getBillingAddress() == null) {
 			throw new ArgumentNotValidException("The Billing address must be filled");							
 		}
 		
-		return orderRepository.save(new_order);		
+		orderRepository.save(order);
+		modelMapper.getConfiguration().setSourceNameTokenizer(NameTokenizers.UNDERSCORE).setDestinationNameTokenizer(NameTokenizers.UNDERSCORE);
+		return modelMapper.map(order, OrderDTO.class);
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.User;
 
 @Service
@@ -59,6 +60,21 @@ public class EmailServiceImpl implements IEmailService {
 		// send email
 		javaMailSender.send(message);
 
+	}
+	
+	/**
+	 * Method to send a Order confirmation Email to User
+	 * 
+	 * @param Client
+	 * @param Order
+	 */
+	@Override
+	public void sendOrderConfirmationEmail(Client client) {
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setTo(client.getUser().getUsername());
+		message.setSubject("Confirmation Order ");
+		message.setText("Hello " + client.getNameAndSurname() + ", your order has been placed");
+		javaMailSender.send(message);
 	}
 	
 	/**
