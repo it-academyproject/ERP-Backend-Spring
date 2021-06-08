@@ -182,20 +182,18 @@ public class OrderServiceImpl implements IOrderService{
 	@Override
 	public List<TopEmployeeDTO> findAllTopTen(DatesTopEmployeePOJO datestopemployee) {
 			
-		List<Object[]> TopEmpl = orderRepository.findEmployeesSalesBetweenDates(datestopemployee.getBegin_date(),datestopemployee.getEnd_date());  //Busqueda en BD
-
-		TopEmployeeDTO topEmployDTO = new TopEmployeeDTO();
+		List<Object[]> repositoryQueryList = orderRepository.findEmployeesSalesBetweenDates(datestopemployee.getBegin_date(),datestopemployee.getEnd_date());  //Busqueda en BD
 	
-		List<TopEmployeeDTO> topemployeelist = new ArrayList();
+		List<TopEmployeeDTO> topEmployeeList = new ArrayList();
 		
-		for (Object[] object : TopEmpl) {
-			topEmployDTO.setId( object[0].toString());
-			topEmployDTO.setTotal(Double.parseDouble(object[1].toString()));
-			topemployeelist.add(topEmployDTO);
-			topEmployDTO = new TopEmployeeDTO();
+		for (Object[] object : repositoryQueryList) {
+			TopEmployeeDTO topEmployeeDTO = new TopEmployeeDTO();
+			topEmployeeDTO.setId(UUID.nameUUIDFromBytes((byte[]) object[0]));
+			topEmployeeDTO.setTotal(Double.parseDouble(object[1].toString()));
+			topEmployeeList.add(topEmployeeDTO);
 		}
 
-		return topemployeelist;
+		return topEmployeeList;
 	
 		
 	}
