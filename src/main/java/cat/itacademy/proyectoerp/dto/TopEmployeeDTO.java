@@ -1,15 +1,15 @@
 package cat.itacademy.proyectoerp.dto;
 
-
+import java.util.UUID;
 
 public class TopEmployeeDTO {
 
 	
-	private String id;
+	private UUID id;
 	private Double total;
 	
 	
-	public TopEmployeeDTO(String id, Double total) {
+	public TopEmployeeDTO(UUID id, Double total) {
 		this.id = id;
 		this.total = total;
 	}
@@ -21,12 +21,12 @@ public class TopEmployeeDTO {
 	
 	//GETTERS & SETTERS
 	
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 	
 	
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 	public Double getTotal() {
