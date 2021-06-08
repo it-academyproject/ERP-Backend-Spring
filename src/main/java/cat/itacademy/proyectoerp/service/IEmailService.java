@@ -11,13 +11,8 @@ public interface IEmailService {
 	// method to send a new random password to user
 	public void sendPasswordEmail(User user, String password);
 
-	/**
-	 * Method to send a Order confirmation Email to User
-	 * 
-	 * @param Client
-	 */
+	//Method to send a Order confirmation Email to User
 	void sendOrderConfirmationEmail(Client client);
-	
 	
 	// method to send farewell email to user when unsubscribing
 	public void sendFarewellEmail(User user);
