@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.DateFormatSymbols;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -210,5 +211,21 @@ public class StatsController {
 		return map;
 	}
 	
-
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/profits/{year}/{month}")
+	public Map<String, Object> getTotalProfitByMonth(@PathVariable("year") int year, @PathVariable("month") int month) {
+		HashMap<String, Object> map = new HashMap<>();
+		try {
+			double profit = orderService.getProfitByMonth(year,month);
+			String monthName = new DateFormatSymbols().getMonths()[month-1];
+			map.put("success", "true");
+			map.put("message", "profits for " + monthName + " " + year + " fount");
+			map.put("month", month);
+			map.put("profit", profit);
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "error: " + e.getMessage());
+		}
+		return map;
+	}
 }

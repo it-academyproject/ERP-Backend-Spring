@@ -36,5 +36,7 @@ public interface IOrderService {
 	public EmployeeSalesDTO getWorstEmployeeByTotalSales();
 	
 	public double getProfitByYear(int year);
+
+	public double getProfitByMonth(int year, int month);
 	
 }
