@@ -244,4 +244,20 @@ public class StatsController {
 		}
 		return map;
 	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/salaries/month")
+	public Map<String, Object> getTotalSalariesByMonth() {
+		HashMap<String, Object> map = new HashMap<>();
+		try {
+			double salaries = employeeService.getSalariesByMonth();
+			map.put("success", "true");
+			map.put("message", "Total salaries for a month found");
+			map.put("salaries", salaries);
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "error: " + e.getMessage());
+		}
+		return map;
+	}
 }

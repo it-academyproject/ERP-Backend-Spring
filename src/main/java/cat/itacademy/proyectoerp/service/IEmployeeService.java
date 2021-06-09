@@ -20,4 +20,6 @@ public interface IEmployeeService {
 
   public double getSalariesByYear();
 
+  public double getSalariesByMonth();
+
 }
