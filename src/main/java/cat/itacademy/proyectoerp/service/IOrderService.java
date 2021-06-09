@@ -8,16 +8,16 @@ import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
 import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
 import cat.itacademy.proyectoerp.dto.OrderDTO;
+import cat.itacademy.proyectoerp.dto.CreateOrderDTO;
 import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 
 public interface IOrderService {
-
-
-	public OrderDTO createOrder(Order order);
+	
+	public OrderDTO createOrder(CreateOrderDTO createOrderDTO);
 	 
 	public Order findOrderById(UUID id);
 
-	public List<Order> findAllOrders();
+	public List<OrderDTO> findAllOrders();
 	
 	public void updateOrder(Order order);
 
