@@ -18,4 +18,6 @@ public interface IEmployeeService {
 
   public void deleteEmployee(UUID id);
 
+  public double getSalariesByYear();
+
 }

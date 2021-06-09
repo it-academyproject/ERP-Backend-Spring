@@ -123,4 +123,9 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
     iEmployeeRepository.deleteById(id);
   }
+
+	@Override
+	public double getSalariesByYear() {
+		return iEmployeeRepository.getTotalSalariesForYear();
+	}
 }

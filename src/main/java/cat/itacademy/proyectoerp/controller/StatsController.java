@@ -228,4 +228,20 @@ public class StatsController {
 		}
 		return map;
 	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/salaries/year")
+	public Map<String, Object> getTotalSalariesByYear() {
+		HashMap<String, Object> map = new HashMap<>();
+		try {
+			double salaries = employeeService.getSalariesByYear();
+			map.put("success", "true");
+			map.put("message", "Total salaries for a year fount");
+			map.put("salaries", salaries);
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "error: " + e.getMessage());
+		}
+		return map;
+	}
 }
