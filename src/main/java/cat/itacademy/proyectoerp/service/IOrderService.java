@@ -31,9 +31,10 @@ public interface IOrderService {
 	
 	public List<TopEmployeeDTO> findAllTopTen(DatesTopEmployeePOJO topemployee);
 	
+	public EmployeeSalesDTO getBestEmployeeByTotalSales();
 
-	EmployeeSalesDTO getBestEmployeeByTotalSales();
-
-	EmployeeSalesDTO getWorstEmployeeByTotalSales();
+	public EmployeeSalesDTO getWorstEmployeeByTotalSales();
+	
+	public double getProfitByYear(int year);
 	
 }

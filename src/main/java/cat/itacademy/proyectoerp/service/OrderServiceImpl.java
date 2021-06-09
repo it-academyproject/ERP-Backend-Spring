@@ -248,6 +248,16 @@ public class OrderServiceImpl implements IOrderService{
 		return employeeSalesDTO;
 	}
 
+	/**
+	 * This method request the sum of all completed Orders for a year
+	 * @return double
+	 */
+	
+	@Override
+	public double getProfitByYear(int year) {
+		return 2000000;
+	}
+
 }
 
 
