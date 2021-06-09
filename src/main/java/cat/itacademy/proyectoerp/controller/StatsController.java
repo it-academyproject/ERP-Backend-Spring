@@ -193,4 +193,19 @@ public class StatsController {
 	  return map;
   }
   
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/profits/{year}")
+	public Map<String, Object> getWorstEmployeeBySalesRate(@PathVariable("year") int year) {
+		HashMap<String, Object> map = new HashMap<>();
+		  try {
+			  map.put("success", "true");
+			  map.put("message", "profits for year " + year +" fount");
+			  map.put("year", year);
+		  }catch(Exception e) {
+			  map.put("success", "false");
+			  map.put("message", "error: " + e.getMessage());
+		  }
+		return map;
+	}
 }
