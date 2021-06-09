@@ -5,7 +5,7 @@ import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
 import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
 import cat.itacademy.proyectoerp.dto.EmployeeDTO;
 import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
-import cat.itacademy.proyectoerp.service.EmployeeServiceImpl;
+import cat.itacademy.proyectoerp.service.IEmployeeService;
 import cat.itacademy.proyectoerp.service.IOrderService;
 import cat.itacademy.proyectoerp.util.StringToOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class StatsController {
   IOrderService orderService;
   
   @Autowired
-  EmployeeServiceImpl employeeService;
+  IEmployeeService employeeService;
 
   @GetMapping("/status/{status}")
   public Map<String, Object> getOrderBySatus(@PathVariable(value = "status") String status) throws Exception{
