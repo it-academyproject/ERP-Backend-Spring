@@ -2,6 +2,7 @@ package cat.itacademy.proyectoerp.service;
 
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,6 +20,7 @@ import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.NameTokenizers;
+import org.springframework.aop.AopInvocationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -255,9 +257,15 @@ public class OrderServiceImpl implements IOrderService{
 	
 	@Override
 	public double getProfitByYear(int year) {
-		return 2000000;
+		double profit = 0;
+		try {
+			profit = orderRepository.findProfitBetweenDates(
+					LocalDateTime.of(year, 1, 1, 0, 0),LocalDateTime.of(year, 12, 31, 12, 59));
+		} catch (AopInvocationException e) {
+			if (profit== 0) throw new ArgumentNotFoundException("There are no completed orders for year " + year);
+		}
+		return profit;
 	}
-
 }
 
 
