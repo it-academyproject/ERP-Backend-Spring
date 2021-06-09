@@ -20,17 +20,17 @@ public class OrderDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private UUID id;
-	private UUID employee_id;
-	private UUID client_id;
+	private UUID employeeId;
+	private UUID clientId;
 	@JsonFormat(pattern = "dd-MM-yyyy")
-	private LocalDateTime date_created;
+	private LocalDateTime dateCreated;
 	private OrderStatus status;
-	private PaymentMethod payment_method;
-	private AddressDTO shipping_address;
-	private AddressDTO billing_address;
+	private PaymentMethod paymentMethod;
+	private AddressDTO shippingAddress;
+	private AddressDTO billingAddress;
 	private Double total;
 	
-	private Set<OrderDetailDTO> order_details;
+	private Set<OrderDetailDTO> orderDetails;
 	
 	private MessageDTO message;
 
@@ -42,28 +42,28 @@ public class OrderDTO implements Serializable {
 		this.id = id;
 	}
 
-	public UUID getEmployee_id() {
-		return employee_id;
+	public UUID getEmployeeId() {
+		return employeeId;
 	}
 
-	public void setEmployee_id(UUID employee_id) {
-		this.employee_id = employee_id;
+	public void setEmployeeId(UUID employeeId) {
+		this.employeeId = employeeId;
 	}
 
-	public UUID getClient_id() {
-		return client_id;
+	public UUID getClientId() {
+		return clientId;
 	}
 
-	public void setClient_id(UUID client_id) {
-		this.client_id = client_id;
+	public void setClientId(UUID clientId) {
+		this.clientId = clientId;
 	}
 
-	public LocalDateTime getDate_created() {
-		return date_created;
+	public LocalDateTime getDateCreated() {
+		return dateCreated;
 	}
 
-	public void setDate_created(LocalDateTime date_created) {
-		this.date_created = date_created;
+	public void setDateCreated(LocalDateTime dateCreated) {
+		this.dateCreated = dateCreated;
 	}
 
 	public OrderStatus getStatus() {
@@ -74,28 +74,28 @@ public class OrderDTO implements Serializable {
 		this.status = status;
 	}
 
-	public PaymentMethod getPayment_method() {
-		return payment_method;
+	public PaymentMethod getPaymentMethod() {
+		return paymentMethod;
 	}
 
-	public void setPayment_method(PaymentMethod payment_method) {
-		this.payment_method = payment_method;
+	public void setPaymentMethod(PaymentMethod paymentMethod) {
+		this.paymentMethod = paymentMethod;
 	}
 
-	public AddressDTO getShipping_address() {
-		return shipping_address;
+	public AddressDTO getShippingAddress() {
+		return shippingAddress;
 	}
 
-	public void setShipping_address(AddressDTO shipping_address) {
-		this.shipping_address = shipping_address;
+	public void setShippingAddress(AddressDTO shippingAddress) {
+		this.shippingAddress = shippingAddress;
 	}
 
-	public AddressDTO getBilling_address() {
-		return billing_address;
+	public AddressDTO getBillingAddress() {
+		return billingAddress;
 	}
 
-	public void setBilling_address(AddressDTO billing_address) {
-		this.billing_address = billing_address;
+	public void setBillingAddress(AddressDTO billingAddress) {
+		this.billingAddress = billingAddress;
 	}
 
 	public Double getTotal() {
@@ -106,12 +106,12 @@ public class OrderDTO implements Serializable {
 		this.total = total;
 	}
 
-	public Set<OrderDetailDTO> getOrder_details() {
-		return order_details;
+	public Set<OrderDetailDTO> getOrderDetails() {
+		return orderDetails;
 	}
 
-	public void setOrder_details(Set<OrderDetailDTO> order_details) {
-		this.order_details = order_details;
+	public void setOrderDetails(Set<OrderDetailDTO> orderDetails) {
+		this.orderDetails = orderDetails;
 	}
 
 	public MessageDTO getMessage() {
