@@ -195,7 +195,7 @@ public class StatsController {
   
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/profits/{year}")
-	public Map<String, Object> getWorstEmployeeBySalesRate(@PathVariable("year") int year) {
+	public Map<String, Object> getTotalProfitByYear(@PathVariable("year") int year) {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
 			double profit = orderService.getProfitByYear(year);
@@ -209,4 +209,6 @@ public class StatsController {
 		}
 		return map;
 	}
+	
+
 }
