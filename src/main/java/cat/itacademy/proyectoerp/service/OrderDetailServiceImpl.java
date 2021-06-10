@@ -25,7 +25,12 @@ public class OrderDetailServiceImpl implements IOrderDetailService{
 	}
 
 	private Double calculateSubtotalFromProductAndQuantity(Product product, Integer quantity) {
-		return (product.getPrice() + product.getPrice() * product.getVat() / 100) * quantity;
+		double price;
+		if(quantity >= product.getWholesale_quantity())
+			price = product.getWholesale_price();
+		else
+			price = product.getPrice();
+		return (price + price * product.getVat() / 100) * quantity;
 	}
 
 	@Override
