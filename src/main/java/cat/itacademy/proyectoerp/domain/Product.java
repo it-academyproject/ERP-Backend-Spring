@@ -132,14 +132,14 @@ public class Product implements Serializable {
 		this.wholesale_quantity = wholesale_quantity;
 	}
 		
-	public Set<OrderDetail> getOrderDetails() {
+	/*public Set<OrderDetail> getOrderDetails() {
 		return order_details;
-	}
+	}*/
 	
 //	@Transient
-	public void setOrderDetails(Set<OrderDetail> order_details) {
+	/*public void setOrderDetails(Set<OrderDetail> order_details) {
 		this.order_details = order_details;
-	}
+	}*/
 
 	// Console data printing method
 	@Override
