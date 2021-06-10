@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cat.itacademy.proyectoerp.domain.Order;
+import cat.itacademy.proyectoerp.dto.CreateOrderDTO;
 import cat.itacademy.proyectoerp.dto.OrderDTO;
 import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 
@@ -35,14 +36,14 @@ public class OrderController {
 	/**
 	 * Create a new order
 	 * 
-	 * @param order order
-	 * @return new order 
+	 * @param CreateOrderDTO
+	 * @return OrderDTO
 	 */
 	@PostMapping("/orders")
-	public Map<String, Object> createOrder(@RequestBody Order order) {
+	public Map<String, Object> createOrder(@RequestBody CreateOrderDTO createOrderDTO) {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
-			OrderDTO newOrder = orderService.createOrder(order);
+			OrderDTO newOrder = orderService.createOrder(createOrderDTO);
 			map.put(success, "true");
 			map.put(message, "Order created");
 			map.put("order", newOrder);
@@ -73,8 +74,8 @@ public class OrderController {
 	@GetMapping("/orders")
 	public HashMap<String, Object> findOrders() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		List<Order> ordersList = orderService.findAllOrders();
 		try {
+			List<OrderDTO> ordersList = orderService.findAllOrders();
 			map.put("success", "true");
 			map.put("message", "order found");
 			map.put("order", ordersList);

@@ -39,8 +39,8 @@ public class Order  {
 
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 
-	@Column(name="date_created")
-    private LocalDateTime date_created;
+	@Column(name="dateCreated")
+    private LocalDateTime dateCreated;
 	
 	@Column
 	@Enumerated(EnumType.STRING)
@@ -48,46 +48,53 @@ public class Order  {
 	
 	@Column
 	@Enumerated(EnumType.STRING)
-	private PaymentMethod payment_method;
+	private PaymentMethod paymentMethod;
 	
 	
 
 	@OneToOne(cascade = CascadeType.ALL) //{CascadeType.MERGE, CascadeType.REFRESH}
 	@JoinColumn(name = "shipping_address_id", referencedColumnName = "id")
 	@Nullable
-	private Address shipping_address;
+	private Address shippingAddress;
 	
 	@OneToOne(cascade = CascadeType.ALL)   //{CascadeType.MERGE, CascadeType.REFRESH}
 	@JoinColumn(name = "billing_address_id", referencedColumnName = "id")
 	//@NotNull
-	private Address billing_address;
+	private Address billingAddress;
 	
 	private Double total;
 	
-	@OneToMany(mappedBy = "order", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
-	//@JsonManagedReference (gives 415 Unsupported Media Exception with Post order)
-	private Set<OrderDetail> order_details = new HashSet<>();
+	@OneToMany(mappedBy = "order", cascade = {CascadeType.ALL})
+	private Set<OrderDetail> orderDetails = new HashSet<>();
 		
 
 	public Order() {
 		
 	}	
 	
+	public Order(UUID clientId, PaymentMethod paymentMethod, Address billingAddress, Address shippingAddress) {
+		this.clientId = clientId;
+		this.paymentMethod = paymentMethod;
+		this.billingAddress = billingAddress;
+		this.shippingAddress = shippingAddress;
+	}
+	
 	public Order(UUID employeeId, UUID clientId, LocalDateTime date_created, OrderStatus status,
 			PaymentMethod payment_method, Address shipping_address, Address billing_address, Double total) {
 		this.employeeId = employeeId;
 		this.clientId = clientId;
-		this.date_created = LocalDateTime.now();
+		this.dateCreated = LocalDateTime.now();
 		this.status = status;
-		this.payment_method = payment_method;
-		this.shipping_address = shipping_address;
-		this.billing_address = billing_address;
+		this.paymentMethod = payment_method;
+		this.shippingAddress = shipping_address;
+		this.billingAddress = billing_address;
 		this.setTotal(total);
 	}
 	
 	@PrePersist
 	public void prePersist() {
-		date_created = LocalDateTime.now();
+		this.dateCreated = LocalDateTime.now();
+		this.status = OrderStatus.UNASSIGNED;
 	}
 	
 	//Getters & Setters
@@ -95,15 +102,11 @@ public class Order  {
 		return id;
 	}
 
-	public void setId(UUID id) {
-		this.id = id;
-	}
-
 	public UUID getEmployeeId() {
 		return employeeId;
 	}
 
-	public void setEmployee_id(UUID employeeId) {
+	public void setEmployeeId(UUID employeeId) {
 		this.employeeId = employeeId;
 	}
 
@@ -117,11 +120,11 @@ public class Order  {
 	}
 	
 	public LocalDateTime getDateCreated() {
-		return date_created;
+		return dateCreated;
 	}
 	
-	public void setDateCreated(LocalDateTime date_created) {
-		this.date_created = date_created;
+	public void setDateCreated(LocalDateTime dateCreated) {
+		this.dateCreated = dateCreated;
 	}
 
 	public OrderStatus getStatus() {
@@ -133,35 +136,35 @@ public class Order  {
 	}	
 
 	public PaymentMethod getPaymentMethod() {
-		return payment_method;
+		return paymentMethod;
 	}
 
-	public void setPaymentMethod(PaymentMethod payment_method) {
-		this.payment_method = payment_method;
+	public void setPaymentMethod(PaymentMethod paymentMethod) {
+		this.paymentMethod = paymentMethod;
 	}
 
 	public Address getShippingAddress() {
-		return shipping_address;
+		return shippingAddress;
 	}
 
-	public void setShippingAddress(Address shipping_address) {
-		this.shipping_address = shipping_address;
+	public void setShippingAddress(Address shippingAddress) {
+		this.shippingAddress = shippingAddress;
 	}
 
 	public Address getBillingAddress() {
-		return billing_address;
+		return billingAddress;
 	}
 
-	public void setBillingAddress(Address billing_address) {
-		this.billing_address = billing_address;
+	public void setBillingAddress(Address billingAddress) {
+		this.billingAddress = billingAddress;
 	}
 
 	public Set<OrderDetail> getOrderDetails() {
-		return order_details;
+		return orderDetails;
 	}
 
-	public void setOrderDetails(Set<OrderDetail> order_details) {
-		this.order_details = order_details;
+	public void setOrderDetails(Set<OrderDetail> orderDetails) {
+		this.orderDetails = orderDetails;
 	}
 	
 	public Double getTotal() {
@@ -173,8 +176,8 @@ public class Order  {
 	}
 	
 	//Method to add orderDetails to order
-	public void addOrderDetail(OrderDetail order_details) {
-		this.order_details.add(order_details);
+	public void addOrderDetail(OrderDetail orderDetails) {
+		this.orderDetails.add(orderDetails);
 	}
 	
 }
