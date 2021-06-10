@@ -37,7 +37,7 @@ public class EmailServiceImpl implements IEmailService {
             // send email
             javaMailSender.send(message);
         } catch (MailException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
 
     }
@@ -64,7 +64,7 @@ public class EmailServiceImpl implements IEmailService {
             // send email
             javaMailSender.send(message);
         } catch (MailException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
 
     }
@@ -85,7 +85,7 @@ public class EmailServiceImpl implements IEmailService {
             javaMailSender.send(message);
 
         } catch (MailException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -107,7 +107,7 @@ public class EmailServiceImpl implements IEmailService {
             javaMailSender.send(message);
 
         } catch (MailException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
 
     }
