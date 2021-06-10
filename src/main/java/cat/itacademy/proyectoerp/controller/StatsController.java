@@ -21,6 +21,7 @@ import java.text.DateFormatSymbols;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -197,7 +198,7 @@ public class StatsController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/profits/{year}")
 	public Map<String, Object> getTotalProfitByYear(@PathVariable("year") int year) {
-		HashMap<String, Object> map = new HashMap<>();
+		HashMap<String, Object> map = new LinkedHashMap<>();
 		try {
 			double profit = orderService.getProfitByYear(year);
 			map.put("success", "true");
@@ -214,13 +215,14 @@ public class StatsController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/profits/{year}/{month}")
 	public Map<String, Object> getTotalProfitByMonth(@PathVariable("year") int year, @PathVariable("month") int month) {
-		HashMap<String, Object> map = new HashMap<>();
+		HashMap<String, Object> map = new LinkedHashMap<>();
 		try {
 			double profit = orderService.getProfitByMonth(year,month);
 			String monthName = new DateFormatSymbols().getMonths()[month-1];
 			map.put("success", "true");
 			map.put("message", "profits for " + monthName + " " + year + " fount");
 			map.put("month", month);
+			map.put("year", year);
 			map.put("profit", profit);
 		} catch (Exception e) {
 			map.put("success", "false");
@@ -232,7 +234,7 @@ public class StatsController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/salaries/year")
 	public Map<String, Object> getTotalSalariesByYear() {
-		HashMap<String, Object> map = new HashMap<>();
+		HashMap<String, Object> map = new LinkedHashMap<>();
 		try {
 			double salaries = employeeService.getSalariesByYear();
 			map.put("success", "true");
@@ -248,7 +250,7 @@ public class StatsController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/salaries/month")
 	public Map<String, Object> getTotalSalariesByMonth() {
-		HashMap<String, Object> map = new HashMap<>();
+		HashMap<String, Object> map = new LinkedHashMap<>();
 		try {
 			double salaries = employeeService.getSalariesByMonth();
 			map.put("success", "true");
