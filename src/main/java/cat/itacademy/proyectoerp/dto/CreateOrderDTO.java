@@ -1,13 +1,20 @@
 package cat.itacademy.proyectoerp.dto;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.UUID;
+
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import cat.itacademy.proyectoerp.domain.Address;
 import cat.itacademy.proyectoerp.domain.PaymentMethod;
 
-public class CreateOrderDTO {
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+public class CreateOrderDTO implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private UUID clientId;
 	private PaymentMethod paymentMethod;
 	private Address shippingAddress;
