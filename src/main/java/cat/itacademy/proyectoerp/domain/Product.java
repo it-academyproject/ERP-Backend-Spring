@@ -131,7 +131,8 @@ public class Product implements Serializable {
 	public void setWholesale_quantity(int wholesale_quantity) {
 		this.wholesale_quantity = wholesale_quantity;
 	}
-		
+	
+	//Comment by Joan(b-68)
 	/*public Set<OrderDetail> getOrderDetails() {
 		return order_details;
 	}*/
