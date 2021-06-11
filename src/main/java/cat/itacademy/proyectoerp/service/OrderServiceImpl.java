@@ -1,11 +1,7 @@
 package cat.itacademy.proyectoerp.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.security.InvalidParameterException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import cat.itacademy.proyectoerp.domain.OrderStatus;
@@ -68,11 +64,11 @@ public class OrderServiceImpl implements IOrderService{
 	ModelMapper modelMapper = new ModelMapper();
 	
 	@Override
-	public OrderDTO createOrder(CreateOrderDTO createOrderDTO) {
+	public OrderDTO createOrder(CreateOrderDTO createOrderDTO) throws Exception {
 		if(createOrderDTO.getClientId() == null) {
 			setAddressesForUnregisteredClient(createOrderDTO);
 		}else {
-			Client client = clientService.findClientById(createOrderDTO.getClientId());		
+			Client client = clientService.findClientById(createOrderDTO.getClientId());
 			setAddressesForRegisteredClient(client, createOrderDTO);
 		}
 		Order order = modelMapper.map(createOrderDTO, Order.class);
@@ -91,8 +87,13 @@ public class OrderServiceImpl implements IOrderService{
 		return orderDetails.stream().collect(Collectors.summingDouble(OrderDetail::getSubtotal));
 	}
 
-	private Set<OrderDetail> createOrderDetailFromProductQuantity(Order order, Map<Integer, Integer> productQuantity) {
-		return productQuantity.entrySet().stream().map(set -> orderDetailService.createOrderDetail(order, productService.findProductById(set.getKey()), set.getValue())).collect(Collectors.toSet());
+	private Set<OrderDetail> createOrderDetailFromProductQuantity(Order order, Map<Integer, Integer> productQuantity) throws Exception {
+		Set<OrderDetail> result = new HashSet<>();
+		for (Map.Entry<Integer, Integer> set : productQuantity.entrySet()) {
+			OrderDetail orderDetail = orderDetailService.createOrderDetail(order, productService.findProductById(set.getKey()), set.getValue());
+			result.add(orderDetail);
+		}
+		return result;
 	}
 
 	private void setAddressesForUnregisteredClient(CreateOrderDTO order) {

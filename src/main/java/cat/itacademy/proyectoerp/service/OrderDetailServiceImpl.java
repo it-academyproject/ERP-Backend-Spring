@@ -1,8 +1,10 @@
 package cat.itacademy.proyectoerp.service;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.InvalidPropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,9 @@ public class OrderDetailServiceImpl implements IOrderDetailService{
 	IOrderDetailRepository iOrderDetailRepository;
 
 	@Override
-	public OrderDetail createOrderDetail(Order order, Product product, Integer quantity) {
+	public OrderDetail createOrderDetail(Order order, Product product, Integer quantity) throws Exception {
+		if (quantity > product.getStock())
+			throw new Exception("Quantity is larger than stock!");
 		Double subtotal = calculateSubtotalFromProductAndQuantity(product, quantity);
 		return new OrderDetail(product, order, quantity, subtotal);
 	}

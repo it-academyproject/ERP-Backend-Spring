@@ -13,7 +13,7 @@ import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 
 public interface IOrderService {
 	
-	public OrderDTO createOrder(CreateOrderDTO createOrderDTO);
+	public OrderDTO createOrder(CreateOrderDTO createOrderDTO) throws Exception;
 	 
 	public Order findOrderById(UUID id);
 

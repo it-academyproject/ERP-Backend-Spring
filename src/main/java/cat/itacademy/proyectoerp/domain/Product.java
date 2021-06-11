@@ -1,6 +1,8 @@
 package cat.itacademy.proyectoerp.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +27,7 @@ public class Product implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "product_id")
+	@JsonIgnore
 	private int id;
 	@Column(unique=true)
 	private String name;

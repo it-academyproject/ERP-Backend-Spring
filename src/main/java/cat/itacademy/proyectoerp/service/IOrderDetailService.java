@@ -9,7 +9,7 @@ import cat.itacademy.proyectoerp.domain.Product;
 
 public interface IOrderDetailService {
 	
-	public OrderDetail createOrderDetail(Order order, Product product, Integer quantity);
+	public OrderDetail createOrderDetail(Order order, Product product, Integer quantity) throws Exception;
 	 
 	public OrderDetail findOrderDetailById(UUID id);
 	 
