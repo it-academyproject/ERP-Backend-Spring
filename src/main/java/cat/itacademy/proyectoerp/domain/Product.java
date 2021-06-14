@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -35,6 +36,9 @@ public class Product implements Serializable {
 	private double vat;
 	private double wholesale_price;
 	private int wholesale_quantity;
+	
+	@ManyToMany
+	private Set<Category> categories;
 	
 	//@JsonIgnoreProperties("products")
 	@OneToMany (mappedBy = "product")
@@ -132,6 +136,14 @@ public class Product implements Serializable {
 		this.wholesale_quantity = wholesale_quantity;
 	}
 		
+	public Set<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(Set<Category> categories) {
+		this.categories = categories;
+	}
+
 	public Set<OrderDetail> getOrderDetails() {
 		return order_details;
 	}
