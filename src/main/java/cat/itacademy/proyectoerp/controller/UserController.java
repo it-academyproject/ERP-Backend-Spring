@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class of User Controller
@@ -213,6 +214,7 @@ public class UserController {
 	 * 
 	 * @return all users
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/users")
 	public ResponseEntity<List<UserDTO>> listAllUsers() {
 		return new ResponseEntity<>(userService.listAllUsers(), HttpStatus.OK);
@@ -223,6 +225,7 @@ public class UserController {
 	 * 
 	 * @return all employees
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/users/employees")
 	public ResponseEntity<List<UserDTO>> listAllEmployeeUsers() {
 		return new ResponseEntity<>(userService.listAllEmployees(), HttpStatus.OK);
@@ -233,6 +236,7 @@ public class UserController {
 	 * 
 	 * @return all clients
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/users/clients")
 	public ResponseEntity<List<UserDTO>> listAllClientsUsers() {
 		return new ResponseEntity<>(userService.listAllClients(), HttpStatus.OK);
@@ -240,71 +244,80 @@ public class UserController {
 
 	/**
 	 * Method for delete user by user ID.
-	 * 
-	 * @param user user ID
+	 *
 	 * @return OK if user exist. Not OK if user don't exists.
 	 */
-	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping("/users")
-	public ResponseEntity<UserDTO> deleteUserById(@RequestBody User user) {
-		Long id = user.getId();
 
-		UserDTO userDto;
-		userDto = userService.deleteUserById(id).get();
-		if (userDto.getSuccess() == "False")
-			return new ResponseEntity<>(userDto, HttpStatus.UNPROCESSABLE_ENTITY);
-		return new ResponseEntity<>(userDto, HttpStatus.OK);
+	@DeleteMapping("/users")
+	public ResponseEntity<UserDTO> deleteUserById(Authentication auth) {
+		try {
+			User user = userService.findByUsername(auth.getName());
+			Long id = user.getId();
+
+			UserDTO userDto;
+			userDto = userService.deleteUserById(id).get();
+			if (userDto.getSuccess() == "False")
+				throw new Exception();
+			return new ResponseEntity<>(userDto, HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+		}
 
 	}
 
 	/**
 	 * Method for modify the type of user.
 	 *
-	 * @param user new type of user.
 	 * @return OK if user exists.
 	 */
-	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/users")
-	public ResponseEntity<UserDTO> modifyTypeUser(@Valid @RequestBody User user) {
-
-		UserDTO userDto;
-		Long id = user.getId();
-		userDto = userService.setUser(id, user).get();
-		if (userDto.getSuccess() == "False")
-			return new ResponseEntity<>(userDto, HttpStatus.UNPROCESSABLE_ENTITY);
-		return new ResponseEntity<>(userDto, HttpStatus.OK);
+	public ResponseEntity<UserDTO> modifyTypeUser(Authentication auth) {
+		try {
+			User user = userService.findByUsername(auth.getName());
+			Long id = user.getId();
+			UserDTO userDto = userService.setUser(id, user).get();
+			if (userDto.getSuccess() == "False")
+				throw new Exception();
+			return new ResponseEntity<>(userDto, HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+		}
 	}
 
 	/**
 	 * Method to set user subscription to inactive
-	 * 
-	 * @param user
+	 *
 	 * @return user "active" field updated
 	 */
 	
 	@PutMapping("/users/unsubscribe")
-	public ResponseEntity<UserDTO> unsubscribeUser(@RequestBody User user) {
-		
-		UserDTO userDto = userService.setSubscription(user);
-		if (userDto.getSuccess() == "False")
-			return new ResponseEntity<>(userDto, HttpStatus.UNPROCESSABLE_ENTITY);
-		return new ResponseEntity<>(userDto, HttpStatus.OK);
+	public ResponseEntity<UserDTO> unsubscribeUser(Authentication auth) {
+		try {
+			User user = userService.findByUsername(auth.getName());
+			UserDTO userDto = userService.setSubscription(user);
+			if (userDto.getSuccess() == "False")
+				throw new Exception();
+			return new ResponseEntity<>(userDto, HttpStatus.OK);
+		} catch(Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+		}
 	}
 	
 	/**
 	 * Method to recover password (Generate a new password and send it by email to
 	 * the user)
-	 * 
-	 * @param user username of user
+	 *
 	 * @return password
 	 */
 	@PutMapping("/users/recoverpassword")
-	public HashMap<String, Object> recoverPassword(@RequestBody User user) {
+	public HashMap<String, Object> recoverPassword(Authentication auth) {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		try {
-			userService.recoverPassword(user.getUsername());
+			userService.recoverPassword(auth.getName());
 
 			map.put("success", "true");
 			map.put("message", "the new password has been sent");
@@ -317,7 +330,7 @@ public class UserController {
 		return map;
 	}
 
-	private Authentication authenticate(String username, String password) throws Exception {
+	private Authentication authenticate(@Valid String username, String password) throws Exception {
 
 		try {
 			return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
@@ -330,19 +343,20 @@ public class UserController {
 
 	/**
 	 * Method to reset password
-	 * 
-	 * @param changeuserpassword
+	 *
 	 * @return user updated
 	 */
-	@PutMapping("/users/resetpassword")
+	@PutMapping("/users/resetPassword")
 		
-	public HashMap<String, Object> resetPassword(@Valid @RequestBody ChangeUserPassword changeuserpassword) {
-	
+	public HashMap<String, Object> resetPassword(Authentication auth) {
+
+
+		User user = userService.findByUsername(auth.getName());
 		HashMap<String, Object> map = new HashMap<String, Object>();
 	
 		try {
 			
-			userService.updatePassword(changeuserpassword);
+			userService.updatePassword(user);
 
 			map.put("success", "true");
 			map.put("message", "User password updated");

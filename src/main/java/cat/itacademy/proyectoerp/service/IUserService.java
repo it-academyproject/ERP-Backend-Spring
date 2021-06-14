@@ -11,6 +11,7 @@ import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.dto.UserDTO;
+import org.springframework.security.core.Authentication;
 
 /**
  * Interface for User Service.
@@ -27,7 +28,7 @@ public interface IUserService {
 	public Optional<UserDTO> deleteUserById(Long id);
 	public Optional<UserDTO> setUser(Long id, User user);
 	public UserDTO setSubscription (User user);
-	public User updatePassword(ChangeUserPassword changeuserpassword);
+	public User updatePassword(User user);
 	public User findByUsername(String username);
 	boolean existsByUsername(String username);
 	MessageDTO getErrorMessageUsernameExists(String username);

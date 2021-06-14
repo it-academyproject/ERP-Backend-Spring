@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.NameTokenizers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -185,14 +186,14 @@ public class UserServiceImpl implements IUserService {
 	 */
 	@Override
 	public List<UserDTO> listAllClients() {
-		List<UserDTO> listaUsers = new ArrayList<UserDTO>();
+		List<UserDTO> userList = new ArrayList<UserDTO>();
 
 		for (User user : userRepository.findByUserType(UserType.CLIENT)) {
-			listaUsers.add(modelMapper.map(user, UserDTO.class));
+			userList.add(modelMapper.map(user, UserDTO.class));
 
 		}
 
-		return listaUsers;
+		return userList;
 	}
 
 	/**
@@ -271,8 +272,7 @@ public class UserServiceImpl implements IUserService {
 	
 	/**
 	 * Method to set active field of user to "false".
-	 * 
-	 * @param id      id of user to modify.
+	 *
 	 * @param user user data to modify.
 	 */	
 	@Override
@@ -381,20 +381,20 @@ public class UserServiceImpl implements IUserService {
 	 * @throws ArgumentNotFoundException
 	 */
 	@Override
-	public User updatePassword(@Valid ChangeUserPassword changeuserpassword) throws ArgumentNotFoundException {
-		 
+	public User updatePassword(User user) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		ChangeUserPassword changeUserPassword = new ChangeUserPassword(user);
 
 		// Verify if user exist
-		User updatedUser = userRepository.findByUsername(changeuserpassword.getUser().getUsername());
+		User updatedUser = userRepository.findByUsername(user.getUsername());
 		
 		if (updatedUser != null) {
 			//Check password
-			if (passwordEncoder.matches(changeuserpassword.getUser().getPassword(), updatedUser.getPassword())) {
+			if (passwordEncoder.matches(user.getPassword(), updatedUser.getPassword())) {
 
 				// set user password (encrypted)
 				
-				updatedUser.setPassword(passEconder(changeuserpassword.getNew_password()));
+				updatedUser.setPassword(passEconder(changeUserPassword.getNew_password()));
 	
 				return userRepository.save(updatedUser);
 			} else {
