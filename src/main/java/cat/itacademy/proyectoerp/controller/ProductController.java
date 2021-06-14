@@ -2,6 +2,7 @@ package cat.itacademy.proyectoerp.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.sql.Timestamp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,7 +32,10 @@ public class ProductController {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		try {
-
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			long ts = timestamp.getTime();
+			product.setCreated(ts);
+			product.setModified(ts);
 			productService.createProduct(product);
 
 			map.put("success", "true");
@@ -99,7 +103,9 @@ public class ProductController {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		try {
-
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			long ts = timestamp.getTime();
+			product.setModified(ts);
 			Product productUpdated = productService.updateProduct(product);
 
 			map.put("success", "true");
