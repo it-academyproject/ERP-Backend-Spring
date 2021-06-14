@@ -35,6 +35,9 @@ public class ProductServiceImpl implements IProductService {
 		} else if (product.getWholesale_price() > product.getPrice()) {
 			throw new ArgumentNotValidException("The wholesale price cannot be higher than price");
 
+		} else if (product.getCreated() > product.getModified()) {
+			throw new ArgumentNotValidException("Modified date prior to Create date");
+		
 		} else {
 			return productRepo.save(product);
 		}
@@ -130,6 +133,10 @@ public class ProductServiceImpl implements IProductService {
 		// WHOLESALE QUANTITY
 		if (product.getWholesale_quantity() != 0) {
 			productSelected.setWholesale_quantity(product.getWholesale_quantity());
+		}
+		
+		if (product.getModified() >= product.getCreated()) {
+			productSelected.setModified(product.getModified());
 		}
 
 		return productRepo.save(productSelected);
