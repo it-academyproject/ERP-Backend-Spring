@@ -202,7 +202,7 @@ public class StatsController {
 		try {
 			double profit = orderService.getProfitByYear(year);
 			map.put("success", "true");
-			map.put("message", "profits for year " + year + " fount");
+			map.put("message", "profits for year " + year + " found");
 			map.put("year", year);
 			map.put("profit", profit);
 		} catch (Exception e) {
@@ -220,7 +220,7 @@ public class StatsController {
 			double profit = orderService.getProfitByMonth(year,month);
 			String monthName = new DateFormatSymbols().getMonths()[month-1];
 			map.put("success", "true");
-			map.put("message", "profits for " + monthName + " " + year + " fount");
+			map.put("message", "profits for " + monthName + " " + year + " found");
 			map.put("month", month);
 			map.put("year", year);
 			map.put("profit", profit);
@@ -238,7 +238,7 @@ public class StatsController {
 		try {
 			double salaries = employeeService.getSalariesByYear();
 			map.put("success", "true");
-			map.put("message", "Total salaries for a year fount");
+			map.put("message", "Total salaries for a year found");
 			map.put("salaries", salaries);
 		} catch (Exception e) {
 			map.put("success", "false");
