@@ -2,15 +2,18 @@ package cat.itacademy.proyectoerp.controller;
 
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
+import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
 import cat.itacademy.proyectoerp.dto.EmployeeDTO;
 import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 import cat.itacademy.proyectoerp.dto.OrderDTO;
+import cat.itacademy.proyectoerp.repository.UserRepository;
 import cat.itacademy.proyectoerp.service.EmployeeServiceImpl;
 import cat.itacademy.proyectoerp.service.IOrderService;
 import cat.itacademy.proyectoerp.util.StringToOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,6 +39,8 @@ public class StatsController {
   @Autowired
   EmployeeServiceImpl employeeService;
 
+  @Autowired UserController userController;
+
   @GetMapping("/status/{status}")
   public Map<String, Object> getOrderBySatus(@PathVariable(value = "status") String status) throws Exception{
     HashMap<String, Object> map = new HashMap<>();
@@ -59,27 +64,33 @@ public class StatsController {
   }
 
   @GetMapping("/ordersByClient/{id}")
-  public Map<String, Object> getOrdersByClient(@PathVariable(value = "id") String id) throws Exception{
+  public Map<String, Object> getOrdersByClient(Authentication auth, @PathVariable(value = "id") String id) {
     HashMap<String, Object> map = new HashMap<>();
 
     try {
-      List<Order> orderList = orderService.findOrdersByClient(id);
-      if(!orderList.isEmpty()){
-        map.put("success", "true");
-        map.put("message", "order by client list found");
-        map.put("order", orderList);
-      } else{
-        map.put("success", "true");
-        map.put("message", "order list by client is empty");
-        map.put("order", orderList);
-      }
+    	User user = userController.userService.findByUsername(auth.getName());
+
+    	// Check if the the requested ID matches the authorized user or is admin.
+    	if(!(user.getId().equals(id) || auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))))
+			throw new Exception();
+    	List<Order> orderList = orderService.findOrdersByClient(id);
+    	if (!orderList.isEmpty()) {
+    		map.put("success", "true");
+    		map.put("message", "order by client list found");
+    		map.put("order", orderList);
+    	} else {
+    		map.put("success", "true");
+    		map.put("message", "order list by client is empty");
+    		map.put("order", orderList);
+		}
     } catch (Exception e) {
       map.put("success", "false");
       map.put("message", "error: " + e.getMessage());
     }
     return map;
   }
-  
+
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/employees/sells")
   public Map<String,Object> getEmployeeSales() throws Exception{
 	  

@@ -247,11 +247,10 @@ public class UserController {
 	 *
 	 * @return OK if user exist. Not OK if user don't exists.
 	 */
-
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/users")
-	public ResponseEntity<UserDTO> deleteUserById(Authentication auth) {
+	public ResponseEntity<UserDTO> deleteUserById(@Valid @RequestBody User user) {
 		try {
-			User user = userService.findByUsername(auth.getName());
 			Long id = user.getId();
 
 			UserDTO userDto;
@@ -271,10 +270,10 @@ public class UserController {
 	 *
 	 * @return OK if user exists.
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/users")
-	public ResponseEntity<UserDTO> modifyTypeUser(Authentication auth) {
+	public ResponseEntity<UserDTO> modifyTypeUser(@Valid @RequestBody User user) {
 		try {
-			User user = userService.findByUsername(auth.getName());
 			Long id = user.getId();
 			UserDTO userDto = userService.setUser(id, user).get();
 			if (userDto.getSuccess() == "False")
@@ -291,11 +290,10 @@ public class UserController {
 	 *
 	 * @return user "active" field updated
 	 */
-	
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/users/unsubscribe")
-	public ResponseEntity<UserDTO> unsubscribeUser(Authentication auth) {
+	public ResponseEntity<UserDTO> unsubscribeUser(@RequestBody @Valid User user) {
 		try {
-			User user = userService.findByUsername(auth.getName());
 			UserDTO userDto = userService.setSubscription(user);
 			if (userDto.getSuccess() == "False")
 				throw new Exception();
@@ -311,7 +309,7 @@ public class UserController {
 	 *
 	 * @return password
 	 */
-	@PutMapping("/users/recoverpassword")
+	@PutMapping("/users/recoverPassword")
 	public HashMap<String, Object> recoverPassword(Authentication auth) {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
