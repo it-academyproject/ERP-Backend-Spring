@@ -1,6 +1,7 @@
-INSERT INTO users (id, active, last_session, password, user_type, username) VALUES 
-('900000001', '1', '2021-06-11 09:27:07', '$2a$10$o8tcNE1BVYvrXLSyMCfWEuFgcnu6NU0UXKb1D5.qBgLl8eeXzH/am', 'ADMIN', 'testEmployee01@erp.com'),
-('900000002', '1', '2021-06-11 09:27:07', '$2a$10$o8tcNE1BVYvrXLSyMCfWEuFgcnu6NU0UXKb1D5.qBgLl8eeXzH/am', 'ADMIN', 'testEmployee02@erp.com');
+INSERT INTO users (id, active, last_session, password, user_type, username) VALUES
+('900000000', '1', '2021-06-11 09:27:07', '$2a$10$o8tcNE1BVYvrXLSyMCfWEuFgcnu6NU0UXKb1D5.qBgLl8eeXzH/am', 'ADMIN', 'testAdmin@erp.com'),
+('900000001', '1', '2021-06-11 09:27:07', '$2a$10$o8tcNE1BVYvrXLSyMCfWEuFgcnu6NU0UXKb1D5.qBgLl8eeXzH/am', 'EMPLOYEE', 'testEmployee01@erp.com'),
+('900000002', '1', '2021-06-11 09:27:07', '$2a$10$o8tcNE1BVYvrXLSyMCfWEuFgcnu6NU0UXKb1D5.qBgLl8eeXzH/am', 'EMPLOYEE', 'testEmployee02@erp.com');
 
 INSERT INTO employee (id,dni,in_date,phone,salary,user_id) VALUES 
 (UNHEX(1111), 'C3333333C', '2021-2-11', '777777777', '30000', '900000001'),
