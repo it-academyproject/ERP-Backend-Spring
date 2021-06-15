@@ -31,6 +31,7 @@ import cat.itacademy.proyectoerp.repository.IClientRepository;
 import cat.itacademy.proyectoerp.repository.IOrderDetailRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
+import cat.itacademy.proyectoerp.util.UUIDconverter;
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderDetail;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
@@ -213,14 +214,11 @@ public class OrderServiceImpl implements IOrderService{
 		
 		for (Object[] object : repositoryQueryList) {
 			TopEmployeeDTO topEmployeeDTO = new TopEmployeeDTO();
-			topEmployeeDTO.setId(UUID.nameUUIDFromBytes((byte[]) object[0]));
+			topEmployeeDTO.setId(UUIDconverter.convertFromBytes((byte[])object[0]));
 			topEmployeeDTO.setTotal(Double.parseDouble(object[1].toString()));
 			topEmployeeList.add(topEmployeeDTO);
 		}
-
 		return topEmployeeList;
-	
-		
 	}
 	
 	/**
