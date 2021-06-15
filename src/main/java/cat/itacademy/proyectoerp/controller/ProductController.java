@@ -158,5 +158,97 @@ public class ProductController {
 
 		return map;
 	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping("/categories")
+	public HashMap<String, Object> createCategory(@RequestBody CategoryDTO categoryDto) {
+		HashMap<String, Object> map = new HashMap<>();
+		try {
+			CategoryDTO category = categoryService.createCategory(categoryDto);
+			map.put("success", "true");
+			map.put("message", "category created");
+			map.put("category", category);
+		}catch(Exception e) {
+			map.put("success", "false");
+			map.put("message", "Error: " + e.getMessage());
+		}
+		return map;
+	}
+	
+	@GetMapping("/categories/{id}")
+	public HashMap<String, Object> getCategoryById(@PathVariable UUID id) {
+		HashMap<String, Object> map = new HashMap<>();
+		try {
+			CategoryDTO category = categoryService.getCategoryById(id);
+			map.put("success", "true");
+			map.put("message", "category found");
+			map.put("category", category);
+		}catch(Exception e) {
+			map.put("success", "false");
+			map.put("message", "Error: " + e.getMessage());
+		}
+		return map;
+	}
+	
+	@GetMapping("/categories")
+	public HashMap<String, Object> getCategories() {
+		HashMap<String, Object> map = new HashMap<>();
+		try {
+			List<CategoryDTO> categories = categoryService.getCategories();
+			map.put("success", "true");
+			map.put("message", "categories found");
+			map.put("categories", categories);
+		}catch(Exception e) {
+			map.put("success", "false");
+			map.put("message", "Error: " + e.getMessage());
+		}
+		return map;
+	}
+	
+	@GetMapping("/categories/parent/{parentCategoryName}")
+	public HashMap<String, Object> getCategoriesByParentCategoryName(@PathVariable String parentCategoryName) {
+		HashMap<String, Object> map = new HashMap<>();
+		try {
+			List<CategoryDTO> categories = categoryService.getCategoriesByParentCategoryName(parentCategoryName);
+			map.put("success", "true");
+			map.put("message", "categories found");
+			map.put("categories", categories);
+		}catch(Exception e) {
+			map.put("success", "false");
+			map.put("message", "Error: " + e.getMessage());
+		}
+		return map;
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@PutMapping("/categories/{id}")
+	public HashMap<String, Object> updateCategoryById(@PathVariable UUID id, @RequestBody CategoryDTO categoryDto) {
+		HashMap<String, Object> map = new HashMap<>();
+		try {
+			CategoryDTO category = categoryService.updateCategory(id, categoryDto);
+			map.put("success", "true");
+			map.put("message", "category updated");
+			map.put("category", category);
+		}catch(Exception e) {
+			map.put("success", false);
+			map.put("message", "Error: " + e.getMessage());
+		}
+		return map;
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@DeleteMapping("/categories/{id}")
+	public HashMap<String, Object> deleteCategoryById(@PathVariable UUID id) {
+		HashMap<String, Object> map = new HashMap<>();
+		try {
+			categoryService.deleteCategoryById(id);
+			map.put("success", "true");
+			map.put("message", "The category with id " + id + " has been successfully deleted");
+		}catch(Exception e) {
+			map.put("success", "false");
+			map.put("message", "Error: " + e.getMessage());
+		}
+		return map;
+	}
 
 }
