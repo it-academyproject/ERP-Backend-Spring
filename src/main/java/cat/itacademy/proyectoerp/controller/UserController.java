@@ -309,7 +309,7 @@ public class UserController {
 	 *
 	 * @return password
 	 */
-	@PutMapping("/users/recoverPassword")
+	@PutMapping("/users/recoverpassword")
 	public HashMap<String, Object> recoverPassword(Authentication auth) {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -344,7 +344,7 @@ public class UserController {
 	 *
 	 * @return user updated
 	 */
-	@PutMapping("/users/resetPassword")
+	@PutMapping("/users/resetpassword")
 		
 	public HashMap<String, Object> resetPassword(Authentication auth) {
 

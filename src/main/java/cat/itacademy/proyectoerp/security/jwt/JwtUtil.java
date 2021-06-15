@@ -40,7 +40,7 @@ public class JwtUtil {
 	public String getNameOfUser(String token) {
 		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
 	}
-	//Some informatiion from token  will need the secret key
+	//Some information from token  will need the secret key
 	private Claims getAllClaimsFromToken(String token) {
 		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
 	}

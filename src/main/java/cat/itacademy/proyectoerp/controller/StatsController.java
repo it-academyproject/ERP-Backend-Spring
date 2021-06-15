@@ -42,7 +42,7 @@ public class StatsController {
   @Autowired UserController userController;
 
   @GetMapping("/status/{status}")
-  public Map<String, Object> getOrderBySatus(@PathVariable(value = "status") String status) throws Exception{
+  public Map<String, Object> getOrderByStatus(@PathVariable(value = "status") String status) throws Exception{
     HashMap<String, Object> map = new HashMap<>();
 
     try {
@@ -63,7 +63,8 @@ public class StatsController {
     return map;
   }
 
-  @GetMapping("/ordersByClient/{id}")
+  // Here the user can get the data if he has the same id
+  @GetMapping("/ordersbyclient/{id}")
   public Map<String, Object> getOrdersByClient(Authentication auth, @PathVariable(value = "id") String id) {
     HashMap<String, Object> map = new HashMap<>();
 
@@ -73,6 +74,7 @@ public class StatsController {
     	// Check if the the requested ID matches the authorized user or is admin.
     	if(!(user.getId().equals(id) || auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))))
 			throw new Exception();
+
     	List<Order> orderList = orderService.findOrdersByClient(id);
     	if (!orderList.isEmpty()) {
     		map.put("success", "true");
