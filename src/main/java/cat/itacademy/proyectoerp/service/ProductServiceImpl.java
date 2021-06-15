@@ -89,6 +89,7 @@ public class ProductServiceImpl implements IProductService {
 	}
 
 	private Set<Category> mapCategoriesDtoToCategories(Set<CategoryDTO> categoriesDto) {
+		if(categoriesDto == null) return null;
 		return categoriesDto.stream().collect(Collectors.mapping(categoryDto -> mapCategoryDtoToEntity(categoryDto), Collectors.toSet()));
 	}
 
