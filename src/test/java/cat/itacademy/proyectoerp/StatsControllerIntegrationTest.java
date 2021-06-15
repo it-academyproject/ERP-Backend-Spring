@@ -8,14 +8,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.UUID;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +23,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.event.annotation.BeforeTestExecution;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,8 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * This class testing the Stats Endpoints. We load some data directly to the test database to work with it. 
- * And drop the test database after it.
+ * This class testing the Integration of Stats Endpoints. We load some data directly to the test database to work with it.
+ * @Transactional used to load scripts @Sql only one time.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -48,7 +43,7 @@ locations = "classpath:application-integrationtest.properties")
 public class StatsControllerIntegrationTest {
 	/**
 	 * @MockBean avoid the execution of real Runner.class as we don't need it's entities. 
-	 * Benefits: we win some testing time and avoid loading problems.
+	 * Benefits: we win some testing time and avoid loading problems or bad testing results.
 	 */
 	@MockBean
 	Runner runner;
@@ -91,50 +86,7 @@ public class StatsControllerIntegrationTest {
 				.andExpect(jsonPath("$.employee[1].orders", is("1")))
 				.andExpect(jsonPath("$.employee[1].dni", is("C3333334C")));
 	}
-	
-	@Test
-	@DisplayName("Security Employee Auth [GET] /api/stats/employees/sells")
-	public void SecurityEmployeeCompletedOrdersByEmployee() throws Exception {
-		
-		String accessToken = obtainEmployeeAccessToken();
-		
-		// request
-		mockMvc.perform(get("/api/stats/employees/sells")
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken) 
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-	
-	
-	@Test
-	@DisplayName("Security Client [GET] /api/stats/employees/sells")
-	public void SecurityClientCompletedOrdersByEmployee() throws Exception {
-		
-		String accessToken = obtainClientAccessToken();
-		
-		// request
-		mockMvc.perform(get("/api/stats/employees/sells")
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken) 
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-	
-	@Test
-	@DisplayName("Security NoAuth [GET] /api/stats/employees/sells")
-	public void SecurityNoAuthCompletedOrdersByEmployee() throws Exception {
 
-		// request
-		mockMvc.perform(get("/api/stats/employees/sells")
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-	
 	// Test /api/stats/employees/toptensales EndPoint	
 	@Test
 	@DisplayName("Correct [GET] /api/stats/employees/toptensales")
@@ -191,60 +143,6 @@ public class StatsControllerIntegrationTest {
 				.andExpect(jsonPath("$.status", is("BAD_REQUEST")));
 	}
 	
-	@Test
-	@DisplayName("Security Employee Auth [GET] /api/stats/employees/toptensales")
-	public void SecurityEmployeeTop10EmployeesBySales() throws Exception {
-		
-		String accessToken = obtainEmployeeAccessToken();
-		String json = "{\"begin_date\":\"2001-01-01T00:00:00\","
-				+ "\"end_date\":\"2001-12-29T23:59:59\"}";	
-		
-		// request
-		mockMvc.perform(get("/api/stats/employees/toptensales")
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-				.contentType(MediaType.APPLICATION_JSON).content(json)
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-	
-	
-	@Test
-	@DisplayName("Security Client [GET] /api/stats/employees/toptensales")
-	public void SecurityClientTop10EmployeesBySales() throws Exception {
-		
-		String accessToken = obtainClientAccessToken();
-		String json = "{\"begin_date\":\"2001-01-01T00:00:00\","
-				+ "\"end_date\":\"2001-12-29T23:59:59\"}";	
-		
-		// request
-		mockMvc.perform(get("/api/stats/employees/toptensales")
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-				.contentType(MediaType.APPLICATION_JSON).content(json)
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-	
-	@Test
-	@DisplayName("Security NoAuth [GET] /api/stats/employees/toptensales")
-	public void SecurityNoAuthTop10EmployeesBySales() throws Exception {
-
-		String json = "{\"begin_date\":\"2001-01-01T00:00:00\","
-				+ "\"end_date\":\"2001-12-29T23:59:59\"}";	
-		
-		// request
-		mockMvc.perform(get("/api/stats/employees/toptensales")
-				.contentType(MediaType.APPLICATION_JSON).content(json)
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-		
 	//GET: /api/stats/employees/bestsales
 	@Test
 	@DisplayName("Correct [GET] /api/stats/employees/bestsales")
@@ -264,48 +162,6 @@ public class StatsControllerIntegrationTest {
 				.andExpect(jsonPath("$.employee.total_sales", is(5000.0)));
 	}
 	
-	@Test
-	@DisplayName("Security Employee Auth [GET] /api/stats/employees/bestsales")
-	public void SecurityEmployeeWorseEmployeeBySales() throws Exception {
-		
-		String accessToken = obtainEmployeeAccessToken();
-		
-		// request
-		mockMvc.perform(get("/api/stats/employees/bestsales")
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-		
-	@Test
-	@DisplayName("Security Client [GET] /api/stats/employees/bestsales")
-	public void SecurityClientWorseEmployeeBySales() throws Exception {
-		
-		String accessToken = obtainClientAccessToken();
-
-		// request
-		mockMvc.perform(get("/api/stats/employees/bestsales")
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-	
-	@Test
-	@DisplayName("Security NoAuth [GET] /api/stats/employees/bestsales")
-	public void SecurityNoAuthWorseEmployeeBySales() throws Exception {
-		
-		// request
-		mockMvc.perform(get("/api/stats/employees/bestsales")
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-	
 	//GET: /api/stats/employees/worstsales
 	@Test
 	@DisplayName("Correct [GET] /api/stats/employees/worstsales")
@@ -323,48 +179,6 @@ public class StatsControllerIntegrationTest {
 				.andExpect(jsonPath("$.employee.employee.id", is("22220000-0000-0000-0000-000000000000")))
 				.andExpect(jsonPath("$.employee.employee.user.username", is("testEmployee02@erp.com")))
 				.andExpect(jsonPath("$.employee.total_sales", is(2000.0)));
-	}
-	
-	@Test
-	@DisplayName("Security Employee Auth [GET] /api/stats/employees/worstsales")
-	public void SecurityEmployeeBestEmployeeBySales() throws Exception {
-		
-		String accessToken = obtainEmployeeAccessToken();
-		
-		// request
-		mockMvc.perform(get("/api/stats/employees/worstsales")
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-		
-	@Test
-	@DisplayName("Security Client [GET] /api/stats/employees/worstsales")
-	public void SecurityClientBestEmployeeBySales() throws Exception {
-		
-		String accessToken = obtainClientAccessToken();
-
-		// request
-		mockMvc.perform(get("/api/stats/employees/worstsales")
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-	
-	@Test
-	@DisplayName("Security NoAuth [GET] /api/stats/employees/worstsales")
-	public void SecurityNoAuthBestEmployeeBySales() throws Exception {
-		
-		// request
-		mockMvc.perform(get("/api/stats/employees/worstsales")
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
 	}
 	
 	//GET: /api/stats/profits/{year}/
@@ -401,48 +215,6 @@ public class StatsControllerIntegrationTest {
 				.andExpect(jsonPath("$.message", is("error: There are no completed orders for year 2019")));
 	}
 	
-	@Test
-	@DisplayName("Security Employee Auth [GET] /api/stats/profits/2021")
-	public void SecurityEmployeeProfitsYear() throws Exception {
-		
-		String accessToken = obtainEmployeeAccessToken();
-		
-		// request
-		mockMvc.perform(get("/api/stats/profits/2021")
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-		
-	@Test
-	@DisplayName("Security Client [GET] /api/stats/profits/2021")
-	public void SecurityClientProfitsYear() throws Exception {
-		
-		String accessToken = obtainClientAccessToken();
-
-		// request
-		mockMvc.perform(get("/api/stats/profits/2021")
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-	
-	@Test
-	@DisplayName("Security NoAuth [GET] /api/stats/profits/2021")
-	public void SecurityNoAuthProfitsYear() throws Exception {
-		
-		// request
-		mockMvc.perform(get("/api/stats/profits/2021")
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-		
 	//GET: /api/stats/profits/{year}/{month}
 	@Test
 	@DisplayName("Correct [GET] /api/stats/profits/2021/2")
@@ -479,49 +251,21 @@ public class StatsControllerIntegrationTest {
 				.andExpect(jsonPath("$.message", is("error: There are no completed orders for junio 2021")));
 	}
 	
-	
 	@Test
-	@DisplayName("Security Employee Auth [GET] /api/stats/profits/2021/2")
-	public void SecurityEmployeeProfitsMonth() throws Exception {
-		
-		String accessToken = obtainEmployeeAccessToken();
-		
-		// request
-		mockMvc.perform(get("/api/stats/profits/2021/2")
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-		
-	@Test
-	@DisplayName("Security Client [GET] /api/stats/profits/2021/2")
-	public void SecurityClientProfitsMonth() throws Exception {
-		
-		String accessToken = obtainClientAccessToken();
+	@DisplayName("Bad Request Period [GET] /api/stats/profits/XXXX/6")
+	public void BadRequestPeriodProfitsMonth() throws Exception {
 
+		String accessToken = obtainAdminAccessToken();
+			
 		// request
-		mockMvc.perform(get("/api/stats/profits/2021/2")
+		mockMvc.perform(get("/api/stats/profits/XXXX/6")
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON_VALUE))
 		
 		// results
-				.andExpect(status().isUnauthorized());
+				.andExpect(status().isBadRequest());
 	}
-	
-	@Test
-	@DisplayName("Security NoAuth [GET] /api/stats/profits/2021/2")
-	public void SecurityNoAuthProfitsMonth() throws Exception {
-		
-		// request
-		mockMvc.perform(get("/api/stats/profits/2021/2")
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-		
+
 	//GET: /api/stats/salaries/year
 	@Test
 	@DisplayName("Correct [GET] /api/stats/salaries/year")
@@ -539,48 +283,7 @@ public class StatsControllerIntegrationTest {
 				.andExpect(jsonPath("$.message",is("Total salaries for a year found")))
 				.andExpect(jsonPath("$.salaries", is(50000.0)));
 	}
-	
-	@Test
-	@DisplayName("Security Employee Auth [GET] /api/stats/salaries/year")
-	public void SecurityEmployeeSalariesYear() throws Exception {
-		
-		String accessToken = obtainEmployeeAccessToken();
-		
-		// request
-		mockMvc.perform(get("/api/stats/salaries/year")
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-		
-	@Test
-	@DisplayName("Security Client [GET] /api/stats/salaries/year")
-	public void SecurityClientSalariesYear() throws Exception {
-		
-		String accessToken = obtainClientAccessToken();
 
-		// request
-		mockMvc.perform(get("/api/stats/salaries/year")
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-	
-	@Test
-	@DisplayName("Security NoAuth [GET] /api/stats/salaries/year")
-	public void SecurityNoAuthSalariesYear() throws Exception {
-		
-		// request
-		mockMvc.perform(get("/api/stats/salaries/year")
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
 	//GET: /api/stats/salaries/month
 	@Test
 	@DisplayName("Correct [GET] /api/stats/salaries/month")
@@ -598,79 +301,9 @@ public class StatsControllerIntegrationTest {
 				.andExpect(jsonPath("$.message",is("Total salaries for a month found")))
 				.andExpect(jsonPath("$.salaries", is(4166.6666666666667)));
 	}
-	
-	@Test
-	@DisplayName("Security Employee Auth [GET] /api/stats/salaries/month")
-	public void SecurityEmployeeSalariesMonth() throws Exception {
-		
-		String accessToken = obtainEmployeeAccessToken();
-		
-		// request
-		mockMvc.perform(get("/api/stats/salaries/month")
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-		
-	@Test
-	@DisplayName("Security Client [GET] /api/stats/salaries/month")
-	public void SecurityClientSalariesMonth() throws Exception {
-		
-		String accessToken = obtainClientAccessToken();
 
-		// request
-		mockMvc.perform(get("/api/stats/salaries/month")
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-	
-	@Test
-	@DisplayName("Security NoAuth [GET] /api/stats/salaries/month")
-	public void SecurityNoAuthSalariesMonth() throws Exception {
-		
-		// request
-		mockMvc.perform(get("/api/stats/salaries/month")
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-		
-		// results
-				.andExpect(status().isUnauthorized());
-	}
-		
 	private String obtainAdminAccessToken() throws Exception {
 		JwtLogin jwtLogin = new JwtLogin("testAdmin@erp.com", "ReW9a0&+TP");
-
-		ResultActions resultPost =
-				this.mockMvc.perform(post("/api/login")
-						.content(new ObjectMapper().writeValueAsString(jwtLogin))
-						.accept(MediaType.APPLICATION_JSON)
-						.contentType(MediaType.APPLICATION_JSON))
-						.andExpect(status().isOk());
-
-		String resultString = resultPost.andReturn().getResponse().getContentAsString();
-		return new JacksonJsonParser().parseMap(resultString).get("token").toString();
-	}
-	
-	private String obtainEmployeeAccessToken() throws Exception {
-		JwtLogin jwtLogin = new JwtLogin("testEmployee@erp.com", "ReW9a0&+TP");
-
-		ResultActions resultPost =
-				this.mockMvc.perform(post("/api/login")
-						.content(new ObjectMapper().writeValueAsString(jwtLogin))
-						.accept(MediaType.APPLICATION_JSON)
-						.contentType(MediaType.APPLICATION_JSON))
-						.andExpect(status().isOk());
-
-		String resultString = resultPost.andReturn().getResponse().getContentAsString();
-		return new JacksonJsonParser().parseMap(resultString).get("token").toString();
-	}
-	
-	private String obtainClientAccessToken() throws Exception {
-		JwtLogin jwtLogin = new JwtLogin("testClient@erp.com", "ReW9a0&+TP");
 
 		ResultActions resultPost =
 				this.mockMvc.perform(post("/api/login")
