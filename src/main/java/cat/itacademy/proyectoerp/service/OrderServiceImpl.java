@@ -1,20 +1,19 @@
 package cat.itacademy.proyectoerp.service;
 
-
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-
 import cat.itacademy.proyectoerp.domain.OrderStatus;
+import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
 import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
 import cat.itacademy.proyectoerp.dto.OrderDTO;
-
+import cat.itacademy.proyectoerp.dto.CreateOrderDTO;
 import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 
 import org.modelmapper.ModelMapper;
@@ -30,7 +29,7 @@ import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
 import cat.itacademy.proyectoerp.util.UUIDconverter;
 import cat.itacademy.proyectoerp.domain.Order;
-
+import cat.itacademy.proyectoerp.domain.OrderDetail;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 
@@ -58,39 +57,61 @@ public class OrderServiceImpl implements IOrderService{
 	@Autowired
 	EmailServiceImpl emailService;
 	
+	@Autowired
+	ClientServiceImpl clientService;
+	
+	@Autowired
+	IOrderDetailService orderDetailService;
+	
+	@Autowired
+	IProductService productService;
+	
 	ModelMapper modelMapper = new ModelMapper();
 	
 	@Override
-	//@Transactional
-	public OrderDTO createOrder(Order order) {  //UUID
-		
-		order.setStatus(OrderStatus.UNASSIGNED);
-		
-		//registered clients, they can ommit to put the shipping address in JSON (billing address won't be in JSON),
-		//or they can put a new shipping address in the JSON
-		if (order.getClientId() != null) { // if registered
-			
-			if (order.getBillingAddress() == null && order.getShippingAddress() == null) {
-						
-				order.setBillingAddress(clientRepository.findById(order.getClientId()).get().getAddress());
-				order.setShippingAddress(clientRepository.findById(order.getClientId()).get().getAddress());
-							
-			//If shipping address is a new one:	
-			}	else if (order.getShippingAddress() != clientRepository.findById(order.getClientId()).get().getAddress()){
-				
-				order.setBillingAddress(clientRepository.findById(order.getClientId()).get().getAddress());
-				
-			}
-			
-			emailService.sendOrderConfirmationEmail(clientRepository.getOne(order.getClientId()));
-		
-		} else if (order.getBillingAddress() == null) {
-			throw new ArgumentNotValidException("The Billing address must be filled");							
+	public OrderDTO createOrder(CreateOrderDTO createOrderDTO) {
+		if(createOrderDTO.getClientId() == null) {
+			setAddressesForUnregisteredClient(createOrderDTO);
+		}else {
+			Client client = clientService.findClientById(createOrderDTO.getClientId());		
+			setAddressesForRegisteredClient(client, createOrderDTO);
 		}
-		
+		Order order = modelMapper.map(createOrderDTO, Order.class);
+		Set<OrderDetail> orderDetails = createOrderDetailFromProductQuantity(order, createOrderDTO.getProductsQuantity());
+		order.setOrderDetails(orderDetails);
+		order.setTotal(calculateTotalFromOrderDetail(orderDetails));
 		orderRepository.save(order);
+		if(createOrderDTO.getClientId() != null) {
+			emailService.sendOrderConfirmationEmail(clientService.findClientById(createOrderDTO.getClientId()));
+		}
 		modelMapper.getConfiguration().setSourceNameTokenizer(NameTokenizers.UNDERSCORE).setDestinationNameTokenizer(NameTokenizers.UNDERSCORE);
 		return modelMapper.map(order, OrderDTO.class);
+	}
+
+	private Double calculateTotalFromOrderDetail(Set<OrderDetail> orderDetails) {
+		return orderDetails.stream().collect(Collectors.summingDouble(OrderDetail::getSubtotal));
+	}
+
+	private Set<OrderDetail> createOrderDetailFromProductQuantity(Order order, Map<Integer, Integer> productQuantity) {
+		return productQuantity.entrySet().stream().map(set -> orderDetailService.createOrderDetail(order, productService.findProductById(set.getKey()), set.getValue())).collect(Collectors.toSet());
+	}
+
+	private void setAddressesForUnregisteredClient(CreateOrderDTO order) {
+		if(order.getBillingAddress() == null) throw new ArgumentNotFoundException("A billing address is necessary to process a new order from an unregistered client");
+		if(order.getShippingAddress() == null) {
+			order.setShippingAddress(order.getBillingAddress());
+		}		
+	}
+
+	private void setAddressesForRegisteredClient(Client client, CreateOrderDTO order) {
+		if(order.getBillingAddress() == null) {
+			order.setBillingAddress(client.getAddress());
+		}
+		if(order.getShippingAddress() == null & client.getShippingAddress() == null) {
+			order.setShippingAddress(order.getBillingAddress());
+		}else if(order.getShippingAddress() == null) {
+			order.setShippingAddress(client.getShippingAddress());
+		}
 	}
 
 	@Override
@@ -102,11 +123,11 @@ public class OrderServiceImpl implements IOrderService{
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Order> findAllOrders() {
+	public List<OrderDTO> findAllOrders() {
 		if (orderRepository.findAll().isEmpty()) {
 			throw new ArgumentNotFoundException("No orders found");
 		} else {
-			return orderRepository.findAll();
+			return orderRepository.findAll().stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
 		}
 	}
 
@@ -133,7 +154,7 @@ public class OrderServiceImpl implements IOrderService{
 				orderToUpdate.setclientId(order.getClientId());
 				
 				//TODO: Once Employee is implemented it should check if it exists.1
-				orderToUpdate.setEmployee_id(order.getEmployeeId());
+				orderToUpdate.setEmployeeId(order.getEmployeeId());
 				if (order.getStatus() == null) {
 					throw new ArgumentNotValidException("Status can't be null");
 				}
@@ -185,7 +206,7 @@ public class OrderServiceImpl implements IOrderService{
 			
 		List<Object[]> repositoryQueryList = orderRepository.findEmployeesSalesBetweenDates(datestopemployee.getBegin_date(),datestopemployee.getEnd_date());  //Busqueda en BD
 	
-		List<TopEmployeeDTO> topEmployeeList = new ArrayList();
+		List<TopEmployeeDTO> topEmployeeList = new ArrayList<>();
 		
 		for (Object[] object : repositoryQueryList) {
 			TopEmployeeDTO topEmployeeDTO = new TopEmployeeDTO();

@@ -13,9 +13,10 @@ import cat.itacademy.proyectoerp.domain.Product;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class OrderDetailDTO implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+	
 	private UUID id;
 	private Product product;
-	private OrderDTO order;
 	private Integer quantity;
 	private Double subtotal;
 	public UUID getId() {
@@ -29,12 +30,6 @@ public class OrderDetailDTO implements Serializable{
 	}
 	public void setProduct(Product product) {
 		this.product = product;
-	}
-	public OrderDTO getOrder() {
-		return order;
-	}
-	public void setOrder(OrderDTO order) {
-		this.order = order;
 	}
 	public Integer getQuantity() {
 		return quantity;
