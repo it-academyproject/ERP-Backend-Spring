@@ -305,6 +305,7 @@ public class StatsControllerIntegrationTest {
 		// results
 				.andExpect(status().isUnauthorized());
 	}
+	
 	//GET: /api/stats/employees/worstsales
 	@Test
 	@DisplayName("Correct [GET] /api/stats/employees/worstsales")
@@ -365,8 +366,84 @@ public class StatsControllerIntegrationTest {
 		// results
 				.andExpect(status().isUnauthorized());
 	}
-	//TODO [Pendiente Pull Request B-71] GET: /api/stats/profits/{year}/
 	
+	//GET: /api/stats/profits/{year}/
+	@Test
+	@DisplayName("Correct [GET] /api/stats/profits/2021")
+	public void RequestProfitsYear() throws Exception {
+
+		String accessToken = obtainAdminAccessToken();
+			
+		// request
+		mockMvc.perform(get("/api/stats/profits/2021")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.year", is(2021)))
+				.andExpect(jsonPath("$.profit", is(7000.0)));
+	}
+	
+	@Test
+	@DisplayName("Empty Order Period [GET] /api/stats/profits/2019")
+	public void EmptyPeriodProfitsYear() throws Exception {
+
+		String accessToken = obtainAdminAccessToken();
+			
+		// request
+		mockMvc.perform(get("/api/stats/profits/2021")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.message", is("error: There are no completed orders for year 2019")));
+	}
+	
+	
+	@Test
+	@DisplayName("Security Employee Auth [GET] /api/stats/profits/2021")
+	public void SecurityEmployeeProfitsYear() throws Exception {
+		
+		String accessToken = obtainEmployeeAccessToken();
+		
+		// request
+		mockMvc.perform(get("/api/stats/profits/2021")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isUnauthorized());
+	}
+		
+	@Test
+	@DisplayName("Security Client [GET] /api/stats/profits/2021")
+	public void SecurityClientProfitsYear() throws Exception {
+		
+		String accessToken = obtainClientAccessToken();
+
+		// request
+		mockMvc.perform(get("/api/stats/profits/2021")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isUnauthorized());
+	}
+	
+	@Test
+	@DisplayName("Security NoAuth [GET] /api/stats/profits/2021")
+	public void SecurityNoAuthProfitsYear() throws Exception {
+		
+		// request
+		mockMvc.perform(get("/api/stats/profits/2021")
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isUnauthorized());
+	}
+		
 	//TODO [Pendiente Pull Request B-71] GET: /api/stats/profits/{year}/{month}
 	
 	//TODO [Pendiente Pull Request B-71] GET: /api/stats/salaries/year
