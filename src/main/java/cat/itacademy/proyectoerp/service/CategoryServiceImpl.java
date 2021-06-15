@@ -43,14 +43,14 @@ public class CategoryServiceImpl implements ICategoryService {
 	private Category createSubCategory(String name, String description, UUID parentCategoryId) {
 		checkCategoryName(name);
 		checkCategoryDescription(description);
-		Category parentCategory = getCategoryById(parentCategoryId);
+		Category parentCategory = findCategoryById(parentCategoryId);
 		checkParentCategoryIsNotSubCategory(parentCategory);
 		return new Category(name, description, parentCategory);
 	}
 
 	@Override
 	public CategoryDTO updateCategory(UUID id, CategoryDTO categoryDto) {
-		Category category = getCategoryById(id);
+		Category category = findCategoryById(id);
 		category = updateCategoryNameIfNameExists(category, categoryDto.getName());
 		category = updateCategoryDescriptionIfDescriptionExists(category, categoryDto.getDescription());
 		category = updateCategoryParentCategoryIfParentCategoryExists(category, categoryDto.getParentCategoryId());
@@ -78,7 +78,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
 	private Category updateCategoryParentCategoryIfParentCategoryExists(Category category, UUID parentCategoryId) {
 		if(parentCategoryId != null) {
-			Category parentCategory = getCategoryById(parentCategoryId);
+			Category parentCategory = findCategoryById(parentCategoryId);
 			checkParentCategoryIsNotSubCategory(parentCategory);
 			category.setParentCategory(parentCategory);
 			return category;
@@ -87,6 +87,7 @@ public class CategoryServiceImpl implements ICategoryService {
 	}
 
 	private void checkCategoryName(String name) {
+		if(name.isBlank()) throw new ArgumentNotValidException("Name cannot be null or whitespace");
 		if(categoryRepository.existsByName(name)) throw new ArgumentNotValidException("A category named " + name + " already exists");		
 	}
 	
@@ -100,18 +101,29 @@ public class CategoryServiceImpl implements ICategoryService {
 	}
 
 	@Override
-	public Category getCategoryById(UUID id) {;
+	public CategoryDTO getCategoryById(UUID id) {
+		return modelMapper.map(findCategoryById(id), CategoryDTO.class);
+	}
+	
+	@Override
+	public Category findCategoryById(UUID id) {
 		return categoryRepository.findById(id).orElseThrow(() -> new ArgumentNotFoundException("The id " + id + " doesn't correspond to any category"));
 	}
-
+	
 	@Override
 	public List<CategoryDTO> getCategories() {
 		return categoryRepository.findAll().stream().collect(Collectors.mapping(category -> modelMapper.map(category, CategoryDTO.class), Collectors.toList()));
 	}
 
 	@Override
-	public List<CategoryDTO> getCategoriesByParentCategoryId(UUID id) {
-		return categoryRepository.findAllByParentCategoryId(id).stream().collect(Collectors.mapping(category -> modelMapper.map(category, CategoryDTO.class), Collectors.toList()));
+	public List<CategoryDTO> getCategoriesByParentCategoryName(String name) {
+		existsCategoryByName(name);
+		return categoryRepository.findAllByParentCategoryName(name).stream().collect(Collectors.mapping(category -> modelMapper.map(category, CategoryDTO.class), Collectors.toList()));
+	}
+
+	@Override
+	public void existsCategoryByName(String name) {
+		if(!categoryRepository.existsByName(name)) throw new ArgumentNotValidException("A category named " + name + " doesn't exist");
 	}
 
 	@Override

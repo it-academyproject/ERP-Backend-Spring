@@ -11,12 +11,16 @@ public interface ICategoryService {
 	public CategoryDTO createCategory(CategoryDTO categoryDto);
 	
 	public CategoryDTO updateCategory(UUID id, CategoryDTO categoryDto);
+
+	public CategoryDTO getCategoryById(UUID id);
 		
-	public Category getCategoryById(UUID id);
+	public Category findCategoryById(UUID id);
 	
 	public List<CategoryDTO> getCategories();
 	
-	public List<CategoryDTO> getCategoriesByParentCategoryId(UUID id);
+	public List<CategoryDTO> getCategoriesByParentCategoryName(String name);
+	
+	public void existsCategoryByName(String name);
 	
 	public void deleteCategoryById(UUID id);
 	
