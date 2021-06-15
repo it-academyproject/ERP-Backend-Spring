@@ -15,6 +15,6 @@ public interface ICategoryRepository extends JpaRepository<Category, UUID> {
 
 	boolean existsByDescription(String description);
 	
-	List<Category> findAllByParentCategoryId(UUID id);
+	List<Category> findAllByParentCategoryName(String name);
 
 }
