@@ -36,6 +36,8 @@ public class Product implements Serializable {
 	private double vat;
 	private double wholesale_price;
 	private int wholesale_quantity;
+	private long created;
+	private long modified;
 	
 	@ManyToMany
 	private Set<Category> categories;
@@ -50,7 +52,7 @@ public class Product implements Serializable {
 	}
 	
 	public Product(String name, int stock, String image, String family, double price, double vat,
-			double wholesale_price, int wholesale_quantity) {
+			double wholesale_price, int wholesale_quantity, long created, long modified) {
 		this.name = name;
 		this.stock = stock;
 		this.image = image;
@@ -59,6 +61,8 @@ public class Product implements Serializable {
 		this.vat = vat;
 		this.wholesale_price = wholesale_price;
 		this.wholesale_quantity = wholesale_quantity;
+		this.created = created;
+		this.modified = modified;
 		
 	}
 	
@@ -146,19 +150,35 @@ public class Product implements Serializable {
 
 	public Set<OrderDetail> getOrderDetails() {
 		return order_details;
-	}
+	}*/
 	
 //	@Transient
-	public void setOrderDetails(Set<OrderDetail> order_details) {
+	/*public void setOrderDetails(Set<OrderDetail> order_details) {
 		this.order_details = order_details;
-	}
+	}*/
 
 	// Console data printing method
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + ", stock=" + stock + ", image=" + image + ", family=" + family
 				+ ", price=" + price + ", vat=" + vat + ", wholesale_price=" + wholesale_price + ", wholesale_quantity="
-				+ wholesale_quantity + "]";
+				+ wholesale_quantity + ", created=" + created + ", modified=" + modified + "]";
+	}
+	
+	public long getCreated() {
+		return created;
+	}
+	
+	public void setCreated(long created) {
+		this.created = created;
+	}
+	
+	public long getModified() {
+		return modified;
+	}
+	
+	public void setModified(long modified) {
+		this.modified = modified;
 	}
 	
 }
