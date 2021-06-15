@@ -392,7 +392,7 @@ public class StatsControllerIntegrationTest {
 		String accessToken = obtainAdminAccessToken();
 			
 		// request
-		mockMvc.perform(get("/api/stats/profits/2021")
+		mockMvc.perform(get("/api/stats/profits/2019")
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON_VALUE))
 		
@@ -400,7 +400,6 @@ public class StatsControllerIntegrationTest {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.message", is("error: There are no completed orders for year 2019")));
 	}
-	
 	
 	@Test
 	@DisplayName("Security Employee Auth [GET] /api/stats/profits/2021")
@@ -444,7 +443,7 @@ public class StatsControllerIntegrationTest {
 				.andExpect(status().isUnauthorized());
 	}
 		
-	//TODO [Pendiente Pull Request B-71] GET: /api/stats/profits/{year}/{month}
+	//GET: /api/stats/profits/{year}/{month}
 	@Test
 	@DisplayName("Correct [GET] /api/stats/profits/2021/2")
 	public void RequestProfitsMonth() throws Exception {
@@ -523,10 +522,125 @@ public class StatsControllerIntegrationTest {
 				.andExpect(status().isUnauthorized());
 	}
 		
-	//TODO [Pendiente Pull Request B-71] GET: /api/stats/salaries/year
+	//GET: /api/stats/salaries/year
+	@Test
+	@DisplayName("Correct [GET] /api/stats/salaries/year")
+	public void RequestSalariesYear() throws Exception {
+
+		String accessToken = obtainAdminAccessToken();
+			
+		// request
+		mockMvc.perform(get("/api/stats/salaries/year")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.message",is("Total salaries for a year found")))
+				.andExpect(jsonPath("$.salaries", is(50000.0)));
+	}
 	
-	//TODO [Pendiente Pull Request B-71] GET: /api/stats/salaries/month
+	@Test
+	@DisplayName("Security Employee Auth [GET] /api/stats/salaries/year")
+	public void SecurityEmployeeSalariesYear() throws Exception {
+		
+		String accessToken = obtainEmployeeAccessToken();
+		
+		// request
+		mockMvc.perform(get("/api/stats/salaries/year")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isUnauthorized());
+	}
+		
+	@Test
+	@DisplayName("Security Client [GET] /api/stats/salaries/year")
+	public void SecurityClientSalariesYear() throws Exception {
+		
+		String accessToken = obtainClientAccessToken();
+
+		// request
+		mockMvc.perform(get("/api/stats/salaries/year")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isUnauthorized());
+	}
 	
+	@Test
+	@DisplayName("Security NoAuth [GET] /api/stats/salaries/year")
+	public void SecurityNoAuthSalariesYear() throws Exception {
+		
+		// request
+		mockMvc.perform(get("/api/stats/salaries/year")
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isUnauthorized());
+	}
+	//GET: /api/stats/salaries/month
+	@Test
+	@DisplayName("Correct [GET] /api/stats/salaries/month")
+	public void RequestSalariesMonth() throws Exception {
+
+		String accessToken = obtainAdminAccessToken();
+			
+		// request
+		mockMvc.perform(get("/api/stats/salaries/month")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.message",is("Total salaries for a month found")))
+				.andExpect(jsonPath("$.salaries", is(4166.6666666666667)));
+	}
+	
+	@Test
+	@DisplayName("Security Employee Auth [GET] /api/stats/salaries/month")
+	public void SecurityEmployeeSalariesMonth() throws Exception {
+		
+		String accessToken = obtainEmployeeAccessToken();
+		
+		// request
+		mockMvc.perform(get("/api/stats/salaries/month")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isUnauthorized());
+	}
+		
+	@Test
+	@DisplayName("Security Client [GET] /api/stats/salaries/month")
+	public void SecurityClientSalariesMonth() throws Exception {
+		
+		String accessToken = obtainClientAccessToken();
+
+		// request
+		mockMvc.perform(get("/api/stats/salaries/month")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isUnauthorized());
+	}
+	
+	@Test
+	@DisplayName("Security NoAuth [GET] /api/stats/salaries/month")
+	public void SecurityNoAuthSalariesMonth() throws Exception {
+		
+		// request
+		mockMvc.perform(get("/api/stats/salaries/month")
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isUnauthorized());
+	}
+		
 	private String obtainAdminAccessToken() throws Exception {
 		JwtLogin jwtLogin = new JwtLogin("testAdmin@erp.com", "ReW9a0&+TP");
 
