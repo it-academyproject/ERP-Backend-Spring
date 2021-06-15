@@ -93,7 +93,7 @@ public class CategoryServiceImpl implements ICategoryService {
 	
 	private void checkCategoryDescription(String description) {
 		if(description.isBlank() || description.length() < 10 || description.length() > 200) throw new ArgumentNotValidException("Description must be between 10 and 200 characters");
-		if(categoryRepository.existsByDescription(description)) throw new ArgumentNotValidException("Another catergory has the same description");
+		if(categoryRepository.existsByDescription(description)) throw new ArgumentNotValidException("Another category has the same description");
 	}
 
 	private void checkParentCategoryIsNotSubCategory(Category parentCategory) {
