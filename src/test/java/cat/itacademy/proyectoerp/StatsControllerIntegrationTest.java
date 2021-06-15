@@ -88,7 +88,7 @@ public class StatsControllerIntegrationTest {
 				.andExpect(jsonPath("$.employee[0].orders", is("2")))
 				.andExpect(jsonPath("$.employee[0].dni", is("C3333333C")))
 				.andExpect(jsonPath("$.employee[1].name", is("testEmployee02@erp.com")))
-				.andExpect(jsonPath("$.employee[1].orders", is("0")))
+				.andExpect(jsonPath("$.employee[1].orders", is("1")))
 				.andExpect(jsonPath("$.employee[1].dni", is("C3333334C")));
 	}
 	
@@ -245,10 +245,70 @@ public class StatsControllerIntegrationTest {
 				.andExpect(status().isUnauthorized());
 	}
 		
+	//GET: /api/stats/employees/bestsales
+	@Test
+	@DisplayName("Correct [GET] /api/stats/employees/bestsales")
+	public void RequestWorseEmployeeBySales() throws Exception {
+
+		String accessToken = obtainAdminAccessToken();
+			
+		// request
+		mockMvc.perform(get("/api/stats/employees/bestsales")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.employee.employee.id", is("11110000-0000-0000-0000-000000000000")))
+				.andExpect(jsonPath("$.employee.employee.user.username", is("testEmployee01@erp.com")))
+				.andExpect(jsonPath("$.employee.total_sales", is(5000.0)));
+	}
+	
+	@Test
+	@DisplayName("Security Employee Auth [GET] /api/stats/employees/bestsales")
+	public void SecurityEmployeeWorseEmployeeBySales() throws Exception {
+		
+		String accessToken = obtainEmployeeAccessToken();
+		
+		// request
+		mockMvc.perform(get("/api/stats/employees/bestsales")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isUnauthorized());
+	}
+		
+	@Test
+	@DisplayName("Security Client [GET] /api/stats/employees/bestsales")
+	public void SecurityClientWorseEmployeeBySales() throws Exception {
+		
+		String accessToken = obtainClientAccessToken();
+
+		// request
+		mockMvc.perform(get("/api/stats/employees/bestsales")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isUnauthorized());
+	}
+	
+	@Test
+	@DisplayName("Security NoAuth [GET] /api/stats/employees/bestsales")
+	public void SecurityNoAuthWorseEmployeeBySales() throws Exception {
+		
+		// request
+		mockMvc.perform(get("/api/stats/employees/bestsales")
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isUnauthorized());
+	}
 	//GET: /api/stats/employees/worstsales
 	@Test
 	@DisplayName("Correct [GET] /api/stats/employees/worstsales")
-	public void RequestWorseEmployeeBySales() throws Exception {
+	public void RequestBestEmployeeBySales() throws Exception {
 
 		String accessToken = obtainAdminAccessToken();
 			
@@ -266,7 +326,7 @@ public class StatsControllerIntegrationTest {
 	
 	@Test
 	@DisplayName("Security Employee Auth [GET] /api/stats/employees/worstsales")
-	public void SecurityEmployeeWorseEmployeeBySales() throws Exception {
+	public void SecurityEmployeeBestEmployeeBySales() throws Exception {
 		
 		String accessToken = obtainEmployeeAccessToken();
 		
@@ -281,7 +341,7 @@ public class StatsControllerIntegrationTest {
 		
 	@Test
 	@DisplayName("Security Client [GET] /api/stats/employees/worstsales")
-	public void SecurityClientWorseEmployeeBySales() throws Exception {
+	public void SecurityClientBestEmployeeBySales() throws Exception {
 		
 		String accessToken = obtainClientAccessToken();
 
@@ -296,7 +356,7 @@ public class StatsControllerIntegrationTest {
 	
 	@Test
 	@DisplayName("Security NoAuth [GET] /api/stats/employees/worstsales")
-	public void SecurityNoAuthWorseEmployeeBySales() throws Exception {
+	public void SecurityNoAuthBestEmployeeBySales() throws Exception {
 		
 		// request
 		mockMvc.perform(get("/api/stats/employees/worstsales")
@@ -305,8 +365,6 @@ public class StatsControllerIntegrationTest {
 		// results
 				.andExpect(status().isUnauthorized());
 	}
-	//TODO GET: /api/stats/employees/bestsales
-	
 	//TODO [Pendiente Pull Request B-71] GET: /api/stats/profits/{year}/
 	
 	//TODO [Pendiente Pull Request B-71] GET: /api/stats/profits/{year}/{month}
