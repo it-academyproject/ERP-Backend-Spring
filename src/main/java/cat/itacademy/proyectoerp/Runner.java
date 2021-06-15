@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
+import java.sql.Timestamp;
 
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import org.slf4j.Logger;
@@ -194,13 +195,15 @@ public class Runner implements CommandLineRunner {
 			
 
 			// Initialize 3 products
-			Product productOne = new Product("ejemplo 1", 100, "url image", "Bebidas", 150.00, 21.00, 100, 200);
+			Timestamp timestamp2 = new Timestamp(System.currentTimeMillis());
+			long ts2 = timestamp2.getTime();
+			Product productOne = new Product("ejemplo 1", 100, "url image", "Bebidas", 150.00, 21.00, 100, 200, ts2, ts2);
 			productService.createProduct(productOne);
 
-			Product productTwo = new Product("ejemplo 2", 200, "url image", "Comidas", 250.00, 21.00, 175, 200);
+			Product productTwo = new Product("ejemplo 2", 200, "url image", "Comidas", 250.00, 21.00, 175, 200, ts2, ts2);
 			productService.createProduct(productTwo);
 			
-			Product productThree = new Product("ejemplo 3", 50, "url image", "Souvenirs", 350.00, 21.00, 250, 100);
+			Product productThree = new Product("ejemplo 3", 50, "url image", "Souvenirs", 350.00, 21.00, 250, 100, ts2, ts2);
 			productService.createProduct(productThree);
 			
 			
@@ -208,9 +211,11 @@ public class Runner implements CommandLineRunner {
 			//initialize 20 products
 			
 			Product p;
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			long ts = timestamp.getTime();
 			for (int i= 0; i<20; i++) {
 				int price = (int)Math.random()*1000;
-				p = new Product("ejemplo "+(int)(i+4) ,price , "imagen nº"+ (int)(i+3),"brahim", price*0.40, 21.00 ,(int)(price+0.40), price);
+				p = new Product("ejemplo "+(int)(i+4) ,price , "imagen nº"+ (int)(i+3),"brahim", price*0.40, 21.00 ,(int)(price+0.40), price, ts, ts);
 				productService.createProduct(p);
 			}
 			
@@ -229,8 +234,8 @@ public class Runner implements CommandLineRunner {
 			OrderDetail orderDetail1 = new OrderDetail (productOne, orderOne, 2, 300.00);
 			OrderDetail orderDetail2 = new OrderDetail (productTwo, orderOne, 1, 250.00);
 			
-			orderDetailService.createOrderDetail(orderDetail1);
-			orderDetailService.createOrderDetail(orderDetail2);
+			orderDetailService.createOrderDetail(orderOne, productOne, 2);
+			orderDetailService.createOrderDetail(orderOne, productTwo, 1);
 			
 			orderOne.addOrderDetail(orderDetail1);
 			orderOne.addOrderDetail(orderDetail2);
@@ -244,8 +249,8 @@ public class Runner implements CommandLineRunner {
 			OrderDetail orderDetail3 = new OrderDetail (productTwo, orderTwo, 2, 500.00);
 			OrderDetail orderDetail4 = new OrderDetail (productThree, orderTwo, 2, 700.00);
 			
-			orderDetailService.createOrderDetail(orderDetail3);
-			orderDetailService.createOrderDetail(orderDetail4);
+			orderDetailService.createOrderDetail(orderTwo, productTwo, 2);
+			orderDetailService.createOrderDetail(orderTwo, productThree, 2);
 			
 			orderTwo.addOrderDetail(orderDetail3);
 			orderTwo.addOrderDetail(orderDetail4);	
@@ -260,8 +265,8 @@ public class Runner implements CommandLineRunner {
 			OrderDetail orderDetail5 = new OrderDetail (productOne, orderThree, 1, 150.00);
 			OrderDetail orderDetail6 = new OrderDetail (productThree, orderThree, 3, 1050.00);
 			
-			orderDetailService.createOrderDetail(orderDetail5);
-			orderDetailService.createOrderDetail(orderDetail6);
+			orderDetailService.createOrderDetail(orderThree, productOne, 1);
+			orderDetailService.createOrderDetail(orderThree, productThree, 3);
 			
 			orderThree.addOrderDetail(orderDetail5);
 			orderThree.addOrderDetail(orderDetail6);	
@@ -276,41 +281,14 @@ public class Runner implements CommandLineRunner {
 			OrderDetail orderDetail7 = new OrderDetail (productOne, orderFour, 1, 150.00);
 			OrderDetail orderDetail8 = new OrderDetail (productThree, orderFour, 3, 1050.00);
 			
-			orderDetailService.createOrderDetail(orderDetail7);
-			orderDetailService.createOrderDetail(orderDetail8);
+			orderDetailService.createOrderDetail(orderFour, productOne, 1);
+			orderDetailService.createOrderDetail(orderFour, productThree, 3);
 			
 			orderFour.addOrderDetail(orderDetail7);
 			orderFour.addOrderDetail(orderDetail8);	
 			
 			orderRepository.save(orderFour);
-			 
-			orderService.createOrder(orderThree);
-			
-			// Add new User, Employee and Order
-			// Order5
-			Order orderFive = new Order(employeeOne.getId(), clientOne.getId(), LocalDateTime.now(), 
-					OrderStatus.COMPLETED, PaymentMethod.CREDIT_CARD, address1, address1, 1200.00);
-			orderFive.addOrderDetail(orderDetail5);
-			orderFive.addOrderDetail(orderDetail6);	
-			orderService.createOrder(orderFive);
-			
-			// Order6
-			Order orderSix = new Order(employeeTwo.getId(), clientTwo.getId(), LocalDateTime.now(), 
-					OrderStatus.COMPLETED, PaymentMethod.CREDIT_CARD, address1, address1, 550.00);
-			orderSix.addOrderDetail(orderDetail1);
-			orderSix.addOrderDetail(orderDetail2);
-			orderService.createOrder(orderSix);
-			
-			// User3 & Employee3 & Order7
-			User userEmployeeThree = new User("employee3@company.com", "ReW9a0&+TP", UserType.EMPLOYEE);
-			userService.registerNewUserAccount(userEmployeeThree);
-			Employee employeeThree = new Employee(14000.00,"B1235467Z",667999998, LocalDate.now(),null, userEmployeeThree);
-			employeeService.createEmployee(employeeThree);
-			Order orderSeven = new Order(employeeThree.getId(), clientTwo.getId(), LocalDateTime.now(), 
-					OrderStatus.COMPLETED, PaymentMethod.CREDIT_CARD, address1, address1, 550.00);
-			orderSeven.addOrderDetail(orderDetail1);
-			orderSeven.addOrderDetail(orderDetail2);
-			orderService.createOrder(orderSeven);
+
 		}
 	}
 }

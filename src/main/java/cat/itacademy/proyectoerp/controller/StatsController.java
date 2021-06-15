@@ -5,6 +5,7 @@ import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
 import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
 import cat.itacademy.proyectoerp.dto.EmployeeDTO;
 import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
+import cat.itacademy.proyectoerp.dto.OrderDTO;
 import cat.itacademy.proyectoerp.service.IEmployeeService;
 import cat.itacademy.proyectoerp.service.IOrderService;
 import cat.itacademy.proyectoerp.util.StringToOrderStatus;
@@ -88,7 +89,7 @@ public class StatsController {
    
     try {
     	List<EmployeeDTO> employees = employeeService.findAllEmployees();
-    	List<Order> orderList = orderService.findAllOrders();
+    	List<OrderDTO> orderList = orderService.findAllOrders();
     	if(employees.isEmpty() || orderList.isEmpty()) {
     		map.put("success", "true");
             map.put("message", "no employees or orders founded");
@@ -98,7 +99,7 @@ public class StatsController {
     	    orderList.removeIf(o -> !o.getStatus().toString().equalsIgnoreCase("COMPLETED"));
     	    List<Map<String,String>> list = new ArrayList<>();
     	    for(EmployeeDTO e : employees) {
-    	    	 List<Order> employeeOrders = orderList.stream()                
+    	    	 List<OrderDTO> employeeOrders = orderList.stream()                
     	                 .filter(order -> order.getEmployeeId().toString()
     	                		 .equalsIgnoreCase(e.getId().toString()))    
     	                 .collect(Collectors.toList()); 

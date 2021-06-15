@@ -6,7 +6,9 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderDetail;
+import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.repository.IOrderDetailRepository;
 
@@ -17,9 +19,18 @@ public class OrderDetailServiceImpl implements IOrderDetailService{
 	IOrderDetailRepository iOrderDetailRepository;
 
 	@Override
-	public OrderDetail createOrderDetail(OrderDetail orderDetail) {
-		
-		return iOrderDetailRepository.save(orderDetail);
+	public OrderDetail createOrderDetail(Order order, Product product, Integer quantity) {
+		Double subtotal = calculateSubtotalFromProductAndQuantity(product, quantity);
+		return new OrderDetail(product, order, quantity, subtotal);
+	}
+
+	private Double calculateSubtotalFromProductAndQuantity(Product product, Integer quantity) {
+		double price;
+		if(quantity >= product.getWholesale_quantity())
+			price = product.getWholesale_price();
+		else
+			price = product.getPrice();
+		return (price + price * product.getVat() / 100) * quantity;
 	}
 
 	@Override
