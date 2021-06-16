@@ -1,0 +1,483 @@
+[33mcommit 8bb8df2ad0764c5b24180a6f1f046d00b83f19a0[m[33m ([m[1;36mHEAD -> [m[1;32mb-68-featureGetOrdersNotDetail[m[33m, [m[1;31morigin/dev[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mdev[m[33m)[m
+Merge: c4d6ed2 edea96f
+Author: IT Academy <52916255+IT-Academy-BCN@users.noreply.github.com>
+Date:   Wed Jun 9 16:38:02 2021 +0200
+
+    Merge pull request #122 from it-academyproject/B-67
+    
+    B-67 cambio del PropertyNamingStrategy a SnakeCaseStrategy
+
+[33mcommit c4d6ed209bc363c1d4b19ddb37ba48d58204f1e4[m
+Merge: c0d34f3 cc88c5e
+Author: IT Academy <52916255+IT-Academy-BCN@users.noreply.github.com>
+Date:   Wed Jun 9 12:20:52 2021 +0200
+
+    Merge pull request #120 from it-academyproject/b-69
+    
+    B 69
+
+[33mcommit edea96f1891d9b486a07a20c44865266b34d0d00[m[33m ([m[1;31morigin/B-67[m[33m)[m
+Author: marcdmv <marcdmv@gmail.com>
+Date:   Wed Jun 9 11:23:10 2021 +0200
+
+    cambio del PropertyNamingStrategy a SnakeCaseStrategy
+
+[33mcommit cc88c5ee1e815247c42286e010c91b35e96b8712[m[33m ([m[1;31morigin/b-69[m[33m)[m
+Author: polhdez <pol.hdez@gmail.com>
+Date:   Wed Jun 9 10:47:05 2021 +0200
+
+    Fixed recursive output when requesting GET at /api/clients
+
+[33mcommit 1f4ab1ae46c9a8921450a8e4f1e4b318a28cdf5d[m
+Author: polhdez <pol.hdez@gmail.com>
+Date:   Wed Jun 9 10:15:07 2021 +0200
+
+    Changed System.out.println(e) to e.printStackTrace()
+
+[33mcommit c0d34f3a470c50ea497d711c1a91ae167d068cee[m
+Merge: 6229398 7f7650d
+Author: IT Academy <52916255+IT-Academy-BCN@users.noreply.github.com>
+Date:   Tue Jun 8 17:02:10 2021 +0200
+
+    Merge pull request #118 from it-academyproject/B-66
+    
+    Send correct Employee UUID when request TOP 10 EMPLOYEE BY SALES
+
+[33mcommit 7f7650d064f551ca119f4bf6491aa95291e42a24[m[33m ([m[1;31morigin/B-66[m[33m)[m
+Author: Gerard <gerardpuig31@hotmail.com>
+Date:   Tue Jun 8 12:26:26 2021 +0200
+
+    Repository Query Renaming
+
+[33mcommit aa9be499c2000334bb024234b670ef91daf0334a[m
+Author: Gerard <gerardpuig31@hotmail.com>
+Date:   Tue Jun 8 12:09:12 2021 +0200
+
+    Send correct Employee UUID when request TOP 10 EMPLOYEE BY SALES
+
+[33mcommit d6434bb06f83e1018e4b3073a3ef7d8c4ab9c727[m
+Author: polhdez <pol.hdez@gmail.com>
+Date:   Tue Jun 8 12:08:19 2021 +0200
+
+    Restored application.properties to production instead of my debug config
+
+[33mcommit 6229398f7507d62e852d8d1eb7c4295544b58008[m
+Merge: b9a70af 07402fc
+Author: Pol Hernández <pol.hdez@gmail.com>
+Date:   Tue Jun 8 11:38:39 2021 +0200
+
+    Merge pull request #117 from it-academyproject/b-69
+    
+    Fixed the loop/crash when there are SMTP errors, handling the exception
+
+[33mcommit 07402fc615e27d20013eed3deaef75db35d37e17[m
+Author: polhdez <pol.hdez@gmail.com>
+Date:   Tue Jun 8 11:27:08 2021 +0200
+
+    Fixed the loop/crash when there are SMTP errors, handling the exception
+
+[33mcommit b9a70afe6a15bb8846542949e7451f54093f6d37[m
+Merge: ce9662d 6afdd47
+Author: IT Academy <52916255+IT-Academy-BCN@users.noreply.github.com>
+Date:   Mon Jun 7 10:53:13 2021 +0200
+
+    Merge pull request #116 from it-academyproject/B-62
+    
+    B-62 Confirmation Email When Order is Created
+
+[33mcommit 6afdd47cc1eeb46f7686cbaa94720a33d0fae749[m[33m ([m[1;31morigin/B-62[m[33m)[m
+Merge: b488324 ce9662d
+Author: Ferran Juanals <ferranjuanals@gmail.com>
+Date:   Mon Jun 7 09:21:00 2021 +0200
+
+    Merge remote-tracking branch 'origin/dev' into dev
+
+[33mcommit ce9662d2e79ab3dacfa1ba088eb4c4bd9ed8c520[m
+Merge: 958e496 27cb4a1
+Author: IT Academy <52916255+IT-Academy-BCN@users.noreply.github.com>
+Date:   Tue Jun 1 12:48:34 2021 +0200
+
+    Merge pull request #115 from it-academyproject/B63
+    
+    B63 Users Testing
+
+[33mcommit 958e49628241867e38d8f315ac04c57fb4bf92e0[m
+Merge: 01b4c3d 1047527
+Author: IT Academy <52916255+IT-Academy-BCN@users.noreply.github.com>
+Date:   Tue Jun 1 11:49:46 2021 +0200
+
+    Merge pull request #112 from it-academyproject/B-56
+    
+    B 56 Unsubscription & farewell email
+
+[33mcommit 01b4c3d127a9908b71d7e4e153ce104f70af60de[m
+Merge: 9ed3df4 e0de55c
+Author: IT Academy <52916255+IT-Academy-BCN@users.noreply.github.com>
+Date:   Tue Jun 1 11:27:12 2021 +0200
+
+    Merge pull request #110 from it-academyproject/B51_2
+    
+    B51_2 Minor change in B51_Fix Post Put Users Clients by new Address entity
+
+[33mcommit 9ed3df4c2312df9dbae382324442ebc30759923a[m
+Merge: aa1bfdb 83fe662
+Author: IT Academy <52916255+IT-Academy-BCN@users.noreply.github.com>
+Date:   Tue Jun 1 11:17:08 2021 +0200
+
+    Merge pull request #107 from it-academyproject/B-57
+    
+    B-57 Add Best/Worst Employee By Total Sales
+
+[33mcommit 27cb4a1897cad8454196434ed3e9400d0adf7fcf[m
+Author: nuriasantossanchez <nuria.santossanchez@gmail.com>
+Date:   Fri May 28 14:16:20 2021 +0200
+
+    B63 Users Testing
+
+[33mcommit b48832459013591a0d731f0ba2c974d9d5b0d90a[m
+Author: Ferran Juanals <ferranjuanals@gmail.com>
+Date:   Fri May 28 13:57:21 2021 +0200
+
+    Modified OrderDTO
+    
+    - OrderDTO: Modified billing_address & shipping_address variables from entity Address to AdressDTO
+
+[33mcommit cd7c97e66fc75e1295d278c148d15218171e8e90[m
+Author: Ferran Juanals <ferranjuanals@gmail.com>
+Date:   Fri May 28 13:55:33 2021 +0200
+
+    Modified OrderController createOrder(Order)
+    
+    - OrderController: Modified createOrder(Order) to return OderDTO in map instead of entity Order
+
+[33mcommit ac7288faae13020369920ac8828fbd45de78954f[m
+Author: Ferran Juanals <ferranjuanals@gmail.com>
+Date:   Fri May 28 13:50:42 2021 +0200
+
+    Modified createOrder(Order) to send ConfirmationEmail & return OrderDTO
+    
+    - IOrderService: Modified createOrder(Order) to return OrderDTO instead of entity Order
+    - OrderServiceImpl: Modified createOrder(Order) to map entity Order to OrderDTO
+    - OrderServiceImpl: Modified createOrder(Order) to send an email once a new order is created if the order is placed by a registered client
+
+[33mcommit 758739de9fad3eff9405775ab291600074df3cba[m
+Author: Ferran Juanals <ferranjuanals@gmail.com>
+Date:   Fri May 28 13:37:26 2021 +0200
+
+    Created sendOrderConfirmationEmail(Client)
+    
+    - IEmailService: Created function to send an email when a client has placed a new order.
+    - EmailServiceImpl: Implemented function
+
+[33mcommit 10475279f1e8c147df8dcecdaf226f44d2a6a3e3[m
+Merge: 3dd1761 aa1bfdb
+Author: Joan <jcoll1@gmail.com>
+Date:   Thu May 27 13:35:18 2021 +0200
+
+    Merged dev into my branch, and solved a conflict with UserServiceImpl
+
+[33mcommit 3dd17616808d9be64fd9147aabef8f4052749408[m
+Author: Joan <jcoll1@gmail.com>
+Date:   Thu May 27 13:21:47 2021 +0200
+
+    Revision on how to unsubscribe users and send them farewell email
+
+[33mcommit 83fe66289ffc7df44ef833c4432af472f73f9536[m
+Author: Ferran Juanals <ferranjuanals@gmail.com>
+Date:   Thu May 27 12:18:51 2021 +0200
+
+    Modified Errors in Runner & EmployeeController
+    
+    - Typos in Runner
+    - Missed modified variables in EmployeeController
+
+[33mcommit fcc568349c7741b2d749e080f131e500ee9f1a77[m
+Merge: 1fb2a8e aa1bfdb
+Author: Ferran Juanals <ferranjuanals@gmail.com>
+Date:   Thu May 27 11:43:08 2021 +0200
+
+    Merge remote-tracking branch 'origin/dev' into dev
+
+[33mcommit aa1bfdb8b0d3aade7deb04dba8a283b1863c4f73[m
+Merge: 00b58f3 98e5cbc
+Author: IT Academy <52916255+IT-Academy-BCN@users.noreply.github.com>
+Date:   Thu May 27 11:02:24 2021 +0200
+
+    Merge pull request #111 from it-academyproject/B60
+    
+    B60
+
+[33mcommit 98e5cbc3cbccce958e8e39642fc27f905de9e190[m
+Merge: eb259ff 00b58f3
+Author: brahim <taza-brahim@hotmail.es>
+Date:   Wed May 26 22:00:21 2021 +0200
+
+    Merge branch 'dev' into B60
+
+[33mcommit eb259ff1d03863213eeae662a144198cc40b415a[m
+Author: brahim <taza-brahim@hotmail.es>
+Date:   Wed May 26 21:56:24 2021 +0200
+
+    add new product task 60
+
+[33mcommit e0de55ccee63122eaf8c91a3e1de584aeeccfa0a[m
+Author: nuriasantossanchez <nuria.santossanchez@gmail.com>
+Date:   Wed May 26 15:43:36 2021 +0200
+
+    B51_Minor change
+
+[33mcommit 00b58f31c6fe67949f88e310678f8b3a97ea9c71[m
+Merge: f73fdea e165b24
+Author: IT Academy <52916255+IT-Academy-BCN@users.noreply.github.com>
+Date:   Wed May 26 11:59:25 2021 +0200
+
+    Merge pull request #109 from it-academyproject/B51
+    
+    B51- POST/PUT Users Clients due to changes in Address entity: Improved levels of abstraction
+
+[33mcommit e165b2481fe2def16b427b853074cdff08278269[m
+Merge: 7e52b3c f73fdea
+Author: nuriasantossanchez <nuria.santossanchez@gmail.com>
+Date:   Wed May 26 11:32:09 2021 +0200
+
+    Resolved conflicts with dev
+
+[33mcommit 7e52b3cc8820d4a373746cc5b4201c2de9167549[m
+Author: nuriasantossanchez <nuria.santossanchez@gmail.com>
+Date:   Wed May 26 11:15:54 2021 +0200
+
+    B51 Fix POST PUT Users Clients: improved levels of abstraction
+
+[33mcommit f73fdea8635a011f763f1645f895a2ab14c2d581[m
+Merge: e2d5d78 c42184c
+Author: IT Academy <52916255+IT-Academy-BCN@users.noreply.github.com>
+Date:   Wed May 26 10:11:45 2021 +0200
+
+    Merge pull request #105 from it-academyproject/B52-dev
+    
+    B52 dev
+
+[33mcommit 1fb2a8ec7d005f147379aecd235b2485123540da[m
+Author: Ferran Juanals <ferranjuanals@gmail.com>
+Date:   Tue May 25 10:58:48 2021 +0200
+
+    Modified StatsController.class name
+    
+    Modified StatsController.class name to correct a typo (StatsContoller)
+
+[33mcommit aecad2c564f0810046b5c6edf55ae66e5045d425[m
+Author: Ferran Juanals <ferranjuanals@gmail.com>
+Date:   Tue May 25 10:14:21 2021 +0200
+
+    Updated Runner to Create new Order and Employee
+    
+    Runner adds an User & Employee and three more Order to test different behaviours of best/worst employee by total sales.
+
+[33mcommit 90b414ab5e8b70d4448a1b16d8bb3f5b599ef9fa[m
+Author: Ferran Juanals <ferranjuanals@gmail.com>
+Date:   Tue May 25 09:58:32 2021 +0200
+
+    Modified various classes to return EmployeeDTO
+    
+    Modified EmployeeController, StatsController, EmployeeServiceImpl, IEmployeeService to return EmployeeDTO instead of Employee entity.
+
+[33mcommit 02d2dd683cbb3cbb318be518c8ca7de142c8b67f[m
+Merge: 7d5169c e2d5d78
+Author: Ferran Juanals <ferranjuanals@gmail.com>
+Date:   Wed May 19 10:59:47 2021 +0200
+
+    Merge branch 'dev' into B-57
+
+[33mcommit 7d5169c62c449ef84cc64d9b359e1c18bc3907ac[m
+Author: Ferran Juanals <ferranjuanals@gmail.com>
+Date:   Wed May 19 10:39:35 2021 +0200
+
+    Modified EmployeeController & EmployeeService to return DTO
+    
+    EmployeeController: Modified getEmployeeById(UUID) to return DTO
+    IEmployeeService: Modified findEmployeeById(UUID) to return DTO
+    EmployeeServiceImpl: Modified implemented findEmployeeById(UUID) to map Employee to EmployeeDTO
+
+[33mcommit 33060c372f8f6e9d4bd8dbe30089c1fe1b607223[m
+Author: Ferran Juanals <ferranjuanals@gmail.com>
+Date:   Wed May 19 10:28:57 2021 +0200
+
+    Undo StatsContoller.class refactor
+    
+    Undo typo correction in StatsContoller.class to prevent conflicts
+
+[33mcommit e47a8366e80ea003e7ff92a0b69053857babdff9[m
+Author: Ferran Juanals <ferranjuanals@gmail.com>
+Date:   Tue May 18 13:58:20 2021 +0200
+
+    Created methods to find best/worst Employee by total sales
+    
+    IOrderRepository: method to find all Order by Status
+    IOrderService: methods to getBest/WorstEmployeeByTotalSales() and return EmployeeSalesDTO
+    OrderServiceImpl: implemented methods getBest/WorstEmployeeByTotalSales()
+    OrderServiceImpl: method getMapOfEmployeesIdAndTotalSales() to get all Order with Status.COMPLETED and return a Map of each Employee and the sum of total sales
+    OrderServiceImpl: method mapEmployeeSalesDTO() to get an EmployeeSalesDTO from an Employee Id and the sum of total sales
+
+[33mcommit f7ec8004d69b9e2f8589942c3aec3ea31171c1d7[m
+Author: Ferran Juanals <ferranjuanals@gmail.com>
+Date:   Tue May 18 13:15:25 2021 +0200
+
+    Modified StatsController.class name
+    
+    Typo corrected
+
+[33mcommit 260114eead2c1d84b9686a89e7b38ea0ae1a9989[m
+Author: Ferran Juanals <ferranjuanals@gmail.com>
+Date:   Tue May 18 13:01:34 2021 +0200
+
+    Created EmployeeSalesDTO
+    
+    Created new DTO to return Employee + sum of total sales
+
+[33mcommit 53603948e0cf68efb09cec95025b4ae275016d74[m
+Author: Ferran Juanals <ferranjuanals@gmail.com>
+Date:   Tue May 18 12:57:08 2021 +0200
+
+    Modified StatsController
+    
+    Class refactor: Typo StatsContoller -> StatsController
+    StatsController: Created two endpoints to get best/worst employee by completed sales
+
+[33mcommit 836fe36b3677c97c766e0fda901bd9089da637c6[m
+Merge: 5b71d5f e2d5d78
+Author: Joan <jcoll1@gmail.com>
+Date:   Tue May 18 12:13:06 2021 +0200
+
+    Merge branch 'dev' of https://github.com/it-academyproject/ERP-Backend-Spring into B-56
+
+[33mcommit 5b71d5ffe36884ed5e2c136d6564cdf9f5a4881c[m
+Author: Joan <jcoll1@gmail.com>
+Date:   Tue May 18 12:10:24 2021 +0200
+
+    changes to be commited on B-56 farewell email
+
+[33mcommit c42184c926390b648b2b1386c217a3b38920eb3d[m
+Merge: 54b17c2 408ff64
+Author: brahim <taza-brahim@hotmail.es>
+Date:   Mon May 17 12:26:57 2021 +0200
+
+    Merge branch 'dev' into B52-dev
+    
+    Conflicts:
+            src/main/java/cat/itacademy/proyectoerp/domain/User.java
+
+[33mcommit 54b17c2e84cbe7badf6d3464458ee757615d1f74[m
+Author: brahim <taza-brahim@hotmail.es>
+Date:   Mon May 17 12:23:24 2021 +0200
+
+    update all changes to format correctly user
+
+[33mcommit e2d5d78588bb0ad747cf8032bfb78c22a25310e5[m
+Merge: 408ff64 dc39683
+Author: IT Academy <52916255+IT-Academy-BCN@users.noreply.github.com>
+Date:   Mon May 17 12:03:23 2021 +0200
+
+    Merge pull request #98 from it-academyproject/B-48
+    
+    B 48
+
+[33mcommit dc3968327bb274aa5d0bc046767b86704a50cbfd[m
+Author: Daniel <danielarizu@gmail.com>
+Date:   Mon May 17 11:59:01 2021 +0200
+
+    Update Runner.java
+    
+    Review runner
+
+[33mcommit 5d781d5e165c88b0f105318afc4e245f499a75a6[m
+Author: Daniel <danielarizu@gmail.com>
+Date:   Mon May 17 11:41:15 2021 +0200
+
+    Resolve conflicts
+    
+    Change DTO: employee_id by id
+
+[33mcommit 85a1be39c412e49cf4059e475f47acc903744c5e[m
+Merge: 8f35f1c 408ff64
+Author: Daniel <danielarizu@gmail.com>
+Date:   Mon May 17 10:39:57 2021 +0200
+
+    Merge branch 'dev' of https://github.com/it-academyproject/ERP-Backend-Spring into B-48
+
+[33mcommit 53e206fcb1b0ec6af5bff7de1d4ed9d6194bf8c0[m
+Author: brahim <taza-brahim@hotmail.es>
+Date:   Mon May 17 10:18:04 2021 +0200
+
+    modified endpoints Employees
+    
+    I modify the endpoints that gets employees, in order to not send the
+    password on the responses
+
+[33mcommit 9cb33a2b0bfb20112e3320a673f8ef2eaa2a3a65[m
+Merge: 136859d 408ff64
+Author: nuriasantossanchez <nuria.santossanchez@gmail.com>
+Date:   Mon May 17 10:15:23 2021 +0200
+
+    Resolved conflicts with dev
+
+[33mcommit 8f35f1c13f10dc43701a597fbb4353c0e6305e4f[m
+Author: Daniel <danielarizu@gmail.com>
+Date:   Mon May 17 09:36:57 2021 +0200
+
+    Update Runner.java
+
+[33mcommit 31d83f92ed03fa8b9ce329cf809e59bc906cd24a[m
+Merge: f65d219 f65d219
+Author: brahim <taza-brahim@hotmail.es>
+Date:   Mon May 17 01:55:22 2021 +0200
+
+    Merge branch 'B52-dev' into dev
+
+[33mcommit f65d2198a3a7d6962fd18af0433a65445e89c313[m
+Author: brahim <taza-brahim@hotmail.es>
+Date:   Mon May 17 01:38:34 2021 +0200
+
+    changement of deleting endpoint
+    
+    I change de delete endopoint from "api/emplyees/" to "api/emplyees"
+
+[33mcommit 408ff6499faa756de384eff23c3f51b49cbf78df[m
+Merge: 1a10a01 e4f070b
+Author: IT Academy <52916255+IT-Academy-BCN@users.noreply.github.com>
+Date:   Fri May 14 14:05:39 2021 +0200
+
+    Merge pull request #100 from it-academyproject/B-50bis
+    
+    B-50bis Post order endpoint
+
+[33mcommit 136859da1990014b0359fecfa95989a468657d46[m
+Merge: 0a1d542 1a10a01
+Author: nuriasantossanchez <nuria.santossanchez@gmail.com>
+Date:   Thu May 13 12:36:03 2021 +0200
+
+    Resolved conflicts with dev
+
+[33mcommit 1a10a01656338f4480bf81124d7ddb8f28da6f9f[m
+Merge: 3951674 97b718a
+Author: IT Academy <52916255+IT-Academy-BCN@users.noreply.github.com>
+Date:   Thu May 13 12:21:15 2021 +0200
+
+    Merge pull request #101 from it-academyproject/B-55
+    
+    Update User lastSession in every successful login
+
+[33mcommit 3951674dc27df432cc93843cca3dac0b728eb0bf[m
+Merge: c3c7e2b 8d3d4d9
+Author: IT Academy <52916255+IT-Academy-BCN@users.noreply.github.com>
+Date:   Thu May 13 12:20:59 2021 +0200
+
+    Merge pull request #102 from it-academyproject/B52-dev
+    
+    B52 dev
+
+[33mcommit 0a1d542e788b6032da54e1fdea5d01885d73c50f[m
+Merge: f7ff746 c3c7e2b
+Author: nuriasantossanchez <nuria.santossanchez@gmail.com>
+Date:   Thu May 13 12:05:17 2021 +0200
+
+    Mrge branch 'dev' of https://github.com/it-academyproject/ERP-Backend-Spring into B51
