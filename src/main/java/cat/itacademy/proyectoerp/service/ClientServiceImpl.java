@@ -32,7 +32,6 @@ public class ClientServiceImpl implements IClientService {
 	// We use ModelMapper for map Client entity with the DTO.
 	ModelMapper modelMapper = new ModelMapper();
 
-	@Override
 	public ClientDTO createClient(Client client) throws Exception {
 
 		String exceptionMessage = "Client not created. ";
