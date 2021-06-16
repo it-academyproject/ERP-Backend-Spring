@@ -5,14 +5,18 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "products")
@@ -42,13 +46,19 @@ public class Product implements Serializable {
 	@OneToMany (mappedBy = "product")
 	// @JsonManagedReference (gives 415 Unsupported Media Exception with Post order)
 	private Set <OrderDetail> order_details = new HashSet<>();
-	
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "shop_id", referencedColumnName = "shop_id", nullable = false)
+	@NotNull(message = "You have to assign shop to this product")
+	@Valid
+	private Shop shop;
+
 	public Product() {
-		
+
 	}
 	
 	public Product(String name, int stock, String image, String family, double price, double vat,
-			double wholesale_price, int wholesale_quantity, long created, long modified) {
+			double wholesale_price, int wholesale_quantity, long created, long modified, Shop shop) {
 		this.name = name;
 		this.stock = stock;
 		this.image = image;
@@ -59,6 +69,7 @@ public class Product implements Serializable {
 		this.wholesale_quantity = wholesale_quantity;
 		this.created = created;
 		this.modified = modified;
+		this.shop = shop;
 		
 	}
 	
@@ -168,6 +179,14 @@ public class Product implements Serializable {
 	
 	public void setModified(long modified) {
 		this.modified = modified;
+	}
+
+	public Shop getShop() {
+		return shop;
+	}
+
+	public void setShop(Shop shop) {
+		this.shop = shop;
 	}
 	
 }

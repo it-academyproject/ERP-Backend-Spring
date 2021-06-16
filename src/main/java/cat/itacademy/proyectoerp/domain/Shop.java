@@ -1,6 +1,7 @@
 package cat.itacademy.proyectoerp.domain;
 
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -9,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.Valid;
@@ -20,10 +22,12 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "shops")
+@JsonIgnoreProperties("products")
 public class Shop {
 
 	@JsonProperty("id")
@@ -64,6 +68,9 @@ public class Shop {
 	@CreationTimestamp
 	@Column(name="creation_date",  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date creationDate ;
+	
+	@OneToMany(mappedBy = "shop", cascade = {CascadeType.ALL})
+	private Set<Product> products;
 	
 	public Shop() {
 	}
@@ -139,5 +146,13 @@ public class Shop {
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	public Set<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(Set<Product> products) {
+		this.products = products;
 	}	
 }
