@@ -1,5 +1,8 @@
 package cat.itacademy.proyectoerp.service;
 
+import java.text.DateFormatSymbols;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,6 +21,7 @@ import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.NameTokenizers;
+import org.springframework.aop.AopInvocationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -269,6 +273,40 @@ public class OrderServiceImpl implements IOrderService{
 		return employeeSalesDTO;
 	}
 
+	/**
+	 * This method request the sum of all completed Orders for a year
+	 * @return double
+	 */
+	
+	@Override
+	public double getProfitByYear(int year) {
+		double profit = 0;
+		try {
+			profit = orderRepository.findProfitBetweenDates(
+					LocalDateTime.of(year, 1, 1, 0, 0),
+					LocalDateTime.of(year, 12, 31, 12, 59,59,59));
+		} catch (AopInvocationException e) {
+			if (profit== 0) throw new ArgumentNotFoundException("There are no completed orders for year " + year);
+		}
+		return profit;
+	}
+	
+	/**
+	 * This method request the sum of all completed Orders for a month
+	 * @return double
+	 */
+	@Override
+	public double getProfitByMonth(int year, int month) {
+		double profit = 0;
+		try {
+			profit = orderRepository.findProfitBetweenDates(
+					LocalDateTime.of(year, month, 1, 0, 0),
+					LocalDateTime.of(year, month, 1, 23, 59,59,59).with(TemporalAdjusters.lastDayOfMonth()));
+		} catch (AopInvocationException e) {
+			if (profit== 0) throw new ArgumentNotFoundException("There are no completed orders for " +  new DateFormatSymbols().getMonths()[month-1] + " " + year);
+		}
+		return profit;
+	}
 }
 
 

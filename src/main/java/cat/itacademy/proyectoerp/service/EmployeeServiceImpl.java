@@ -123,4 +123,15 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
     iEmployeeRepository.deleteById(id);
   }
+
+	@Override
+	public double getSalariesByYear() {
+		return iEmployeeRepository.getTotalSalariesForYear();
+	}
+
+	@Override
+	public double getSalariesByMonth() {
+		//Assuming employees have 12 payments per year.
+		return iEmployeeRepository.getTotalSalariesForYear()/12;
+	}
 }
