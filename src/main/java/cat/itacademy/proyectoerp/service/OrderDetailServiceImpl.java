@@ -4,6 +4,7 @@ import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.UUID;
 
+import cat.itacademy.proyectoerp.repository.IProductRepository;
 import org.springframework.beans.InvalidPropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,11 +21,18 @@ public class OrderDetailServiceImpl implements IOrderDetailService{
 	@Autowired
 	IOrderDetailRepository iOrderDetailRepository;
 
+	@Autowired
+	IProductRepository iProductRepository;
+
 	@Override
 	public OrderDetail createOrderDetail(Order order, Product product, Integer quantity) throws Exception {
+		// Get product in db just in case if the given product is malformed (for security)
+		product = iProductRepository.findByName(product.getName());
 		if (quantity > product.getStock())
 			throw new Exception("Quantity is larger than stock!");
 		Double subtotal = calculateSubtotalFromProductAndQuantity(product, quantity);
+		product.setStock(product.getStock() - quantity);
+		iProductRepository.save(product);
 		return new OrderDetail(product, order, quantity, subtotal);
 	}
 
