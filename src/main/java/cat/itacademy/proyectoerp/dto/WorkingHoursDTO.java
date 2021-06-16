@@ -14,18 +14,18 @@ import java.util.UUID;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class WorkingHoursDTO implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	private UUID id;
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime checkIn;
     private EmployeeDTO employee;
-    
     public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
+		return id;
+	}
+	public void setId(UUID id) {
+		this.id = id;
+	}
 
     public LocalDateTime getCheckIn() {
         return checkIn;

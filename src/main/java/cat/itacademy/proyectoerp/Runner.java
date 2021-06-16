@@ -36,6 +36,7 @@ import cat.itacademy.proyectoerp.service.IOrderService;
 import cat.itacademy.proyectoerp.service.OrderDetailServiceImpl;
 import cat.itacademy.proyectoerp.service.ProductServiceImpl;
 import cat.itacademy.proyectoerp.service.UserServiceImpl;
+import cat.itacademy.proyectoerp.service.WorkingHoursServiceImpl;
 
 /**
  * This class establishes that when the application is started, the run method
@@ -80,6 +81,9 @@ public class Runner implements CommandLineRunner {
 	
 	@Autowired
 	IOrderService orderService;
+	
+	@Autowired
+	WorkingHoursServiceImpl workingHoursService;
 
 	@Override
 	@Transactional
