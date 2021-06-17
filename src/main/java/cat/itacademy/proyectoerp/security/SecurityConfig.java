@@ -64,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.cors().and().csrf().disable().authorizeRequests()
 				.antMatchers(HttpMethod.GET, "/api/products").permitAll()
 				.antMatchers(HttpMethod.POST, "/api/users").permitAll()
-				.antMatchers("/api/login","/api/users/clients", "/api/users/recoverpassword")
+				.antMatchers("/api/login", "/api/users/recoverpassword")
 				.permitAll().anyRequest().authenticated().and()
 				// Exception control. 401 no authorized
 				.exceptionHandling().authenticationEntryPoint(jwtEntryPoint).and().sessionManagement()
