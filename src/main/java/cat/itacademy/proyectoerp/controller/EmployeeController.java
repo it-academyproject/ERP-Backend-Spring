@@ -1,8 +1,12 @@
 package cat.itacademy.proyectoerp.controller;
 
 import cat.itacademy.proyectoerp.domain.Employee;
+import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.dto.EmployeeDTO;
 import cat.itacademy.proyectoerp.service.IEmployeeService;
+import cat.itacademy.proyectoerp.service.OrderServiceImpl;
+import cat.itacademy.proyectoerp.util.CalculOrderAttendedAndSale;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +24,9 @@ public class EmployeeController {
 
   @Autowired
   IEmployeeService iEmployeeService;
+  
+  @Autowired 
+  OrderServiceImpl iOrderService;
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping()
@@ -27,9 +34,21 @@ public class EmployeeController {
     HashMap<String, Object> map = new HashMap<String, Object>();
     try {
       List<EmployeeDTO> employeeList = iEmployeeService.findAllEmployees();
+      
+      for (EmployeeDTO e:employeeList) {
+    	      	 
+    	  List<Order> ordersEmployeeList= iOrderService.findByEmployeeId(e.getId());
+    	  CalculOrderAttendedAndSale attendedAndSale= new CalculOrderAttendedAndSale();
+    	  int totolOrdersAttended=  attendedAndSale.getTotalOrdersAttendedbyEmployee(ordersEmployeeList);
+    	  double totalSales= attendedAndSale.getTotalSalesEmployee(ordersEmployeeList);
+    	  e.setTotalOrdersAttended(totolOrdersAttended);
+    	  e.setTotalSales(totalSales);
+      }
+      	
       map.put("success", "true");
       map.put("message", "employee found");
-      map.put("employee", employeeList);
+      map.put("id emple", employeeList);
+      
     } catch (Exception e) {
       map.put("success", "false");
       map.put("message", e.getMessage());

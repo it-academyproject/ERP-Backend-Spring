@@ -10,9 +10,11 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.sun.istack.Nullable;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 
 @Entity
@@ -28,7 +30,9 @@ public class Order  {
 	@JsonProperty("id")
 	private UUID id;
 	
+	
 	@Column(name = "employee_id")
+	@Type(type="uuid-char")
 	private UUID employeeId;
 	
 

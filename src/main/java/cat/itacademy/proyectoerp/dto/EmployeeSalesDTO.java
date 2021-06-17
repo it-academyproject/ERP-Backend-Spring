@@ -17,6 +17,9 @@ public class EmployeeSalesDTO implements Serializable {
 
 	private EmployeeDTO employee;
 	private Double totalSales;
+	
+
+	
 
 	public EmployeeDTO getEmployee() {
 		return employee;
