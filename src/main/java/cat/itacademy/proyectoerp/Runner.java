@@ -3,6 +3,7 @@ package cat.itacademy.proyectoerp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Random;
 import java.sql.Timestamp;
@@ -26,8 +27,10 @@ import cat.itacademy.proyectoerp.domain.PaymentMethod;
 import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.domain.UserType;
+import cat.itacademy.proyectoerp.domain.WorkingHours;
 import cat.itacademy.proyectoerp.repository.IAddressRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
+import cat.itacademy.proyectoerp.repository.IWorkingHoursRepository;
 import cat.itacademy.proyectoerp.repository.UserRepository;
 import cat.itacademy.proyectoerp.service.AddressServiceImpl;
 import cat.itacademy.proyectoerp.service.ClientServiceImpl;
@@ -84,6 +87,9 @@ public class Runner implements CommandLineRunner {
 	
 	@Autowired
 	WorkingHoursServiceImpl workingHoursService;
+	
+	@Autowired
+	IWorkingHoursRepository workingHoursRepository;
 
 	@Override
 	@Transactional
@@ -197,6 +203,14 @@ public class Runner implements CommandLineRunner {
 			Employee employeeTwo = new Employee(14000.00, "B1236767Z", 667999998, LocalDate.now(), null, userEmployeeTwo);
 			employeeService.createEmployee(employeeTwo);	
 			
+			// Initialize the working hours
+			
+			WorkingHours workingHours1 = new WorkingHours(LocalDate.of(2021, 6, 17), LocalTime.of(8, 00), LocalTime.of(17, 00), employeeOne.getId());
+			WorkingHours workingHours2 = new WorkingHours(LocalDate.of(2021, 6, 17), LocalTime.of(8, 00), LocalTime.of(17, 00), employeeTwo.getId());
+			
+			workingHoursService.createWorkingHours(workingHours1);
+			workingHoursService.createWorkingHours(workingHours2);
+						
 
 			// Initialize 3 products
 			Timestamp timestamp2 = new Timestamp(System.currentTimeMillis());
@@ -291,7 +305,7 @@ public class Runner implements CommandLineRunner {
 			orderFour.addOrderDetail(orderDetail7);
 			orderFour.addOrderDetail(orderDetail8);	
 			
-			orderRepository.save(orderFour);
+			orderRepository.save(orderFour);			
 
 		}
 	}

@@ -2,6 +2,7 @@ package cat.itacademy.proyectoerp.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -12,8 +13,7 @@ import javax.validation.constraints.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Entity
@@ -24,50 +24,73 @@ public class WorkingHours {
 	
 	@Id
 	@GeneratedValue(generator = "UUID")
-	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @GenericGenerator( name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
 	@Column(name = "id", columnDefinition = "BINARY(16)")
+	@JsonProperty("id")
 	private UUID id;
 
-  @JsonFormat(pattern = "HH:mm:ss")
-  @NotNull(message = "check_in is mandatory")
-  @Column(name="check_in")
-  private LocalDateTime checkIn;
-
-  @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "employee_id", referencedColumnName = "id", unique = true, nullable = false)
-  @NotNull(message = "You have to assign this checkIn to an employee")
-  @Valid
-  private Employee employee;
-
-  public WorkingHours(){
-	  
-  };
-
-  public WorkingHours(LocalDateTime checkIn, Employee employee) {
-    this.checkIn = checkIn;
-    this.employee = employee;
-  }
-
-  public UUID getId() {
-		return id;
-  }
-  public void setId(UUID id) {
- 	this.id = id;
-  }
+	@Column(name="day")
+	private LocalDate day;
+  
+	@NotNull(message = "check_in is mandatory")
+	@JsonFormat(pattern = "HH:mm:ss")
+	@Column(name="check_in")
+	private LocalTime checkIn;
 	
-  public LocalDateTime getCheckIn() {
-    return checkIn;
-  }
+	@NotNull(message = "check_out is mandatory")
+	@JsonFormat(pattern = "HH:mm:ss")
+	@Column(name="check_out")
+	private LocalTime checkOut;
 
-  public void setCheckIn(LocalDateTime checkIn) {
-    this.checkIn = checkIn;
-  }
+	@NotNull(message = "You have to assign an employee id to the working hours")
+	private UUID employeeId;
 
-  public Employee getEmployee() {
-    return employee;
-  }
+	public WorkingHours(){
+	  
+	};
 
-  public void setEmployee(Employee employee) {
-    this.employee = employee;
-  }
+	public WorkingHours(LocalDate day, LocalTime checkIn, LocalTime checkOut, UUID employeeId) {
+		this.day = day;
+		this.checkIn = checkIn;
+		this.checkOut = checkOut;
+		this.employeeId = employeeId;
+	}
+
+	public UUID getId() {
+		return id;
+	}
+	public void setId(UUID id) {
+		this.id = id;
+	}
+  
+	public LocalDate getDay() {
+		return day;
+	}
+	public void setDayOfTheWeek(LocalDate day) {
+		this.day = day;
+	}
+	
+	public LocalTime getCheckIn() {
+		return checkIn;
+	}
+
+	public void setCheckIn(LocalTime checkIn) {
+		this.checkIn = checkIn;
+	}
+	
+	public LocalTime getCheckOut() {
+		return checkOut;
+	}
+
+	public void setCheckOut(LocalTime checkOut) {
+		this.checkOut = checkOut;
+	}
+
+	public UUID getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(UUID employeeId) {
+		this.employeeId = employeeId;
+	}
 }

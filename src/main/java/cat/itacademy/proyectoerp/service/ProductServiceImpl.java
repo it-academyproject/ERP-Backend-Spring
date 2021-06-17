@@ -15,7 +15,7 @@ import cat.itacademy.proyectoerp.repository.IProductRepository;
 public class ProductServiceImpl implements IProductService {
 
 	@Autowired
-	IProductRepository productRepo;
+	IProductRepository iProductRepository;
 
 	@Override
 	@Transactional
@@ -28,7 +28,7 @@ public class ProductServiceImpl implements IProductService {
 		} else if (product.getName().isEmpty()) {
 			throw new ArgumentNotValidException("The product name cannot be empty");
 
-		} else if (productRepo.countByName(product.getName()) != 0) {
+		} else if (iProductRepository.countByName(product.getName()) != 0) {
 			throw new ArgumentNotValidException("Product name already exists");
 
 		//verify that the wholesale price is not higher than the price
@@ -39,7 +39,7 @@ public class ProductServiceImpl implements IProductService {
 			throw new ArgumentNotValidException("Modified date prior to Create date");
 		
 		} else {
-			return productRepo.save(product);
+			return iProductRepository.save(product);
 		}
 	}
 
@@ -48,10 +48,10 @@ public class ProductServiceImpl implements IProductService {
 	public List<Product> getProducts() throws ArgumentNotFoundException {
 
 		// if there are no products, throw exception
-		if (productRepo.findAll().isEmpty()) {
+		if (iProductRepository.findAll().isEmpty()) {
 			throw new ArgumentNotFoundException("No products found");
 		} else {
-			return productRepo.findAll();
+			return iProductRepository.findAll();
 		}
 
 	}
@@ -61,7 +61,7 @@ public class ProductServiceImpl implements IProductService {
 	public Product findProductById(int id) throws ArgumentNotFoundException {
 
 		//if there is no product with that id throw exception
-		return productRepo.findById(id)
+		return iProductRepository.findById(id)
 				.orElseThrow(() -> new ArgumentNotFoundException("Product not found. The id " + id + " doesn't exist"));
 	}
 
@@ -70,7 +70,7 @@ public class ProductServiceImpl implements IProductService {
 	public Product updateProduct(Product product) throws ArgumentNotValidException, ArgumentNotFoundException {
 
 		// verify if there is a product with that id.
-		Product productSelected = productRepo.findById(product.getId()).get();
+		Product productSelected = iProductRepository.findById(product.getId()).get();
 
 		if (productSelected == null) {
 			throw new ArgumentNotFoundException("Product not found. The id " + product.getId() + " doesn't exist");
@@ -86,7 +86,7 @@ public class ProductServiceImpl implements IProductService {
 
 		} else if (!productSelected.getName().equalsIgnoreCase(product.getName())) {
 
-			Product productFound = productRepo.findByName(product.getName());
+			Product productFound = iProductRepository.findByName(product.getName());
 
 			if (productFound != null) {
 				throw new ArgumentNotValidException("Product name already exists");
@@ -139,14 +139,14 @@ public class ProductServiceImpl implements IProductService {
 			productSelected.setModified(product.getModified());
 		}
 
-		return productRepo.save(productSelected);
+		return iProductRepository.save(productSelected);
 
 	}
 
 	@Override
 	@Transactional
 	public void deleteProduct(int id) {
-		productRepo.deleteById(id);
+		iProductRepository.deleteById(id);
 	}
 
 }

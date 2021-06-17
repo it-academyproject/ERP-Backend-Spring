@@ -6,8 +6,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -16,31 +15,48 @@ public class WorkingHoursDTO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	private UUID id;
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    private LocalDateTime checkIn;
-    private EmployeeDTO employee;
-    public UUID getId() {
+	private int id;
+	private String dayOfTheWeek;
+	private LocalTime checkIn;
+    private LocalTime checkOut;
+    private UUID employeeId;
+    public int getId() {
 		return id;
 	}
-	public void setId(UUID id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-    public LocalDateTime getCheckIn() {
+    public String getDayOfTheWeek() {
+        return dayOfTheWeek;
+    }
+
+    public void setDayOfTheWeek(String dayOfTheWeek) {
+        this.dayOfTheWeek = dayOfTheWeek;
+    }
+    
+    public LocalTime getCheckIn() {
         return checkIn;
     }
 
-    public void setCheckIn(LocalDateTime checkIn) {
+    public void setCheckIn(LocalTime checkIn) {
         this.checkIn = checkIn;
     }
     
-    public EmployeeDTO getEmployee() {
-        return employee;
+    public LocalTime getCheckOut() {
+        return checkOut;
     }
 
-    public void setEmployee(EmployeeDTO employee) {
-        this.employee = employee;
+    public void setCheckOut(LocalTime checkOut) {
+        this.checkOut = checkOut;
+    }
+    
+    public UUID getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployee(UUID employeeId) {
+        this.employeeId = employeeId;
     }
 
 }
