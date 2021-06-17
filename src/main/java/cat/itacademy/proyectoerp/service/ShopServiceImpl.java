@@ -57,8 +57,11 @@ public class ShopServiceImpl implements IShopService {
 	public ShopDTO updateShop(Shop shop) throws ArgumentNotValidException, ArgumentNotFoundException {
 
 		//check if the new brand change and if the new one is available
-		Shop shopToUpdate = GetShopByIdFromRepository(shop.getId());
-		if(!shopToUpdate.getBrandName().equals(shop.getBrandName())) CheckIfShopBrandNameExist(shop);
+		Shop shopPrevious = GetShopByIdFromRepository(shop.getId());
+		if(!shopPrevious.getBrandName().equals(shop.getBrandName())) CheckIfShopBrandNameExist(shop);
+		
+		//keep creation date
+		shop.setCreationDate(shopPrevious.getCreationDate());
 		
 		//update shop
 		shop = shopRepo.save(shop);
