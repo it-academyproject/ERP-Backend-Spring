@@ -203,13 +203,13 @@ public class Runner implements CommandLineRunner {
 			addressService.createAddress(addressShopOne);
 			
 			Shop shopOne = new Shop("BrandTest01", "CompanyTest01", "443344F",666777999, addressShopOne);
-			shopRepository.save(shopOne);
+			shopOne = shopRepository.save(shopOne);
 			
 			Address addressShopTwo = new Address("Calle Botigues", "1 C", "Barcelona", "Spain", "08016");
 			addressService.createAddress(addressShopOne);
 			
 			Shop shopTwo = new Shop("BrandTest01", "CompanyTest01", "443344F",666777999, addressShopTwo);
-			shopRepository.save(shopTwo);	
+			shopTwo = shopRepository.save(shopTwo);	
 			
 			
 			
@@ -222,7 +222,7 @@ public class Runner implements CommandLineRunner {
 			Product productTwo = new Product("ejemplo 2", 200, "url image", "Comidas", 250.00, 21.00, 175, 200, ts2, ts2, shopOne);
 			productService.createProduct(productTwo);
 			
-			Product productThree = new Product("ejemplo 3", 50, "url image", "Souvenirs", 350.00, 21.00, 250, 100, ts2, ts2, shopOne);
+			Product productThree = new Product("ejemplo 3", 50, "url image", "Souvenirs", 350.00, 21.00, 250, 100, ts2, ts2, null);
 			productService.createProduct(productThree);
 			
 			//initialize 20 products
