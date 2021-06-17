@@ -24,8 +24,7 @@ public class UserDTO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "UserDTO [success=" + success + ", message=" + message + ", username=" + username + ", id=" + id
-				+ ", user_type=" + user_type + "]";
+		return "UserDTO [success=" + success + ", message=" + message + ", username=" + username + ", id=" + id +  "]";
 	}
 	private static final long serialVersionUID = 1L;
 	
@@ -67,9 +66,10 @@ public class UserDTO implements Serializable{
 	public void setUsername(String username) {
 		this.username = username;
 	}
+	/*
 	public UserType getUserType() {
 		return user_type;
-	}
+	}*/
 	public void setUserType(UserType user_type) {
 		this.user_type = user_type;
 	}

@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
+import java.sql.Timestamp;
 
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import org.slf4j.Logger;
@@ -194,13 +195,15 @@ public class Runner implements CommandLineRunner {
 			
 
 			// Initialize 3 products
-			Product productOne = new Product("ejemplo 1", 100, "url image", "Bebidas", 150.00, 21.00, 100, 200);
+			Timestamp timestamp2 = new Timestamp(System.currentTimeMillis());
+			long ts2 = timestamp2.getTime();
+			Product productOne = new Product("ejemplo 1", 100, "url image", "Bebidas", 150.00, 21.00, 100, 200, ts2, ts2);
 			productService.createProduct(productOne);
 
-			Product productTwo = new Product("ejemplo 2", 200, "url image", "Comidas", 250.00, 21.00, 175, 200);
+			Product productTwo = new Product("ejemplo 2", 200, "url image", "Comidas", 250.00, 21.00, 175, 200, ts2, ts2);
 			productService.createProduct(productTwo);
 			
-			Product productThree = new Product("ejemplo 3", 50, "url image", "Souvenirs", 350.00, 21.00, 250, 100);
+			Product productThree = new Product("ejemplo 3", 50, "url image", "Souvenirs", 350.00, 21.00, 250, 100, ts2, ts2);
 			productService.createProduct(productThree);
 			
 			
@@ -208,9 +211,11 @@ public class Runner implements CommandLineRunner {
 			//initialize 20 products
 			
 			Product p;
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			long ts = timestamp.getTime();
 			for (int i= 0; i<20; i++) {
 				int price = (int)Math.random()*1000;
-				p = new Product("ejemplo "+(int)(i+4) ,price , "imagen nº"+ (int)(i+3),"brahim", price*0.40, 21.00 ,(int)(price+0.40), price);
+				p = new Product("ejemplo "+(int)(i+4) ,price , "imagen nº"+ (int)(i+3),"brahim", price*0.40, 21.00 ,(int)(price+0.40), price, ts, ts);
 				productService.createProduct(p);
 			}
 			

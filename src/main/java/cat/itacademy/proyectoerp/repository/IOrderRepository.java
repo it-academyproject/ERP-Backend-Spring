@@ -30,8 +30,10 @@ public interface IOrderRepository extends JpaRepository<Order, UUID>{
 		          +"group by employee_id order by total desc limit 10", nativeQuery = true)
   List<Object[]> findEmployeesSalesBetweenDates(LocalDateTime begin_date, LocalDateTime end_date);
   
-
-
+  @Query(value = "select sum(total) as total from orders " 
+          +"where (orders.status like 'COMPLETED') "	
+          +" and (orders.date_created between :begin_date and :end_date) ", nativeQuery = true)
+  double findProfitBetweenDates(LocalDateTime begin_date, LocalDateTime end_date);
 
 }
  
