@@ -20,6 +20,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -34,7 +35,8 @@ public class Shop {
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-	@Column(name = "shop_id", columnDefinition = "BINARY(16)")
+	@Column(name = "shop_id")
+	@Type(type="uuid-char")
 	private UUID id;
 
 	@JsonProperty("brand_name")
@@ -69,7 +71,7 @@ public class Shop {
 	@Column(name="creation_date",  columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date creationDate ;
 	
-	@OneToMany(mappedBy = "shop", cascade = {CascadeType.ALL})
+	@OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
 	private Set<Product> products;
 	
 	public Shop() {

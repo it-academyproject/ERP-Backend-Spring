@@ -48,8 +48,9 @@ public class Product implements Serializable {
 	private Set <OrderDetail> order_details = new HashSet<>();
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "shop_id", referencedColumnName = "shop_id", nullable = false)
-	@NotNull(message = "You have to assign shop to this product")
+	@JoinColumn(name = "shop_id", referencedColumnName = "shop_id")
+	//TODO In the future this field should be mandatory
+	//@NotNull(message = "You have to assign shop to this product")
 	@Valid
 	private Shop shop;
 
