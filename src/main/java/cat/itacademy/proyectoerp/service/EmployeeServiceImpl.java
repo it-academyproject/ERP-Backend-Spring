@@ -9,7 +9,7 @@ import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.repository.IEmployeeRepository;
-import cat.itacademy.proyectoerp.repository.UserRepository;
+import cat.itacademy.proyectoerp.repository.IUserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,10 +22,10 @@ import java.util.stream.Collectors;
 public class EmployeeServiceImpl implements IEmployeeService {
 
   @Autowired
-  IEmployeeRepository iEmployeeRepository;
+  IEmployeeRepository employeeRepository;
 
   @Autowired
-  UserRepository userRepository;
+  IUserRepository userRepository;
 
   ModelMapper modelMapper = new ModelMapper();
 
@@ -38,7 +38,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
     User user = userRepository.findByUsername(employee.getUser().getUsername());
     try {
-      savedEmployee = iEmployeeRepository.save(employee);
+      savedEmployee = employeeRepository.save(employee);
     }catch (Exception e){
       messageDTO = new MessageDTO("False", "Employee exist. Please, check the username");
       employeeDTO.setMessage(messageDTO);
@@ -56,22 +56,22 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
   @Override
   public EmployeeDTO findEmployeeById(UUID id) throws ArgumentNotFoundException  {
-	Employee employee = iEmployeeRepository.findById(id).orElseThrow(() -> new ArgumentNotFoundException("Employee not found. The id " + id + " doesn't exist"));
+	Employee employee = employeeRepository.findById(id).orElseThrow(() -> new ArgumentNotFoundException("Employee not found. The id " + id + " doesn't exist"));
 	return modelMapper.map(employee, EmployeeDTO.class);
   }
 
   @Override
   public List<EmployeeDTO> findAllEmployees() throws ArgumentNotFoundException {
-    if(iEmployeeRepository.findAll().isEmpty()){
+    if(employeeRepository.findAll().isEmpty()){
       throw new ArgumentNotFoundException("No employees found");
     }
-    List<EmployeeDTO> employeesDTO = iEmployeeRepository.findAll().stream().map(employee -> modelMapper.map(employee, EmployeeDTO.class)).collect(Collectors.toList());
+    List<EmployeeDTO> employeesDTO = employeeRepository.findAll().stream().map(employee -> modelMapper.map(employee, EmployeeDTO.class)).collect(Collectors.toList());
     return employeesDTO;
   }
 
   @Override
   public EmployeeDTO updateEmployee(Employee employee) throws Exception {
-    Employee employeeById = iEmployeeRepository.findById(employee.getId()).orElseThrow(
+    Employee employeeById = employeeRepository.findById(employee.getId()).orElseThrow(
             () -> new ArgumentNotFoundException("Employee not found. The id " + employee.getId() + " doesn't exist"));
 
     validateEmployeeToUpdate(employee, employeeById);
@@ -80,7 +80,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
     Employee employeeUpdated;
     try {
-      employeeUpdated = iEmployeeRepository.save(employee);
+      employeeUpdated = employeeRepository.save(employee);
     }catch (Exception e){
       throw new Exception("The username already exists. Please, choose another.");
     }
@@ -118,20 +118,20 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
   @Override
   public void deleteEmployee(UUID id) throws ArgumentNotFoundException {
-    iEmployeeRepository.findById(id).orElseThrow(
+    employeeRepository.findById(id).orElseThrow(
             () -> new ArgumentNotFoundException("Employee not found. The id " + id + " doesn't exist"));
 
-    iEmployeeRepository.deleteById(id);
+    employeeRepository.deleteById(id);
   }
 
 	@Override
 	public double getSalariesByYear() {
-		return iEmployeeRepository.getTotalSalariesForYear();
+		return employeeRepository.getTotalSalariesForYear();
 	}
 
 	@Override
 	public double getSalariesByMonth() {
 		//Assuming employees have 12 payments per year.
-		return iEmployeeRepository.getTotalSalariesForYear()/12;
+		return employeeRepository.getTotalSalariesForYear()/12;
 	}
 }
