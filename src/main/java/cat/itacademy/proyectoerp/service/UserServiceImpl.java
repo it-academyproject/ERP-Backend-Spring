@@ -259,8 +259,7 @@ public class UserServiceImpl implements IUserService {
 			user.setUsername(userDto.getUsername());
 		if (password != null)
 			user.setPassword(passEconder(password));
-		if (userDto.getUserType() != null)
-			user.setUserType(userDto.getUserType());
+	
 
 		userRepository.save(user);
 		userDto.setSuccess("True");

@@ -11,7 +11,10 @@ import cat.itacademy.proyectoerp.dto.MessageDTO;
 
 public interface IClientService {
 	
-	public ClientDTO createClient(Client client) throws Exception; //CREATE - Adds new client to the Database
+	public static ClientDTO createClient(Client client) throws Exception {
+	
+		return null;
+	} //CREATE - Adds new client to the Database
 	
 	public ClientDTO createFastClient(ClientDTO client) throws Exception; // CREATE - Adds a new client without needing an username. Only for admin purposes.
 	
