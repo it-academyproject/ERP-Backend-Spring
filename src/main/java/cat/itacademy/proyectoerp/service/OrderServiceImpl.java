@@ -214,7 +214,7 @@ public class OrderServiceImpl implements IOrderService{
 		
 		for (Object[] object : repositoryQueryList) {
 			TopEmployeeDTO topEmployeeDTO = new TopEmployeeDTO();
-			topEmployeeDTO.setId(UUIDconverter.convertFromBytes((byte[])object[0]));
+			topEmployeeDTO.setId(UUID.fromString(object[0].toString()));
 			topEmployeeDTO.setTotal(Double.parseDouble(object[1].toString()));
 			topEmployeeList.add(topEmployeeDTO);
 		}

@@ -16,7 +16,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "products")
