@@ -9,5 +9,6 @@ import cat.itacademy.proyectoerp.domain.Shop;
 
 @Repository
 public interface IShopRepository extends JpaRepository<Shop,UUID> {
-
+	
+	public boolean existsByBrandName(String brandName);
 }
