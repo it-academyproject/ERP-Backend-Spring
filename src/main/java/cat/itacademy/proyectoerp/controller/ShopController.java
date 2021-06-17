@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cat.itacademy.proyectoerp.domain.Shop;
@@ -38,11 +36,11 @@ public class ShopController {
 		HashMap<String, Object> map = new LinkedHashMap<String, Object>();
 
 		try {
-			shopService.createShop(shop);
+			ShopDTO shopDTO= shopService.createShop(shop);
 
 			map.put("success", "true");
 			map.put("message", "New shop created");
-			map.put("shop", shop);
+			map.put("shop", shopDTO);
 		} catch (Exception e) {
 			map.put("success", "false");
 			map.put("message", "Error: " + e.getMessage());

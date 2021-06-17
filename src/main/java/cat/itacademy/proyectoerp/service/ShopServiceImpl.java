@@ -25,16 +25,12 @@ public class ShopServiceImpl implements IShopService {
 
 	ModelMapper modelMapper = new ModelMapper();
 	
-	private ShopDTO convertShopToDTO(Shop shop) {
-		return modelMapper.map(shop,ShopDTO.class);
-	}
-	
 	@Override
 	@Transactional
 	public ShopDTO createShop(Shop shop) throws ArgumentNotValidException {
 		CheckIfShopBrandNameExist(shop);
 		shop = shopRepo.save(shop);
-		return convertShopToDTO(shop);
+		return ConvertShopToDTO(shop);
 	}
 
 	@Override
@@ -44,7 +40,7 @@ public class ShopServiceImpl implements IShopService {
 		if (shopRepo.findAll().isEmpty()) {
 			throw new ArgumentNotFoundException("No shops found");
 		} else {
-			List<ShopDTO> shopDTOList = shopRepo.findAll().stream().map(s->convertShopToDTO(s)).collect(Collectors.toList());		
+			List<ShopDTO> shopDTOList = shopRepo.findAll().stream().map(s->ConvertShopToDTO(s)).collect(Collectors.toList());		
 			return shopDTOList;
 		}
 	}
@@ -52,18 +48,21 @@ public class ShopServiceImpl implements IShopService {
 	@Override
 	@Transactional(readOnly = true)
 	public ShopDTO findShopById(UUID id) throws ArgumentNotFoundException {
-		//if there is no shop with that id throw exception
-		Shop shop = shopRepo.findById(id)
-				.orElseThrow(() -> new ArgumentNotFoundException("Shop not found. The id " + id + " doesn't exist"));
-		return convertShopToDTO(shop);
+		Shop shop = GetShopByIdFromRepository(id);
+		return ConvertShopToDTO(shop);
 	}
 
 	@Override
 	@Transactional
 	public ShopDTO updateShop(Shop shop) throws ArgumentNotValidException, ArgumentNotFoundException {
-		CheckIfShopBrandNameExist(shop);
+
+		//check if the new brand change and if the new one is available
+		Shop shopToUpdate = GetShopByIdFromRepository(shop.getId());
+		if(!shopToUpdate.getBrandName().equals(shop.getBrandName())) CheckIfShopBrandNameExist(shop);
+		
+		//update shop
 		shop = shopRepo.save(shop);
-		return convertShopToDTO(shop);
+		return ConvertShopToDTO(shop);
 	}
 
 	@Override
@@ -71,8 +70,20 @@ public class ShopServiceImpl implements IShopService {
 	public void deleteShop(UUID id) {
 		shopRepo.deleteById(id);
 	}
-	
-	public void CheckIfShopBrandNameExist(Shop shop) {
-		if(shopRepo.existsByBrandName(shop.getBrandName())) throw new EntityExistsException("The brand name is already in use");
+		
+	private ShopDTO ConvertShopToDTO(Shop shop) {
+		return modelMapper.map(shop,ShopDTO.class);
 	}
+	
+	private void CheckIfShopBrandNameExist(Shop shop) {
+		if(shopRepo.existsByBrandName(shop.getBrandName())) throw new EntityExistsException("The brand name: " + shop.getBrandName() + " is already in use");
+	}
+	
+	private Shop GetShopByIdFromRepository(UUID id) {
+		//if there is no shop with that id throw exception
+		Shop shop = shopRepo.findById(id)
+				.orElseThrow(() -> new ArgumentNotFoundException("Shop not found. The id: " + id + " doesn't exist"));
+		return shop;
+	}
+
 }
