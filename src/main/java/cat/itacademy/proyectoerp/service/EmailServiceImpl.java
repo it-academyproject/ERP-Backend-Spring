@@ -35,7 +35,7 @@ public class EmailServiceImpl implements IEmailService {
             message.setText("Welcome to ProyectoERP \n\nThanks for signing up!");
 
             // send email
-            // javaMailSender.send(message);
+            javaMailSender.send(message);
         } catch (MailException e) {
             e.printStackTrace();
         }
@@ -62,7 +62,7 @@ public class EmailServiceImpl implements IEmailService {
                     + "\n\nNow you can login with your new password and navigate through the app, see you soon!");
 
             // send email
-            // javaMailSender.send(message);
+            javaMailSender.send(message);
         } catch (MailException e) {
             e.printStackTrace();
         }
@@ -82,7 +82,7 @@ public class EmailServiceImpl implements IEmailService {
             message.setTo(client.getUser().getUsername());
             message.setSubject("Confirmation Order ");
             message.setText("Hello " + client.getNameAndSurname() + ", your order has been placed");
-            // javaMailSender.send(message);
+            javaMailSender.send(message);
 
         } catch (MailException e) {
             e.printStackTrace();
@@ -104,7 +104,7 @@ public class EmailServiceImpl implements IEmailService {
             message.setText("We already miss how close we used to be.");
 
             // send email
-            // javaMailSender.send(message);
+            javaMailSender.send(message);
 
         } catch (MailException e) {
             e.printStackTrace();

@@ -305,7 +305,7 @@ public class Runner implements CommandLineRunner {
 			orderFour.addOrderDetail(orderDetail7);
 			orderFour.addOrderDetail(orderDetail8);	
 			
-			orderRepository.save(orderFour);			
+			orderRepository.save(orderFour);
 
 		}
 	}
