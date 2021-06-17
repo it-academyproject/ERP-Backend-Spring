@@ -31,7 +31,6 @@ import cat.itacademy.proyectoerp.repository.IClientRepository;
 import cat.itacademy.proyectoerp.repository.IOrderDetailRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
-import cat.itacademy.proyectoerp.util.UUIDconverter;
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderDetail;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
