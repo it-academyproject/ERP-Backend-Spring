@@ -31,7 +31,6 @@ import cat.itacademy.proyectoerp.repository.IAddressRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.IUserRepository;
 import cat.itacademy.proyectoerp.repository.IShopRepository;
-import cat.itacademy.proyectoerp.repository.UserRepository;
 import cat.itacademy.proyectoerp.service.AddressServiceImpl;
 import cat.itacademy.proyectoerp.service.ClientServiceImpl;
 import cat.itacademy.proyectoerp.service.EmployeeServiceImpl;
