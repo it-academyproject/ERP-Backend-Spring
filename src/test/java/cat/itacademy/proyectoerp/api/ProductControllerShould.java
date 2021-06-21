@@ -9,6 +9,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -26,6 +27,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cat.itacademy.proyectoerp.Runner;
@@ -345,31 +347,28 @@ public class ProductControllerShould {
 		);	
 	}
 	
-//	@Test
-//	void fetchListOfCategories() throws Exception {
-//		// GIVEN
-//		String token = loginAndGetJwtToken(mvc, DEFAULT_ADMIN_USERNAME, DEFAULT_PASSWORD);
-////		Category parentCategory = testData.createCategory(VALID_PARENT_CATEGORY_NAME, VALID_PARENT_CATEGORY_DESCRIPTON, null);
-////		Category subCategory = testData.createCategory(VALID_CATEGORY_NAME, VALID_CATEGORY_DESCRIPTON, parentCategory);
-//		// WHEN
-//		MockHttpServletResponse response = mvc.perform(get(CATEGORY_BASE_URI)
-//				.header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-//				.accept(APPLICATION_JSON))
-//				.andExpect(status().isOk())
-//				.andReturn().getResponse();
-//		// THEN
-//		Map<String, Object> map = jsonParser.parseMap(response.getContentAsString());
-//		assertAll(
-//				() -> assertThat(map.get("success")).isEqualTo("true"),
-//				() -> assertThat(map.get("message")).isEqualTo("categories found"),
-//				() -> assertThat(map.get("categories")).isNotNull()
-////				() -> assertThat(category.getId()).isNotNull(),
-////				() -> assertThat(category.getName()).isEqualTo(parentCategory.getName()),
-////				() -> assertThat(category.getDescription()).isEqualTo(parentCategory.getDescription()),
-////				() -> assertThat(category.getParentCategoryId()).isNull(),
-////				() -> assertThat(category.getParentCategoryName()).isNull()
-//		);	
-//	}
+	@Test
+	void fetchListOfCategories() throws Exception {
+		// GIVEN
+		String token = loginAndGetJwtToken(mvc, DEFAULT_ADMIN_USERNAME, DEFAULT_PASSWORD);
+		Category parentCategory = testData.createCategory(VALID_PARENT_CATEGORY_NAME, VALID_PARENT_CATEGORY_DESCRIPTON, null);
+		Category subCategory = testData.createCategory(VALID_CATEGORY_NAME, VALID_CATEGORY_DESCRIPTON, parentCategory);
+		List<CategoryDTO> categories = testData.buildListCategoryDto(new Category[] {parentCategory, subCategory});
+		// WHEN
+		MockHttpServletResponse response = mvc.perform(get(CATEGORY_BASE_URI)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+				.accept(APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andReturn().getResponse();
+		// THEN
+		Map<String, Object> map = jsonParser.parseMap(response.getContentAsString());
+		List<CategoryDTO> cata = objectMapper.convertValue(map.get("categories"), new TypeReference<List<CategoryDTO>>(){});
+		assertAll(
+				() -> assertThat(map.get("success")).isEqualTo("true"),
+				() -> assertThat(map.get("message")).isEqualTo("categories found"),
+				() -> assertThat(cata).isEqualTo(categories)
+		);	
+	}
 	
 	@Test
 	void returnErrorWhenUpdatingInexistentCategory() throws Exception {
