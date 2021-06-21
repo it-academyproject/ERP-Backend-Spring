@@ -3,17 +3,20 @@ package cat.itacademy.proyectoerp.service;
 import java.util.List;
 
 import cat.itacademy.proyectoerp.domain.Product;
+import cat.itacademy.proyectoerp.dto.ProductDTO;
 
 public interface IProductService {
 
-	public Product createProduct(Product product); // CREATE - create new product
+	public ProductDTO createProduct(ProductDTO productDto);
 
-	public List<Product> getProducts(); // READ - read product list data
+	public List<ProductDTO> getProducts();
+	
+	public List<ProductDTO> getProductsByCategoryName(String name);
 
-	public Product findProductById(int id); // READ - read data of a product according to id
+	public Product findProductById(int id);
 
-	public Product updateProduct(Product product); // UPDATE - update product data
+	public ProductDTO updateProduct(Product product);
 
-	public void deleteProduct(int id); // DELETE - delete product according to id
+	public void deleteProduct(int id);
 
 }
