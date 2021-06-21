@@ -1,7 +1,7 @@
 package cat.itacademy.proyectoerp;
 
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
-import cat.itacademy.proyectoerp.repository.UserRepository;
+import cat.itacademy.proyectoerp.repository.IUserRepository;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 import javassist.tools.web.BadHttpRequest;
 
@@ -51,7 +51,7 @@ public class StatsControllerSecurityTest {
 	private MockMvc mockMvc;
 
 	@Autowired
-	UserRepository userRepository;
+	IUserRepository userRepository;
 	
 	@Autowired
 	IOrderRepository orderRepository;
