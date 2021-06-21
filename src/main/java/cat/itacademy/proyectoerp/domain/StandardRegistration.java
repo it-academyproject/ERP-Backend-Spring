@@ -8,10 +8,13 @@ import javax.persistence.Column;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 /**
  * @author Piero Reppucci
  *
  */
+@PreAuthorize("hasRole('ADMIN')")
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class StandardRegistration {
     /**
