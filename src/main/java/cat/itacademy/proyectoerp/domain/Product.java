@@ -5,15 +5,19 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "products")
@@ -41,14 +45,22 @@ public class Product implements Serializable {
 	private Set<Category> categories;
 	
 	@OneToMany (mappedBy = "product")
-	private Set <OrderDetail> orderDetails = new HashSet<>();
-	
+	// @JsonManagedReference (gives 415 Unsupported Media Exception with Post order)
+	private Set <OrderDetail> order_details = new HashSet<>();
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "shop_id", referencedColumnName = "shop_id")
+	//TODO In the future this field should be mandatory
+	//@NotNull(message = "You have to assign shop to this product")
+	@Valid
+	private Shop shop;
+
 	public Product() {
-		
+
 	}
 	
 	public Product(String name, int stock, String image, String family, double price, double vat,
-			double wholesalePrice, int wholesaleQuantity, long created, long modified) {
+			double wholesale_price, int wholesale_quantity, long created, long modified, Shop shop) {
 		this.name = name;
 		this.stock = stock;
 		this.image = image;
@@ -59,6 +71,7 @@ public class Product implements Serializable {
 		this.wholesaleQuantity = wholesaleQuantity;
 		this.created = created;
 		this.modified = modified;
+		this.shop = shop;
 		
 	}
 	
@@ -145,11 +158,11 @@ public class Product implements Serializable {
 	}
 
 	public Set<OrderDetail> getOrderDetails() {
-		return orderDetails;
+		return order_details;
 	}
 	
 	public void setOrderDetails(Set<OrderDetail> orderDetails) {
-		this.orderDetails = orderDetails;
+		this.order_details = orderDetails;
 	}
 
 	@Override
@@ -173,6 +186,14 @@ public class Product implements Serializable {
 	
 	public void setModified(long modified) {
 		this.modified = modified;
+	}
+
+	public Shop getShop() {
+		return shop;
+	}
+
+	public void setShop(Shop shop) {
+		this.shop = shop;
 	}
 	
 }
