@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
+
 @Entity
 @Table(name = "orders")
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
@@ -30,6 +31,7 @@ public class Order  {
 	@JsonProperty("id")
 	private UUID id;
 	
+
 	@Column(name = "employee_id")
 	@Type(type="uuid-char")
 	private UUID employeeId;

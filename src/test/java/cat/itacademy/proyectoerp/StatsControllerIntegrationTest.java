@@ -37,7 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(
-locations = "classpath:application-integrationtest.properties")
+locations = "classpath:application-stats-integrationtest.properties")
 @Transactional
 @Sql(scripts = "classpath:stats-integration-test-insert-data.sql")
 public class StatsControllerIntegrationTest {
@@ -56,7 +56,7 @@ public class StatsControllerIntegrationTest {
 	
 	@Autowired
 	IOrderRepository orderRepository;
-
+	
 	// Test initial Data from sql is correctly loaded.	
 	@Test
 	@DisplayName("Entities loaded correctly in DB")
