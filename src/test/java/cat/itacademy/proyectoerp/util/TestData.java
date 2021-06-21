@@ -10,14 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import cat.itacademy.proyectoerp.domain.Address;
 import cat.itacademy.proyectoerp.domain.Category;
 import cat.itacademy.proyectoerp.domain.Product;
+import cat.itacademy.proyectoerp.domain.Shop;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.domain.UserType;
 import cat.itacademy.proyectoerp.dto.CategoryDTO;
 import cat.itacademy.proyectoerp.dto.ProductDTO;
 import cat.itacademy.proyectoerp.repository.ICategoryRepository;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
+import cat.itacademy.proyectoerp.repository.IShopRepository;
 import cat.itacademy.proyectoerp.repository.IUserRepository;
 
 @TestComponent
@@ -65,10 +68,14 @@ public class TestData {
 	@Autowired
 	private ICategoryRepository categoryRepository;
 	
+	@Autowired
+	private IShopRepository shopRepository;
+	
 	private ModelMapper modelMapper = new ModelMapper();
 	
 	public void resetData() {
 		userRepository.deleteAll();
+		shopRepository.deleteAll();
 		productRepository.deleteAll();
 		categoryRepository.deleteAll();
 	}
@@ -102,8 +109,13 @@ public class TestData {
 		return Set.of(categories).stream().collect(Collectors.mapping(category -> modelMapper.map(category, CategoryDTO.class) , Collectors.toSet()));
 	}
 	
+	public Shop  createRandomShop() {
+		Shop shop = new Shop("BrandTest01", "CompanyTest01", "443344F", 666777999, new Address("Calle Botigues", "1 C", "Barcelona", "Spain", "08016"));
+		return shopRepository.save(shop);
+	}
+	
 	public Product createProduct(String name, int stock, String image, String family, double price, double vat, double wholesalePrice, int wholesaleQuantity, long created, long modified) {
-		Product product = new Product(name, stock, image, family, price, vat, wholesalePrice, wholesaleQuantity, created, modified);
+		Product product = new Product(name, stock, image, family, price, vat, wholesalePrice, wholesaleQuantity, created, modified, createRandomShop());
 		return productRepository.save(product);
 	}
 	

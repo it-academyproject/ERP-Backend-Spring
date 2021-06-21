@@ -228,6 +228,7 @@ public class ProductControllerShould {
 		);
 	}
 	
+	@Test
 	void returnErrorWhenParentCategoryDoesNotExists() throws Exception {
 		// GIVEN
 		String token = loginAndGetJwtToken(mvc, DEFAULT_ADMIN_USERNAME, DEFAULT_PASSWORD);

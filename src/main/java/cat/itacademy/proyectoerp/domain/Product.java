@@ -59,7 +59,7 @@ public class Product implements Serializable {
 	}
 	
 	public Product(String name, int stock, String image, String family, double price, double vat,
-			double wholesale_price, int wholesale_quantity, long created, long modified, Shop shop) {
+			double wholesalePrice, int wholesaleQuantity, long created, long modified, Shop shop) {
 		this.name = name;
 		this.stock = stock;
 		this.image = image;
