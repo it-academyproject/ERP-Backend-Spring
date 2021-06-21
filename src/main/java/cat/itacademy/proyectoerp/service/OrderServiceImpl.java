@@ -197,11 +197,11 @@ public class OrderServiceImpl implements IOrderService{
 	}
 
 	@Override
-	public List<Order> findOrdersByEmployeeId(String employeeId) {
-		if(orderRepository.findOrdersByEmployeeId(employeeId) == null){
+	public List<Order> findByEmployeeId(UUID employeeId) {
+		if(orderRepository.findByEmployeeId(employeeId) == null){
 			throw new ArgumentNotFoundException("The employee with id: " + employeeId + " does not have orders assigned");
 		} else{
-			return orderRepository.findOrdersByEmployeeId(employeeId);
+			return orderRepository.findByEmployeeId(employeeId);
 		}
 	}
 

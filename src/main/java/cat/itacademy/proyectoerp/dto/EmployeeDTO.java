@@ -12,7 +12,9 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class EmployeeDTO implements Serializable {
-
+	
+	private static final long serialVersionUID = 1L;
+	
     private UUID id;
     private Double salary;
     private String dni;
@@ -24,6 +26,28 @@ public class EmployeeDTO implements Serializable {
 
     private UserDTO user;
     private MessageDTO message;
+    
+    //b-79. added by Joan
+    private Double totalSales;
+    private int totalOrdersAttended;
+    
+    public Double getTotalSales() {
+		return totalSales;
+	}
+
+	public void setTotalSales(Double totalSales) {
+		this.totalSales = totalSales;
+	}
+
+	public int getTotalOrdersAttended() {
+		return totalOrdersAttended;
+	}
+
+	public void setTotalOrdersAttended(int totalOrdersAttended) {
+		this.totalOrdersAttended = totalOrdersAttended;
+	}
+
+	
 
     public UUID getId() {
         return id;
@@ -88,4 +112,7 @@ public class EmployeeDTO implements Serializable {
     public void setOutDate(LocalDate outDate) {
         this.outDate = outDate;
     }
+
+	
+    
 }
