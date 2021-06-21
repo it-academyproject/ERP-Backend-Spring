@@ -31,7 +31,6 @@ import cat.itacademy.proyectoerp.repository.IClientRepository;
 import cat.itacademy.proyectoerp.repository.IOrderDetailRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
-import cat.itacademy.proyectoerp.util.UUIDconverter;
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderDetail;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
@@ -197,11 +196,11 @@ public class OrderServiceImpl implements IOrderService{
 	}
 
 	@Override
-	public List<Order> findOrdersByEmployeeId(String employeeId) {
-		if(orderRepository.findOrdersByEmployeeId(employeeId) == null){
+	public List<Order> findByEmployeeId(UUID employeeId) {
+		if(orderRepository.findByEmployeeId(employeeId) == null){
 			throw new ArgumentNotFoundException("The employee with id: " + employeeId + " does not have orders assigned");
 		} else{
-			return orderRepository.findOrdersByEmployeeId(employeeId);
+			return orderRepository.findByEmployeeId(employeeId);
 		}
 	}
 
@@ -214,7 +213,7 @@ public class OrderServiceImpl implements IOrderService{
 		
 		for (Object[] object : repositoryQueryList) {
 			TopEmployeeDTO topEmployeeDTO = new TopEmployeeDTO();
-			topEmployeeDTO.setId(UUIDconverter.convertFromBytes((byte[])object[0]));
+			topEmployeeDTO.setId(UUID.fromString(object[0].toString()));
 			topEmployeeDTO.setTotal(Double.parseDouble(object[1].toString()));
 			topEmployeeList.add(topEmployeeDTO);
 		}
