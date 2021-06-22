@@ -87,7 +87,7 @@ public class UserController {
 
 		userDTO = userService.registerNewUserAccount(user);
 
-		if (userDTO.getSuccess() == "False") {
+		if (userDTO.getSuccess().equals("False")) {
 
 			return new ResponseEntity<>(userDTO, HttpStatus.UNPROCESSABLE_ENTITY);
 		} else {
@@ -146,15 +146,14 @@ public class UserController {
 
 	private Client getClient(StandardRegistration standard) {
 		User user = new User(standard.getUsername(), standard.getPassword());
-		Client client = new Client(standard.getDni(), standard.getImage(), standard.getNameAndSurname(),
+		return new Client(standard.getDni(), standard.getImage(), standard.getNameAndSurname(),
 				standard.getAddress(), standard.getShippingAddress(), user);
-		return client;
 	}
 
 	/**
 	 * Create a new user and employee
-	 * @param employee
-	 * @return
+	 * @param employee employee to create using dto
+	 * @return created employee and request status
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping(value = "/users/employees", method = RequestMethod.POST)
@@ -186,7 +185,6 @@ public class UserController {
 	 * 
 	 * @param jwtLogin JSON with credentials.
 	 * @return String with message: Success or unauthorized.
-	 * @throws Exception
 	 */
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -265,7 +263,7 @@ public class UserController {
 
 			UserDTO userDto;
 			userDto = userService.deleteUserById(id).get();
-			if (userDto.getSuccess() == "False")
+			if (userDto.getSuccess().equals("False"))
 				throw new Exception();
 			return new ResponseEntity<>(userDto, HttpStatus.OK);
 		}
@@ -285,8 +283,9 @@ public class UserController {
 	public ResponseEntity<UserDTO> modifyTypeUser(@Valid @RequestBody User user) {
 		try {
 			Long id = user.getId();
+			userService.setUser(user.getId(), user);
 			UserDTO userDto = userService.setUser(id, user).get();
-			if (userDto.getSuccess() == "False")
+			if (userDto.getSuccess().equals("False"))
 				throw new Exception();
 			return new ResponseEntity<>(userDto, HttpStatus.OK);
 		}
@@ -305,7 +304,7 @@ public class UserController {
 	public ResponseEntity<UserDTO> unsubscribeUser(@RequestBody @Valid User user) {
 		try {
 			UserDTO userDto = userService.setSubscription(user);
-			if (userDto.getSuccess() == "False")
+			if (userDto.getSuccess().equals("False"))
 				throw new Exception();
 			return new ResponseEntity<>(userDto, HttpStatus.OK);
 		} catch(Exception e) {

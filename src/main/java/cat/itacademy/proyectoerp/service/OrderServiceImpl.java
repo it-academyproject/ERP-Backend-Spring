@@ -1,19 +1,9 @@
 package cat.itacademy.proyectoerp.service;
 
-<<<<<<< HEAD
-import java.security.InvalidParameterException;
-import java.util.*;
-=======
 import java.text.DateFormatSymbols;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
->>>>>>> dev
+import java.util.*;
 import java.util.stream.Collectors;
 
 import cat.itacademy.proyectoerp.domain.OrderStatus;

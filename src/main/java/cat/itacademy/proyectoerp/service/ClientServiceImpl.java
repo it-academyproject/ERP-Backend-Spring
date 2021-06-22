@@ -145,7 +145,7 @@ public class ClientServiceImpl implements IClientService {
 			client.getUser().setUsername(null == client.getUser().getUsername()? clientDB.getUser().getUsername():
 					client.getUser().getUsername());
 			client.getUser().setPassword(null == client.getUser().getPassword()? clientDB.getUser().getPassword():
-					userService.passEconder(client.getUser().getPassword()));
+					userService.passEncoder(client.getUser().getPassword()));
 			client.getUser().setUserType(clientDB.getUser().getUserType());
 		}else{
 			client.setUser(clientDB.getUser());
@@ -301,7 +301,7 @@ public class ClientServiceImpl implements IClientService {
 	}
 
 	@Override
-	public ClientDTO createFastClient(ClientDTO client) throws Exception {
+	public ClientDTO createFastClient(Client client) throws Exception {
 		Client finalClient = modelMapper.map(client, Client.class);
 		setFastClient(finalClient);
 
@@ -325,7 +325,7 @@ public class ClientServiceImpl implements IClientService {
 	}
 
 	private void setUser(Client fastClient, String randomUsername){
-		String password = userService.passEconder("ReW9a0&+TP");
+		String password = userService.passEncoder("ReW9a0&+TP");
 		User user = new User("userclientfast_"+randomUsername+"@example.com", password, UserType.CLIENT);
 		fastClient.setUser(user);
 	}

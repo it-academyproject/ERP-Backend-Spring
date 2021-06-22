@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.dto.ClientDTO;
 import cat.itacademy.proyectoerp.service.IClientService;
+import cat.itacademy.proyectoerp.util.AuthenticationMethods;
 
 @RestController
 @RequestMapping("/api/clients")
@@ -37,7 +39,12 @@ public class ClientController {
 
 	 //Add a new Client
     @PostMapping
-    public ResponseEntity<?> addNewClient(@Valid @RequestBody Client client) {
+    public ResponseEntity<?> addNewClient(@Valid @RequestBody Authentication auth, Client client) {
+
+    	// Check for user permissions or admin
+    	if(!AuthenticationMethods.tokenMatchesOrAdmin(auth, client.getUser()))
+    		return new ResponseEntity<>(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED);
+
 		UserDTO userDTO = null;
 		ClientDTO clientDTO = new ClientDTO();
 		try {
@@ -77,14 +84,18 @@ public class ClientController {
 
 	private Client getClient(Client client, String username) {
 		User user = userService.findByUsername(username);
-		Client newClient = new Client(client.getDni(),client.getImage(),client.getNameAndSurname(),
+		return new Client(client.getDni(),client.getImage(),client.getNameAndSurname(),
 				client.getAddress(),client.getShippingAddress(),user);
-		return newClient;
 	}
 
     //Add client without giving user
     @PostMapping("/fastclient") 
-    public ResponseEntity<?> addFastClient(@RequestBody ClientDTO client) {
+    public ResponseEntity<?> addFastClient(@RequestBody Authentication auth, Client client) {
+
+		// Check for user permissions or admin
+		if(!AuthenticationMethods.tokenMatchesOrAdmin(auth, client.getUser()))
+			return new ResponseEntity<>(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED);
+
 		ClientDTO finalClient;
 
 		MessageDTO messageDTO = getErrorMessageNameAndSurname(client.getNameAndSurname());
@@ -143,27 +154,35 @@ public class ClientController {
 
     //get a client by id 
     @GetMapping("/{id}")   
-    public Map<String, Object> getClientById(@PathVariable(name="id") UUID id) {
-    	HashMap<String, Object> map = new HashMap<>();
-    	try {
+    public ResponseEntity<Map<String, Object>> getClientById(@PathVariable(name="id") UUID id, Authentication auth) {
+		try {
+			// Check for user permissions or admin
+			if(!AuthenticationMethods.tokenMatchesOrAdmin(auth, service.findClientById(id).getUser()))
+				return new ResponseEntity<>(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED);
+			HashMap<String, Object> map = new HashMap<>();
     		Client client = service.findClientById(id);
             map.put("success", "true");
             map.put("message", "client found");
             map.put("client", client);
-            return map;
+            return new ResponseEntity<>(map, HttpStatus.OK);
     	} catch (Exception e) {
+			HashMap<String, Object> map = new HashMap<>();
             map.put("success", "false");
             map.put("message", "error: " + e.getMessage());
+			return new ResponseEntity<>(map, HttpStatus.FORBIDDEN);
     	}
-    	return map;
     }
        
     //Update a client by id
-    @PutMapping()
-    public ResponseEntity<?> updateClientById(@RequestBody Client clientUpdate) {
+	@PostMapping("/{id}")
+	public ResponseEntity<?> updateClientById(@PathVariable(name="id") UUID id, Authentication auth) {
+		// Check for user permissions or admin
+		Client client = service.findClientById(id);
+		if(!AuthenticationMethods.tokenMatchesOrAdmin(auth, client.getUser()))
+			return new ResponseEntity<>(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED);
 		ClientDTO clientDTO;
 		try {
-			clientDTO = service.updateClient(clientUpdate);
+			clientDTO = service.updateClient(client);
 		} catch (Exception e) {
 			MessageDTO messageDTO = new MessageDTO("False", e.getMessage());
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(messageDTO);
@@ -173,7 +192,9 @@ public class ClientController {
 
     //Delete a client
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteClientById(@PathVariable UUID id){
+    public ResponseEntity<?> deleteClientById(@PathVariable UUID id, Authentication auth){
+		if(!AuthenticationMethods.tokenMatchesOrAdmin(auth, service.findClientById(id).getUser()))
+			return new ResponseEntity<>(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED);
     	  try {
 			service.deleteClient(id);
 		} catch (Exception e) {
@@ -192,6 +213,5 @@ public class ClientController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 		return new ResponseEntity<>(list, HttpStatus.OK);
-	} 
-
+	}
 }

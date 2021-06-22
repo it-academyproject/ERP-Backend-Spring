@@ -30,8 +30,10 @@ public interface IUserService {
 	public UserDTO setSubscription (User user);
 	public User updatePassword(User user);
 	public User findByUsername(String username);
+	public User findById(Long id);
 	boolean existsByUsername(String username);
 	MessageDTO getErrorMessageUsernameExists(String username);
 	public void updateLastSession(String username);
+	public String passEncoder(String password);
 
 }

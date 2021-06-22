@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import cat.itacademy.proyectoerp.dto.MessageDTO;
@@ -65,6 +66,13 @@ public class UserServiceImpl implements IUserService {
 		return Optional.of(userDTO);
 
 	}
+	
+	@Override
+	public User findById(Long id) {
+		if (userRepository.findById(id).isPresent())
+			return userRepository.findById(id).get();
+		return null;
+	}
 
 	@Override
 	public User findByUsername(String username) {
@@ -73,11 +81,7 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public boolean existsByUsername(String username) {
-		boolean existsByUsername = false;
-		if (userRepository.existsByUsername(username)) {
-			existsByUsername = true;
-		}
-		return existsByUsername;
+		return userRepository.existsByUsername(username);
 	}
 
 	@Override
@@ -115,7 +119,7 @@ public class UserServiceImpl implements IUserService {
 			return userDto;
 		}
 
-		user.setPassword(passEconder(user.getPassword()));
+		user.setPassword(passEncoder(user.getPassword()));
 		// user = modelMapper.map(userDto, User.class);
 		userRepository.save(user);
 
@@ -135,11 +139,9 @@ public class UserServiceImpl implements IUserService {
 
 	}
 
-	public String passEconder(String pass) {
+	public String passEncoder(String pass) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		String encodedPassword = passwordEncoder.encode(pass);
-		//System.out.println("pass encrip " + encodedPassword);
-		return encodedPassword;
+		return passwordEncoder.encode(pass);
 	}
 
 	/**
@@ -150,14 +152,14 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public List<UserDTO> listAllUsers() {
 
-		List<UserDTO> listaUsers = new ArrayList<>();
+		List<UserDTO> usersList = new ArrayList<>();
 
 		for (User user : userRepository.findAll()) {
-			listaUsers.add(modelMapper.map(user, UserDTO.class));
+			usersList.add(modelMapper.map(user, UserDTO.class));
 
 		}
 
-		return listaUsers;
+		return usersList;
 	}
 
 	/**
@@ -259,7 +261,7 @@ public class UserServiceImpl implements IUserService {
 	if (userDto.getUsername() != null)
 			user.setUsername(userDto.getUsername());
 		if (password != null)
-			user.setPassword(passEconder(password));
+			user.setPassword(passEncoder(password));
 	
 
 		userRepository.save(user);
@@ -279,12 +281,12 @@ public class UserServiceImpl implements IUserService {
 		
 		UserDTO userDto = verifyUser(user);
 		
-		if (!(userDto.getSuccess()=="False")) {
+		if (!(userDto.getSuccess().equals("False"))) {
 		
 			userDto = verifySubscription(user);
 		}
 	
-		if (!(userDto.getSuccess()=="False")) {
+		if (!(userDto.getSuccess().equals("False"))) {
 			emailService.sendFarewellEmail(user);
 			user.setUserType(userRepository.findById(user.getId()).get().getUserType());
 			user.setPassword(userRepository.findById(user.getId()).get().getPassword());
@@ -308,11 +310,11 @@ public class UserServiceImpl implements IUserService {
 		}
 		
 		// Verifies if username matches
-		if (!(userDto.getSuccess()=="False")) {
+		if (!(userDto.getSuccess().equals("False"))) {
 			
-			String usernamerepo = userRepository.findById(user.getId()).get().getUsername();
+			String usernameRepo = userRepository.findById(user.getId()).get().getUsername();
 			
-			if ( !usernamerepo.equals(user.getUsername())) {
+			if ( !usernameRepo.equals(user.getUsername())) {
 				userDto.setSuccess("False");
 				userDto.setMessage("The username does not match, please check it again");
 				return userDto;
@@ -341,7 +343,7 @@ public class UserServiceImpl implements IUserService {
 	 * Method to recover password. Generate a new password and send it by email to
 	 * the user
 	 * 
-	 * @param username
+	 * @param username username
 	 * @return new password
 	 * @throws ArgumentNotFoundException
 	 * @throws MailException
@@ -364,7 +366,7 @@ public class UserServiceImpl implements IUserService {
 		emailService.sendPasswordEmail(user, password);
 
 		// set user password (encrypted)
-		user.setPassword(passEconder(password));
+		user.setPassword(passEncoder(password));
 
 		// Save user new password in ddbb
 		userRepository.save(user);
@@ -375,9 +377,9 @@ public class UserServiceImpl implements IUserService {
 	/**
 	 * Method to update user password
 	 * 
-	 * @param changeuserpassword
+	 * @param user user
 	 * @return user with new password
-	 * @throws ArgumentNotFoundException
+	 * @throws ArgumentNotFoundException error messages
 	 */
 	@Override
 	public User updatePassword(User user) {
@@ -393,7 +395,7 @@ public class UserServiceImpl implements IUserService {
 
 				// set user password (encrypted)
 				
-				updatedUser.setPassword(passEconder(changeUserPassword.getNew_password()));
+				updatedUser.setPassword(passEncoder(changeUserPassword.getNew_password()));
 	
 				return userRepository.save(updatedUser);
 			} else {
@@ -408,7 +410,7 @@ public class UserServiceImpl implements IUserService {
 	 * 
 	 * Method to update User lastSession with the current LocalDateTime.
 	 * 
-	 * @param username
+	 * @param username username
 	 */
 	public void updateLastSession(String username) {
 		User user = userRepository.findByUsername(username);
