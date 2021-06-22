@@ -39,7 +39,7 @@ public class ClientController {
 
 	 //Add a new Client
     @PostMapping
-    public ResponseEntity<?> addNewClient(@Valid @RequestBody Authentication auth, Client client) {
+    public ResponseEntity<?> addNewClient(Authentication auth, @Valid @RequestBody Client client) {
 
     	// Check for user permissions or admin
     	if(!AuthenticationMethods.tokenMatchesOrAdmin(auth, client.getUser()))
@@ -90,7 +90,7 @@ public class ClientController {
 
     //Add client without giving user
     @PostMapping("/fastclient") 
-    public ResponseEntity<?> addFastClient(@RequestBody Authentication auth, Client client) {
+    public ResponseEntity<?> addFastClient(Authentication auth, @RequestBody @Valid Client client) {
 
 		// Check for user permissions or admin
 		if(!AuthenticationMethods.tokenMatchesOrAdmin(auth, client.getUser()))
