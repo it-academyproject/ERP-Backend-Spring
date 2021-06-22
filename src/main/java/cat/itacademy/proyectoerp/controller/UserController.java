@@ -10,6 +10,7 @@ import cat.itacademy.proyectoerp.service.ClientServiceImpl;
 import cat.itacademy.proyectoerp.service.IClientService;
 import cat.itacademy.proyectoerp.service.IEmployeeService;
 import cat.itacademy.proyectoerp.service.UserServiceImpl;
+import cat.itacademy.proyectoerp.util.AuthenticationMethods;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -350,30 +351,28 @@ public class UserController {
 
 	/**
 	 * Method to reset password
-	 *
 	 * @return user updated
 	 */
 	@PutMapping("/users/resetpassword")
-		
-	public HashMap<String, Object> resetPassword(Authentication auth) {
+	public ResponseEntity<HashMap<String, Object>> resetPassword(Authentication auth, @RequestBody @Valid ChangeUserPassword changeUserPassword) {
 
-
+		// Check for user permissions or admin
 		User user = userService.findByUsername(auth.getName());
+		if(!AuthenticationMethods.tokenMatchesOrAdmin(auth, user))
+			return new ResponseEntity<>(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED);
+
 		HashMap<String, Object> map = new HashMap<String, Object>();
 	
 		try {
-			
-			userService.updatePassword(user);
-
+			userService.updatePassword(changeUserPassword);
 			map.put("success", "true");
 			map.put("message", "User password updated");
+			return new ResponseEntity<>(map, HttpStatus.OK);
 
 		} catch (Exception e) {
 			map.put("success", "false");
 			map.put("message", e.getMessage());
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
-
-		return map;
 	}
-		
 }

@@ -382,16 +382,15 @@ public class UserServiceImpl implements IUserService {
 	 * @throws ArgumentNotFoundException error messages
 	 */
 	@Override
-	public User updatePassword(User user) {
+	public User updatePassword(ChangeUserPassword changeUserPassword) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		ChangeUserPassword changeUserPassword = new ChangeUserPassword(user);
 
 		// Verify if user exist
-		User updatedUser = userRepository.findByUsername(user.getUsername());
+		User updatedUser = userRepository.findByUsername(changeUserPassword.getUser().getUsername());
 		
 		if (updatedUser != null) {
 			//Check password
-			if (passwordEncoder.matches(user.getPassword(), updatedUser.getPassword())) {
+			if (passwordEncoder.matches(changeUserPassword.getUser().getPassword(), updatedUser.getPassword())) {
 
 				// set user password (encrypted)
 				

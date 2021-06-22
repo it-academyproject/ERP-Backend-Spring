@@ -28,7 +28,7 @@ public interface IUserService {
 	public Optional<UserDTO> deleteUserById(Long id);
 	public Optional<UserDTO> setUser(Long id, User user);
 	public UserDTO setSubscription (User user);
-	public User updatePassword(User user);
+	public User updatePassword(ChangeUserPassword changeUserPassword);
 	public User findByUsername(String username);
 	public User findById(Long id);
 	boolean existsByUsername(String username);
