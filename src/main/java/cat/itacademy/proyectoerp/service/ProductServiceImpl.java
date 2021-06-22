@@ -1,12 +1,20 @@
 package cat.itacademy.proyectoerp.service;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cat.itacademy.proyectoerp.domain.Category;
 import cat.itacademy.proyectoerp.domain.Product;
+import cat.itacademy.proyectoerp.dto.CategoryDTO;
+import cat.itacademy.proyectoerp.dto.ProductDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
@@ -15,10 +23,15 @@ import cat.itacademy.proyectoerp.repository.IProductRepository;
 public class ProductServiceImpl implements IProductService {
 
 	@Autowired
-	IProductRepository productRepo;
+	IProductRepository productRepository;
+	
+	@Autowired
+	ICategoryService categoryService;
+	
+	ModelMapper modelMapper = new ModelMapper();
+	TypeMap<ProductDTO, Product> typeMap = modelMapper.createTypeMap(ProductDTO.class, Product.class);
 
-	@Override
-	@Transactional
+
 	public Product createProduct(Product product) throws ArgumentNotValidException {
 
 		// Verify that the product name: is not null, not empty or already exists.
@@ -28,46 +41,88 @@ public class ProductServiceImpl implements IProductService {
 		} else if (product.getName().isEmpty()) {
 			throw new ArgumentNotValidException("The product name cannot be empty");
 
-		} else if (productRepo.countByName(product.getName()) != 0) {
+		} else if (productRepository.countByName(product.getName()) != 0) {
 			throw new ArgumentNotValidException("Product name already exists");
 
 		//verify that the wholesale price is not higher than the price
-		} else if (product.getWholesale_price() > product.getPrice()) {
+		} else if (product.getWholesalePrice() > product.getPrice()) {
 			throw new ArgumentNotValidException("The wholesale price cannot be higher than price");
 
+		} else if (product.getCreated() > product.getModified()) {
+			throw new ArgumentNotValidException("Modified date prior to Create date");
+		
 		} else {
-			return productRepo.save(product);
+			return productRepository.save(product);
 		}
+	}
+	
+	@Override
+	public ProductDTO createProduct(ProductDTO productDto) {
+		checkProductName(productDto.getName());
+		checkProductPriceAndWholesalePrice(productDto.getPrice(), productDto.getWholesalePrice());
+		setProductCreatedAndModified(productDto);
+		Product product = mapProductDtoToProductWithoutCategories(productDto);
+		product.setCategories(mapCategoriesDtoToCategories(productDto.getCategories()));
+		productRepository.save(product);
+		return modelMapper.map(product, ProductDTO.class);
+	}
+
+	private void checkProductName(String name) {
+		if(name.isBlank()) throw new ArgumentNotValidException("Name cannot be null or whitespace");
+		if(productRepository.existsByName(name)) throw new ArgumentNotValidException("A category named " + name + " already exists");		
+	}
+
+	private void checkProductPriceAndWholesalePrice(double price, double wholesalePrice) {
+		if(price < wholesalePrice) throw new ArgumentNotValidException("The wholesale price cannot be higher than the regular price");		
+	}
+
+	private void setProductCreatedAndModified(ProductDTO productDto) {
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		long ts = timestamp.getTime();
+		productDto.setCreated(ts);
+		productDto.setModified(ts);
+	}
+
+	private Product mapProductDtoToProductWithoutCategories(ProductDTO productDto) {
+		typeMap.addMappings(mapper -> mapper.skip(Product::setCategories));
+		return typeMap.map(productDto);
+	}
+
+	private Set<Category> mapCategoriesDtoToCategories(Set<CategoryDTO> categoriesDto) {
+		if(categoriesDto == null) return null;
+		return categoriesDto.stream().collect(Collectors.mapping(categoryDto -> mapCategoryDtoToEntity(categoryDto), Collectors.toSet()));
+	}
+
+	private Category mapCategoryDtoToEntity(CategoryDTO categoryDto) {
+		return categoryService.findCategoryById(categoryDto.getId());
+	}
+	
+	@Override
+	public List<ProductDTO> getProducts() {
+		if (productRepository.findAll().isEmpty()) throw new ArgumentNotFoundException("No products found");
+		return productRepository.findAll().stream().collect(Collectors.mapping(product -> modelMapper.map(product, ProductDTO.class), Collectors.toList()));
 	}
 
 	@Override
-	@Transactional(readOnly = true)
-	public List<Product> getProducts() throws ArgumentNotFoundException {
-
-		// if there are no products, throw exception
-		if (productRepo.findAll().isEmpty()) {
-			throw new ArgumentNotFoundException("No products found");
-		} else {
-			return productRepo.findAll();
-		}
-
+	public List<ProductDTO> getProductsByCategoryName(String name) {
+		categoryService.existsCategoryByName(name);
+		return productRepository.findAllByCategoriesName(name).stream().collect(Collectors.mapping(product -> modelMapper.map(product, ProductDTO.class), Collectors.toList()));
 	}
 
 	@Override
-	@Transactional(readOnly = true)
 	public Product findProductById(int id) throws ArgumentNotFoundException {
-
-		//if there is no product with that id throw exception
-		return productRepo.findById(id)
-				.orElseThrow(() -> new ArgumentNotFoundException("Product not found. The id " + id + " doesn't exist"));
+		return productRepository.findById(id).orElseThrow(() -> new ArgumentNotFoundException("Product not found. The id " + id + " doesn't exist"));
+	}
+	
+	public ProductDTO getProductById(int id) {
+		return modelMapper.map(findProductById(id), ProductDTO.class);
 	}
 
 	@Override
-	@Transactional
-	public Product updateProduct(Product product) throws ArgumentNotValidException, ArgumentNotFoundException {
+	public ProductDTO updateProduct(Product product) throws ArgumentNotValidException, ArgumentNotFoundException {
 
 		// verify if there is a product with that id.
-		Product productSelected = productRepo.findById(product.getId()).get();
+		Product productSelected = productRepository.findById(product.getId()).get();
 
 		if (productSelected == null) {
 			throw new ArgumentNotFoundException("Product not found. The id " + product.getId() + " doesn't exist");
@@ -83,7 +138,7 @@ public class ProductServiceImpl implements IProductService {
 
 		} else if (!productSelected.getName().equalsIgnoreCase(product.getName())) {
 
-			Product productFound = productRepo.findByName(product.getName());
+			Product productFound = productRepository.findByName(product.getName());
 
 			if (productFound != null) {
 				throw new ArgumentNotValidException("Product name already exists");
@@ -119,27 +174,32 @@ public class ProductServiceImpl implements IProductService {
 
 		// WHOLESALE PRICE
 		// check if the wholesale price changed or if it is higher than the price
-		if (product.getWholesale_price() != 0) {
-			productSelected.setWholesale_price(product.getWholesale_price());
+		if (product.getWholesalePrice() != 0) {
+			productSelected.setWholesalePrice(product.getWholesalePrice());
 		}
 
-		if (productSelected.getWholesale_price() > productSelected.getPrice()) {
+		if (productSelected.getWholesalePrice() > productSelected.getPrice()) {
 			throw new ArgumentNotValidException("The wholesale price cannot be higher than price");
 		}
 
 		// WHOLESALE QUANTITY
-		if (product.getWholesale_quantity() != 0) {
-			productSelected.setWholesale_quantity(product.getWholesale_quantity());
+		if (product.getWholesaleQuantity() != 0) {
+			productSelected.setWholesaleQuantity(product.getWholesaleQuantity());
+		}
+		
+		if (product.getModified() >= product.getCreated()) {
+			productSelected.setModified(product.getModified());
 		}
 
-		return productRepo.save(productSelected);
+		productRepository.save(productSelected);
+		return modelMapper.map(productSelected, ProductDTO.class);
 
 	}
 
 	@Override
 	@Transactional
 	public void deleteProduct(int id) {
-		productRepo.deleteById(id);
+		productRepository.deleteById(id);
 	}
 
 }

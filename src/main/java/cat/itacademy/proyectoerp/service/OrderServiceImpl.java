@@ -1,7 +1,19 @@
 package cat.itacademy.proyectoerp.service;
 
+<<<<<<< HEAD
 import java.security.InvalidParameterException;
 import java.util.*;
+=======
+import java.text.DateFormatSymbols;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+>>>>>>> dev
 import java.util.stream.Collectors;
 
 import cat.itacademy.proyectoerp.domain.OrderStatus;
@@ -14,6 +26,7 @@ import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.NameTokenizers;
+import org.springframework.aop.AopInvocationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -193,11 +206,11 @@ public class OrderServiceImpl implements IOrderService{
 	}
 
 	@Override
-	public List<Order> findOrdersByEmployeeId(String employeeId) {
-		if(orderRepository.findOrdersByEmployeeId(employeeId) == null){
+	public List<Order> findByEmployeeId(UUID employeeId) {
+		if(orderRepository.findByEmployeeId(employeeId) == null){
 			throw new ArgumentNotFoundException("The employee with id: " + employeeId + " does not have orders assigned");
 		} else{
-			return orderRepository.findOrdersByEmployeeId(employeeId);
+			return orderRepository.findByEmployeeId(employeeId);
 		}
 	}
 
@@ -210,14 +223,11 @@ public class OrderServiceImpl implements IOrderService{
 		
 		for (Object[] object : repositoryQueryList) {
 			TopEmployeeDTO topEmployeeDTO = new TopEmployeeDTO();
-			topEmployeeDTO.setId(UUID.nameUUIDFromBytes((byte[]) object[0]));
+			topEmployeeDTO.setId(UUID.fromString(object[0].toString()));
 			topEmployeeDTO.setTotal(Double.parseDouble(object[1].toString()));
 			topEmployeeList.add(topEmployeeDTO);
 		}
-
 		return topEmployeeList;
-	
-		
 	}
 	
 	/**
@@ -270,6 +280,40 @@ public class OrderServiceImpl implements IOrderService{
 		return employeeSalesDTO;
 	}
 
+	/**
+	 * This method request the sum of all completed Orders for a year
+	 * @return double
+	 */
+	
+	@Override
+	public double getProfitByYear(int year) {
+		double profit = 0;
+		try {
+			profit = orderRepository.findProfitBetweenDates(
+					LocalDateTime.of(year, 1, 1, 0, 0),
+					LocalDateTime.of(year, 12, 31, 12, 59,59,59));
+		} catch (AopInvocationException e) {
+			if (profit== 0) throw new ArgumentNotFoundException("There are no completed orders for year " + year);
+		}
+		return profit;
+	}
+	
+	/**
+	 * This method request the sum of all completed Orders for a month
+	 * @return double
+	 */
+	@Override
+	public double getProfitByMonth(int year, int month) {
+		double profit = 0;
+		try {
+			profit = orderRepository.findProfitBetweenDates(
+					LocalDateTime.of(year, month, 1, 0, 0),
+					LocalDateTime.of(year, month, 1, 23, 59,59,59).with(TemporalAdjusters.lastDayOfMonth()));
+		} catch (AopInvocationException e) {
+			if (profit== 0) throw new ArgumentNotFoundException("There are no completed orders for " +  new DateFormatSymbols().getMonths()[month-1] + " " + year);
+		}
+		return profit;
+	}
 }
 
 

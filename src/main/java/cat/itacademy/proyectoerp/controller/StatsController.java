@@ -7,8 +7,7 @@ import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
 import cat.itacademy.proyectoerp.dto.EmployeeDTO;
 import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 import cat.itacademy.proyectoerp.dto.OrderDTO;
-import cat.itacademy.proyectoerp.repository.UserRepository;
-import cat.itacademy.proyectoerp.service.EmployeeServiceImpl;
+import cat.itacademy.proyectoerp.service.IEmployeeService;
 import cat.itacademy.proyectoerp.service.IOrderService;
 import cat.itacademy.proyectoerp.util.StringToOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.DateFormatSymbols;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,7 +38,7 @@ public class StatsController {
   IOrderService orderService;
   
   @Autowired
-  EmployeeServiceImpl employeeService;
+  IEmployeeService employeeService;
 
   @Autowired UserController userController;
 
@@ -72,7 +73,7 @@ public class StatsController {
     	User user = userController.userService.findByUsername(auth.getName());
 
     	// Check if the the requested ID matches the authorized user or is admin.
-    	if(!(user.getId().equals(id) || auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))))
+    	if(!(user.getId().equals(Long.parseLong(id)) || auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))))
 			throw new Exception();
 
     	List<Order> orderList = orderService.findOrdersByClient(id);
@@ -207,4 +208,71 @@ public class StatsController {
 	  return map;
   }
   
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/profits/{year}")
+	public Map<String, Object> getTotalProfitByYear(@PathVariable("year") int year) {
+		HashMap<String, Object> map = new LinkedHashMap<>();
+		try {
+			double profit = orderService.getProfitByYear(year);
+			map.put("success", "true");
+			map.put("message", "profits for year " + year + " found");
+			map.put("year", year);
+			map.put("profit", profit);
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "error: " + e.getMessage());
+		}
+		return map;
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/profits/{year}/{month}")
+	public Map<String, Object> getTotalProfitByMonth(@PathVariable("year") int year, @PathVariable("month") int month) {
+		HashMap<String, Object> map = new LinkedHashMap<>();
+		try {
+			double profit = orderService.getProfitByMonth(year,month);
+			String monthName = new DateFormatSymbols().getMonths()[month-1];
+			map.put("success", "true");
+			map.put("message", "profits for " + monthName + " " + year + " found");
+			map.put("month", month);
+			map.put("year", year);
+			map.put("profit", profit);
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "error: " + e.getMessage());
+		}
+		return map;
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/salaries/year")
+	public Map<String, Object> getTotalSalariesByYear() {
+		HashMap<String, Object> map = new LinkedHashMap<>();
+		try {
+			double salaries = employeeService.getSalariesByYear();
+			map.put("success", "true");
+			map.put("message", "Total salaries for a year found");
+			map.put("salaries", salaries);
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "error: " + e.getMessage());
+		}
+		return map;
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/salaries/month")
+	public Map<String, Object> getTotalSalariesByMonth() {
+		HashMap<String, Object> map = new LinkedHashMap<>();
+		try {
+			double salaries = employeeService.getSalariesByMonth();
+			map.put("success", "true");
+			map.put("message", "Total salaries for a month found");
+			map.put("salaries", salaries);
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "error: " + e.getMessage());
+		}
+		return map;
+	}
 }

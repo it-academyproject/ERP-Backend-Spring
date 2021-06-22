@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.domain.PaymentMethod;
+import cat.itacademy.proyectoerp.domain.Shop;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
@@ -29,6 +30,7 @@ public class OrderDTO implements Serializable {
 	private AddressDTO shippingAddress;
 	private AddressDTO billingAddress;
 	private Double total;
+	private Shop shop;
 	
 	private Set<OrderDetailDTO> orderDetails;
 	
@@ -120,6 +122,14 @@ public class OrderDTO implements Serializable {
 
 	public void setMessage(MessageDTO message) {
 		this.message = message;
+	}
+	
+	public Shop getShop() {
+		return shop;
+	}
+	
+	public void setShop(Shop shop) {
+		this.shop = shop;
 	}
 	
 }
