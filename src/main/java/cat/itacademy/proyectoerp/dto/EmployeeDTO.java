@@ -27,7 +27,7 @@ public class EmployeeDTO implements Serializable {
     private UserDTO user;
     private MessageDTO message;
     
-    //b-79. added by Joan
+    
     private Double totalSales;
     private int totalOrdersAttended;
     
