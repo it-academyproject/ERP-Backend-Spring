@@ -1,11 +1,9 @@
 package cat.itacademy.proyectoerp.controller;
 
 import cat.itacademy.proyectoerp.domain.Employee;
-import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.dto.EmployeeDTO;
 import cat.itacademy.proyectoerp.service.IEmployeeService;
 import cat.itacademy.proyectoerp.service.OrderServiceImpl;
-import cat.itacademy.proyectoerp.util.CalculOrderAttendedAndSale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,15 +33,7 @@ public class EmployeeController {
     try {
       List<EmployeeDTO> employeeList = iEmployeeService.findAllEmployees();
       
-      for (EmployeeDTO e:employeeList) {
-    	      	 
-    	  List<Order> ordersEmployeeList= iOrderService.findByEmployeeId(e.getId());
-    	  CalculOrderAttendedAndSale attendedAndSale= new CalculOrderAttendedAndSale();
-    	  int totolOrdersAttended=  attendedAndSale.getTotalOrdersAttendedbyEmployee(ordersEmployeeList);
-    	  double totalSales= attendedAndSale.getTotalSalesEmployee(ordersEmployeeList);
-    	  e.setTotalOrdersAttended(totolOrdersAttended);
-    	  e.setTotalSales(totalSales);
-      }
+      employeeList= iEmployeeService.findAllEmployeesAndTotalSalesAndTotalOrdersAttended(employeeList);
       	
       map.put("success", "true");
       map.put("message", "employee found");
