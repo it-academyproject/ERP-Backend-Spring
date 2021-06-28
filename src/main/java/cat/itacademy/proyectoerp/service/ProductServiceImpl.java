@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,7 @@ public class ProductServiceImpl implements IProductService {
 	}
 
 	private void checkProductName(String name) {
-		if(name.isBlank()) throw new ArgumentNotValidException("Name cannot be null or whitespace");
+		if(StringUtils.isBlank(name)) throw new ArgumentNotValidException("Name cannot be null or whitespace");
 		if(productRepository.existsByName(name)) throw new ArgumentNotValidException("A category named " + name + " already exists");		
 	}
 

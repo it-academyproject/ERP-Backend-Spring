@@ -3,7 +3,7 @@ package cat.itacademy.proyectoerp;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.domain.UserType;
 import cat.itacademy.proyectoerp.dto.UserDTO;
-import cat.itacademy.proyectoerp.repository.UserRepository;
+import cat.itacademy.proyectoerp.repository.IUserRepository;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 import cat.itacademy.proyectoerp.service.UserServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,7 +49,7 @@ public class UserControllerIntegrationTest {
 	private MockMvc mockMvc;
 
 	@Autowired
-	UserRepository userRepository;
+	IUserRepository userRepository;
 
 	@Resource
 	private WebApplicationContext webApplicationContext;

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,12 +88,12 @@ public class CategoryServiceImpl implements ICategoryService {
 	}
 
 	private void checkCategoryName(String name) {
-		if(name.isBlank()) throw new ArgumentNotValidException("Name cannot be null or whitespace");
+		if(StringUtils.isBlank(name)) throw new ArgumentNotValidException("Name cannot be null or whitespace");
 		if(categoryRepository.existsByName(name)) throw new ArgumentNotValidException("A category named " + name + " already exists");		
 	}
 	
 	private void checkCategoryDescription(String description) {
-		if(description.isBlank() || description.length() < 10 || description.length() > 200) throw new ArgumentNotValidException("Description must be between 10 and 200 characters");
+		if(StringUtils.isBlank(description)|| description.length() < 10 || description.length() > 200) throw new ArgumentNotValidException("Description must be between 10 and 200 characters");
 		if(categoryRepository.existsByDescription(description)) throw new ArgumentNotValidException("Another category has the same description");
 	}
 
@@ -128,6 +129,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
 	@Override
 	public void deleteCategoryById(UUID id) {
+		if(!categoryRepository.existsById(id)) throw new ArgumentNotFoundException("The id " + id + " doesn't correspond to any category");
 		categoryRepository.deleteById(id);		
 	}
 

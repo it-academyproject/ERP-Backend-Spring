@@ -1,7 +1,7 @@
 package cat.itacademy.proyectoerp;
 
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
-import cat.itacademy.proyectoerp.repository.UserRepository;
+import cat.itacademy.proyectoerp.repository.IUserRepository;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,7 +52,7 @@ public class StatsControllerIntegrationTest {
 	private MockMvc mockMvc;
 
 	@Autowired
-	UserRepository userRepository;
+	IUserRepository userRepository;
 	
 	@Autowired
 	IOrderRepository orderRepository;

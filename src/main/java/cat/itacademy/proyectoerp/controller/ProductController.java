@@ -43,7 +43,7 @@ public class ProductController {
 			map.put("product", product);
 		} catch (Exception e) {
 			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.put("message", "error: " + e.getMessage());
 		}
 		return map;
 	}
@@ -65,7 +65,7 @@ public class ProductController {
 		} catch (Exception e) {
 
 			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.put("message", "error: " + e.getMessage());
 		}
 
 		return map;
@@ -81,12 +81,12 @@ public class ProductController {
 			List<ProductDTO> productList = productService.getProducts();
 
 			map.put("success", "true");
-			map.put("message", "product list found");
+			map.put("message", "products found");
 			map.put("products", productList);
 
 		} catch (Exception e) {
 			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.put("message", "error: " + e.getMessage());
 		}
 
 		return map;
@@ -98,11 +98,11 @@ public class ProductController {
 		try {
 			List<ProductDTO> productList = productService.getProductsByCategoryName(categoryName);
 			map.put("success", "true");
-			map.put("message", "product list found");
+			map.put("message", "products found");
 			map.put("products", productList);
 		} catch (Exception e) {
 			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.put("message", "error: " + e.getMessage());
 		}
 		return map;
 	}
@@ -126,7 +126,7 @@ public class ProductController {
 		} catch (Exception e) {
 
 			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.put("message", "error: " + e.getMessage());
 
 		}
 
@@ -147,12 +147,12 @@ public class ProductController {
 			productService.deleteProduct(product.getId());
 
 			map.put("success", "true");
-			map.put("message", "Product id: " + product.getId() + " has been successfully deleted");
+			map.put("message", "product deleted");
 
 		} catch (Exception e) {
 
 			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.put("message", "error: " + e.getMessage());
 
 		}
 
@@ -170,7 +170,7 @@ public class ProductController {
 			map.put("category", category);
 		}catch(Exception e) {
 			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.put("message", "error: " + e.getMessage());
 		}
 		return map;
 	}
@@ -185,7 +185,7 @@ public class ProductController {
 			map.put("category", category);
 		}catch(Exception e) {
 			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.put("message", "error: " + e.getMessage());
 		}
 		return map;
 	}
@@ -200,7 +200,7 @@ public class ProductController {
 			map.put("categories", categories);
 		}catch(Exception e) {
 			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.put("message", "error: " + e.getMessage());
 		}
 		return map;
 	}
@@ -215,7 +215,7 @@ public class ProductController {
 			map.put("categories", categories);
 		}catch(Exception e) {
 			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.put("message", "error: " + e.getMessage());
 		}
 		return map;
 	}
@@ -230,8 +230,8 @@ public class ProductController {
 			map.put("message", "category updated");
 			map.put("category", category);
 		}catch(Exception e) {
-			map.put("success", false);
-			map.put("message", "Error: " + e.getMessage());
+			map.put("success", "false");
+			map.put("message", "error: " + e.getMessage());
 		}
 		return map;
 	}
@@ -243,10 +243,10 @@ public class ProductController {
 		try {
 			categoryService.deleteCategoryById(id);
 			map.put("success", "true");
-			map.put("message", "The category with id " + id + " has been successfully deleted");
+			map.put("message", "category deleted");
 		}catch(Exception e) {
 			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.put("message", "error: " + e.getMessage());
 		}
 		return map;
 	}
