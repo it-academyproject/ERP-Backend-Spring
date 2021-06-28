@@ -22,8 +22,7 @@ public interface IOrderRepository extends JpaRepository<Order, UUID>{
   List<Order> findByEmployeeId(UUID employeeId);
   
   List<Order> findAllByStatus(OrderStatus status);
-  
-  
+    
   @Query(value = "select employee_id,sum(total) as total from orders " 
                   +"where (orders.status like 'COMPLETED') "	
                   +" and (orders.date_created between :begin_date and :end_date) "

@@ -2,6 +2,7 @@ package cat.itacademy.proyectoerp.service;
 
 
 import cat.itacademy.proyectoerp.domain.Employee;
+import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.domain.UserType;
 import cat.itacademy.proyectoerp.dto.EmployeeDTO;
@@ -9,6 +10,7 @@ import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.repository.IEmployeeRepository;
+import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
   @Autowired
   UserRepository userRepository;
+  
+  @Autowired
+  IOrderRepository iOrderRepository;
 
   ModelMapper modelMapper = new ModelMapper();
 
@@ -68,6 +73,8 @@ public class EmployeeServiceImpl implements IEmployeeService {
     List<EmployeeDTO> employeesDTO = iEmployeeRepository.findAll().stream().map(employee -> modelMapper.map(employee, EmployeeDTO.class)).collect(Collectors.toList());
     return employeesDTO;
   }
+  
+  
 
   @Override
   public EmployeeDTO updateEmployee(Employee employee) throws Exception {
@@ -133,5 +140,18 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	public double getSalariesByMonth() {
 		//Assuming employees have 12 payments per year.
 		return iEmployeeRepository.getTotalSalariesForYear()/12;
+	}
+
+	@Override
+	public List<EmployeeDTO> findAllEmployeesAndTotalSalesAndTotalOrdersAttended(List<EmployeeDTO> listEmployees) {
+		
+		for(EmployeeDTO e:listEmployees) {
+			List<Order> listOrdersOneEmployee = iOrderRepository.findByEmployeeId(e.getId());
+			double totalSalesEmployee = listOrdersOneEmployee.stream().mapToDouble(Order:: getTotal).sum();
+			int totoalOrdersAttended = (int) listOrdersOneEmployee.stream().count();
+			e.setTotalSales(totalSalesEmployee);
+			e.setTotalOrdersAttended(totoalOrdersAttended);
+		}
+		return listEmployees;
 	}
 }
