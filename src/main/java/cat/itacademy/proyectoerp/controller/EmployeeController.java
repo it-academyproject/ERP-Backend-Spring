@@ -37,7 +37,7 @@ public class EmployeeController {
       	
       map.put("success", "true");
       map.put("message", "employee found");
-      map.put("id_emple", employeeList);
+      map.put("employee_id", employeeList);
       
     } catch (Exception e) {
       map.put("success", "false");
