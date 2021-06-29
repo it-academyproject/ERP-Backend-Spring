@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -26,7 +26,7 @@ public class WorkingHoursController {
   public HashMap<String, Object> getWorkingHours(){
     HashMap<String, Object> map = new HashMap<String, Object>();
     try {
-      List<WorkingHours> workingHoursList = workingHoursService.findAllWorkingHours();
+      List<WorkingHoursDTO> workingHoursList = workingHoursService.findAllWorkingHours();
       map.put("success", "true");
       map.put("message", "working hours found");
       map.put("workingHours", workingHoursList);
@@ -53,17 +53,18 @@ public class WorkingHoursController {
     return map;
   }
   
+  @PreAuthorize("hasRole('ADMIN')")
   @PostMapping()
-	public HashMap<String, Object> createWorkingHours(@RequestBody WorkingHours workingHours) {
+	public Map<String, Object> createWorkingHours(@RequestBody WorkingHoursDTO workingHoursDTO) {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		try {
-			workingHoursService.createWorkingHours(workingHours);
+			workingHoursService.createWorkingHours(workingHoursDTO);
 
 			map.put("success", "true");
 			map.put("message", "New Working Hours created");
-			map.put("workingHours", workingHours);
+			map.put("workingHours", workingHoursDTO);
 
 		} catch (Exception e) {
 

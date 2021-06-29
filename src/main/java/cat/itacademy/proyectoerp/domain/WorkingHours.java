@@ -29,28 +29,26 @@ public class WorkingHours {
 	@JsonProperty("id")
 	private UUID id;
 
-	@Column(name="day")
-	private LocalDate day;
+	@Column(name="date")
+	private LocalDate date;
   
-	@NotNull(message = "check_in is mandatory")
 	@JsonFormat(pattern = "HH:mm:ss")
 	@Column(name="check_in")
 	private LocalTime checkIn;
 	
-	@NotNull(message = "check_out is mandatory")
 	@JsonFormat(pattern = "HH:mm:ss")
 	@Column(name="check_out")
 	private LocalTime checkOut;
 
-	@NotNull(message = "You have to assign an employee id to the working hours")
+	@NotNull(message = "You have to assign an employee id")
 	private UUID employeeId;
 
 	public WorkingHours(){
 	  
 	};
 
-	public WorkingHours(LocalDate day, LocalTime checkIn, LocalTime checkOut, UUID employeeId) {
-		this.day = day;
+	public WorkingHours(LocalDate date, LocalTime checkIn, LocalTime checkOut, UUID employeeId) {
+		this.date = date;
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
 		this.employeeId = employeeId;
@@ -63,11 +61,11 @@ public class WorkingHours {
 		this.id = id;
 	}
   
-	public LocalDate getDay() {
-		return day;
+	public LocalDate getDate() {
+		return date;
 	}
-	public void setDayOfTheWeek(LocalDate day) {
-		this.day = day;
+	public void setDate(LocalDate date) {
+		this.date = date;
 	}
 	
 	public LocalTime getCheckIn() {

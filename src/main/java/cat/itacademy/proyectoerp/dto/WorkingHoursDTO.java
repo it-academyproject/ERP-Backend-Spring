@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
 
@@ -15,24 +16,24 @@ public class WorkingHoursDTO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	private int id;
-	private String dayOfTheWeek;
+	private UUID id;
+	private LocalDate date;
 	private LocalTime checkIn;
     private LocalTime checkOut;
     private UUID employeeId;
-    public int getId() {
+    public UUID getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
-    public String getDayOfTheWeek() {
-        return dayOfTheWeek;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setDayOfTheWeek(String dayOfTheWeek) {
-        this.dayOfTheWeek = dayOfTheWeek;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
     
     public LocalTime getCheckIn() {
