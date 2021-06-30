@@ -205,8 +205,8 @@ public class Runner implements CommandLineRunner {
 			
 			// Initialize the working hours
 			
-			WorkingHours workingHours1 = new WorkingHours(LocalDate.of(2021, 6, 17), LocalTime.of(8, 00), LocalTime.of(17, 00), employeeOne.getId());
-			WorkingHours workingHours2 = new WorkingHours(LocalDate.of(2021, 6, 17), LocalTime.of(8, 00), LocalTime.of(17, 00), employeeTwo.getId());
+			WorkingHours workingHours1 = new WorkingHours(LocalDate.of(2021, 6, 30), LocalTime.of(9, 00), LocalTime.of(18, 00), employeeOne.getId());
+			WorkingHours workingHours2 = new WorkingHours(LocalDate.of(2021, 6, 30), LocalTime.of(9, 00), LocalTime.of(18, 00), employeeTwo.getId());
 			
 			workingHoursRepository.save(workingHours1);
 			workingHoursRepository.save(workingHours2);

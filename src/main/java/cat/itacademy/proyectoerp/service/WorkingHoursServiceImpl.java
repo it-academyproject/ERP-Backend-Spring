@@ -1,5 +1,6 @@
 package cat.itacademy.proyectoerp.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -27,12 +28,16 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService{
 		WorkingHours workingHours = modelMapper.map(workingHoursDTO, WorkingHours.class);
 		if (workingHours.getEmployeeId() == null) {
 			throw new ArgumentNotValidException("An Employee ID is required");
+			
 		} else if ((workingHours.getCheckIn() == null) && (workingHours.getCheckOut() == null)) {
 			throw new ArgumentNotValidException("Either the CheckIn time or Checkout time is required");
+			
 		} else if (workingHours.getDate() == null) {
 			throw new ArgumentNotValidException("A Date is required");
+									
 		} else {
 			workingHoursRepository.save(workingHours);
+			
 		}
 		
 		return modelMapper.map(workingHours, WorkingHoursDTO.class);
@@ -40,9 +45,19 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService{
 
 	@Override
 	public WorkingHours findWorkingHoursById(UUID id) {
+
+		return workingHoursRepository.findById(id).orElseThrow(() -> new ArgumentNotFoundException("WorkingHours not found. The id " + id + " doesn't exist"));
+	}
+	
+	@Override
+	public List<WorkingHoursDTO> findWorkingHoursByEmployeeId(UUID employeeId) {
+
+		if (workingHoursRepository.findByEmployeeId(employeeId).isEmpty()) {
+			throw new ArgumentNotFoundException("No Working Hours found for this Employee Id: " + employeeId);
+		} else {
+			return workingHoursRepository.findByEmployeeId(employeeId).stream().map(workingHours -> modelMapper.map(workingHours, WorkingHoursDTO.class)).collect(Collectors.toList());
 		
-		return workingHoursRepository.findById(id)
-	            .orElseThrow(() -> new ArgumentNotFoundException("WorkingHours not found. The id " + id + " doesn't exist"));
+		}
 	}
 
 	@Override
@@ -52,19 +67,27 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService{
 			throw new ArgumentNotFoundException("No Working Hours found");
 		} else {
 			return workingHoursRepository.findAll().stream().map(workingHours -> modelMapper.map(workingHours, WorkingHoursDTO.class)).collect(Collectors.toList());
+		
 		}
 	}
 
 	@Override
-	public WorkingHours updateWorkingHours(WorkingHours workingHours) {
-		if(workingHoursRepository.findById(workingHours.getId()) == null){
-		      throw new ArgumentNotFoundException("No WorkingHours found");
-		    }
-		    return workingHoursRepository.save(workingHours);
+	public WorkingHoursDTO updateWorkingHours(WorkingHoursDTO workingHoursDTO) throws ArgumentNotValidException {
+		WorkingHours workingHours = modelMapper.map(workingHoursDTO, WorkingHours.class);
+		
+		if(workingHoursRepository.findById(workingHours.getId()) == null) {
+		      throw new ArgumentNotFoundException("No WorkingHours found for this UUID");
+		
+		} else {
+			workingHoursRepository.save(workingHours);
+		}
+		    
+		return modelMapper.map(workingHours, WorkingHoursDTO.class);
 	}
 
 	@Override
 	public void deleteWorkingHours(UUID id) {
+		
 		workingHoursRepository.deleteById(id);
 		
 	}
