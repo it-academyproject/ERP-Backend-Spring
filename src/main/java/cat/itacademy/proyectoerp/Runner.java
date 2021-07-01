@@ -202,13 +202,13 @@ public class Runner implements CommandLineRunner {
 			Address addressShopOne = new Address("Calle Botigues", "1 C", "Barcelona", "Spain", "08016");
 			addressService.createAddress(addressShopOne);
 			
-			Shop shopOne = new Shop("BrandTest01", "CompanyTest01", "443344F",666777999, addressShopOne);
+			Shop shopOne = new Shop("BrandTest01", "CompanyTest01", "443344F",666777999, addressShopOne, "www.ShopOne.com");
 			shopOne = shopRepository.save(shopOne);
 			
 			Address addressShopTwo = new Address("Calle Botigues", "1 C", "Barcelona", "Spain", "08016");
 			addressService.createAddress(addressShopOne);
 			
-			Shop shopTwo = new Shop("BrandTest01", "CompanyTest01", "443344F",666777999, addressShopTwo);
+			Shop shopTwo = new Shop("BrandTest01", "CompanyTest01", "443344F",666777999, addressShopTwo, "www.ShopTwo.com");
 			shopTwo = shopRepository.save(shopTwo);	
 			
 			

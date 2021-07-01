@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import cat.itacademy.proyectoerp.domain.Address;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "id", "brand_name", "company_name", "nif", "phone", "creation_date", "address"})
+@JsonPropertyOrder({ "id", "brand_name", "company_name", "nif", "phone", "creation_date", "address","web_address" })
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ShopDTO {
 
@@ -34,6 +34,9 @@ public class ShopDTO {
 	private Date creationDate ;
 	
 	private Address address;
+	
+	@JsonProperty("web_address")
+	private String webAddress;
 		
 	public ShopDTO() {
 	}
@@ -93,4 +96,20 @@ public class ShopDTO {
 	public void setAddress(Address address) {
 		this.address = address;
 	}
+
+	public String getWebAddress() {
+		return webAddress;
+	}
+
+	public void setWebAddress(String webAddress) {
+		this.webAddress = webAddress;
+	}
+
+	@Override
+	public String toString() {
+		return "ShopDTO [brandName=" + brandName + ", companyName=" + companyName + ", phone=" + phone + ", address="
+				+ address + ", webAddress=" + webAddress + "]";
+	}
+	
+	
 }

@@ -40,7 +40,7 @@ public class ShopServiceImpl implements IShopService {
 		if (shopRepo.findAll().isEmpty()) {
 			throw new ArgumentNotFoundException("No shops found");
 		} else {
-			List<ShopDTO> shopDTOList = shopRepo.findAll().stream().map(s->ConvertShopToDTO(s)).collect(Collectors.toList());		
+			List<ShopDTO> shopDTOList = shopRepo.findAll().stream().map(s->ConvertShopToDTO(s)).collect(Collectors.toList());				
 			return shopDTOList;
 		}
 	}

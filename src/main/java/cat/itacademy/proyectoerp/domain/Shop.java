@@ -58,13 +58,16 @@ public class Shop {
 	
 	@Column(length = 11, nullable = false)
 	@NotNull(message = "Phone is mandatory")
-	private Integer phone;
+	private Integer phone;		
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "address_id", referencedColumnName = "id", unique = true)
 	@NotNull(message = "You have to assign this shop to an address")
 	@Valid
 	private Address address;
+	
+	@JsonProperty("web_address")
+	private String webAddress;
 	
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	@CreationTimestamp
@@ -77,21 +80,23 @@ public class Shop {
 	public Shop() {
 	}
 	
-	public Shop(UUID id, String brandName, String companyName, String nif, Integer phone, Address address) {
+	public Shop(UUID id, String brandName, String companyName, String nif, Integer phone, Address address, String webAddress) {
 		this.id = id;
 		this.brandName = brandName;
 		this.companyName = companyName;
 		this.nif = nif;
 		this.phone = phone;
 		this.address = address;
+		this.webAddress = webAddress;
 	}
 
-	public Shop(String brandName, String companyName,  String nif, Integer phone, Address address) {
+	public Shop(String brandName, String companyName,  String nif, Integer phone, Address address, String webAddress) {
 		this.brandName = brandName;
 		this.companyName = companyName;
 		this.nif = nif;
 		this.phone = phone;
 		this.address = address;
+		this.webAddress = webAddress;
 	}
 
 	public UUID getId() {
@@ -156,5 +161,14 @@ public class Shop {
 
 	public void setProducts(Set<Product> products) {
 		this.products = products;
+	}
+
+	public String getWebAddress() {
+		return webAddress;
+	}
+
+	public void setWebAddress(String webAddress) {
+		this.webAddress = webAddress;
 	}	
+	
 }

@@ -110,7 +110,7 @@ public class TestData {
 	}
 	
 	public Shop  createRandomShop() {
-		Shop shop = new Shop("BrandTest01", "CompanyTest01", "443344F", 666777999, new Address("Calle Botigues", "1 C", "Barcelona", "Spain", "08016"));
+		Shop shop = new Shop("BrandTest01", "CompanyTest01", "443344F", 666777999, new Address("Calle Botigues", "1 C", "Barcelona", "Spain", "08016"),  "www.ShopOne.com");
 		return shopRepository.save(shop);
 	}
 	
