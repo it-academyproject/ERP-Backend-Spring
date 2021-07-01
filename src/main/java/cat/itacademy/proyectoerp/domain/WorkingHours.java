@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -17,6 +16,7 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 @Entity
+@IdClass(WorkingHoursId.class)
 @Table (name = "working_hours")
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -29,6 +29,7 @@ public class WorkingHours {
 	@JsonProperty("id")
 	private UUID id;
 
+	@Id
 	@Column(name="date")
 	private LocalDate date;
   
@@ -40,7 +41,9 @@ public class WorkingHours {
 	@Column(name="check_out")
 	private LocalTime checkOut;
 
+	@Id
 	@NotNull(message = "You have to assign an employee id")
+	@Column(name="employee_id")
 	private UUID employeeId;
 
 	public WorkingHours(){
