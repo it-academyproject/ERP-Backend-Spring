@@ -2,6 +2,7 @@ package cat.itacademy.proyectoerp.controller;
 
 import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.domain.WorkingHours;
+import cat.itacademy.proyectoerp.domain.WorkingHoursId;
 import cat.itacademy.proyectoerp.dto.WorkingHoursDTO;
 import cat.itacademy.proyectoerp.service.WorkingHoursServiceImpl;
 
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,30 +40,14 @@ public class WorkingHoursController {
   }
 
   @PreAuthorize("hasRole('ADMIN')")
-  @GetMapping("/{id}")
-  public HashMap<String, Object> getWorkingHoursById(@PathVariable(name="id") UUID id){
+  @GetMapping("/{employee_id}/{date}")
+  public HashMap<String, Object> getWorkingHoursByEmployeeIdDate(@PathVariable(name="employee_id") UUID employeeId, @PathVariable(name="date") LocalDate date){
     HashMap<String, Object> map = new HashMap<>();
     try {
-      WorkingHours workingHours = workingHoursService.findWorkingHoursById(id);
+      WorkingHours workingHours = workingHoursService.findWorkingHoursByEmployeeIdDate(new WorkingHoursId(employeeId, date));
       map.put("success", "true");
       map.put("message", "working hours found");
       map.put("workingHours", workingHours);
-    } catch (Exception e){
-      map.put("success", "false");
-      map.put("message", e.getMessage());
-    }
-    return map;
-  }
-  
-  @PreAuthorize("hasRole('ADMIN')")
-  @GetMapping("/employee/{employeeId}")
-  public HashMap<String, Object> getWorkingHoursByEmployeeId(@PathVariable(name="employeeId") UUID employeeId){
-    HashMap<String, Object> map = new HashMap<>();
-    try {
-      List<WorkingHoursDTO> workingHoursEmployeeList = workingHoursService.findWorkingHoursByEmployeeId(employeeId);
-      map.put("success", "true");
-      map.put("message", "working hours found for the Employee Id: " + employeeId);
-      map.put("workingHours", workingHoursEmployeeList);
     } catch (Exception e){
       map.put("success", "false");
       map.put("message", e.getMessage());
@@ -96,10 +82,10 @@ public class WorkingHoursController {
   public HashMap<String, Object> deleteWorkingHours(@RequestBody WorkingHours workingHours) {
     HashMap<String, Object> map = new HashMap<>();
     try {
-    	workingHoursService.findWorkingHoursById(workingHours.getId());
-    	workingHoursService.deleteWorkingHours(workingHours.getId());
+    	workingHoursService.findWorkingHoursByEmployeeIdDate(new WorkingHoursId(workingHours.getEmployeeId(), workingHours.getDate()));
+    	workingHoursService.deleteWorkingHours(new WorkingHoursId(workingHours.getEmployeeId(), workingHours.getDate()));
     	map.put("success", "true");
-    	map.put("message", "Working Hours with id: " + workingHours.getId() + " have been deleted");
+    	map.put("message", "Working Hours with Employee id: " + workingHours.getEmployeeId() + " and date" + workingHours.getDate() + "have been deleted");
     } catch (Exception e) {
     	map.put("success", "false");
     	map.put("message", e.getMessage());

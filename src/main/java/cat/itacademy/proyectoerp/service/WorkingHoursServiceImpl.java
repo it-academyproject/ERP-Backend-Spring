@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cat.itacademy.proyectoerp.domain.WorkingHours;
+import cat.itacademy.proyectoerp.domain.WorkingHoursId;
 import cat.itacademy.proyectoerp.dto.WorkingHoursDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
@@ -44,9 +45,9 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService{
 	}
 
 	@Override
-	public WorkingHours findWorkingHoursById(UUID id) {
+	public WorkingHours findWorkingHoursByEmployeeIdDate(WorkingHoursId workingHoursId) {
 
-		return workingHoursRepository.findById(id).orElseThrow(() -> new ArgumentNotFoundException("WorkingHours not found. The id " + id + " doesn't exist"));
+		return workingHoursRepository.findByEmployeeIdDate(workingHoursId); //.orElseThrow(() -> new ArgumentNotFoundException("WorkingHours not found. The id " + id + " doesn't exist"));
 	}
 	
 	@Override
@@ -75,8 +76,8 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService{
 	public WorkingHoursDTO updateWorkingHours(WorkingHoursDTO workingHoursDTO) throws ArgumentNotValidException {
 		WorkingHours workingHours = modelMapper.map(workingHoursDTO, WorkingHours.class);
 		
-		if(workingHoursRepository.findById(workingHours.getId()) == null) {
-		      throw new ArgumentNotFoundException("No WorkingHours found for this UUID");
+		if(workingHoursRepository.findByEmployeeIdDate(new WorkingHoursId(workingHours.getEmployeeId(), workingHours.getDate())) == null) {
+		      throw new ArgumentNotFoundException("No WorkingHours found for this Employee Id and date");
 		
 		} else {
 			workingHoursRepository.save(workingHours);
@@ -86,9 +87,9 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService{
 	}
 
 	@Override
-	public void deleteWorkingHours(UUID id) {
+	public void deleteWorkingHours(WorkingHoursId workingHoursId) {
 		
-		workingHoursRepository.deleteById(id);
+		workingHoursRepository.deleteByEmployeeIdDate(workingHoursId);
 		
 	}
 	

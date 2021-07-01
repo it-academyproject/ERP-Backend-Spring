@@ -21,13 +21,6 @@ import java.util.UUID;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class WorkingHours {
-	
-	@Id
-	@GeneratedValue(generator = "UUID")
-    @GenericGenerator( name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-	@Column(name = "id", columnDefinition = "BINARY(16)")
-	@JsonProperty("id")
-	private UUID id;
 
 	@Id
 	@Column(name="date")
@@ -55,13 +48,6 @@ public class WorkingHours {
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
 		this.employeeId = employeeId;
-	}
-
-	public UUID getId() {
-		return id;
-	}
-	public void setId(UUID id) {
-		this.id = id;
 	}
   
 	public LocalDate getDate() {
