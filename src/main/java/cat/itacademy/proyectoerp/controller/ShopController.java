@@ -48,7 +48,7 @@ public class ShopController {
 		return map;
 	}
 
-	@GetMapping("/shop/{id}")
+	@GetMapping("/shops/{id}")
 	public HashMap<String, Object> findShopById(@PathVariable(name = "id") UUID id) {
 
 		HashMap<String, Object> map = new LinkedHashMap<String, Object>();
@@ -75,7 +75,7 @@ public class ShopController {
 
 		try {
 			List<ShopDTO> shopList = shopService.getShops();
-
+		
 			map.put("success", "true");
 			map.put("message", "shop list found");
 			map.put("shops", shopList);
