@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -306,6 +307,28 @@ public class OrderServiceImpl implements IOrderService{
 			if (profit== 0) throw new ArgumentNotFoundException("There are no completed orders for " +  new DateFormatSymbols().getMonths()[month-1] + " " + year);
 		}
 		return profit;
+	}
+
+	@Override
+	public HashMap<String, Long> countOrdersByStatus() {
+
+		HashMap<String, Long> map = new HashMap<>();				
+
+		List<String> statusOrders = orderRepository.findAllStatusOfOrders();
+
+		if (statusOrders.isEmpty()) {
+			throw new ArgumentNotFoundException("No orders found");
+		} else {
+			
+			long count = 0;
+			for (OrderStatus o : OrderStatus.values()) {
+				count = statusOrders.stream().filter(c -> (c.equals(o.name()))).count();
+				map.put(o.name(), count);
+				count = 0;
+			}
+		}
+
+		return map;
 	}
 
 	

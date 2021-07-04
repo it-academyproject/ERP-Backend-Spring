@@ -263,4 +263,28 @@ public class StatsController {
 		}
 		return map;
 	}
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/status/count")
+	public Map<String, Object> getCountOrderByStatus() throws Exception {		
+
+		HashMap<String, Object> map = new HashMap<>();
+		
+		try {
+			HashMap<String, Long> countOrderStatus = orderService.countOrdersByStatus();
+			
+		      if(!countOrderStatus.isEmpty()){
+		        map.put("success", "true");
+		  		map.put("message", "order list found");
+		  		map.put("Quantity of orders by status",countOrderStatus);
+		      } else{
+		        map.put("success", "true");
+		        map.put("message", "order list empty");		        
+		      }
+		    } catch (Exception e) {
+		      map.put("success", "false");
+		      map.put("message", "error: " + e.getMessage());
+		    }
+
+		return map;
+	}
 }
