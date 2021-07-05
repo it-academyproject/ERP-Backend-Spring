@@ -36,8 +36,8 @@ public class EmployeeController {
       employeeList= iEmployeeService.findAllEmployeesAndTotalSalesAndTotalOrdersAttended(employeeList);
       	
       map.put("success", "true");
-      map.put("message", "employee found");
-      map.put("id emple", employeeList);
+      map.put("message", "employees found");
+      map.put("Employees", employeeList);
       
     } catch (Exception e) {
       map.put("success", "false");
