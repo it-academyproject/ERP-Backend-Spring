@@ -314,7 +314,7 @@ public class OrderServiceImpl implements IOrderService{
 
 		HashMap<String, Long> map = new HashMap<>();				
 
-		List<String> statusOrders = orderRepository.findAllStatusOfOrders();
+		List<String> statusOrders = orderRepository.findAllStatusOfOrders().stream().filter(c-> c!=null).collect(Collectors.toList());
 
 		if (statusOrders.isEmpty()) {
 			throw new ArgumentNotFoundException("No orders found");
@@ -323,7 +323,7 @@ public class OrderServiceImpl implements IOrderService{
 			long count = 0;
 			for (OrderStatus o : OrderStatus.values()) {
 				count = statusOrders.stream().filter(c -> (c.equals(o.name()))).count();
-				map.put(o.name(), count);
+				map.put(o.name().toLowerCase(), count);
 				count = 0;
 			}
 		}
