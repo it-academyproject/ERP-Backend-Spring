@@ -264,7 +264,7 @@ public class StatsController {
 		return map;
 	}
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/status/count")
+	@GetMapping("/status")
 	public Map<String, Object> getCountOrderByStatus() throws Exception {		
 
 		HashMap<String, Object> map = new HashMap<>();
@@ -275,7 +275,7 @@ public class StatsController {
 		      if(!countOrderStatus.isEmpty()){
 		        map.put("success", "true");
 		  		map.put("message", "order list found");
-		  		map.put("Quantity of orders by status",countOrderStatus);
+		  		map.put("orders_by_status",countOrderStatus);
 		      } else{
 		        map.put("success", "true");
 		        map.put("message", "order list empty");		        
