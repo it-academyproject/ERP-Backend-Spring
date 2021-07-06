@@ -33,6 +33,9 @@ public interface IOrderRepository extends JpaRepository<Order, UUID>{
           +"where (orders.status like 'COMPLETED') "	
           +" and (orders.date_created between :begin_date and :end_date) ", nativeQuery = true)
   double findProfitBetweenDates(LocalDateTime begin_date, LocalDateTime end_date);
+  
+  @Query(value = "select status from orders", nativeQuery = true)
+  List<String> findAllStatusOfOrders();
 
 }
  

@@ -101,7 +101,7 @@ public class Order  {
 	@PrePersist
 	public void prePersist() {
 		this.dateCreated = LocalDateTime.now();
-		this.status = OrderStatus.UNASSIGNED;
+		//this.status = OrderStatus.UNASSIGNED;
 	}
 	
 	//Getters & Setters
