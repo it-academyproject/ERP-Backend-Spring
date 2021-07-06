@@ -16,17 +16,10 @@ public class WorkingHoursDTO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	private UUID id;
 	private LocalDate date;
 	private LocalTime checkIn;
     private LocalTime checkOut;
     private UUID employeeId;
-    public UUID getId() {
-		return id;
-	}
-	public void setId(UUID id) {
-		this.id = id;
-	}
 
     public LocalDate getDate() {
         return date;

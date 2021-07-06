@@ -79,8 +79,13 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService{
 
 	@Override
 	public WorkingHours findWorkingHoursByEmployeeIdAndDate(UUID employeeId, LocalDate date) {
+		
+		if (workingHoursRepository.findWorkingHoursByEmployeeIdAndDate(employeeId, date) == null) {
+			throw new ArgumentNotFoundException("No WorkingHours found for this Employee Id and date");
+		} else {
 
-		return workingHoursRepository.findWorkingHoursByEmployeeIdAndDate(employeeId, date); //.orElseThrow(() -> new ArgumentNotFoundException("WorkingHours not found. The id " + id + " doesn't exist"));
+			return workingHoursRepository.findWorkingHoursByEmployeeIdAndDate(employeeId, date);
+		}
 	}
 
 	@Override
@@ -99,8 +104,12 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService{
 
 	@Override
 	public void deleteWorkingHoursByEmployeeIdAndDate(UUID employeeId, LocalDate date) {
+		if(workingHoursRepository.findWorkingHoursByEmployeeIdAndDate(employeeId, date) == null) {
+		      throw new ArgumentNotFoundException("No WorkingHours found for this Employee Id and date");
 		
-		workingHoursRepository.deleteWorkingHoursByEmployeeIdAndDate(employeeId, date);
+		} else {
+			workingHoursRepository.deleteWorkingHoursByEmployeeIdAndDate(employeeId, date);
+		}
 		
 	}
 	

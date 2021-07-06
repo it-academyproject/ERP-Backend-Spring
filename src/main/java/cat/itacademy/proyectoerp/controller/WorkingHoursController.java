@@ -7,6 +7,7 @@ import cat.itacademy.proyectoerp.dto.WorkingHoursDTO;
 import cat.itacademy.proyectoerp.service.WorkingHoursServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.transaction.Transactional;
 
 @RestController
 @RequestMapping("/api/workinghours")
@@ -40,8 +43,8 @@ public class WorkingHoursController {
   }
 
   @PreAuthorize("hasRole('ADMIN')")
-  @GetMapping("/{employee_id}/{date}")
-  public HashMap<String, Object> getWorkingHoursByEmployeeIdAndDate(@PathVariable(name="employee_id") UUID employeeId, @PathVariable(name="date") LocalDate date){
+  @GetMapping("/employeeid/{employee_id}/date/{date}")
+  public HashMap<String, Object> getWorkingHoursByEmployeeIdAndDate(@PathVariable(name="employee_id") UUID employeeId, @PathVariable(name="date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
     HashMap<String, Object> map = new HashMap<>();
     try {
       WorkingHours workingHours = workingHoursService.findWorkingHoursByEmployeeIdAndDate(employeeId, date);
@@ -56,11 +59,27 @@ public class WorkingHoursController {
   }
   
   @PreAuthorize("hasRole('ADMIN')")
-  @GetMapping("/{employee_id}")
+  @GetMapping("/employeeid/{employee_id}")
   public HashMap<String, Object> getWorkingHoursByEmployeeId(@PathVariable(name="employee_id") UUID employeeId){
     HashMap<String, Object> map = new HashMap<>();
     try {
       List<WorkingHoursDTO> workingHoursList = workingHoursService.findWorkingHoursByEmployeeId(employeeId);
+      map.put("success", "true");
+      map.put("message", "working hours found");
+      map.put("workingHours", workingHoursList);
+    } catch (Exception e){
+      map.put("success", "false");
+      map.put("message", e.getMessage());
+    }
+    return map;
+  }
+  
+  @PreAuthorize("hasRole('ADMIN')")
+  @GetMapping("/date/{date}")
+  public HashMap<String, Object> getWorkingHoursByDate(@PathVariable(name="date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+    HashMap<String, Object> map = new HashMap<>();
+    try {
+      List<WorkingHoursDTO> workingHoursList = workingHoursService.findWorkingHoursByDate(date);
       map.put("success", "true");
       map.put("message", "working hours found");
       map.put("workingHours", workingHoursList);
@@ -94,6 +113,7 @@ public class WorkingHoursController {
 	}
 
   @PreAuthorize("hasRole('ADMIN')")
+  @Transactional
   @DeleteMapping()
   public HashMap<String, Object> deleteWorkingHours(@RequestBody WorkingHours workingHours) {
     HashMap<String, Object> map = new HashMap<>();
@@ -101,7 +121,7 @@ public class WorkingHoursController {
     	workingHoursService.findWorkingHoursByEmployeeIdAndDate(workingHours.getEmployeeId(), workingHours.getDate());
     	workingHoursService.deleteWorkingHoursByEmployeeIdAndDate(workingHours.getEmployeeId(), workingHours.getDate());
     	map.put("success", "true");
-    	map.put("message", "Working Hours with Employee id: " + workingHours.getEmployeeId() + " and date" + workingHours.getDate() + "have been deleted");
+    	map.put("message", "Working Hours with Employee id: " + workingHours.getEmployeeId() + " and date " + workingHours.getDate() + " have been deleted");
     } catch (Exception e) {
     	map.put("success", "false");
     	map.put("message", e.getMessage());
@@ -116,7 +136,7 @@ public class WorkingHoursController {
     try {
       WorkingHoursDTO workingHoursUpdated = workingHoursService.updateWorkingHoursByEmployeeIdAndDate(workingHoursDTO);
       map.put("success", "true");
-      map.put("message", "Working Hours with Empployee id: " + workingHoursDTO.getEmployeeId() + " and " + workingHoursDTO.getDate() + "have been updated");
+      map.put("message", "Working Hours with Empployee id: " + workingHoursDTO.getEmployeeId() + " and " + workingHoursDTO.getDate() + " have been updated");
       map.put("employee", workingHoursUpdated);
 
     } catch (Exception e) {

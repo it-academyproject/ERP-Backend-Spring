@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -36,6 +37,7 @@ public class WorkingHours {
 
 	@Id
 	@NotNull(message = "You have to assign an employee id")
+	@Type(type="org.hibernate.type.UUIDCharType")
 	@Column(name="employee_id")
 	private UUID employeeId;
 
