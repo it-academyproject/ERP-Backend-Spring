@@ -25,13 +25,15 @@ import cat.itacademy.proyectoerp.domain.OrderDetail;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.domain.PaymentMethod;
 import cat.itacademy.proyectoerp.domain.Product;
+import cat.itacademy.proyectoerp.domain.Shop;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.domain.UserType;
 import cat.itacademy.proyectoerp.domain.WorkingHours;
 import cat.itacademy.proyectoerp.repository.IAddressRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.IWorkingHoursRepository;
-import cat.itacademy.proyectoerp.repository.UserRepository;
+import cat.itacademy.proyectoerp.repository.IUserRepository;
+import cat.itacademy.proyectoerp.repository.IShopRepository;
 import cat.itacademy.proyectoerp.service.AddressServiceImpl;
 import cat.itacademy.proyectoerp.service.ClientServiceImpl;
 import cat.itacademy.proyectoerp.service.EmployeeServiceImpl;
@@ -65,7 +67,7 @@ public class Runner implements CommandLineRunner {
 	PasswordEncoder passwordEncoder;
 	
 	@Autowired
-	UserRepository userRepository;
+	IUserRepository userRepository;
 	
 	@Autowired
 	EmployeeServiceImpl employeeService;
@@ -90,6 +92,9 @@ public class Runner implements CommandLineRunner {
 	
 	@Autowired
 	IWorkingHoursRepository workingHoursRepository;
+
+	@Autowired
+	IShopRepository shopRepository;
 
 	@Override
 	@Transactional
@@ -212,28 +217,39 @@ public class Runner implements CommandLineRunner {
 			workingHoursRepository.save(workingHours2);
 						
 
+			// Initialize 2 shops
+			Address addressShopOne = new Address("Calle Botigues", "1 C", "Barcelona", "Spain", "08016");
+			addressService.createAddress(addressShopOne);
+			
+			Shop shopOne = new Shop("BrandTest01", "CompanyTest01", "443344F",666777999, addressShopOne, "www.ShopOne.com");
+			shopOne = shopRepository.save(shopOne);
+			
+			Address addressShopTwo = new Address("Calle Botigues", "1 C", "Barcelona", "Spain", "08016");
+			addressService.createAddress(addressShopOne);
+			
+			Shop shopTwo = new Shop("BrandTest01", "CompanyTest01", "443344F",666777999, addressShopTwo, "www.ShopTwo.com");
+			shopTwo = shopRepository.save(shopTwo);	
+			
+
 			// Initialize 3 products
 			Timestamp timestamp2 = new Timestamp(System.currentTimeMillis());
 			long ts2 = timestamp2.getTime();
-			Product productOne = new Product("ejemplo 1", 100, "url image", "Bebidas", 150.00, 21.00, 100, 200, ts2, ts2);
+			Product productOne = new Product("ejemplo 1", 100, "url image", "Bebidas", 150.00, 21.00, 100, 200, ts2, ts2, shopOne);
 			productService.createProduct(productOne);
-
-			Product productTwo = new Product("ejemplo 2", 200, "url image", "Comidas", 250.00, 21.00, 175, 200, ts2, ts2);
+			
+			Product productTwo = new Product("ejemplo 2", 200, "url image", "Comidas", 250.00, 21.00, 175, 200, ts2, ts2, shopOne);
 			productService.createProduct(productTwo);
 			
-			Product productThree = new Product("ejemplo 3", 50, "url image", "Souvenirs", 350.00, 21.00, 250, 100, ts2, ts2);
+			Product productThree = new Product("ejemplo 3", 50, "url image", "Souvenirs", 350.00, 21.00, 250, 100, ts2, ts2, null);
 			productService.createProduct(productThree);
 			
-			
-			
 			//initialize 20 products
-			
 			Product p;
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 			long ts = timestamp.getTime();
 			for (int i= 0; i<20; i++) {
 				int price = (int)Math.random()*1000;
-				p = new Product("ejemplo "+(int)(i+4) ,price , "imagen nº"+ (int)(i+3),"brahim", price*0.40, 21.00 ,(int)(price+0.40), price, ts, ts);
+				p = new Product("ejemplo "+(int)(i+4) ,price , "imagen nº"+ (int)(i+3),"brahim", price*0.40, 21.00 ,(int)(price+0.40), price, ts, ts, shopTwo);
 				productService.createProduct(p);
 			}
 			

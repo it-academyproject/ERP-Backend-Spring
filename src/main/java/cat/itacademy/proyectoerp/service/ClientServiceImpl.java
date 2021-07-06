@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 
 import cat.itacademy.proyectoerp.domain.*;
 import cat.itacademy.proyectoerp.dto.*;
-import cat.itacademy.proyectoerp.repository.UserRepository;
+import cat.itacademy.proyectoerp.repository.IUserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,7 +24,7 @@ public class ClientServiceImpl implements IClientService {
 	IClientRepository repository;
 
 	@Autowired
-	UserRepository userRepository;
+	IUserRepository userRepository;
 
 	@Autowired
 	UserServiceImpl userService;
@@ -32,7 +32,6 @@ public class ClientServiceImpl implements IClientService {
 	// We use ModelMapper for map Client entity with the DTO.
 	ModelMapper modelMapper = new ModelMapper();
 
-	@Override
 	public ClientDTO createClient(Client client) throws Exception {
 
 		String exceptionMessage = "Client not created. ";

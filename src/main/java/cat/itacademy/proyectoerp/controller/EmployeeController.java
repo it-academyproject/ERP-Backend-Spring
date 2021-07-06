@@ -3,6 +3,8 @@ package cat.itacademy.proyectoerp.controller;
 import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.dto.EmployeeDTO;
 import cat.itacademy.proyectoerp.service.IEmployeeService;
+import cat.itacademy.proyectoerp.service.OrderServiceImpl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,9 @@ public class EmployeeController {
 
   @Autowired
   IEmployeeService iEmployeeService;
+  
+  @Autowired 
+  OrderServiceImpl iOrderService;
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping()
@@ -27,9 +32,13 @@ public class EmployeeController {
     HashMap<String, Object> map = new HashMap<String, Object>();
     try {
       List<EmployeeDTO> employeeList = iEmployeeService.findAllEmployees();
+      
+      employeeList= iEmployeeService.findAllEmployeesAndTotalSalesAndTotalOrdersAttended(employeeList);
+      	
       map.put("success", "true");
       map.put("message", "employee found");
-      map.put("employee", employeeList);
+      map.put("employees", employeeList);
+      
     } catch (Exception e) {
       map.put("success", "false");
       map.put("message", e.getMessage());

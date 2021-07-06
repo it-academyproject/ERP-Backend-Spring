@@ -7,6 +7,7 @@ import cat.itacademy.proyectoerp.security.entity.JwtResponse;
 import cat.itacademy.proyectoerp.security.jwt.JwtUtil;
 import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
 import cat.itacademy.proyectoerp.service.ClientServiceImpl;
+import cat.itacademy.proyectoerp.service.IClientService;
 import cat.itacademy.proyectoerp.service.IEmployeeService;
 import cat.itacademy.proyectoerp.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import java.util.List;
  * @author 
  *
  */
+
 @CrossOrigin
 @RestController
 @RequestMapping("/api")
@@ -54,6 +56,9 @@ public class UserController {
 
 	@Autowired
 	IEmployeeService iEmployeeService;
+	
+	@Autowired
+	IClientService iClientService;
 
 	/**
 	 * Method for all url which don't exist
@@ -73,6 +78,7 @@ public class UserController {
 	 * @param user JSON with User data
 	 * @return Welcome String.
 	 */
+	
 	@RequestMapping(value = "/users", method = RequestMethod.POST)
 	public ResponseEntity<UserDTO> newUser(@Valid @RequestBody User user) {
 
@@ -94,7 +100,8 @@ public class UserController {
 	 * 
 	 * @param standard JSON with StandarRegistration data
 	 * @return Welcome String.
-	 */
+	*/
+	@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping(value = "/users/clients", method = RequestMethod.POST)
 	public ResponseEntity<?> newUserAndClient(@Valid @RequestBody StandardRegistration standard) {
 		ClientDTO clientDTO;
@@ -118,6 +125,8 @@ public class UserController {
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(clientDTO);
 	}
+	 
+	
 
 	private MessageDTO getErrorMessage(StandardRegistration standard) {
 		MessageDTO errorMessageDTO = new MessageDTO("True","");
@@ -178,6 +187,7 @@ public class UserController {
 	 * @return String with message: Success or unauthorized.
 	 * @throws Exception
 	 */
+	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<?> loginUser(@Valid @RequestBody JwtLogin jwtLogin){
 

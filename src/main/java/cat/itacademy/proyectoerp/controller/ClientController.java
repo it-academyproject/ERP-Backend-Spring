@@ -12,6 +12,7 @@ import cat.itacademy.proyectoerp.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,7 +49,7 @@ public class ClientController {
 			userDTO = getUser(client);
 
 			Client newClient = getClient(client, userDTO.getUsername());
-			clientDTO = service.createClient(newClient);
+			clientDTO = IClientService.createClient(newClient);
 		} catch (Exception e) {
 			clientDTO.setUser(userDTO);
 			return ResponseEntity.unprocessableEntity().body(clientDTO);
@@ -110,6 +111,7 @@ public class ClientController {
 	}
 
 	//Get all the clients
+	@PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<?> getAllClients() {
         List<Client> list = new ArrayList<>();

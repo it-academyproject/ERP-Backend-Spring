@@ -8,6 +8,10 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -18,8 +22,11 @@ import java.util.UUID;
 public class Employee {
 
   @Id
-  @Column(name = "id", columnDefinition = "BINARY(16)")
-  private UUID id = UUID.randomUUID();
+  @GeneratedValue(generator = "UUID")
+  @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+  @Column(name = "id")
+  @Type(type="uuid-char")
+  private UUID id;
 
   @NotNull(message = "Salary is mandatory")
   private Double salary;

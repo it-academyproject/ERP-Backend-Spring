@@ -10,9 +10,11 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.sun.istack.Nullable;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 
 @Entity
@@ -24,17 +26,22 @@ public class Order  {
 	@Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator( name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-	@Column(name = "order_id", columnDefinition = "BINARY(16)")
+	@Column(name = "order_id")
+	@Type(type="uuid-char")
 	@JsonProperty("id")
 	private UUID id;
 	
+
 	@Column(name = "employee_id")
+	@Type(type="uuid-char")
 	private UUID employeeId;
 	
 
 	//@ManyToOne(fetch = FetchType.LAZY)
 	//@JoinColumn(name = "client_id", referencedColumnName = "id", nullable=true)
 	//private Client client;  //	private UUID client;
+	@Column(name = "client_id")
+	@Type(type="uuid-char")
 	private UUID clientId;
 
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
