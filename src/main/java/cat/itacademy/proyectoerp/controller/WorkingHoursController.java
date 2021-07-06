@@ -41,13 +41,29 @@ public class WorkingHoursController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/{employee_id}/{date}")
-  public HashMap<String, Object> getWorkingHoursByEmployeeIdDate(@PathVariable(name="employee_id") UUID employeeId, @PathVariable(name="date") LocalDate date){
+  public HashMap<String, Object> getWorkingHoursByEmployeeIdAndDate(@PathVariable(name="employee_id") UUID employeeId, @PathVariable(name="date") LocalDate date){
     HashMap<String, Object> map = new HashMap<>();
     try {
-      WorkingHours workingHours = workingHoursService.findWorkingHoursByEmployeeIdDate(new WorkingHoursId(employeeId, date));
+      WorkingHours workingHours = workingHoursService.findWorkingHoursByEmployeeIdAndDate(employeeId, date);
       map.put("success", "true");
       map.put("message", "working hours found");
       map.put("workingHours", workingHours);
+    } catch (Exception e){
+      map.put("success", "false");
+      map.put("message", e.getMessage());
+    }
+    return map;
+  }
+  
+  @PreAuthorize("hasRole('ADMIN')")
+  @GetMapping("/{employee_id}")
+  public HashMap<String, Object> getWorkingHoursByEmployeeId(@PathVariable(name="employee_id") UUID employeeId){
+    HashMap<String, Object> map = new HashMap<>();
+    try {
+      List<WorkingHoursDTO> workingHoursList = workingHoursService.findWorkingHoursByEmployeeId(employeeId);
+      map.put("success", "true");
+      map.put("message", "working hours found");
+      map.put("workingHours", workingHoursList);
     } catch (Exception e){
       map.put("success", "false");
       map.put("message", e.getMessage());
@@ -82,8 +98,8 @@ public class WorkingHoursController {
   public HashMap<String, Object> deleteWorkingHours(@RequestBody WorkingHours workingHours) {
     HashMap<String, Object> map = new HashMap<>();
     try {
-    	workingHoursService.findWorkingHoursByEmployeeIdDate(new WorkingHoursId(workingHours.getEmployeeId(), workingHours.getDate()));
-    	workingHoursService.deleteWorkingHours(new WorkingHoursId(workingHours.getEmployeeId(), workingHours.getDate()));
+    	workingHoursService.findWorkingHoursByEmployeeIdAndDate(workingHours.getEmployeeId(), workingHours.getDate());
+    	workingHoursService.deleteWorkingHoursByEmployeeIdAndDate(workingHours.getEmployeeId(), workingHours.getDate());
     	map.put("success", "true");
     	map.put("message", "Working Hours with Employee id: " + workingHours.getEmployeeId() + " and date" + workingHours.getDate() + "have been deleted");
     } catch (Exception e) {
@@ -98,9 +114,9 @@ public class WorkingHoursController {
   public HashMap<String, Object> updateEmployee(@RequestBody WorkingHoursDTO workingHoursDTO){
     HashMap<String, Object> map = new HashMap<String, Object>();
     try {
-      WorkingHoursDTO workingHoursUpdated = workingHoursService.updateWorkingHours(workingHoursDTO);
+      WorkingHoursDTO workingHoursUpdated = workingHoursService.updateWorkingHoursByEmployeeIdAndDate(workingHoursDTO);
       map.put("success", "true");
-      map.put("message", "Working Hours with id: " + workingHoursDTO.getId() + " have been updated");
+      map.put("message", "Working Hours with Empployee id: " + workingHoursDTO.getEmployeeId() + " and " + workingHoursDTO.getDate() + "have been updated");
       map.put("employee", workingHoursUpdated);
 
     } catch (Exception e) {

@@ -43,24 +43,7 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService{
 		
 		return modelMapper.map(workingHours, WorkingHoursDTO.class);
 	}
-
-	@Override
-	public WorkingHours findWorkingHoursByEmployeeIdDate(WorkingHoursId workingHoursId) {
-
-		return workingHoursRepository.findByEmployeeIdDate(workingHoursId); //.orElseThrow(() -> new ArgumentNotFoundException("WorkingHours not found. The id " + id + " doesn't exist"));
-	}
 	
-	@Override
-	public List<WorkingHoursDTO> findWorkingHoursByEmployeeId(UUID employeeId) {
-
-		if (workingHoursRepository.findByEmployeeId(employeeId).isEmpty()) {
-			throw new ArgumentNotFoundException("No Working Hours found for this Employee Id: " + employeeId);
-		} else {
-			return workingHoursRepository.findByEmployeeId(employeeId).stream().map(workingHours -> modelMapper.map(workingHours, WorkingHoursDTO.class)).collect(Collectors.toList());
-		
-		}
-	}
-
 	@Override
 	public List<WorkingHoursDTO> findAllWorkingHours() {
 		
@@ -71,12 +54,40 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService{
 		
 		}
 	}
+	
+	@Override
+	public List<WorkingHoursDTO> findWorkingHoursByEmployeeId(UUID employeeId) {
+
+		if (workingHoursRepository.findWorkingHoursByEmployeeId(employeeId).isEmpty()) {
+			throw new ArgumentNotFoundException("No Working Hours found for this Employee Id: " + employeeId);
+		} else {
+			return workingHoursRepository.findWorkingHoursByEmployeeId(employeeId).stream().map(workingHours -> modelMapper.map(workingHours, WorkingHoursDTO.class)).collect(Collectors.toList());
+		
+		}
+	}
+	
+	@Override
+	public List<WorkingHoursDTO> findWorkingHoursByDate(LocalDate date) {
+
+		if (workingHoursRepository.findWorkingHoursByDate(date).isEmpty()) {
+			throw new ArgumentNotFoundException("No Working Hours found for date: " + date);
+		} else {
+			return workingHoursRepository.findWorkingHoursByDate(date).stream().map(workingHours -> modelMapper.map(workingHours, WorkingHoursDTO.class)).collect(Collectors.toList());
+		
+		}
+	}
 
 	@Override
-	public WorkingHoursDTO updateWorkingHours(WorkingHoursDTO workingHoursDTO) throws ArgumentNotValidException {
+	public WorkingHours findWorkingHoursByEmployeeIdAndDate(UUID employeeId, LocalDate date) {
+
+		return workingHoursRepository.findWorkingHoursByEmployeeIdAndDate(employeeId, date); //.orElseThrow(() -> new ArgumentNotFoundException("WorkingHours not found. The id " + id + " doesn't exist"));
+	}
+
+	@Override
+	public WorkingHoursDTO updateWorkingHoursByEmployeeIdAndDate(WorkingHoursDTO workingHoursDTO) throws ArgumentNotValidException {
 		WorkingHours workingHours = modelMapper.map(workingHoursDTO, WorkingHours.class);
 		
-		if(workingHoursRepository.findByEmployeeIdDate(new WorkingHoursId(workingHours.getEmployeeId(), workingHours.getDate())) == null) {
+		if(workingHoursRepository.findWorkingHoursByEmployeeIdAndDate(workingHours.getEmployeeId(), workingHours.getDate()) == null) {
 		      throw new ArgumentNotFoundException("No WorkingHours found for this Employee Id and date");
 		
 		} else {
@@ -87,9 +98,9 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService{
 	}
 
 	@Override
-	public void deleteWorkingHours(WorkingHoursId workingHoursId) {
+	public void deleteWorkingHoursByEmployeeIdAndDate(UUID employeeId, LocalDate date) {
 		
-		workingHoursRepository.deleteByEmployeeIdDate(workingHoursId);
+		workingHoursRepository.deleteWorkingHoursByEmployeeIdAndDate(employeeId, date);
 		
 	}
 	

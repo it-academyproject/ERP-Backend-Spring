@@ -15,11 +15,13 @@ public interface IWorkingHoursService {
   public List<WorkingHoursDTO> findAllWorkingHours(); // READ - read Working Hours list
   
   public List<WorkingHoursDTO> findWorkingHoursByEmployeeId(UUID employeeId);
-
-  public WorkingHoursDTO updateWorkingHours(WorkingHoursDTO workingHoursDTO); // UPDATE - update Working Hours data
-
-  public void deleteWorkingHours(WorkingHoursId workingHoursId); // DELETE - delete product according to id
   
-  public WorkingHours findWorkingHoursByEmployeeIdDate(WorkingHoursId workingHoursId);
+  public List<WorkingHoursDTO> findWorkingHoursByDate(LocalDate date);
+
+  public WorkingHoursDTO updateWorkingHoursByEmployeeIdAndDate(WorkingHoursDTO workingHoursDTO); // UPDATE - update Working Hours data
+
+  public void deleteWorkingHoursByEmployeeIdAndDate(UUID employeeId, LocalDate date); // DELETE - delete product according to id
+  
+  public WorkingHours findWorkingHoursByEmployeeIdAndDate(UUID employeeId, LocalDate date);
 
 }

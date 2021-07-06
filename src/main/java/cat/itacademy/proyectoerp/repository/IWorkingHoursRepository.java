@@ -4,6 +4,7 @@ import cat.itacademy.proyectoerp.domain.WorkingHours;
 import cat.itacademy.proyectoerp.domain.WorkingHoursId;
 import cat.itacademy.proyectoerp.dto.WorkingHoursDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,10 +14,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IWorkingHoursRepository extends JpaRepository<WorkingHours, UUID> {
 	
-	List<WorkingHoursDTO> findByEmployeeId(UUID employeeId);
+	List<WorkingHoursDTO> findWorkingHoursByEmployeeId(UUID employeeId);
 	
-	WorkingHours findByEmployeeIdDate(WorkingHoursId workingHoursId);
+	List<WorkingHoursDTO> findWorkingHoursByDate(LocalDate date);
 	
-	void deleteByEmployeeIdDate(WorkingHoursId workingHoursId);
+	WorkingHours findWorkingHoursByEmployeeIdAndDate(UUID employeeId, LocalDate date);
+	
+	void deleteWorkingHoursByEmployeeIdAndDate(UUID employeeId, LocalDate date);
 
 }
