@@ -3,6 +3,7 @@ package cat.itacademy.proyectoerp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Random;
 import java.sql.Timestamp;
@@ -27,8 +28,10 @@ import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.domain.Shop;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.domain.UserType;
+import cat.itacademy.proyectoerp.domain.WorkingHours;
 import cat.itacademy.proyectoerp.repository.IAddressRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
+import cat.itacademy.proyectoerp.repository.IWorkingHoursRepository;
 import cat.itacademy.proyectoerp.repository.IUserRepository;
 import cat.itacademy.proyectoerp.repository.IShopRepository;
 import cat.itacademy.proyectoerp.service.AddressServiceImpl;
@@ -38,6 +41,7 @@ import cat.itacademy.proyectoerp.service.IOrderService;
 import cat.itacademy.proyectoerp.service.OrderDetailServiceImpl;
 import cat.itacademy.proyectoerp.service.ProductServiceImpl;
 import cat.itacademy.proyectoerp.service.UserServiceImpl;
+import cat.itacademy.proyectoerp.service.WorkingHoursServiceImpl;
 
 /**
  * This class establishes that when the application is started, the run method
@@ -83,6 +87,12 @@ public class Runner implements CommandLineRunner {
 	@Autowired
 	IOrderService orderService;
 	
+	@Autowired
+	WorkingHoursServiceImpl workingHoursService;
+	
+	@Autowired
+	IWorkingHoursRepository workingHoursRepository;
+
 	@Autowired
 	IShopRepository shopRepository;
 
@@ -198,6 +208,15 @@ public class Runner implements CommandLineRunner {
 			Employee employeeTwo = new Employee(14000.00, "B1236767Z", 667999998, LocalDate.now(), null, userEmployeeTwo);
 			employeeService.createEmployee(employeeTwo);	
 			
+			// Initialize the working hours
+			
+			WorkingHours workingHours1 = new WorkingHours(LocalDate.of(2021, 6, 30), LocalTime.of(9, 00), LocalTime.of(18, 00), employeeOne.getId());
+			WorkingHours workingHours2 = new WorkingHours(LocalDate.of(2021, 6, 30), LocalTime.of(9, 00), LocalTime.of(18, 00), employeeTwo.getId());
+			
+			workingHoursRepository.save(workingHours1);
+			workingHoursRepository.save(workingHours2);
+						
+
 			// Initialize 2 shops
 			Address addressShopOne = new Address("Calle Botigues", "1 C", "Barcelona", "Spain", "08016");
 			addressService.createAddress(addressShopOne);
@@ -211,8 +230,7 @@ public class Runner implements CommandLineRunner {
 			Shop shopTwo = new Shop("BrandTest01", "CompanyTest01", "443344F",666777999, addressShopTwo, "www.ShopTwo.com");
 			shopTwo = shopRepository.save(shopTwo);	
 			
-			
-			
+
 			// Initialize 3 products
 			Timestamp timestamp2 = new Timestamp(System.currentTimeMillis());
 			long ts2 = timestamp2.getTime();

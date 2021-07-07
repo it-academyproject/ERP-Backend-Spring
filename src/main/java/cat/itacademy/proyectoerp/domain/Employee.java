@@ -46,7 +46,7 @@ public class Employee {
 
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true, nullable = false)
-  @NotNull(message = "You have to assign this employee to an user")
+  @NotNull(message = "You have to assign this employee to a user")
   @Valid
   private User user;
 
