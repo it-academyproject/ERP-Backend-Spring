@@ -331,6 +331,12 @@ public class OrderServiceImpl implements IOrderService{
 		return map;
 	}
 
+	@Override
+	public HashMap<String, Long> countOrdersByfield(String field) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 }
 

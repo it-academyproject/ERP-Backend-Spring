@@ -41,5 +41,7 @@ public interface IOrderService {
 	public double getProfitByYear(int year);
 
 	public double getProfitByMonth(int year, int month);
+
+	public HashMap<String, Long> countOrdersByfield(String field);
 	
 }

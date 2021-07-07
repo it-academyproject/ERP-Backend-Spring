@@ -264,18 +264,19 @@ public class StatsController {
 		return map;
 	}
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/status")
-	public Map<String, Object> getCountOrderByStatus() throws Exception {		
+	@GetMapping("/count/{field}")
+	public Map<String, Object> getCountOrderByField(@PathVariable("field") String field) throws Exception {		
 
 		HashMap<String, Object> map = new HashMap<>();
 		
 		try {
-			HashMap<String, Long> countOrderStatus = orderService.countOrdersByStatus();
-			
-		      if(!countOrderStatus.isEmpty()){
+			//HashMap<String, Long> countOrder = orderService.countOrdersByfield(field);
+			HashMap<String, Long> countOrder =  orderService.countOrdersByStatus();
+		      if(!countOrder.isEmpty()){
 		        map.put("success", "true");
 		  		map.put("message", "order list found");
-		  		map.put("orders_by_status",countOrderStatus);
+		  		map.put("count_by", field);
+		  		map.put("orders",countOrder);
 		      } else{
 		        map.put("success", "true");
 		        map.put("message", "order list empty");		        
