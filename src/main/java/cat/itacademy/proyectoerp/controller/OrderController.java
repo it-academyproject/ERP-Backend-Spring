@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.dto.CreateOrderDTO;
 import cat.itacademy.proyectoerp.dto.OrderDTO;
+import cat.itacademy.proyectoerp.security.jwt.JwtUtil;
 import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 
 @RestController
@@ -27,6 +29,7 @@ public class OrderController {
 
 	@Autowired
 	OrderServiceImpl orderService;
+	
 	
 	String success = "success";
 	String message = "message";
@@ -40,10 +43,11 @@ public class OrderController {
 	 * @return OrderDTO
 	 */
 	@PostMapping("/orders")
-	public Map<String, Object> createOrder(@RequestBody CreateOrderDTO createOrderDTO) {
+	public Map<String, Object> createOrder(@RequestBody CreateOrderDTO createOrderDTO, @RequestHeader("authorization") String token) {
 		HashMap<String, Object> map = new HashMap<>();
+		
 		try {
-			OrderDTO newOrder = orderService.createOrder(createOrderDTO);
+			OrderDTO newOrder = orderService.createOrder(createOrderDTO,token);
 			map.put(success, "true");
 			map.put(message, "Order created");
 			map.put("order", newOrder);

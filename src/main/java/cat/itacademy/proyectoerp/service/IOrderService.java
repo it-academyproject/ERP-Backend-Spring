@@ -3,6 +3,8 @@ package cat.itacademy.proyectoerp.service;
 import java.util.List;
 import java.util.UUID;
 
+import javax.security.auth.message.AuthException;
+
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
@@ -13,7 +15,7 @@ import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 
 public interface IOrderService {
 	
-	public OrderDTO createOrder(CreateOrderDTO createOrderDTO);
+	public OrderDTO createOrder(CreateOrderDTO createOrderDTO, String token) throws  AuthException;
 	 
 	public Order findOrderById(UUID id);
 
