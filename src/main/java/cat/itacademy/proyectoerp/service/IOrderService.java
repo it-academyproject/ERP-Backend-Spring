@@ -24,9 +24,7 @@ public interface IOrderService {
 
 	public void deleteOrder(UUID id);
 
-	public List<Order> findOrdersByStatus(OrderStatus status);
-	
-	public  HashMap<String, Long> countOrdersByStatus();		
+	public List<Order> findOrdersByStatus(OrderStatus status);			
 
 	public List<Order> findOrdersByClient(String id);
 	

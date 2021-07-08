@@ -269,9 +269,14 @@ public class StatsController {
 
 		HashMap<String, Object> map = new HashMap<>();
 		
+		if (!field.equalsIgnoreCase("status" ) && !field.equalsIgnoreCase("payment" ) ) {
+			   map.put("success", "false");
+		      map.put("message", "error, the parameter: '"+ field + "' its wrong " );
+		      return map;
+		}			  
 		try {
-			//HashMap<String, Long> countOrder = orderService.countOrdersByfield(field);
-			HashMap<String, Long> countOrder =  orderService.countOrdersByStatus();
+			HashMap<String, Long> countOrder = orderService.countOrdersByfield(field);
+			
 		      if(!countOrder.isEmpty()){
 		        map.put("success", "true");
 		  		map.put("message", "order list found");
@@ -285,7 +290,6 @@ public class StatsController {
 		      map.put("success", "false");
 		      map.put("message", "error: " + e.getMessage());
 		    }
-
 		return map;
 	}
 }

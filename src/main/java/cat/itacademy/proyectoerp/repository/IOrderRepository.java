@@ -1,6 +1,7 @@
 package cat.itacademy.proyectoerp.repository;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import cat.itacademy.proyectoerp.domain.Order;
+import cat.itacademy.proyectoerp.domain.OrderDetail;
 
 @Repository
 public interface IOrderRepository extends JpaRepository<Order, UUID>{
@@ -34,8 +36,11 @@ public interface IOrderRepository extends JpaRepository<Order, UUID>{
           +" and (orders.date_created between :begin_date and :end_date) ", nativeQuery = true)
   double findProfitBetweenDates(LocalDateTime begin_date, LocalDateTime end_date);
   
-  @Query(value = "select status from orders", nativeQuery = true)
-  List<String> findAllStatusOfOrders();
+  @Query(value = "select o.status from Order o")
+  List<String> findAllOrdersByStatus();
+  
+  @Query(value = "select o.paymentMethod from Order o")
+  List<String> findAllOrdersByPayment();
 
 }
  
