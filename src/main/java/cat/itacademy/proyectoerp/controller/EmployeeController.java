@@ -2,6 +2,7 @@ package cat.itacademy.proyectoerp.controller;
 
 import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.dto.EmployeeDTO;
+import cat.itacademy.proyectoerp.helpers.Responsehelper;
 import cat.itacademy.proyectoerp.service.IEmployeeService;
 import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 
@@ -25,6 +26,9 @@ public class EmployeeController {
   
   @Autowired 
   OrderServiceImpl iOrderService;
+  
+  @Autowired
+  Responsehelper responsehelper;
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping()
@@ -34,14 +38,12 @@ public class EmployeeController {
       List<EmployeeDTO> employeeList = iEmployeeService.findAllEmployees();
       
       employeeList= iEmployeeService.findAllEmployeesAndTotalSalesAndTotalOrdersAttended(employeeList);
-      	
-      map.put("success", "true");
-      map.put("message", "employee found");
-      map.put("employees", employeeList);
+      	map.putAll(responsehelper.responseWasOkWithEntity("true", "employees found", "employees", employeeList));
+      
       
     } catch (Exception e) {
-      map.put("success", "false");
-      map.put("message", e.getMessage());
+      map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
+     
     }
     return map;
   }
@@ -52,12 +54,10 @@ public class EmployeeController {
     HashMap<String, Object> map = new HashMap<>();
     try {
       EmployeeDTO employeeDTO = iEmployeeService.findEmployeeById(id);
-      map.put("success", "true");
-      map.put("message", "employee found");
-      map.put("employee", employeeDTO);
+      map.putAll(responsehelper.responseWasOkWithEntity("true", "employee found", "employees", employeeDTO));
+      
     } catch (Exception e){
-      map.put("success", "false");
-      map.put("message", e.getMessage());
+    	map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
     }
     return map;
   }
@@ -69,11 +69,10 @@ public class EmployeeController {
     HashMap<String, Object> map = new HashMap<>();
     try {
       iEmployeeService.deleteEmployee(id);
-      map.put("success", "true");
-      map.put("message", "Employee with id: " + id + " has been deleted");
+      map.putAll(responsehelper.responseSimpleWasOk("true", "Employee with id: " + id + " has been deleted"));
+      
     } catch (Exception e) {
-      map.put("success", "false");
-      map.put("message", e.getMessage());
+    	map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));;
     }
     return map;
   }
@@ -84,13 +83,11 @@ public class EmployeeController {
     HashMap<String, Object> map = new HashMap<String, Object>();
     try {
       EmployeeDTO employeeUpdated = iEmployeeService.updateEmployee(employee);
-      map.put("success", "true");
-      map.put("message", "Employee with id: " + employee.getId() + " has been updated");
-      map.put("employee", employeeUpdated);
+      map.putAll(responsehelper.responseWasOkWithEntity("true", "Employee with id: " + employee.getId() + " has been updated" , "employee", employeeUpdated));
+      
 
     } catch (Exception e) {
-      map.put("success", "false");
-      map.put("message", e.getMessage());
+    	map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
     }
     return map;
   }
