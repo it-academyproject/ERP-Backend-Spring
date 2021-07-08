@@ -1,5 +1,6 @@
 package cat.itacademy.proyectoerp.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,11 +27,12 @@ public interface IOrderService {
 	public void deleteOrder(UUID id);
 
 	public List<Order> findOrdersByStatus(OrderStatus status);
+	
+	public  HashMap<String, Long> countOrdersByStatus();		
 
 	public List<Order> findOrdersByClient(String id);
 	
-	public List<Order> findByEmployeeId(UUID employeeId);
-	
+	public List<Order> findByEmployeeId(UUID employeeId);	
 	
 	public List<TopEmployeeDTO> findAllTopTen(DatesTopEmployeePOJO topemployee);
 	

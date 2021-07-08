@@ -9,6 +9,7 @@ import javax.validation.constraints.Pattern;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import com.sun.istack.Nullable;
 
@@ -20,7 +21,8 @@ public class Address {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id", columnDefinition = "BINARY(16)")
+    @Column(name = "id")
+	@Type(type="uuid-char")
     private UUID id;
 
     @NotBlank(message = "Street is mandatory")

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import cat.itacademy.proyectoerp.domain.*;
 import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
-import cat.itacademy.proyectoerp.repository.UserRepository;
+import cat.itacademy.proyectoerp.repository.IUserRepository;
 
 import cat.itacademy.proyectoerp.util.PasswordGenerator;
 
@@ -32,7 +32,7 @@ import cat.itacademy.proyectoerp.util.PasswordGenerator;
 public class UserServiceImpl implements IUserService {
 
 	@Autowired
-	UserRepository userRepository;
+	IUserRepository userRepository;
 
 	@Autowired
 	EmailServiceImpl emailService;

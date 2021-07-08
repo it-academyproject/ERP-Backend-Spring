@@ -26,22 +26,22 @@ public class Order  {
 	@Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator( name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-	@Column(name = "order_id", columnDefinition = "BINARY(16)")
+	@Column(name = "order_id")
+	@Type(type="uuid-char")
 	@JsonProperty("id")
 	private UUID id;
 	
 
-	
 	@Column(name = "employee_id")
 	@Type(type="uuid-char")
-
 	private UUID employeeId;
 	
 
 	//@ManyToOne(fetch = FetchType.LAZY)
 	//@JoinColumn(name = "client_id", referencedColumnName = "id", nullable=true)
 	//private Client client;  //	private UUID client;
-	@Column(name = "client_id", columnDefinition = "BINARY(16)")
+	@Column(name = "client_id")
+	@Type(type="uuid-char")
 	private UUID clientId;
 
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
@@ -101,7 +101,7 @@ public class Order  {
 	@PrePersist
 	public void prePersist() {
 		this.dateCreated = LocalDateTime.now();
-		this.status = OrderStatus.UNASSIGNED;
+		//this.status = OrderStatus.UNASSIGNED;
 	}
 	
 	//Getters & Setters
