@@ -343,8 +343,8 @@ public class OrderServiceImpl implements IOrderService{
 			
 			long count = 0;
 
-			for (String o :  ordersNotNull) {
-				count = ordersByField.stream().filter(c -> (c.equals(o) )  ).count();
+			for (String o :  enumeration) {
+				count = ordersNotNull.stream().filter(c -> (c.equals(o) )  ).count();
 				map.put(o.toLowerCase(), count);
 
 				count = 0;
