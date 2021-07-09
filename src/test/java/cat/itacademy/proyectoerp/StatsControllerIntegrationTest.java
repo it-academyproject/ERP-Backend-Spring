@@ -301,6 +301,46 @@ public class StatsControllerIntegrationTest {
 				.andExpect(jsonPath("$.message",is("Total salaries for a month found")))
 				.andExpect(jsonPath("$.salaries", is(4166.6666666666667)));
 	}
+	
+	@Test
+	@DisplayName("Correct [GET] /api/stats/count/{status}")
+	public void RequestOrdersByStatus() throws Exception {
+
+		String accessToken = obtainAdminAccessToken();
+			
+		// request
+		mockMvc.perform(get("/api/stats/count/status")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.success", is("true")))
+				.andExpect(jsonPath("$.message", is("order list found")))
+				.andExpect(jsonPath("$.orders.completed", is(3)))
+				.andExpect(jsonPath("$.orders.assigned", is(0)))
+				.andExpect(jsonPath("$.message", is("order list found")));
+	}
+	
+	@Test
+	@DisplayName("Correct [GET] /api/stats/count/{payment}")
+	public void RequestOrdersByPayment() throws Exception {
+
+		String accessToken = obtainAdminAccessToken();
+			
+		// request
+		mockMvc.perform(get("/api/stats/count/payment")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.success", is("true")))
+				.andExpect(jsonPath("$.message", is("order list found")))
+				.andExpect(jsonPath("$.orders.cash", is(3)))
+				.andExpect(jsonPath("$.orders.credit_card", is(0)))
+				.andExpect(jsonPath("$.message", is("order list found")));
+	}
 
 	private String obtainAdminAccessToken() throws Exception {
 		JwtLogin jwtLogin = new JwtLogin("testAdmin@erp.com", "ReW9a0&+TP");
