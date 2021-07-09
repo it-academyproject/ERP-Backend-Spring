@@ -4,6 +4,7 @@ import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.domain.WorkingHours;
 import cat.itacademy.proyectoerp.domain.WorkingHoursId;
 import cat.itacademy.proyectoerp.dto.WorkingHoursDTO;
+import cat.itacademy.proyectoerp.helpers.Responsehelper;
 import cat.itacademy.proyectoerp.service.WorkingHoursServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class WorkingHoursController {
 
   @Autowired
   WorkingHoursServiceImpl workingHoursService;
+  
+  @Autowired
+  Responsehelper responsehelper;
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping()
@@ -32,12 +36,11 @@ public class WorkingHoursController {
     HashMap<String, Object> map = new HashMap<String, Object>();
     try {
       List<WorkingHoursDTO> workingHoursList = workingHoursService.findAllWorkingHours();
-      map.put("success", "true");
-      map.put("message", "working hours found");
-      map.put("workingHours", workingHoursList);
+      
+      map.putAll(responsehelper.responseWasOkWithEntity("true", "working hours found", "workingHours", workingHoursList));
+      
     } catch (Exception e) {
-      map.put("success", "false");
-      map.put("message", e.getMessage());
+    	map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
     }
     return map;
   }
@@ -48,12 +51,11 @@ public class WorkingHoursController {
     HashMap<String, Object> map = new HashMap<>();
     try {
       WorkingHours workingHours = workingHoursService.findWorkingHoursByEmployeeIdAndDate(employeeId, date);
-      map.put("success", "true");
-      map.put("message", "working hours found");
-      map.put("workingHours", workingHours);
+      
+      map.putAll(responsehelper.responseWasOkWithEntity("true", "working hours found", "workingHours", workingHours));
+      
     } catch (Exception e){
-      map.put("success", "false");
-      map.put("message", e.getMessage());
+    	map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
     }
     return map;
   }
@@ -64,12 +66,10 @@ public class WorkingHoursController {
     HashMap<String, Object> map = new HashMap<>();
     try {
       List<WorkingHoursDTO> workingHoursList = workingHoursService.findWorkingHoursByEmployeeId(employeeId);
-      map.put("success", "true");
-      map.put("message", "working hours found");
-      map.put("workingHours", workingHoursList);
+      map.putAll(responsehelper.responseWasOkWithEntity("true", "working hours found", "workingHours", workingHoursList));
+      
     } catch (Exception e){
-      map.put("success", "false");
-      map.put("message", e.getMessage());
+    	map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
     }
     return map;
   }
@@ -80,12 +80,11 @@ public class WorkingHoursController {
     HashMap<String, Object> map = new HashMap<>();
     try {
       List<WorkingHoursDTO> workingHoursList = workingHoursService.findWorkingHoursByDate(date);
-      map.put("success", "true");
-      map.put("message", "working hours found");
-      map.put("workingHours", workingHoursList);
+      
+      map.putAll(responsehelper.responseWasOkWithEntity("true", "working hours found", "workingHours", workingHoursList));
+      
     } catch (Exception e){
-      map.put("success", "false");
-      map.put("message", e.getMessage());
+    	map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
     }
     return map;
   }
@@ -98,15 +97,12 @@ public class WorkingHoursController {
 
 		try {
 			workingHoursService.createWorkingHours(workingHoursDTO);
-
-			map.put("success", "true");
-			map.put("message", "New Working Hours created");
-			map.put("workingHours", workingHoursDTO);
+			map.putAll(responsehelper.responseWasOkWithEntity("true", "New Working Hours created", "workingHours", workingHoursDTO));
+			
 
 		} catch (Exception e) {
 
-			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 		}
 
 		return map;
@@ -120,11 +116,12 @@ public class WorkingHoursController {
     try {
     	workingHoursService.findWorkingHoursByEmployeeIdAndDate(workingHours.getEmployeeId(), workingHours.getDate());
     	workingHoursService.deleteWorkingHoursByEmployeeIdAndDate(workingHours.getEmployeeId(), workingHours.getDate());
-    	map.put("success", "true");
-    	map.put("message", "Working Hours with Employee id: " + workingHours.getEmployeeId() + " and date " + workingHours.getDate() + " have been deleted");
+    	
+    	map.putAll(responsehelper.responseSimpleWasOk("true", 
+    			"Working Hours with Employee id: " + workingHours.getEmployeeId() + " and date " + workingHours.getDate() + " have been deleted"));
+    	
     } catch (Exception e) {
-    	map.put("success", "false");
-    	map.put("message", e.getMessage());
+    	map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
     }
     return map;
   }
@@ -135,13 +132,14 @@ public class WorkingHoursController {
     HashMap<String, Object> map = new HashMap<String, Object>();
     try {
       WorkingHoursDTO workingHoursUpdated = workingHoursService.updateWorkingHoursByEmployeeIdAndDate(workingHoursDTO);
-      map.put("success", "true");
-      map.put("message", "Working Hours with Empployee id: " + workingHoursDTO.getEmployeeId() + " and " + workingHoursDTO.getDate() + " have been updated");
-      map.put("employee", workingHoursUpdated);
+      
+      map.putAll(responsehelper.responseWasOkWithEntity(
+    		  "true", "Working Hours with Empployee id: " + workingHoursDTO.getEmployeeId() + " and " + workingHoursDTO.getDate() + " have been updated", 
+    		  "employee", workingHoursUpdated));
+      
 
     } catch (Exception e) {
-      map.put("success", "false");
-      map.put("message", e.getMessage());
+    	map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
     }
     return map;
   }

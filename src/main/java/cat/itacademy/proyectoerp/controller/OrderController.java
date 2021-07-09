@@ -30,11 +30,7 @@ public class OrderController {
 	OrderServiceImpl orderService;
 	@Autowired
 	Responsehelper responsehelper;
-	
-	String success = "success";
-	String message = "message";
-	String isFalse = "false";
-	String error = "Error: ";	
+		
 	
 	/**
 	 * Create a new order
