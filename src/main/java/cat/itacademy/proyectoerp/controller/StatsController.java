@@ -269,7 +269,7 @@ public class StatsController {
 
 		HashMap<String, Object> map = new HashMap<>();
 		
-		if (!field.equalsIgnoreCase("status" ) && !field.equalsIgnoreCase("payment" ) ) {
+		if (!field.equals("status" ) && !field.equals("payment" ) ) {
 			   map.put("success", "false");
 		      map.put("message", "error, the parameter: '"+ field + "' its wrong " );
 		      return map;
