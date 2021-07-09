@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cat.itacademy.proyectoerp.domain.Shop;
 import cat.itacademy.proyectoerp.dto.ShopDTO;
+import cat.itacademy.proyectoerp.helpers.Responsehelper;
 import cat.itacademy.proyectoerp.service.IShopService;
 
 @RestController
@@ -29,6 +30,9 @@ public class ShopController {
 	@Autowired
 	IShopService shopService;
 	
+	@Autowired
+	Responsehelper responsehelper;
+	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/shop")
 	public HashMap<String, Object> createShop(@Valid @RequestBody Shop shop) {
@@ -37,13 +41,10 @@ public class ShopController {
 
 		try {
 			ShopDTO shopDTO= shopService.createShop(shop);
-
-			map.put("success", "true");
-			map.put("message", "New shop created");
-			map.put("shop", shopDTO);
+			map.putAll(responsehelper.responseWasOkWithEntity("true", "New shop created", "shop", shopDTO));
+			
 		} catch (Exception e) {
-			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 		}
 		return map;
 	}
@@ -56,13 +57,10 @@ public class ShopController {
 		try {
 			ShopDTO shop = shopService.findShopById(id);
 
-			map.put("success", "true");
-			map.put("message", "shop found");
-			map.put("shop", shop);
+			map.putAll(responsehelper.responseWasOkWithEntity("true", "shop found", "shop", shop));
 
 		} catch (Exception e) {
-			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 		}
 
 		return map;
@@ -75,14 +73,11 @@ public class ShopController {
 
 		try {
 			List<ShopDTO> shopList = shopService.getShops();
-		
-			map.put("success", "true");
-			map.put("message", "shop list found");
-			map.put("shops", shopList);
+			map.putAll(responsehelper.responseWasOkWithEntity("true", "shop list found", "shops", shopList));
+			
 
 		} catch (Exception e) {
-			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 		}
 		return map;
 	}
@@ -96,14 +91,11 @@ public class ShopController {
 
 		try {
 			ShopDTO shopUpdated = shopService.updateShop(shop);
-
-			map.put("success", "true");
-			map.put("message", "shop updated");
-			map.put("shop", shopUpdated);
+			map.putAll(responsehelper.responseWasOkWithEntity("true", "shop updated", "shop", shopUpdated));
+			
 		} catch (Exception e) {
 
-			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 		}
 		return map;
 	}
@@ -117,13 +109,12 @@ public class ShopController {
 		try {
 			shopService.findShopById(shop.getId());
 			shopService.deleteShop(shop.getId());
-
-			map.put("success", "true");
-			map.put("message", "Shop id: " + shop.getId() + " has been successfully deleted");
+			
+			map.putAll(responsehelper.responseSimpleWasOk("true", "Shop id: " + shop.getId() + " has been successfully deleted"));
+			
 		} catch (Exception e) {
 
-			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 		}
 		return map;
 	}
