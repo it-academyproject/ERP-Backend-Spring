@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.dto.CategoryDTO;
 import cat.itacademy.proyectoerp.dto.ProductDTO;
+import cat.itacademy.proyectoerp.helpers.Responsehelper;
 import cat.itacademy.proyectoerp.service.ICategoryService;
 import cat.itacademy.proyectoerp.service.ProductServiceImpl;
 
@@ -32,18 +33,20 @@ public class ProductController {
 	@Autowired
 	ICategoryService categoryService;
 	
+	@Autowired
+	Responsehelper responsehelper;
+	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	public HashMap<String, Object> createProduct(@RequestBody ProductDTO productDto) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		try {
 			ProductDTO product = productService.createProduct(productDto);
-			map.put("success", "true");
-			map.put("message", "product created");
-			map.put("product", product);
+			map.putAll(responsehelper.responseWasOkWithEntity("true", "product created", "product", product));
+			
 		} catch (Exception e) {
-			map.put("success", "false");
-			map.put("message", "error: " + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
+			
 		}
 		return map;
 	}
@@ -57,15 +60,12 @@ public class ProductController {
 		try {
 
 			ProductDTO product = productService.getProductById(id);
-
-			map.put("success", "true");
-			map.put("message", "product found");
-			map.put("product", product);
+			map.putAll(responsehelper.responseWasOkWithEntity("true", "product found", "product", product));
+			
 
 		} catch (Exception e) {
 
-			map.put("success", "false");
-			map.put("message", "error: " + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 		}
 
 		return map;
@@ -79,14 +79,11 @@ public class ProductController {
 		try {
 
 			List<ProductDTO> productList = productService.getProducts();
-
-			map.put("success", "true");
-			map.put("message", "products found");
-			map.put("products", productList);
+			map.putAll(responsehelper.responseWasOkWithEntity("true", "products found", "products", productList));
+			
 
 		} catch (Exception e) {
-			map.put("success", "false");
-			map.put("message", "error: " + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 		}
 
 		return map;
@@ -97,12 +94,9 @@ public class ProductController {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		try {
 			List<ProductDTO> productList = productService.getProductsByCategoryName(categoryName);
-			map.put("success", "true");
-			map.put("message", "products found");
-			map.put("products", productList);
+			map.putAll(responsehelper.responseWasOkWithEntity("true", "products found", "products", productList));
 		} catch (Exception e) {
-			map.put("success", "false");
-			map.put("message", "error: " + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 		}
 		return map;
 	}
@@ -119,14 +113,11 @@ public class ProductController {
 			product.setModified(ts);
 			ProductDTO productUpdated = productService.updateProduct(product);
 
-			map.put("success", "true");
-			map.put("message", "product updated");
-			map.put("product", productUpdated);
+			map.putAll(responsehelper.responseWasOkWithEntity("true", "products update", "products", productUpdated));
 
 		} catch (Exception e) {
 
-			map.put("success", "false");
-			map.put("message", "error: " + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 
 		}
 
@@ -145,14 +136,13 @@ public class ProductController {
 			productService.findProductById(product.getId());
 
 			productService.deleteProduct(product.getId());
-
-			map.put("success", "true");
-			map.put("message", "product deleted");
+			
+			map.putAll(responsehelper.responseSimpleWasOk("true", "product deleted"));
+			
 
 		} catch (Exception e) {
 
-			map.put("success", "false");
-			map.put("message", "error: " + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 
 		}
 
@@ -165,12 +155,10 @@ public class ProductController {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
 			CategoryDTO category = categoryService.createCategory(categoryDto);
-			map.put("success", "true");
-			map.put("message", "category created");
-			map.put("category", category);
+			map.putAll(responsehelper.responseWasOkWithEntity("true", "category created", "category", category));
+			
 		}catch(Exception e) {
-			map.put("success", "false");
-			map.put("message", "error: " + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 		}
 		return map;
 	}
@@ -180,12 +168,10 @@ public class ProductController {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
 			CategoryDTO category = categoryService.getCategoryById(id);
-			map.put("success", "true");
-			map.put("message", "category found");
-			map.put("category", category);
+			map.putAll(responsehelper.responseWasOkWithEntity("true", "category found", "category", category));
+			
 		}catch(Exception e) {
-			map.put("success", "false");
-			map.put("message", "error: " + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 		}
 		return map;
 	}
@@ -195,12 +181,10 @@ public class ProductController {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
 			List<CategoryDTO> categories = categoryService.getCategories();
-			map.put("success", "true");
-			map.put("message", "categories found");
-			map.put("categories", categories);
+			map.putAll(responsehelper.responseWasOkWithEntity("true", "categories found", "categories", categories));
+			
 		}catch(Exception e) {
-			map.put("success", "false");
-			map.put("message", "error: " + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 		}
 		return map;
 	}
@@ -210,12 +194,11 @@ public class ProductController {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
 			List<CategoryDTO> categories = categoryService.getCategoriesByParentCategoryName(parentCategoryName);
-			map.put("success", "true");
-			map.put("message", "categories found");
-			map.put("categories", categories);
+			
+			map.putAll(responsehelper.responseWasOkWithEntity("true", "categories found", "categories", categories));
+			
 		}catch(Exception e) {
-			map.put("success", "false");
-			map.put("message", "error: " + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 		}
 		return map;
 	}
@@ -226,12 +209,11 @@ public class ProductController {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
 			CategoryDTO category = categoryService.updateCategory(id, categoryDto);
-			map.put("success", "true");
-			map.put("message", "category updated");
-			map.put("category", category);
+			
+			map.putAll(responsehelper.responseWasOkWithEntity("true", "category update", "category", category));
+			
 		}catch(Exception e) {
-			map.put("success", "false");
-			map.put("message", "error: " + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 		}
 		return map;
 	}
@@ -242,11 +224,10 @@ public class ProductController {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
 			categoryService.deleteCategoryById(id);
-			map.put("success", "true");
-			map.put("message", "category deleted");
+			map.putAll(responsehelper.responseSimpleWasOk("true", "category deleted"));
+			
 		}catch(Exception e) {
-			map.put("success", "false");
-			map.put("message", "error: " + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 		}
 		return map;
 	}
