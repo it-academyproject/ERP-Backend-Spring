@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.dto.CreateOrderDTO;
 import cat.itacademy.proyectoerp.dto.OrderDTO;
+import cat.itacademy.proyectoerp.helpers.Responsehelper;
 import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 
 @RestController
@@ -27,6 +28,8 @@ public class OrderController {
 
 	@Autowired
 	OrderServiceImpl orderService;
+	@Autowired
+	Responsehelper responsehelper;
 	
 	String success = "success";
 	String message = "message";
@@ -44,12 +47,11 @@ public class OrderController {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
 			OrderDTO newOrder = orderService.createOrder(createOrderDTO);
-			map.put(success, "true");
-			map.put(message, "Order created");
-			map.put("order", newOrder);
+			map.putAll(responsehelper.responseWasOkWithEntity("true", "Order created", "order", newOrder));
+			
 		} catch (Exception e) {
-			map.put(success, isFalse);
-			map.put(message, error + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
+			
 		}
 		return map;
 	}
@@ -60,12 +62,10 @@ public class OrderController {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
 			Order order = orderService.findOrderById(id);
-			map.put(success, "true");
-			map.put(message, "order found");
-			map.put("order", order);
+			map.putAll(responsehelper.responseWasOkWithEntity("true", "Order found", "order", order));
+			
 		} catch (Exception e) {
-			map.put(success, isFalse);
-			map.put(message, error + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 		}
 		return map;
 	}
@@ -76,12 +76,10 @@ public class OrderController {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		try {
 			List<OrderDTO> ordersList = orderService.findAllOrders();
-			map.put("success", "true");
-			map.put("message", "order found");
-			map.put("order", ordersList);
+			map.putAll(responsehelper.responseWasOkWithEntity("true", "Orders found", "orders", ordersList));
+			
 		} catch (Exception e) {
-			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 		}
 		return map;
 	}
@@ -99,14 +97,13 @@ public class OrderController {
 		try {
 			orderService.findOrderById(order.getId());
 			orderService.deleteOrder(order.getId());
-
-			map.put(success, "true");
-			map.put(message, "Order with id: " + order.getId() + " has been deleted");
+			
+			map.putAll(responsehelper.responseSimpleWasOk("true", "Order with id: " + order.getId() + " has been deleted"));
+			
 
 		} catch (Exception e) {
 
-			map.put(success, isFalse);
-			map.put(message, error + e.getMessage());
+			map.putAll(responsehelper.responsewaswrong("false", e.getMessage()));
 
 		}
 		return map;
