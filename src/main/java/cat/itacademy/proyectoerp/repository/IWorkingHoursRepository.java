@@ -7,6 +7,7 @@ import cat.itacademy.proyectoerp.dto.WorkingHoursDTO;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.IntPredicate;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
