@@ -319,7 +319,7 @@ public class OrderServiceImpl implements IOrderService{
 	
 		switch (field) {
 		case "status":
-			 ordersByField = orderRepository.findAllOrdersByStatus().stream().filter(c ->c!=null).collect(Collectors.toList());
+			 ordersByField = orderRepository.findAllOrdersByStatus().stream().filter(c -> c!=null).collect(Collectors.toList());
 			 enumeration  = Stream.of(OrderStatus.values()).map( OrderStatus::name).collect( Collectors.toList());			 
 			break;
 		case "payment":
@@ -335,13 +335,16 @@ public class OrderServiceImpl implements IOrderService{
 		HashMap<String, Long> map = new HashMap<>();
 		
 		if (ordersByField.isEmpty()) {
+
 			throw new ArgumentNotFoundException("No orders found");
 		} else {
 			
 			long count = 0;
+
 			for (String o :  enumeration) {
 				count = ordersByField.stream().filter(c -> (c.equals(o) )  ).count();
 				map.put(o.toLowerCase(), count);
+
 				count = 0;
 			}
 		}		
