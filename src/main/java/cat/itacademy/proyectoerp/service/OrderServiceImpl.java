@@ -319,18 +319,20 @@ public class OrderServiceImpl implements IOrderService{
 	
 		switch (field) {
 		case "status":
-			 ordersByField = orderRepository.findAllOrdersByStatus().stream().filter(c -> c!=null).collect(Collectors.toList());
+			 ordersByField = orderRepository.findAllOrdersByStatus(); 
 			 enumeration  = Stream.of(OrderStatus.values()).map( OrderStatus::name).collect( Collectors.toList());			 
 			break;
 		case "payment":
-			 ordersByField = orderRepository.findAllOrdersByPayment().stream().filter(c ->c!=null).collect(Collectors.toList());
+			 ordersByField = orderRepository.findAllOrdersByPayment();
 			 enumeration  = Stream.of(PaymentMethod.values()).map( PaymentMethod::name).collect( Collectors.toList());			
 		}
 		
-		return calculateCountOrdersByfield(ordersByField,enumeration );
+		return calculateCountOrdersByfield(ordersByField, enumeration );
 	}
 	
 	private HashMap<String, Long> calculateCountOrdersByfield(List<String> ordersByField, List<String> enumeration){
+		
+		List<String> ordersNotNull = ordersByField.stream().filter(c ->c!=null).collect(Collectors.toList());
 		
 		HashMap<String, Long> map = new HashMap<>();
 		
@@ -341,7 +343,7 @@ public class OrderServiceImpl implements IOrderService{
 			
 			long count = 0;
 
-			for (String o :  enumeration) {
+			for (String o :  ordersNotNull) {
 				count = ordersByField.stream().filter(c -> (c.equals(o) )  ).count();
 				map.put(o.toLowerCase(), count);
 
