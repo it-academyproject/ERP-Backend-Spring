@@ -303,13 +303,13 @@ public class StatsControllerIntegrationTest {
 	}
 	
 	@Test
-	@DisplayName("Correct [GET] /api/stats/status")
+	@DisplayName("Correct [GET] /api/stats/count/{status}")
 	public void RequestOrdersByStatus() throws Exception {
 
 		String accessToken = obtainAdminAccessToken();
 			
 		// request
-		mockMvc.perform(get("/api/stats/status")
+		mockMvc.perform(get("/api/stats/count/status")
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON_VALUE))
 		
@@ -317,8 +317,28 @@ public class StatsControllerIntegrationTest {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.success", is("true")))
 				.andExpect(jsonPath("$.message", is("order list found")))
-				.andExpect(jsonPath("$.orders_by_status.completed", is(3)))
-				.andExpect(jsonPath("$.orders_by_status.assigned", is(0)))
+				.andExpect(jsonPath("$.orders.completed", is(3)))
+				.andExpect(jsonPath("$.orders.assigned", is(0)))
+				.andExpect(jsonPath("$.message", is("order list found")));
+	}
+	
+	@Test
+	@DisplayName("Correct [GET] /api/stats/count/{payment}")
+	public void RequestOrdersByPayment() throws Exception {
+
+		String accessToken = obtainAdminAccessToken();
+			
+		// request
+		mockMvc.perform(get("/api/stats/count/payment")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.success", is("true")))
+				.andExpect(jsonPath("$.message", is("order list found")))
+				.andExpect(jsonPath("$.orders.cash", is(3)))
+				.andExpect(jsonPath("$.orders.credit_card", is(0)))
 				.andExpect(jsonPath("$.message", is("order list found")));
 	}
 

@@ -11,10 +11,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.security.auth.message.AuthException;
 
 import cat.itacademy.proyectoerp.domain.OrderStatus;
+import cat.itacademy.proyectoerp.domain.PaymentMethod;
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
 import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
@@ -326,27 +328,46 @@ public class OrderServiceImpl implements IOrderService{
 	}
 
 	@Override
-	public HashMap<String, Long> countOrdersByStatus() {
+	public HashMap<String, Long> countOrdersByfield(String field) {
+			
+		List<String> enumeration=null;  
+		List<String> ordersByField=null;
+	
+		switch (field) {
+		case "status":
+			 ordersByField = orderRepository.findAllOrdersByStatus(); 
+			 enumeration  = Stream.of(OrderStatus.values()).map( OrderStatus::name).collect( Collectors.toList());			 
+			break;
+		case "payment":
+			 ordersByField = orderRepository.findAllOrdersByPayment();
+			 enumeration  = Stream.of(PaymentMethod.values()).map( PaymentMethod::name).collect( Collectors.toList());			
+		}
+		
+		return calculateCountOrdersByfield(ordersByField, enumeration );
+	}
+	
+	private HashMap<String, Long> calculateCountOrdersByfield(List<String> ordersByField, List<String> enumeration){
+		
+		List<String> ordersNotNull = ordersByField.stream().filter(c ->c!=null).collect(Collectors.toList());
+		
+		HashMap<String, Long> map = new HashMap<>();
+		
+		if (ordersByField.isEmpty()) {
 
-		HashMap<String, Long> map = new HashMap<>();				
-
-		List<String> statusOrders = orderRepository.findAllStatusOfOrders().stream().filter(c-> c!=null).collect(Collectors.toList());
-
-		if (statusOrders.isEmpty()) {
 			throw new ArgumentNotFoundException("No orders found");
 		} else {
 			
 			long count = 0;
-			for (OrderStatus o : OrderStatus.values()) {
-				count = statusOrders.stream().filter(c -> (c.equals(o.name()))).count();
-				map.put(o.name().toLowerCase(), count);
+
+			for (String o :  enumeration) {
+				count = ordersNotNull.stream().filter(c -> (c.equals(o) )  ).count();
+				map.put(o.toLowerCase(), count);
+
 				count = 0;
 			}
-		}
-
+		}		
 		return map;
 	}
-
 	
 }
 

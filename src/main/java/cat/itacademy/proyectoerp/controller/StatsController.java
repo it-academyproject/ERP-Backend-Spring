@@ -264,18 +264,24 @@ public class StatsController {
 		return map;
 	}
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/status")
-	public Map<String, Object> getCountOrderByStatus() throws Exception {		
+	@GetMapping("/count/{field}")
+	public Map<String, Object> getCountOrderByField(@PathVariable("field") String field) throws Exception {		
 
 		HashMap<String, Object> map = new HashMap<>();
 		
+		if (!field.equals("status" ) && !field.equals("payment" ) ) {
+			   map.put("success", "false");
+		      map.put("message", "error, the parameter: '"+ field + "' its wrong " );
+		      return map;
+		}			  
 		try {
-			HashMap<String, Long> countOrderStatus = orderService.countOrdersByStatus();
+			HashMap<String, Long> countOrder = orderService.countOrdersByfield(field);
 			
-		      if(!countOrderStatus.isEmpty()){
+		      if(!countOrder.isEmpty()){
 		        map.put("success", "true");
 		  		map.put("message", "order list found");
-		  		map.put("orders_by_status",countOrderStatus);
+		  		map.put("count_by", field);
+		  		map.put("orders",countOrder);
 		      } else{
 		        map.put("success", "true");
 		        map.put("message", "order list empty");		        
@@ -284,7 +290,6 @@ public class StatsController {
 		      map.put("success", "false");
 		      map.put("message", "error: " + e.getMessage());
 		    }
-
 		return map;
 	}
 }
