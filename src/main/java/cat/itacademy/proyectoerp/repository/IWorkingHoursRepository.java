@@ -1,8 +1,6 @@
 package cat.itacademy.proyectoerp.repository;
 
 import cat.itacademy.proyectoerp.domain.WorkingHours;
-import cat.itacademy.proyectoerp.domain.WorkingHoursId;
-import cat.itacademy.proyectoerp.dto.WorkingHoursDTO;
 
 import java.time.LocalDate;
 import java.util.List;

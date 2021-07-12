@@ -34,7 +34,7 @@ public class WorkingHoursController {
       List<WorkingHoursDTO> workingHoursList = workingHoursService.findAllWorkingHours();
       map.put("success", "true");
       map.put("message", "working hours found");
-      map.put("workingHours", workingHoursList);
+      map.put("working_hours", workingHoursList);
     } catch (Exception e) {
       map.put("success", "false");
       map.put("message", e.getMessage());
@@ -50,7 +50,7 @@ public class WorkingHoursController {
       WorkingHours workingHours = workingHoursService.findWorkingHoursByEmployeeIdAndDate(employeeId, date);
       map.put("success", "true");
       map.put("message", "working hours found");
-      map.put("workingHours", workingHours);
+      map.put("working_hours", workingHours);
     } catch (Exception e){
       map.put("success", "false");
       map.put("message", e.getMessage());
@@ -66,7 +66,7 @@ public class WorkingHoursController {
       List<WorkingHoursDTO> workingHoursList = workingHoursService.findWorkingHoursByEmployeeId(employeeId);
       map.put("success", "true");
       map.put("message", "working hours found");
-      map.put("workingHours", workingHoursList);
+      map.put("working_hours", workingHoursList);
     } catch (Exception e){
       map.put("success", "false");
       map.put("message", e.getMessage());
@@ -82,7 +82,7 @@ public class WorkingHoursController {
       List<WorkingHoursDTO> workingHoursList = workingHoursService.findWorkingHoursByDate(date);
       map.put("success", "true");
       map.put("message", "working hours found");
-      map.put("workingHours", workingHoursList);
+      map.put("working_hours", workingHoursList);
     } catch (Exception e){
       map.put("success", "false");
       map.put("message", e.getMessage());
@@ -101,7 +101,7 @@ public class WorkingHoursController {
 
 			map.put("success", "true");
 			map.put("message", "New Working Hours created");
-			map.put("workingHours", workingHoursDTO);
+			map.put("working_hours", workingHoursDTO);
 
 		} catch (Exception e) {
 
@@ -137,7 +137,7 @@ public class WorkingHoursController {
       WorkingHoursDTO workingHoursUpdated = workingHoursService.updateWorkingHoursByEmployeeIdAndDate(workingHoursDTO);
       map.put("success", "true");
       map.put("message", "Working Hours with Empployee id: " + workingHoursDTO.getEmployeeId() + " and " + workingHoursDTO.getDate() + " have been updated");
-      map.put("employee", workingHoursUpdated);
+      map.put("working_hours", workingHoursUpdated);
 
     } catch (Exception e) {
       map.put("success", "false");
