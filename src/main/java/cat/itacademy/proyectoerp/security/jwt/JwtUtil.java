@@ -5,9 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+
 import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -24,6 +27,7 @@ public class JwtUtil {
 	
 	@Value("${jwt.expiration}")
 	private int expiration;
+	
 	
 	/**
 	 * Method for generate token.
@@ -102,6 +106,8 @@ public class JwtUtil {
 					.signWith(SignatureAlgorithm.HS512, secret).compact();
 		}
 
-	
+	 public void setSecret(String value) {
+	        this.secret = value;
+	    }	
 
 }

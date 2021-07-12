@@ -12,6 +12,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.security.auth.message.AuthException;
+
 import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
@@ -36,6 +38,7 @@ import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderDetail;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
+import cat.itacademy.proyectoerp.security.jwt.JwtUtil;
 
 @Service
 public class OrderServiceImpl implements IOrderService{
@@ -70,15 +73,28 @@ public class OrderServiceImpl implements IOrderService{
 	@Autowired
 	IProductService productService;
 	
+	@Autowired
+	JwtUtil jwtUtil;
+	
 	ModelMapper modelMapper = new ModelMapper();
 	
 	@Override
-	public OrderDTO createOrder(CreateOrderDTO createOrderDTO) {
+	public OrderDTO createOrder(CreateOrderDTO createOrderDTO, String token) throws  AuthException{
+		String auxToken;
+		auxToken=token.substring(7);
+		
+		String authClient= jwtUtil.getNameOfUser(auxToken);
+		
 		if(createOrderDTO.getClientId() == null) {
 			setAddressesForUnregisteredClient(createOrderDTO);
 		}else {
-			Client client = clientService.findClientById(createOrderDTO.getClientId());		
-			setAddressesForRegisteredClient(client, createOrderDTO);
+			Client client = clientService.findClientById(createOrderDTO.getClientId());	
+			if(client.getUser().getUsername().equals(authClient)) {
+				setAddressesForRegisteredClient(client, createOrderDTO); 
+			}else {
+				throw new AuthException();
+			}
+			
 		}
 		Order order = modelMapper.map(createOrderDTO, Order.class);
 		Set<OrderDetail> orderDetails = createOrderDetailFromProductQuantity(order, createOrderDTO.getProductsQuantity());
