@@ -320,25 +320,21 @@ public class OrderServiceImpl implements IOrderService{
 			return calculateCountOrdersByfield(orderRepository.findAllOrdersByPayment(), PaymentMethod.values() );						
 	}
 	
-	private <T> HashMap<String, Long> calculateCountOrdersByfield(List<String> ordersByField, T[] enumeration){
-		
-		List<String> ordersNotNull = ordersByField.stream().filter(c ->c!=null).collect(Collectors.toList());
-		
-		HashMap<String, Long> map = new HashMap<>();
-		
-		if (ordersByField.isEmpty()) {
+	private <T> HashMap<String, Long> calculateCountOrdersByfield(List<String> ordersByField, T[] enumFieldValues) {
 
+		List<String> ordersNotNull = ordersByField.stream().filter(c -> c != null).collect(Collectors.toList());
+		HashMap<String, Long> map = new HashMap<>();
+
+		if (ordersByField.isEmpty()) {
 			throw new ArgumentNotFoundException("No orders found");
 		} else {
-			
 			long count = 0;
-
-			for (T o :  enumeration) {				
-				count = ordersNotNull.stream().filter(c -> (c.equals( o.toString()) )  ).count();
-				map.put(o.toString().toLowerCase(), count);
+			for (T value : enumFieldValues) {
+				count = ordersNotNull.stream().filter(c -> (c.equals(value.toString()))).count();
+				map.put(value.toString().toLowerCase(), count);
 				count = 0;
 			}
-		}		
+		}
 		return map;
 	}
 	
