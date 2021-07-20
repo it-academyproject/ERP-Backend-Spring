@@ -328,44 +328,29 @@ public class OrderServiceImpl implements IOrderService{
 	}
 
 	@Override
-	public HashMap<String, Long> countOrdersByfield(String field) {
-			
-		List<String> enumeration=null;  
-		List<String> ordersByField=null;
+	public HashMap<String, Long> countOrdersByfield(String field) {			
 	
-		switch (field) {
-		case "status":
-			 ordersByField = orderRepository.findAllOrdersByStatus(); 
-			 enumeration  = Stream.of(OrderStatus.values()).map( OrderStatus::name).collect( Collectors.toList());			 
-			break;
-		case "payment":
-			 ordersByField = orderRepository.findAllOrdersByPayment();
-			 enumeration  = Stream.of(PaymentMethod.values()).map( PaymentMethod::name).collect( Collectors.toList());			
-		}
-		
-		return calculateCountOrdersByfield(ordersByField, enumeration );
+		if (field.equals("status"))		
+			return calculateCountOrdersByfield(orderRepository.findAllOrdersByStatus(), OrderStatus.values() );
+		else 
+			return calculateCountOrdersByfield(orderRepository.findAllOrdersByPayment(), PaymentMethod.values() );						
 	}
 	
-	private HashMap<String, Long> calculateCountOrdersByfield(List<String> ordersByField, List<String> enumeration){
-		
-		List<String> ordersNotNull = ordersByField.stream().filter(c ->c!=null).collect(Collectors.toList());
-		
-		HashMap<String, Long> map = new HashMap<>();
-		
-		if (ordersByField.isEmpty()) {
+	private <T> HashMap<String, Long> calculateCountOrdersByfield(List<String> ordersByField, T[] enumFieldValues) {
 
+		List<String> ordersNotNull = ordersByField.stream().filter(c -> c != null).collect(Collectors.toList());
+		HashMap<String, Long> map = new HashMap<>();
+
+		if (ordersByField.isEmpty()) {
 			throw new ArgumentNotFoundException("No orders found");
 		} else {
-			
 			long count = 0;
-
-			for (String o :  enumeration) {
-				count = ordersNotNull.stream().filter(c -> (c.equals(o) )  ).count();
-				map.put(o.toLowerCase(), count);
-
+			for (T value : enumFieldValues) {
+				count = ordersNotNull.stream().filter(c -> (c.equals(value.toString()))).count();
+				map.put(value.toString().toLowerCase(), count);
 				count = 0;
 			}
-		}		
+		}
 		return map;
 	}
 	
