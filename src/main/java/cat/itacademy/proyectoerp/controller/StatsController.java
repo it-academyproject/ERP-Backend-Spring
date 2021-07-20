@@ -142,7 +142,7 @@ public class StatsController {
 			            map.put("message", "no employees or orders found between the dates");
 				  } 
 				  else {
-					  map.put("succes","true");
+					  map.put("success","true");
 					  map.put("message","top 10 employees found");
 					  map.put("employees", employeeList);
 				  }
