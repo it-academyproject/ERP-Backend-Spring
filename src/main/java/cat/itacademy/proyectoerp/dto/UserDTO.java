@@ -1,6 +1,7 @@
 package cat.itacademy.proyectoerp.dto;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotBlank;
 
@@ -42,6 +43,8 @@ public class UserDTO implements Serializable{
 	private Long id;
 	
 	UserType user_type;
+	
+	private LocalDateTime registrationDate;
 
 	
 	//SETERRS AND GETTERS
@@ -78,6 +81,12 @@ public class UserDTO implements Serializable{
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public LocalDateTime getRegistrationDate() {
+		return registrationDate;
+	}
+	public void setRegistrationDate(LocalDateTime registrationDate) {
+		this.registrationDate = registrationDate;
 	}
 	
 	

@@ -47,6 +47,9 @@ public class User {
   
   @Column
   private LocalDateTime lastSession;
+  
+  @Column
+  private LocalDateTime registrationDate;
 
   @JsonProperty("user_type")
   @Column(length = 16)
@@ -78,6 +81,7 @@ public class User {
     this.username = username;
     this.password = password;
     userType = UserType.CLIENT;
+    
   }
 
 
@@ -151,12 +155,21 @@ public class User {
 	this.active = active;
   }
 
+  public LocalDateTime getRegistrationDate() {
+	  return registrationDate;
+  }
 
+  public void setRegistrationDate(LocalDateTime registrationDate) {
+	  this.registrationDate = registrationDate;
+  }
+	
   @Override
   public String toString() {
 	return "User [id=" + id + ", username=" + username + ", password=" + password + ", lastSession=" + lastSession
 			+ ", userType=" + userType + "]";
   }
+
+
 
 
 }
