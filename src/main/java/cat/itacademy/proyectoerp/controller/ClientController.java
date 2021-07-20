@@ -172,10 +172,11 @@ public class ClientController {
     }
 
     //Delete a client
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteClientById(@PathVariable UUID id){
+    @DeleteMapping()
+    public ResponseEntity<?> deleteClientById(@RequestBody Client client){
     	  try {
-			service.deleteClient(id);
+    		
+			service.deleteClient(client.getId());
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
