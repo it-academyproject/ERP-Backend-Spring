@@ -26,18 +26,22 @@ public class CategoryServiceImpl implements ICategoryService {
 	@Override
 	public CategoryDTO createCategory(CategoryDTO categoryDto) {
 		Category category;
-		if(categoryDto.getParentCategoryId() == null) {
+		
+		if (categoryDto.getParentCategoryId() == null) {
 			category = createParentCategory(categoryDto.getName(), categoryDto.getDescription());
-		}else {
+		} else {
 			category = createSubCategory(categoryDto.getName(), categoryDto.getDescription(), categoryDto.getParentCategoryId());
 		}
+		
 		categoryRepository.save(category);
+		
 		return modelMapper.map(category, CategoryDTO.class);
 	}
 	
 	private Category createParentCategory(String name, String description) {
 		checkCategoryName(name);
 		checkCategoryDescription(description);
+		
 		return new Category(name, description);
 	}
 
@@ -46,6 +50,7 @@ public class CategoryServiceImpl implements ICategoryService {
 		checkCategoryDescription(description);
 		Category parentCategory = findCategoryById(parentCategoryId);
 		checkParentCategoryIsNotSubCategory(parentCategory);
+		
 		return new Category(name, description, parentCategory);
 	}
 
@@ -126,10 +131,15 @@ public class CategoryServiceImpl implements ICategoryService {
 	public void existsCategoryByName(String name) {
 		if(!categoryRepository.existsByName(name)) throw new ArgumentNotValidException("A category named " + name + " doesn't exist");
 	}
-
+	
 	@Override
-	public void deleteCategoryById(UUID id) {
-		if(!categoryRepository.existsById(id)) throw new ArgumentNotFoundException("The id " + id + " doesn't correspond to any category");
+	public void deleteCategory(CategoryDTO categoryDto) {
+		UUID id = categoryDto.getId();
+		this.findCategoryById(id);
+		
+		if (!categoryRepository.existsById(id))
+			throw new ArgumentNotFoundException("The id " + id + " doesn't correspond to any category");
+		
 		categoryRepository.deleteById(id);		
 	}
 

@@ -22,6 +22,6 @@ public interface ICategoryService {
 	
 	public void existsCategoryByName(String name);
 	
-	public void deleteCategoryById(UUID id);
+	public void deleteCategory(CategoryDTO categoryDto);
 	
 }
