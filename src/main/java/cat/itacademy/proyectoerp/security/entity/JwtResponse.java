@@ -18,13 +18,12 @@ public class JwtResponse implements Serializable {
 	 */
 	private static final long serialVersionUID = -1138581471978379303L;
 	private String token;
-    private String bearer = "Bearer";
-    private String nombreUsuario;
+    private String userName;
     private Collection<? extends GrantedAuthority> authorities;
 
     public JwtResponse(String token, String nombreUsuario, Collection<? extends GrantedAuthority> authorities) {
         this.token = token;
-        this.nombreUsuario = nombreUsuario;
+        this.userName = nombreUsuario;
         this.authorities = authorities;
     }
 
@@ -36,20 +35,12 @@ public class JwtResponse implements Serializable {
         this.token = token;
     }
 
-    public String getBearer() {
-        return bearer;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setBearer(String bearer) {
-        this.bearer = bearer;
-    }
-
-    public String getNombreUsuario() {
-        return nombreUsuario;
-    }
-
-    public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
