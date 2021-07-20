@@ -237,17 +237,20 @@ public class ProductController {
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping("/categories/{id}")
-	public HashMap<String, Object> deleteCategoryById(@PathVariable UUID id) {
+	@DeleteMapping("/categories")
+	public HashMap<String, Object> deleteCategoryById(@RequestBody CategoryDTO categoryDto) {
 		HashMap<String, Object> map = new HashMap<>();
+		
 		try {
-			categoryService.deleteCategoryById(id);
+			categoryService.deleteCategory(categoryDto);
+			
 			map.put("success", "true");
 			map.put("message", "category deleted");
-		}catch(Exception e) {
+		} catch (Exception e) {
 			map.put("success", "false");
 			map.put("message", "error: " + e.getMessage());
 		}
+		
 		return map;
 	}
 
