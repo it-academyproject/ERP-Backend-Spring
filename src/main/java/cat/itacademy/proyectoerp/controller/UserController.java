@@ -156,16 +156,17 @@ public class UserController {
 	 * @return
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
-	@RequestMapping(value = "/users/employees", method = RequestMethod.POST)
+	@PostMapping("/users/employees")
 	public ResponseEntity<?> newUserAndEmployee(@Valid @RequestBody Employee employee) {
 		EmployeeDTO employeeDTO;
 
 		User user = new User(employee.getUser().getUsername(),employee.getUser().getPassword(), UserType.EMPLOYEE);
 		userService.registerNewUserAccount(user);
 
-		employee.setOutDate(null != employee.getOutDate()?employee.getOutDate():null);
-		Employee newEmployee = new Employee(employee.getSalary(), employee.getDni(),
+		employee.setOutDate(null != employee.getOutDate() ? employee.getOutDate() : null);
+		Employee newEmployee = new Employee(employee.getName(), employee.getSurname(), employee.getSalary(), employee.getDni(),
 				employee.getPhone(), employee.getInDate(), employee.getOutDate(), user);
+		
 		try {
 			employeeDTO = iEmployeeService.createEmployee(newEmployee);
 		} catch (Exception e) {
@@ -174,9 +175,9 @@ public class UserController {
 			return ResponseEntity.unprocessableEntity().body(messageDTO);
 		}
 
-		if (employeeDTO.getMessage().getSuccess().equalsIgnoreCase("True")) {
+		if (employeeDTO.getMessage().getSuccess().equalsIgnoreCase("True"))
 			return ResponseEntity.status(HttpStatus.CREATED).body(employeeDTO);
-		}
+		
 		return new ResponseEntity<>(employeeDTO, HttpStatus.UNPROCESSABLE_ENTITY);
 	}
 
