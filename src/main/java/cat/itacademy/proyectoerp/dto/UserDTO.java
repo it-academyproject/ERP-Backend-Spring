@@ -91,6 +91,4 @@ public class UserDTO implements Serializable{
 		this.registrationDate = registrationDate;
 	}
 	
-	
-
 }
