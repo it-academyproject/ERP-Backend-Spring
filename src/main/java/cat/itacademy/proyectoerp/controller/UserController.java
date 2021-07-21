@@ -78,21 +78,14 @@ public class UserController {
 	 * @param user JSON with User data
 	 * @return Welcome String.
 	 */
-	
 	@RequestMapping(value = "/users", method = RequestMethod.POST)
 	public ResponseEntity<UserDTO> newUser(@Valid @RequestBody User user) {
+		UserDTO userDTO = userService.registerNewUserAccount(user);
 
-		UserDTO userDTO;
-
-		userDTO = userService.registerNewUserAccount(user);
-
-		if (userDTO.getSuccess() == "False") {
-
+		if (userDTO.getSuccess() == "False")
 			return new ResponseEntity<>(userDTO, HttpStatus.UNPROCESSABLE_ENTITY);
-		} else {
-
+		else
 			return new ResponseEntity<>(userDTO, HttpStatus.OK);
-		}
 	}
 	
 	/**
@@ -132,21 +125,24 @@ public class UserController {
 		MessageDTO errorMessageDTO = new MessageDTO("True","");
 		MessageDTO errorMessageDni = clientService.getErrorMessageDniExists(standard.getDni());
 		MessageDTO errorMessageUsername = userService.getErrorMessageUsernameExists(standard.getUsername());
+		
 		if (null != errorMessageDni) {
 			errorMessageDTO.setSuccess("False");
 			errorMessageDTO.setMessage(errorMessageDni.getMessage());
-		}
-		else if (null != errorMessageUsername) {
+		} else if (null != errorMessageUsername) {
 			errorMessageDTO.setSuccess("False");
 			errorMessageDTO.setMessage(errorMessageUsername.getMessage());
 		}
+		
 		return errorMessageDTO;
 	}
 
 	private Client getClient(StandardRegistration standard) {
 		User user = new User(standard.getUsername(), standard.getPassword());
+		
 		Client client = new Client(standard.getDni(), standard.getImage(), standard.getNameAndSurname(),
 				standard.getAddress(), standard.getShippingAddress(), user);
+		
 		return client;
 	}
 

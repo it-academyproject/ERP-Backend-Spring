@@ -1,7 +1,5 @@
 package cat.itacademy.proyectoerp;
 
-
-
 import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.domain.UserType;
@@ -59,8 +57,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK,
 			classes = ProyectoErpApplication.class)
 @AutoConfigureMockMvc
-@TestPropertySource(
-		locations = "classpath:application-integrationtest.properties")
+@TestPropertySource(locations = "classpath:application-integrationtest.properties")
 public class EmployeeControllerTest {
 	protected JsonNode node;
 	ModelMapper modelMapper = new ModelMapper();
@@ -100,15 +97,12 @@ public class EmployeeControllerTest {
 					.accept(MediaType.APPLICATION_JSON))
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("Employees",hasSize(employeesDTO.size())))
-					.andExpect(jsonPath("Employees[0].dni",  is(employeesDTO.get(0).getDni())))
+					.andExpect(jsonPath("Employees[2].dni",  is(employeesDTO.get(2).getDni())))
 					.andExpect(jsonPath("Employees["+lastElement+"].dni",  is(employeesDTO.get(lastElement).getDni())));
 
 		String resultStringTest1 = result.andReturn().getResponse().getContentAsString();
 		
 		showResult(resultStringTest1);
-		
-		
-		
 	}
 	
 	@Test
@@ -323,7 +317,6 @@ public class EmployeeControllerTest {
 		String resultStringTest7 = result.andReturn().getResponse().getContentAsString();
 		
 		showResult(resultStringTest7);
-		
 	}
 	
 	private String obtainAccessToken(String username, String password) throws Exception {
@@ -341,14 +334,14 @@ public class EmployeeControllerTest {
 	}
 	
 	private Employee createNewEmployee() {
-		
 		User useremployee= new  User( "employee@erptest", "ReW9a0&+TP", UserType.EMPLOYEE);
-		Employee employee = new Employee((double) 22000, "a8762135z", 555333222, LocalDate.now(), null, useremployee);
+		Employee employee = new Employee("John", "Doe", (double) 22000, "a8762135z", 555333222, LocalDate.now(), null, useremployee);
 		
 		//if (employeeRepository.exists(employee.getDni()))		
 		employeeRepository.save( employee);
 		return employee;
 	}
+	
 	private void showResult(String result) {
 		System.out.println("===================================");
 		System.out.println("output test:");

@@ -80,6 +80,4 @@ public class UserDTO implements Serializable{
 		this.id = id;
 	}
 	
-	
-
 }

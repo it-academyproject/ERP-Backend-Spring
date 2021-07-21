@@ -142,7 +142,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 	@Override
 	public List<EmployeeDTO> findAllEmployeesAndTotalSalesAndTotalOrdersAttended(List<EmployeeDTO> listEmployees) {	
-		for (EmployeeDTO e:listEmployees) {
+		for (EmployeeDTO e : listEmployees) {
 			List<Order> listOrdersOneEmployee = iOrderRepository.findByEmployeeId(e.getId());
 			double totalSalesEmployee = listOrdersOneEmployee.stream().mapToDouble(Order:: getTotal).sum();
 			int totoalOrdersAttended = (int) listOrdersOneEmployee.stream().count();
