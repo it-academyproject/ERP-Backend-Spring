@@ -1,11 +1,13 @@
 package cat.itacademy.proyectoerp.dto;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotBlank;
 
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 
@@ -24,7 +26,7 @@ public class UserDTO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "UserDTO [success=" + success + ", message=" + message + ", username=" + username + ", id=" + id +  "]";
+		return "UserDTO [success=" + success + ", message=" + message + ", username=" + username + ", id=" + id +  ", registration: " + registrationDate + " ]";
 	}
 	private static final long serialVersionUID = 1L;
 	
@@ -42,6 +44,9 @@ public class UserDTO implements Serializable{
 	private Long id;
 	
 	UserType user_type;
+	
+	@JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
+	private LocalDateTime registrationDate;
 
 	
 	//SETERRS AND GETTERS
@@ -78,6 +83,12 @@ public class UserDTO implements Serializable{
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public LocalDateTime getRegistrationDate() {
+		return registrationDate;
+	}
+	public void setRegistrationDate(LocalDateTime registrationDate) {
+		this.registrationDate = registrationDate;
 	}
 	
 	
