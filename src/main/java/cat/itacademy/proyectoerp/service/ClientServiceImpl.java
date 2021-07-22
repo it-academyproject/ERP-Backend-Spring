@@ -266,8 +266,9 @@ public class ClientServiceImpl implements IClientService {
 	}
 
 	@Override
-	public ClientDTO deleteClient(UUID id) {
-		ClientDTO clientDTO = modelMapper.map(repository.getOne(id), ClientDTO.class);
+	public ClientDTO deleteClient(UUID id) throws ArgumentNotFoundException {
+		Client client = repository.findById(id).orElseThrow( () -> new ArgumentNotFoundException("Employee not found. The id " + id + " doesn't exist"));
+		ClientDTO clientDTO = modelMapper.map(client, ClientDTO.class);
 		repository.deleteById(id);
 		return clientDTO;
 	}

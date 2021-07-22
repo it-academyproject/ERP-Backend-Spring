@@ -1,13 +1,13 @@
 package cat.itacademy.proyectoerp.controller;
 
 import java.util.*;
-
 import javax.validation.Valid;
 
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.service.IUserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -172,15 +172,14 @@ public class ClientController {
 	// Delete a client
 	@DeleteMapping()
 	public ResponseEntity<MessageDTO> deleteClientById(@RequestBody Client client) {
-		try {
-			String name = service.deleteClient(client.getId()).getNameAndSurname();
-			MessageDTO output = new MessageDTO("true", "Client " + name + " has been successfully deleted");
-			return ResponseEntity.status(HttpStatus.OK).body(output);
-		} catch (Exception e) {
-			UUID id = client.getId();
-			MessageDTO output = new MessageDTO("false", "Client not found. The id " + id + " doesn't exist");
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(output);
+		// empty id case
+		if (client.getId() == null) {
+			MessageDTO output = new MessageDTO("False", "empty mandatory field in body request");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(output);
 		}
+		String name = service.deleteClient(client.getId()).getNameAndSurname();
+		MessageDTO output = new MessageDTO("true", "Client " + name + " has been successfully deleted");
+		return ResponseEntity.status(HttpStatus.OK).body(output);
 	}
 
 	// pruebaDTO
