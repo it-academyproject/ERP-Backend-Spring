@@ -32,7 +32,6 @@ public class ShopController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/shop")
 	public HashMap<String, Object> createShop(@Valid @RequestBody Shop shop) {
-
 		HashMap<String, Object> map = new LinkedHashMap<String, Object>();
 
 		try {
@@ -45,12 +44,12 @@ public class ShopController {
 			map.put("success", "false");
 			map.put("message", "Error: " + e.getMessage());
 		}
+		
 		return map;
 	}
 
 	@GetMapping("/shops/{id}")
 	public HashMap<String, Object> findShopById(@PathVariable(name = "id") UUID id) {
-
 		HashMap<String, Object> map = new LinkedHashMap<String, Object>();
 
 		try {
@@ -59,7 +58,6 @@ public class ShopController {
 			map.put("success", "true");
 			map.put("message", "shop found");
 			map.put("shop", shop);
-
 		} catch (Exception e) {
 			map.put("success", "false");
 			map.put("message", "Error: " + e.getMessage());
@@ -70,7 +68,6 @@ public class ShopController {
 
 	@GetMapping("/shops")
 	public HashMap<String, Object> getShops() {
-
 		HashMap<String, Object> map = new LinkedHashMap<String, Object>();
 
 		try {
@@ -84,6 +81,7 @@ public class ShopController {
 			map.put("success", "false");
 			map.put("message", "Error: " + e.getMessage());
 		}
+		
 		return map;
 	}
 
@@ -91,7 +89,6 @@ public class ShopController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/shop")
 	public HashMap<String, Object> updateShop(@Valid @RequestBody Shop shop) {
-
 		HashMap<String, Object> map = new LinkedHashMap<String, Object>();
 
 		try {
@@ -105,13 +102,13 @@ public class ShopController {
 			map.put("success", "false");
 			map.put("message", "Error: " + e.getMessage());
 		}
+		
 		return map;
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/shop")
 	public HashMap<String, Object> deleteShop(@RequestBody ShopDTO shop) {
-		
 		HashMap<String, Object> map = new LinkedHashMap<String, Object>();
 
 		try {
@@ -121,10 +118,11 @@ public class ShopController {
 			map.put("success", "true");
 			map.put("message", "Shop id: " + shop.getId() + " has been successfully deleted");
 		} catch (Exception e) {
-
 			map.put("success", "false");
 			map.put("message", "Error: " + e.getMessage());
 		}
+		
 		return map;
 	}
+	
 }
