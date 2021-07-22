@@ -26,7 +26,7 @@ public interface IClientService {
 		
 	public ClientDTO updateClient(Client client) throws Exception; //UPDATE - Updates clients info
 	
-	public void deleteClient(UUID id); //DELETE - deletes client
+	public ClientDTO deleteClient(UUID id); //DELETE - deletes client
 
 	List<ClientDTO> listAllUsers();
 

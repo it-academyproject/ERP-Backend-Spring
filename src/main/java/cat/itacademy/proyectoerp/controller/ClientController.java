@@ -1,14 +1,13 @@
 package cat.itacademy.proyectoerp.controller;
 
 import java.util.*;
-
-
 import javax.validation.Valid;
 
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.service.IUserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,21 +27,21 @@ import cat.itacademy.proyectoerp.service.IClientService;
 @RestController
 @RequestMapping("/api/clients")
 public class ClientController {
-	
+
 	@Autowired
 	IClientService service;
 
 	@Autowired
 	IUserService userService;
 
-	 //Add a new Client
-    @PostMapping
-    public ResponseEntity<?> addNewClient(@Valid @RequestBody Client client) {
+	// Add a new Client
+	@PostMapping
+	public ResponseEntity<?> addNewClient(@Valid @RequestBody Client client) {
 		UserDTO userDTO = null;
 		ClientDTO clientDTO = new ClientDTO();
 		try {
 			MessageDTO errorMessage = service.getErrorMessageDniExists(client.getDni());
-			if(null != errorMessage){
+			if (null != errorMessage) {
 				return new ResponseEntity<>(errorMessage, HttpStatus.UNPROCESSABLE_ENTITY);
 			}
 
@@ -54,16 +53,15 @@ public class ClientController {
 			clientDTO.setUser(userDTO);
 			return ResponseEntity.unprocessableEntity().body(clientDTO);
 		}
-        return ResponseEntity.status(HttpStatus.CREATED).body(clientDTO);
-    }
+		return ResponseEntity.status(HttpStatus.CREATED).body(clientDTO);
+	}
 
 	private UserDTO getUser(Client client) {
 		UserDTO userDTO;
-		if(userService.existsByUsername(client.getUser().getUsername())){
+		if (userService.existsByUsername(client.getUser().getUsername())) {
 			userDTO = userService.getByUsername(client.getUser().getUsername()).get();
 			setErrorMessageUsernameExists(userDTO);
-		}
-		else{
+		} else {
 			userDTO = userService.registerNewUserAccount(client.getUser());
 		}
 		return userDTO;
@@ -77,18 +75,18 @@ public class ClientController {
 
 	private Client getClient(Client client, String username) {
 		User user = userService.findByUsername(username);
-		Client newClient = new Client(client.getDni(),client.getImage(),client.getNameAndSurname(),
-				client.getAddress(),client.getShippingAddress(),user);
+		Client newClient = new Client(client.getDni(), client.getImage(), client.getNameAndSurname(),
+				client.getAddress(), client.getShippingAddress(), user);
 		return newClient;
 	}
 
-    //Add client without giving user
-    @PostMapping("/fastclient") 
-    public ResponseEntity<?> addFastClient(@RequestBody ClientDTO client) {
+	// Add client without giving user
+	@PostMapping("/fastclient")
+	public ResponseEntity<?> addFastClient(@RequestBody ClientDTO client) {
 		ClientDTO finalClient;
 
 		MessageDTO messageDTO = getErrorMessageNameAndSurname(client.getNameAndSurname());
-		if(null != messageDTO){
+		if (null != messageDTO) {
 			return ResponseEntity.unprocessableEntity().body(messageDTO);
 		}
 
@@ -98,36 +96,36 @@ public class ClientController {
 			messageDTO = new MessageDTO("False", e.getMessage());
 			return ResponseEntity.unprocessableEntity().body(messageDTO);
 		}
-    	return ResponseEntity.ok().body(finalClient);
-    }
+		return ResponseEntity.ok().body(finalClient);
+	}
 
 	private MessageDTO getErrorMessageNameAndSurname(String nameAndSurname) {
 		MessageDTO errorMessage = null;
-		if (null == nameAndSurname || nameAndSurname.isBlank()){
+		if (null == nameAndSurname || nameAndSurname.isBlank()) {
 			errorMessage = new MessageDTO("False", "name_and_surname is mandatory. ");
 
 		}
 		return errorMessage;
 	}
 
-	//Get all the clients
+	// Get all the clients
 	@PreAuthorize("hasRole('ADMIN')")
-    @GetMapping
-    public ResponseEntity<?> getAllClients() {
-        List<Client> list = new ArrayList<>();
+	@GetMapping
+	public ResponseEntity<?> getAllClients() {
+		List<Client> list = new ArrayList<>();
 		try {
 			list = service.getAllClients();
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
 		}
-        return ResponseEntity.ok().body(list);
-    }
-    
-    //Get clients per page
-    @GetMapping("/list/{amount}/{page}")
-    public ResponseEntity<HashMap<String, Object>> getClientsByPage(@PathVariable int amount, @PathVariable int page) {
-    	List<ClientDTO> list;
-    	HashMap<String, Object> map = new HashMap<>();
+		return ResponseEntity.ok().body(list);
+	}
+
+	// Get clients per page
+	@GetMapping("/list/{amount}/{page}")
+	public ResponseEntity<HashMap<String, Object>> getClientsByPage(@PathVariable int amount, @PathVariable int page) {
+		List<ClientDTO> list;
+		HashMap<String, Object> map = new HashMap<>();
 		try {
 			list = service.getPageOfClients(page, amount);
 		} catch (Exception e) {
@@ -135,32 +133,32 @@ public class ClientController {
 			map.put("error", e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(map);
 		}
-    
-		map.put("total_clients", service.getAllClients().size());
-    	map.put("clients_of_the_page", list);
-    	return ResponseEntity.ok().body(map);
-    }
 
-    //get a client by id 
-    @GetMapping("/{id}")   
-    public Map<String, Object> getClientById(@PathVariable(name="id") UUID id) {
-    	HashMap<String, Object> map = new HashMap<>();
-    	try {
-    		Client client = service.findClientById(id);
-            map.put("success", "true");
-            map.put("message", "client found");
-            map.put("client", client);
-            return map;
-    	} catch (Exception e) {
-            map.put("success", "false");
-            map.put("message", "error: " + e.getMessage());
-    	}
-    	return map;
-    }
-       
-    //Update a client by id
-    @PutMapping()
-    public ResponseEntity<?> updateClientById(@RequestBody Client clientUpdate) {
+		map.put("total_clients", service.getAllClients().size());
+		map.put("clients_of_the_page", list);
+		return ResponseEntity.ok().body(map);
+	}
+
+	// get a client by id
+	@GetMapping("/{id}")
+	public Map<String, Object> getClientById(@PathVariable(name = "id") UUID id) {
+		HashMap<String, Object> map = new HashMap<>();
+		try {
+			Client client = service.findClientById(id);
+			map.put("success", "true");
+			map.put("message", "client found");
+			map.put("client", client);
+			return map;
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "error: " + e.getMessage());
+		}
+		return map;
+	}
+
+	// Update a client by id
+	@PutMapping()
+	public ResponseEntity<?> updateClientById(@RequestBody Client clientUpdate) {
 		ClientDTO clientDTO;
 		try {
 			clientDTO = service.updateClient(clientUpdate);
@@ -169,21 +167,27 @@ public class ClientController {
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(messageDTO);
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(clientDTO);
-    }
+	}
 
-    //Delete a client
-    @DeleteMapping()
-    public ResponseEntity<?> deleteClientById(@RequestBody Client client){
-    	  try {
-    		
-			service.deleteClient(client.getId());
+	// Delete a client
+	@DeleteMapping()
+	public ResponseEntity<MessageDTO> deleteClientById(@RequestBody Client client) {
+		try {
+			// empty id case
+			if (client.getId() == null) {
+				MessageDTO output = new MessageDTO("False", "empty mandatory field in body request");
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(output);
+			}
+			String name = service.deleteClient(client.getId()).getNameAndSurname();
+			MessageDTO output = new MessageDTO("true", "Client " + name + " has been successfully deleted");
+			return ResponseEntity.status(HttpStatus.OK).body(output);
 		} catch (Exception e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
+			MessageDTO output = new MessageDTO("False", e.getMessage());
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(output);
 		}
-        return ResponseEntity.ok().build();
-    }	
-    
-    //pruebaDTO
+	}
+
+	// pruebaDTO
 	@GetMapping("/lista")
 	public ResponseEntity<?> listAllUsers() {
 		List<ClientDTO> list = new ArrayList<>();
@@ -193,6 +197,6 @@ public class ClientController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 		return new ResponseEntity<>(list, HttpStatus.OK);
-	} 
+	}
 
 }

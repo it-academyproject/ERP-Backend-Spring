@@ -44,14 +44,14 @@ public class ClientServiceImpl implements IClientService {
 	private Client saveClientCheckedException(Client client, String exceptionMessage) throws Exception {
 		try {
 			return repository.save(client);
-		}catch (Exception e){
+		} catch (Exception e) {
 			throw new Exception(exceptionMessage);
 			//throw new Exception(exceptionMessage.concat(e.getMessage()));
 		}
 	}
 
 	private ClientDTO getSuccesfulClientDTO(Client client, String message) {
-		MessageDTO messageDTO = new MessageDTO("True",message);
+		MessageDTO messageDTO = new MessageDTO("True", message);
 		ClientDTO clientDTO = modelMapper.map(client, ClientDTO.class);
 		clientDTO.setMessage(messageDTO);
 		return clientDTO;
@@ -73,9 +73,9 @@ public class ClientServiceImpl implements IClientService {
 
 	@Override
 	public MessageDTO getErrorMessageDniExists(String dni) {
-		MessageDTO errorMessage=null;
+		MessageDTO errorMessage = null;
 		if (existsByDni(dni)) {
-			errorMessage = new MessageDTO("False", "Dni Exists: '" + dni +"' ");
+			errorMessage = new MessageDTO("False", "Dni Exists: '" + dni + "' ");
 		}
 		return errorMessage;
 	}
@@ -112,9 +112,9 @@ public class ClientServiceImpl implements IClientService {
 	@Override
 	public Client findClientById(UUID id) throws ArgumentNotFoundException {
 		return repository.findById(id)
-	            .orElseThrow(() -> new ArgumentNotFoundException("Client not found. The id " + id + " doesn't exist"));
-	  }	 
-	  
+				.orElseThrow(() -> new ArgumentNotFoundException("Client not found. The id " + id + " doesn't exist"));
+	}
+
 	@Override
 	public ClientDTO updateClient(Client client) throws Exception {
 		Client clientById = repository.findById(client.getId()).orElseThrow(
@@ -134,47 +134,48 @@ public class ClientServiceImpl implements IClientService {
 	}
 
 	private void setClient(Client client, Client clientDB) {
-		client.setDni(null == client.getDni()? clientDB.getDni(): client.getDni());
-		client.setImage(null == client.getImage()? clientDB.getImage(): client.getImage());
-		client.setNameAndSurname(null == client.getNameAndSurname()?clientDB.getNameAndSurname():client.getNameAndSurname());
+		client.setDni(null == client.getDni() ? clientDB.getDni() : client.getDni());
+		client.setImage(null == client.getImage() ? clientDB.getImage() : client.getImage());
+		client.setNameAndSurname(
+				null == client.getNameAndSurname() ? clientDB.getNameAndSurname() : client.getNameAndSurname());
 	}
 
 	private void setUserClient(Client client, Client clientDB) {
-		if(null != client.getUser()){
+		if (null != client.getUser()) {
 			client.getUser().setId(clientDB.getUser().getId());
-			client.getUser().setUsername(null == client.getUser().getUsername()? clientDB.getUser().getUsername():
-					client.getUser().getUsername());
-			client.getUser().setPassword(null == client.getUser().getPassword()? clientDB.getUser().getPassword():
-					userService.passEconder(client.getUser().getPassword()));
+			client.getUser().setUsername(null == client.getUser().getUsername() ? clientDB.getUser().getUsername()
+					: client.getUser().getUsername());
+			client.getUser().setPassword(null == client.getUser().getPassword() ? clientDB.getUser().getPassword()
+					: userService.passEconder(client.getUser().getPassword()));
 			client.getUser().setUserType(clientDB.getUser().getUserType());
-		}else{
+		} else {
 			client.setUser(clientDB.getUser());
 		}
 	}
 
 	private void setClientAddress(Client client, Client clientDB) {
 		Address address;
-		if(isAddress(client)){
-			//if Address is equals to  ShippingAddress,
+		if (isAddress(client)) {
+			// if Address is equals to ShippingAddress,
 			// needs a valid Address (new Address)
 			Address validAddress = getValidAddress(clientDB);
 			clientDB.setAddress(validAddress);
-			address =  setAddress(client.getAddress(), clientDB.getAddress());
-		} else{
+			address = setAddress(client.getAddress(), clientDB.getAddress());
+		} else {
 			address = clientDB.getAddress();
 		}
 		client.setAddress(address);
 	}
 
-	private boolean isAddress(Client client){
+	private boolean isAddress(Client client) {
 		Predicate<Client> isAddress = (c) -> (null != c.getAddress());
 		return isAddress.test(client);
 	}
 
-	private Address getValidAddress (Client clientDB) {
+	private Address getValidAddress(Client clientDB) {
 		Address newAddress = clientDB.getAddress();
-		if(isShippingAddress(clientDB) &&
-				clientDB.getShippingAddress().getId().equals(clientDB.getAddress().getId())){
+		if (isShippingAddress(clientDB)
+				&& clientDB.getShippingAddress().getId().equals(clientDB.getAddress().getId())) {
 			newAddress = new Address(clientDB.getAddress());
 		}
 		return newAddress;
@@ -182,51 +183,44 @@ public class ClientServiceImpl implements IClientService {
 
 	private Address setAddress(Address address, Address addressDB) {
 		address.setId(addressDB.getId());
-		address.setStreet(null == address.getStreet()? addressDB.getStreet():
-				address.getStreet());
-		address.setNumber(null == address.getNumber()? addressDB.getNumber():
-				address.getNumber());
-		address.setCity(null == address.getCity()? addressDB.getCity():
-				address.getCity());
-		address.setCountry(null == address.getCountry()? addressDB.getCountry():
-				address.getCountry());
-		address.setZipcode(null == address.getZipcode()? addressDB.getZipcode():
-				address.getZipcode());
+		address.setStreet(null == address.getStreet() ? addressDB.getStreet() : address.getStreet());
+		address.setNumber(null == address.getNumber() ? addressDB.getNumber() : address.getNumber());
+		address.setCity(null == address.getCity() ? addressDB.getCity() : address.getCity());
+		address.setCountry(null == address.getCountry() ? addressDB.getCountry() : address.getCountry());
+		address.setZipcode(null == address.getZipcode() ? addressDB.getZipcode() : address.getZipcode());
 		return address;
 	}
 
 	private void setClientShippingAddress(Client client, Client clientDB) {
 		Address shippingAddress = null;
-		if(isShippingAddress(client,clientDB)){
-			//if ShippingAddress is equals to Address,
+		if (isShippingAddress(client, clientDB)) {
+			// if ShippingAddress is equals to Address,
 			// needs a valid ShippingAddress (new Address)
 			Address validShippingAddress = getValidShippingAddress(clientDB);
 			clientDB.setShippingAddress(validShippingAddress);
-			shippingAddress =  setAddress(client.getShippingAddress(), clientDB.getShippingAddress());
-		}
-		else if (isShippingAddress(client)){
+			shippingAddress = setAddress(client.getShippingAddress(), clientDB.getShippingAddress());
+		} else if (isShippingAddress(client)) {
 			shippingAddress = new Address(client.getShippingAddress());
-		}
-		else if (isShippingAddress(clientDB)){
+		} else if (isShippingAddress(clientDB)) {
 			shippingAddress = clientDB.getShippingAddress();
 		}
 		client.setShippingAddress(shippingAddress);
 	}
 
-	private boolean isShippingAddress(Client client, Client clientDB){
-		BiPredicate<Client, Client> isShippingAddress =
-				(c, cDB) -> (null != c.getShippingAddress() && null != cDB.getShippingAddress());
+	private boolean isShippingAddress(Client client, Client clientDB) {
+		BiPredicate<Client, Client> isShippingAddress = (c,
+				cDB) -> (null != c.getShippingAddress() && null != cDB.getShippingAddress());
 		return isShippingAddress.test(client, clientDB);
 	}
 
-	private boolean isShippingAddress(Client client){
+	private boolean isShippingAddress(Client client) {
 		Predicate<Client> isShippingAddress = (c) -> (null != c.getShippingAddress());
 		return isShippingAddress.test(client);
 	}
 
-	private Address getValidShippingAddress (Client clientDB) {
+	private Address getValidShippingAddress(Client clientDB) {
 		Address newShippingAddress = clientDB.getShippingAddress();
-		if(clientDB.getShippingAddress().getId().equals(clientDB.getAddress().getId())){
+		if (clientDB.getShippingAddress().getId().equals(clientDB.getAddress().getId())) {
 			newShippingAddress = new Address(clientDB.getShippingAddress());
 		}
 		return newShippingAddress;
@@ -242,10 +236,10 @@ public class ClientServiceImpl implements IClientService {
 
 	private String getExceptionMessageDni(Client client, Client clientDB) {
 		String exceptionMessage = "";
-		if(null != client.getDni()){
+		if (null != client.getDni()) {
 			Client clientByDni = findByDni(client.getDni());
-			if(null != clientByDni && !clientByDni.getId().equals(clientDB.getId())){
-				exceptionMessage = exceptionMessage + "Dni Exists: '"+client.getDni()+"'. ";
+			if (null != clientByDni && !clientByDni.getId().equals(clientDB.getId())) {
+				exceptionMessage = exceptionMessage + "Dni Exists: '" + client.getDni() + "'. ";
 			}
 		}
 		return exceptionMessage;
@@ -253,11 +247,10 @@ public class ClientServiceImpl implements IClientService {
 
 	private String getExceptionMessageUsername(Client client) {
 		String exceptionMessage = "";
-		if(null != client.getUser() && null != client.getUser().getUsername()){
+		if (null != client.getUser() && null != client.getUser().getUsername()) {
 			User userByUsername = userService.findByUsername(client.getUser().getUsername());
-			if(null != userByUsername && !userByUsername.getId().equals(client.getUser().getId())){
-				exceptionMessage = exceptionMessage +
-						"User Exists: '"+client.getUser().getUsername()+"'. ";
+			if (null != userByUsername && !userByUsername.getId().equals(client.getUser().getId())) {
+				exceptionMessage = exceptionMessage + "User Exists: '" + client.getUser().getUsername() + "'. ";
 			}
 		}
 		return exceptionMessage;
@@ -265,21 +258,19 @@ public class ClientServiceImpl implements IClientService {
 
 	private String getExceptionMessageShippingAddress(Client client, Client clientDB) {
 		String exceptionMessage = "";
-		if(isShippingAddress(client) && !isShippingAddress(clientDB)){
-			exceptionMessage = "Because of this client have no any shipping_address assigned," +
-					" all shipping_address fields are mandatory: " +
-					"street, number, city, country, zipcode. ";
+		if (isShippingAddress(client) && !isShippingAddress(clientDB)) {
+			exceptionMessage = "Because of this client have no any shipping_address assigned,"
+					+ " all shipping_address fields are mandatory: " + "street, number, city, country, zipcode. ";
 		}
 		return exceptionMessage;
 	}
 
 	@Override
-	public void deleteClient(UUID id) throws ArgumentNotFoundException {
-		if (repository.getOne(id) == null) {
-			throw new ArgumentNotFoundException("The client with id " + id + "doesn't exists");
-		} else {
-			repository.deleteById(id);
-		}
+	public ClientDTO deleteClient(UUID id) throws ArgumentNotFoundException {
+		Client client = repository.findById(id).orElseThrow( () -> new ArgumentNotFoundException("Employee not found. The id " + id + " doesn't exist"));
+		ClientDTO clientDTO = modelMapper.map(client, ClientDTO.class);
+		repository.deleteById(id);
+		return clientDTO;
 	}
 
 	@Override
@@ -293,7 +284,7 @@ public class ClientServiceImpl implements IClientService {
 			throw new ArgumentNotFoundException("No clients found");
 		}
 		List<ClientDTO> clientsList = new ArrayList<>();
-		for(Client client : clients) {
+		for (Client client : clients) {
 			ClientDTO clientDTO = modelMapper.map(client, ClientDTO.class);
 			clientsList.add(clientDTO);
 		}
@@ -312,25 +303,25 @@ public class ClientServiceImpl implements IClientService {
 		return getSuccesfulClientDTO(clientSaved, successMessage);
 	}
 
-	private void setFastClient(Client fastClient){
+	private void setFastClient(Client fastClient) {
 		Random rand = new Random();
 		String random = String.valueOf(rand.nextInt(100000));
 		UUID id = UUID.randomUUID();
 
 		fastClient.setId(id);
-		fastClient.setDni("A1234"+random+"A");
+		fastClient.setDni("A1234" + random + "A");
 
 		setUser(fastClient, random);
 		setAddress(fastClient);
 	}
 
-	private void setUser(Client fastClient, String randomUsername){
+	private void setUser(Client fastClient, String randomUsername) {
 		String password = userService.passEconder("ReW9a0&+TP");
-		User user = new User("userclientfast_"+randomUsername+"@example.com", password, UserType.CLIENT);
+		User user = new User("userclientfast_" + randomUsername + "@example.com", password, UserType.CLIENT);
 		fastClient.setUser(user);
 	}
 
-	private void setAddress(Client fastClient){
+	private void setAddress(Client fastClient) {
 		Address fastAddress = new Address("Calle Ejemplo Fast", "1 A", "Barcelona", "Spain", "08018");
 		fastClient.setAddress(fastAddress);
 		fastClient.setShippingAddress(fastAddress);
