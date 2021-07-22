@@ -91,10 +91,12 @@ public class UserController {
 	/**
 	 * Method for create a new user and client.
 	 * 
+	 * It is not required to be authenticated to use this method. 
+	 * Opened access in issue B-101.
+	 * 
 	 * @param standard JSON with StandarRegistration data
 	 * @return Welcome String.
 	*/
-	@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping(value = "/users/clients", method = RequestMethod.POST)
 	public ResponseEntity<?> newUserAndClient(@Valid @RequestBody StandardRegistration standard) {
 		ClientDTO clientDTO;
