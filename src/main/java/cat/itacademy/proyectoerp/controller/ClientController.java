@@ -172,14 +172,19 @@ public class ClientController {
 	// Delete a client
 	@DeleteMapping()
 	public ResponseEntity<MessageDTO> deleteClientById(@RequestBody Client client) {
-		// empty id case
-		if (client.getId() == null) {
-			MessageDTO output = new MessageDTO("False", "empty mandatory field in body request");
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(output);
+		try {
+			// empty id case
+			if (client.getId() == null) {
+				MessageDTO output = new MessageDTO("False", "empty mandatory field in body request");
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(output);
+			}
+			String name = service.deleteClient(client.getId()).getNameAndSurname();
+			MessageDTO output = new MessageDTO("true", "Client " + name + " has been successfully deleted");
+			return ResponseEntity.status(HttpStatus.OK).body(output);
+		} catch (Exception e) {
+			MessageDTO output = new MessageDTO("False", e.getMessage());
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(output);
 		}
-		String name = service.deleteClient(client.getId()).getNameAndSurname();
-		MessageDTO output = new MessageDTO("true", "Client " + name + " has been successfully deleted");
-		return ResponseEntity.status(HttpStatus.OK).body(output);
 	}
 
 	// pruebaDTO
