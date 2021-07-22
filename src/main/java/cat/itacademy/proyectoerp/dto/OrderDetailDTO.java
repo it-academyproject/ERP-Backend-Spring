@@ -16,7 +16,7 @@ public class OrderDetailDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private UUID id;
-	private Product product;
+	private ProductDTO product;
 	private Integer quantity;
 	private Double subtotal;
 	public UUID getId() {
@@ -25,10 +25,10 @@ public class OrderDetailDTO implements Serializable{
 	public void setId(UUID id) {
 		this.id = id;
 	}
-	public Product getProduct() {
+	public ProductDTO getProduct() {
 		return product;
 	}
-	public void setProduct(Product product) {
+	public void setProduct(ProductDTO product) {
 		this.product = product;
 	}
 	public Integer getQuantity() {
