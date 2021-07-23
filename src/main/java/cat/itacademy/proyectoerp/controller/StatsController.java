@@ -2,7 +2,6 @@ package cat.itacademy.proyectoerp.controller;
 
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
-import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
 import cat.itacademy.proyectoerp.dto.EmployeeDTO;
 import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
@@ -143,12 +142,8 @@ public class StatsController {
 			            map.put("message", "no employees or orders found between the dates");
 				  } 
 				  else {
-					  map.put("succes","true");
+					  map.put("success","true");
 					  map.put("message","top 10 employees found");
-					  for (TopEmployeeDTO e: employeeList) {
-						  String dni = employeeService.findEmployeeById(e.getId()).getDni();
-						  e.setDni(dni);
-					  }
 					  map.put("employees", employeeList);
 				  }
 					  
