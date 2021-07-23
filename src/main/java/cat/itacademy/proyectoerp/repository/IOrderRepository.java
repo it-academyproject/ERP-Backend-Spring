@@ -25,15 +25,16 @@ public interface IOrderRepository extends JpaRepository<Order, UUID>{
   
   List<Order> findAllByStatus(OrderStatus status);
     
-  @Query(value = "select employee_id,sum(total) as total from orders " 
+  @Query(value = "select orders.employee_id,sum(orders.total) as total, employee.dni from orders "
+		   	+"left join employee on orders.employee_id = employee.id "
                   +"where (orders.status like 'COMPLETED') "	
                   +" and (orders.date_created between :begin_date and :end_date) "
-		          +"group by employee_id order by total desc limit 10", nativeQuery = true)
+		          +"group by orders.employee_id order by total desc limit 10", nativeQuery = true)
   List<Object[]> findEmployeesSalesBetweenDates(LocalDateTime begin_date, LocalDateTime end_date);
   
   @Query(value = "select sum(total) as total from orders " 
-          +"where (orders.status like 'COMPLETED') "	
-          +" and (orders.date_created between :begin_date and :end_date) ", nativeQuery = true)
+          +"where (status like 'COMPLETED') "	
+          +" and (date_created between :begin_date and :end_date) ", nativeQuery = true)
   double findProfitBetweenDates(LocalDateTime begin_date, LocalDateTime end_date);
   
   @Query(value = "select o.status from Order o")

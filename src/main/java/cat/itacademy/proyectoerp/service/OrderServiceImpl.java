@@ -237,6 +237,7 @@ public class OrderServiceImpl implements IOrderService{
 			TopEmployeeDTO topEmployeeDTO = new TopEmployeeDTO();
 			topEmployeeDTO.setId(UUID.fromString(object[0].toString()));
 			topEmployeeDTO.setTotal(Double.parseDouble(object[1].toString()));
+			topEmployeeDTO.setDni((object[2].toString()));
 			topEmployeeList.add(topEmployeeDTO);
 		}
 		return topEmployeeList;
