@@ -78,30 +78,25 @@ public class UserController {
 	 * @param user JSON with User data
 	 * @return Welcome String.
 	 */
-	
 	@RequestMapping(value = "/users", method = RequestMethod.POST)
 	public ResponseEntity<UserDTO> newUser(@Valid @RequestBody User user) {
+		UserDTO userDTO = userService.registerNewUserAccount(user);
 
-		UserDTO userDTO;
-
-		userDTO = userService.registerNewUserAccount(user);
-
-		if (userDTO.getSuccess() == "False") {
-
+		if (userDTO.getSuccess() == "False")
 			return new ResponseEntity<>(userDTO, HttpStatus.UNPROCESSABLE_ENTITY);
-		} else {
-
+		else
 			return new ResponseEntity<>(userDTO, HttpStatus.OK);
-		}
 	}
 	
 	/**
 	 * Method for create a new user and client.
 	 * 
+	 * It is not required to be authenticated to use this method. 
+	 * Opened access in issue B-101.
+	 * 
 	 * @param standard JSON with StandarRegistration data
 	 * @return Welcome String.
 	*/
-	@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping(value = "/users/clients", method = RequestMethod.POST)
 	public ResponseEntity<?> newUserAndClient(@Valid @RequestBody StandardRegistration standard) {
 		ClientDTO clientDTO;
@@ -132,21 +127,24 @@ public class UserController {
 		MessageDTO errorMessageDTO = new MessageDTO("True","");
 		MessageDTO errorMessageDni = clientService.getErrorMessageDniExists(standard.getDni());
 		MessageDTO errorMessageUsername = userService.getErrorMessageUsernameExists(standard.getUsername());
+		
 		if (null != errorMessageDni) {
 			errorMessageDTO.setSuccess("False");
 			errorMessageDTO.setMessage(errorMessageDni.getMessage());
-		}
-		else if (null != errorMessageUsername) {
+		} else if (null != errorMessageUsername) {
 			errorMessageDTO.setSuccess("False");
 			errorMessageDTO.setMessage(errorMessageUsername.getMessage());
 		}
+		
 		return errorMessageDTO;
 	}
 
 	private Client getClient(StandardRegistration standard) {
 		User user = new User(standard.getUsername(), standard.getPassword());
+		
 		Client client = new Client(standard.getDni(), standard.getImage(), standard.getNameAndSurname(),
 				standard.getAddress(), standard.getShippingAddress(), user);
+		
 		return client;
 	}
 
@@ -156,16 +154,17 @@ public class UserController {
 	 * @return
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
-	@RequestMapping(value = "/users/employees", method = RequestMethod.POST)
+	@PostMapping("/users/employees")
 	public ResponseEntity<?> newUserAndEmployee(@Valid @RequestBody Employee employee) {
 		EmployeeDTO employeeDTO;
 
 		User user = new User(employee.getUser().getUsername(),employee.getUser().getPassword(), UserType.EMPLOYEE);
 		userService.registerNewUserAccount(user);
 
-		employee.setOutDate(null != employee.getOutDate()?employee.getOutDate():null);
-		Employee newEmployee = new Employee(employee.getSalary(), employee.getDni(),
+		employee.setOutDate(null != employee.getOutDate() ? employee.getOutDate() : null);
+		Employee newEmployee = new Employee(employee.getName(), employee.getSurname(), employee.getSalary(), employee.getDni(),
 				employee.getPhone(), employee.getInDate(), employee.getOutDate(), user);
+		
 		try {
 			employeeDTO = iEmployeeService.createEmployee(newEmployee);
 		} catch (Exception e) {
@@ -174,9 +173,9 @@ public class UserController {
 			return ResponseEntity.unprocessableEntity().body(messageDTO);
 		}
 
-		if (employeeDTO.getMessage().getSuccess().equalsIgnoreCase("True")) {
+		if (employeeDTO.getMessage().getSuccess().equalsIgnoreCase("True"))
 			return ResponseEntity.status(HttpStatus.CREATED).body(employeeDTO);
-		}
+		
 		return new ResponseEntity<>(employeeDTO, HttpStatus.UNPROCESSABLE_ENTITY);
 	}
 

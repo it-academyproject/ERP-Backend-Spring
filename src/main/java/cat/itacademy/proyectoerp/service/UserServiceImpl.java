@@ -116,6 +116,7 @@ public class UserServiceImpl implements IUserService {
 
 		user.setPassword(passEconder(user.getPassword()));
 		// user = modelMapper.map(userDto, User.class);
+		user.setRegistrationDate(LocalDateTime.now());
 		userRepository.save(user);
 
 		// send welcome email to new user

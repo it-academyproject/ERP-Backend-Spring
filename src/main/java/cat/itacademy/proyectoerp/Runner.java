@@ -109,7 +109,7 @@ public class Runner implements CommandLineRunner {
 		if(!userRepository.existsByUsername("employee@erp.com")) {
 			User userEmployee = new User("employee@erp.com", "ReW9a0&+TP", UserType.EMPLOYEE);
 			userService.registerNewUserAccount(userEmployee);
-			Employee employee = new Employee(18000.00, "C1234567Z", 667999997, LocalDate.now(),null, userEmployee);
+			Employee employee = new Employee("John", "Doe", 18000.00, "C1234567Z", 667999997, LocalDate.now(),null, userEmployee);
 
 			employeeService.createEmployee(employee);
 		}
@@ -202,10 +202,10 @@ public class Runner implements CommandLineRunner {
 			userService.registerNewUserAccount(userEmployeeTwo);			
 			
 			// Initialize two Employees for the orders
-			Employee employeeOne = new Employee(24000.00, "A1234567Z", 667999999, LocalDate.now(), null, userEmployeeOne);
+			Employee employeeOne = new Employee("John", "Doe", 24000.00, "A1234567Z", 667999999, LocalDate.now(), null, userEmployeeOne);
 			employeeService.createEmployee(employeeOne);
 
-			Employee employeeTwo = new Employee(14000.00, "B1236767Z", 667999998, LocalDate.now(), null, userEmployeeTwo);
+			Employee employeeTwo = new Employee("Jane", "Doe", 14000.00, "B1236767Z", 667999998, LocalDate.now(), null, userEmployeeTwo);
 			employeeService.createEmployee(employeeTwo);	
 			
 			// Initialize the working hours

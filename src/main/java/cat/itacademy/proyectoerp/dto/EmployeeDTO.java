@@ -16,6 +16,8 @@ public class EmployeeDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
     private UUID id;
+    private String name;
+    private String surname;
     private Double salary;
     private String dni;
     private Integer phone;
@@ -46,15 +48,29 @@ public class EmployeeDTO implements Serializable {
 	public void setTotalOrdersAttended(int totalOrdersAttended) {
 		this.totalOrdersAttended = totalOrdersAttended;
 	}
-
 	
-
     public UUID getId() {
         return id;
     }
 
     public void setId(UUID id) {
         this.id = id;
+    }
+    
+    public String getName() {
+    	return name;
+    }
+    
+    public void setName(String name) {
+    	this.name = name;
+    }
+    
+    public String getSurname() {
+    	return surname;
+    }
+    
+    public void setSurname(String surname) {
+    	this.surname = surname;
     }
 
     public Double getSalary() {
