@@ -139,18 +139,17 @@ public class OrderServiceImpl implements IOrderService{
 	@Override
 	@Transactional(readOnly = true)
 	public Order findOrderById(UUID id) {
-		return orderRepository.findById(id)
-				.orElseThrow(() -> new ArgumentNotFoundException("Order not found. The id " + id + " doesn't exist"));
+		return orderRepository.findById(id).orElse(null);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<OrderDTO> findAllOrders() {
-		if (orderRepository.findAll().isEmpty()) {
-			throw new ArgumentNotFoundException("No orders found");
-		} else {
+//		if (orderRepository.findAll().isEmpty()) {
+//			throw new ArgumentNotFoundException("No orders found");
+//		} else {
 			return orderRepository.findAll().stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
-		}
+//		}
 	}
 
 	@Override

@@ -29,96 +29,107 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Order;
+import cat.itacademy.proyectoerp.domain.OrderDetail;
+import cat.itacademy.proyectoerp.dto.EmployeeDTO;
 import cat.itacademy.proyectoerp.dto.OrderDTO;
+import cat.itacademy.proyectoerp.repository.IOrderDetailRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK,
-classes = ProyectoErpApplication.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = ProyectoErpApplication.class)
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-integrationtest.properties")
 public class OrderControllerTest {
-	
+
 	ModelMapper modelMapper = new ModelMapper();
-	
+
 	@Autowired
 	private MockMvc mockMvc;
 
 	@Autowired
 	IOrderRepository orderRepository;
 
+	@Autowired
+	IOrderDetailRepository orderDetailRepository;
+
 	@Resource
 	private WebApplicationContext webApplicationContext;
 
-
 	@BeforeTestExecution
 	public void setUp() {
-		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-				.build();
+		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
 
 	@Test
-	@DisplayName("Validate if exists order by id")
-	void givenOrderById_whenGetOrderById_thenStatus200() throws Exception{
-		UUID id= UUID.fromString("c0c955de-91f4-4787-9d72-996748f99810");
-		
+	@DisplayName("Validate endpoint get all orders")
+	void givenOrders_whenGetOrders_thenStatus200() throws Exception {
 		String accessToken = obtainAccessToken();
-		ResultActions result =
-			this.mockMvc.perform(get("/api/orders/{id}", id)
-					.header("Authorization", "Bearer " + accessToken)
-					.accept(MediaType.APPLICATION_JSON))
-					.andExpect(status().isOk());
-		String resultStringTest = result.andReturn().getResponse().getContentAsString();
 		
-		showResult(resultStringTest);	
+		this.mockMvc
+		.perform(get("/api/orders")
+				.header("Authorization", "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().isOk());
 	}
-	
+
 	@Test
-	@DisplayName("Validate non existent id order")
-	void givenEmployeeById_whenEmployeeByIdNotFound_thenStatus200() throws Exception{
-		UUID id= UUID.fromString("06d70bed-7424-43ab-954e-385fcd68997a");
-		
+	@DisplayName("Validate 204 http response when no orders exist")
+	void noOrders_whenGetOrders_thenStatus204() throws Exception {
+		// delete all orders - necessary first delete all order details
+		orderDetailRepository.deleteAll();
+		orderRepository.deleteAll();
 		String accessToken = obtainAccessToken();
-		ResultActions result =
-			this.mockMvc.perform(get("/api/employees/{id}", id)
-					.header("Authorization", "Bearer " + accessToken)
-					.accept(MediaType.APPLICATION_JSON))
-					.andExpect(status().isOk())
-					.andExpect(content().json("{'success' : 'false'}"));
 		
-		String resultStringTest5 = result.andReturn().getResponse().getContentAsString();
-		
-		showResult(resultStringTest5);
-					
+		this.mockMvc
+		.perform(get("/api/orders")
+				.header("Authorization", "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().isNoContent());
 	}
-	
-	
-	
-	
+
+	@Test
+	@DisplayName("Validate endpoint get order by id")
+	void givenOrderById_whenGetOrderById_thenStatus200() throws Exception {
+		Order firstOrder = orderRepository.findAll().get(0);
+		UUID id = firstOrder.getId();
+		String accessToken = obtainAccessToken();
+		
+		this.mockMvc
+		.perform(get("/api/orders/{id}", id)
+				.header("Authorization", "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().isOk());
+	}
+
+	@Test
+	@DisplayName("Validate bad endpoint get order by id - non existent id")
+	void givenEmployeeById_whenEmployeeByIdNotFound_thenStatus204() throws Exception {
+		UUID nonExtistentId = UUID.fromString("06d70bed-7424-43ab-954e-385fcd68997a");
+		String accessToken = obtainAccessToken();
+		
+		this.mockMvc
+		.perform(get("/api/orders/{id}", nonExtistentId)
+				.header("Authorization", "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().isNoContent());
+	}
+
 	private String obtainAccessToken() throws Exception {
 		JwtLogin jwtLogin = new JwtLogin("admin@erp.com", "ReW9a0&+TP");
 
-		ResultActions resultPost =
-				this.mockMvc.perform(post("/api/login")
+		ResultActions resultPost = this.mockMvc
+				.perform(post("/api/login")
 						.content(new ObjectMapper().writeValueAsString(jwtLogin))
-						.accept(MediaType.APPLICATION_JSON)
-						.contentType(MediaType.APPLICATION_JSON))
-						.andExpect(status().isOk());
+						.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
 
 		String resultString = resultPost.andReturn().getResponse().getContentAsString();
 		return new JacksonJsonParser().parseMap(resultString).get("token").toString();
 	}
-
-
-	private void showResult(String result) {
-		System.out.println("===================================");
-		System.out.println("output test:");
-		System.out.println(result);
-		System.out.println("===================================");
-	}
-
 }
