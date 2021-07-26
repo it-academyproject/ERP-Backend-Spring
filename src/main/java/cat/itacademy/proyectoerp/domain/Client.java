@@ -45,6 +45,7 @@ public class Client {
 
 	private String image;
 
+	@Column(name="name_surname")
 	@NotBlank(message = "Name and surname is mandatory")
 	private String nameAndSurname;
 

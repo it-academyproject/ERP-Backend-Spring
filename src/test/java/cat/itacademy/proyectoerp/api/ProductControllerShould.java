@@ -21,7 +21,6 @@ import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -30,7 +29,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import cat.itacademy.proyectoerp.Runner;
 import cat.itacademy.proyectoerp.domain.Category;
 import cat.itacademy.proyectoerp.dto.CategoryDTO;
 import cat.itacademy.proyectoerp.dto.ProductDTO;
@@ -45,9 +43,7 @@ public class ProductControllerShould {
 	
 	private static final String CATEGORY_BASE_URI = "/api/products/categories/";
 	
-	@MockBean
-	Runner runner;
-	
+		
 	@Autowired
 	private TestData testData;
 	
