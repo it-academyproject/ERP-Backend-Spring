@@ -11,8 +11,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
-import com.sun.istack.Nullable;
-
 @Entity
 @Table(name = "addresses")
 
@@ -50,6 +48,15 @@ public class Address {
 
     public Address(String street, String number, String city, String country, String zipcode) {
         this.street = street;
+        this.number = number;
+        this.city = city;
+        this.country = country;
+        this.zipcode = zipcode;
+    }
+
+    public Address(UUID id, String street, String number, String city, String country, String zipcode) {
+        this.id = id;
+    	this.street = street;
         this.number = number;
         this.city = city;
         this.country = country;
