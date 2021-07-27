@@ -108,7 +108,7 @@ public class OrderControllerTest {
 	}
 
 	@Test
-	@DisplayName("Validate bad endpoint get order by id - non existent id")
+	@DisplayName("Validate get order by id - non existent id")
 	void givenEmployeeById_whenEmployeeByIdNotFound_thenStatus204() throws Exception {
 		UUID nonExtistentId = UUID.fromString("06d70bed-7424-43ab-954e-385fcd68997a");
 		String accessToken = obtainAccessToken();
@@ -118,6 +118,19 @@ public class OrderControllerTest {
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().isNoContent());
+	}
+
+	@Test
+	@DisplayName("Validate bad endpoint get order by id - wrong id format")
+	void givenEmployeeById_whenEmployeeByIdNotFound_thenStatus400() throws Exception {
+		UUID nonExtistentId = UUID.fromString("yertueriy");
+		String accessToken = obtainAccessToken();
+		
+		this.mockMvc
+		.perform(get("/api/orders/{id}", nonExtistentId)
+				.header("Authorization", "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().isBadRequest());
 	}
 
 	private String obtainAccessToken() throws Exception {
