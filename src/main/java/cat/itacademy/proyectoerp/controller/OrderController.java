@@ -84,7 +84,7 @@ public class OrderController {
 		try {
 			List<OrderDTO> ordersList = orderService.findAllOrders();
 			if (ordersList.size() == 0) {
-				return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			}
 			output = new MessageDTO("true", "list of orders successfully retrieved.", ordersList);
 			return ResponseEntity.status(HttpStatus.OK).body(output);			
