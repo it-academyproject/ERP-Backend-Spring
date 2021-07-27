@@ -71,7 +71,7 @@ public class Order  {
 	
 	private Double total;
 	
-	@OneToMany(mappedBy = "order", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "order", cascade = {CascadeType.ALL})
 	private Set<OrderDetail> orderDetails = new HashSet<>();
 		
 

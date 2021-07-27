@@ -41,7 +41,7 @@ public class Product implements Serializable {
 	private long created;
 	private long modified;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	private Set<Category> categories;
 	
 	@OneToMany (mappedBy = "product")
