@@ -9,18 +9,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 /**
- * Exception handler for Shops. It avoids printing the entire stack trace
- * when an error occurs.
+ * Global exception handler. It avoids printing the entire stack trace when
+ * an error occurs.
  */
 
 @RestControllerAdvice
-public class ShopExceptionHandler {
+public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
-	public ResponseEntity<ApiShopError> handleExcpetion(MethodArgumentTypeMismatchException e) {
-		return new ResponseEntity<ApiShopError>(
-				new ApiShopError(LocalDateTime.now(), HttpStatus.BAD_REQUEST, "Shop not found due to invalid id"),
-				HttpStatus.BAD_REQUEST);
+	public ResponseEntity<CustomErrorResponse> handleExcpetion(MethodArgumentTypeMismatchException e) {
+		return new ResponseEntity<CustomErrorResponse>(
+			new CustomErrorResponse(LocalDateTime.now(), HttpStatus.BAD_REQUEST, "Resource not found due to method argument type mismatch"),
+			HttpStatus.BAD_REQUEST);
 	}
 	
 }
