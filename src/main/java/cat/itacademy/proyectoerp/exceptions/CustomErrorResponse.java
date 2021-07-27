@@ -12,15 +12,22 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class CustomErrorResponse {
 	
+	private boolean success;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
 	private LocalDateTime timestamp;
 	private HttpStatus status;
 	private String message;
 	
 	public CustomErrorResponse(LocalDateTime timestamp, HttpStatus status, String message) {
+		success = false;
+		
 		this.timestamp = timestamp;
 		this.status = status;
 		this.message = message;
+	}
+	
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 	
 	public void setTimestamp(LocalDateTime timestamp) {
@@ -33,6 +40,10 @@ public class CustomErrorResponse {
 	
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	
+	public boolean getSuccess() {
+		return success;
 	}
 	
 	public LocalDateTime getTimestamp() {

@@ -55,7 +55,6 @@ public class ShopServiceImpl implements IShopService {
 	@Override
 	@Transactional
 	public ShopDTO updateShop(Shop shop) throws ArgumentNotValidException, ArgumentNotFoundException {
-
 		//check if the new brand change and if the new one is available
 		Shop shopPrevious = GetShopByIdFromRepository(shop.getId());
 		if(!shopPrevious.getBrandName().equals(shop.getBrandName())) CheckIfShopBrandNameExist(shop);

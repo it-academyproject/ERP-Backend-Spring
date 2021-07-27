@@ -15,7 +15,6 @@ public class ArgumentNotValidException extends RuntimeException {
 	 * Constructor without parameters
 	 */
 	public ArgumentNotValidException() {
-
 	}
 
 	/**
@@ -24,7 +23,6 @@ public class ArgumentNotValidException extends RuntimeException {
 	 * @param message message that will appear when throwing the exception
 	 */
 	public ArgumentNotValidException(String message) {
-
 		super(message);
 	}
 

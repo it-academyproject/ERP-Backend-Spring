@@ -33,35 +33,25 @@ public class ShopController {
 	@PostMapping("/shop")
 	public HashMap<String, Object> createShop(@Valid @RequestBody Shop shop) {
 		HashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		
+		ShopDTO shopDTO= shopService.createShop(shop);
 
-		try {
-			ShopDTO shopDTO= shopService.createShop(shop);
-
-			map.put("success", "true");
-			map.put("message", "New shop created");
-			map.put("shop", shopDTO);
-		} catch (Exception e) {
-			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
-		}
+		map.put("success", "true");
+		map.put("message", "New shop created");
+		map.put("shop", shopDTO);
 		
 		return map;
 	}
 
 	@GetMapping("/shops/{id}")
-	public HashMap<String, Object> findShopById(@PathVariable(name = "id") UUID id) {
+	public HashMap<String, Object> findShopById(@PathVariable UUID id) {
 		HashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		
+		ShopDTO shop = shopService.findShopById(id);
 
-		try {
-			ShopDTO shop = shopService.findShopById(id);
-
-			map.put("success", "true");
-			map.put("message", "shop found");
-			map.put("shop", shop);
-		} catch (Exception e) {
-			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
-		}
+		map.put("success", "true");
+		map.put("message", "shop found");
+		map.put("shop", shop);
 
 		return map;
 	}
@@ -69,18 +59,12 @@ public class ShopController {
 	@GetMapping("/shops")
 	public HashMap<String, Object> getShops() {
 		HashMap<String, Object> map = new LinkedHashMap<String, Object>();
-
-		try {
-			List<ShopDTO> shopList = shopService.getShops();
 		
-			map.put("success", "true");
-			map.put("message", "shop list found");
-			map.put("shops", shopList);
-
-		} catch (Exception e) {
-			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
-		}
+		List<ShopDTO> shopList = shopService.getShops();
+	
+		map.put("success", "true");
+		map.put("message", "shop list found");
+		map.put("shops", shopList);
 		
 		return map;
 	}
@@ -90,18 +74,12 @@ public class ShopController {
 	@PutMapping("/shop")
 	public HashMap<String, Object> updateShop(@Valid @RequestBody Shop shop) {
 		HashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		
+		ShopDTO shopUpdated = shopService.updateShop(shop);
 
-		try {
-			ShopDTO shopUpdated = shopService.updateShop(shop);
-
-			map.put("success", "true");
-			map.put("message", "shop updated");
-			map.put("shop", shopUpdated);
-		} catch (Exception e) {
-
-			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
-		}
+		map.put("success", "true");
+		map.put("message", "shop updated");
+		map.put("shop", shopUpdated);
 		
 		return map;
 	}
@@ -110,17 +88,12 @@ public class ShopController {
 	@DeleteMapping("/shop")
 	public HashMap<String, Object> deleteShop(@RequestBody ShopDTO shop) {
 		HashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		
+		shopService.findShopById(shop.getId());
+		shopService.deleteShop(shop.getId());
 
-		try {
-			shopService.findShopById(shop.getId());
-			shopService.deleteShop(shop.getId());
-
-			map.put("success", "true");
-			map.put("message", "Shop id: " + shop.getId() + " has been successfully deleted");
-		} catch (Exception e) {
-			map.put("success", "false");
-			map.put("message", "Error: " + e.getMessage());
-		}
+		map.put("success", "true");
+		map.put("message", "Shop id: " + shop.getId() + " has been successfully deleted");
 		
 		return map;
 	}

@@ -15,7 +15,6 @@ public class ArgumentNotFoundException extends RuntimeException {
 	 * Constructor without parameters
 	 */
 	public ArgumentNotFoundException() {
-
 	}
 
 	/**
@@ -24,7 +23,6 @@ public class ArgumentNotFoundException extends RuntimeException {
 	 * @param message message that will appear when throwing the exception
 	 */
 	public ArgumentNotFoundException(String message) {
-
 		super(message);
 	}
 
