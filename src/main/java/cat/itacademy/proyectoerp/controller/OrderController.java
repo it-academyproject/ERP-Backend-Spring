@@ -74,7 +74,7 @@ public class OrderController {
 			return ResponseEntity.status(HttpStatus.OK).body(output);		
 		} catch (Exception e) {
 			output = new MessageDTO("False", e.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(output);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(output);
 		}
 	}
 
