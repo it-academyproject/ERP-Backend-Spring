@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -68,7 +69,7 @@ public class ShopControllerTest {
 	
 	@Test
 	@DisplayName("200 Ok GET /api/shops")
-	public void givenShops_whenGetShops_thenStatus200() throws Exception {
+	public void givenGetShops_thenStatus200() throws Exception {
 		String endpoint = "/api/shops";
 		
 		mvc
@@ -82,7 +83,7 @@ public class ShopControllerTest {
 	
 	@Test
 	@DisplayName("200 Ok GET /api/shops/{id}")
-	public void givenShops_whenGetShopById_thenStatus200() throws Exception {
+	public void givenGetShopById_thenStatus200() throws Exception {
 		String id = "11110000-0000-0000-0000-000000000000";
 		String endpoint = "/api/shops/" + id;
 		
@@ -94,8 +95,8 @@ public class ShopControllerTest {
 	}
 	
 	@Test
-	@DisplayName("204 No Content GET /api/shops/{id}")
-	public void givenShops_whenGetShopById_thenStatus204() throws Exception {
+	@DisplayName("200 Ok GET /api/shops/{id}")
+	public void givenGetShopById_whenArgumentNotFoundException_thenStatus200() throws Exception {
 		String id = "33330000-0000-0000-0000-000000000000";
 		String endpoint = "/api/shops/" + id;
 		
@@ -103,12 +104,12 @@ public class ShopControllerTest {
 			.perform(get(endpoint)
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainAdminAccessToken())
 				.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isNoContent());
+			.andExpect(status().isOk());
 	}
 	
 	@Test
 	@DisplayName("400 Bad Request GET /api/shops/{id}")
-	public void givenShops_whenGetShopById_thenStatus400() throws Exception {
+	public void givenGetShopById_whenMethodArgumentTypeMismatchException_thenStatus400() throws Exception {
 		String id = "1";
 		String endpoint = "/api/shops/" + id;
 		
@@ -117,6 +118,19 @@ public class ShopControllerTest {
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainAdminAccessToken())
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	@DisplayName("500 Internal Server Error GET /api/shops/{id}")
+	public void givenGetShopById_whenMissingPathVariableException_thenStatus500() throws Exception {
+		String id = " ";
+		String endpoint = "/api/shops/" + id;
+		
+		mvc
+			.perform(get(endpoint)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainAdminAccessToken())
+				.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isInternalServerError());
 	}
 	
 }
