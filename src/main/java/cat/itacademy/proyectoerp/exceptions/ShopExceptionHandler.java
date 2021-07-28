@@ -19,7 +19,8 @@ public class ShopExceptionHandler {
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<ApiShopError> handleExcpetion(MethodArgumentTypeMismatchException e) {
 		return new ResponseEntity<ApiShopError>(
-				new ApiShopError(LocalDateTime.now(), HttpStatus.BAD_REQUEST, "Shop not found due to invalid id"),
+				// !!!  Cristina is working on this exception right now  !!!
+				new ApiShopError(LocalDateTime.now(), HttpStatus.BAD_REQUEST, "type mismatch!"),
 				HttpStatus.BAD_REQUEST);
 	}
 	
