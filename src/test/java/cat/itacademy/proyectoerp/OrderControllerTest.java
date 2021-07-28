@@ -1,17 +1,10 @@
 package cat.itacademy.proyectoerp;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
 import javax.annotation.Resource;
 
 import org.junit.jupiter.api.DisplayName;
@@ -29,15 +22,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Order;
-import cat.itacademy.proyectoerp.domain.OrderDetail;
-import cat.itacademy.proyectoerp.dto.EmployeeDTO;
-import cat.itacademy.proyectoerp.dto.OrderDTO;
 import cat.itacademy.proyectoerp.repository.IOrderDetailRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
@@ -78,20 +64,6 @@ public class OrderControllerTest {
 		.andExpect(status().isOk());
 	}
 
-	@Test
-	@DisplayName("Validate 204 http response when no orders exist")
-	void noOrders_whenGetOrders_thenStatus204() throws Exception {
-		// delete all orders - necessary first delete all order details
-		orderDetailRepository.deleteAll();
-		orderRepository.deleteAll();
-		String accessToken = obtainAccessToken();
-		
-		this.mockMvc
-		.perform(get("/api/orders")
-				.header("Authorization", "Bearer " + accessToken)
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isNoContent());
-	}
 
 	@Test
 	@DisplayName("Validate endpoint get order by id")
@@ -109,7 +81,7 @@ public class OrderControllerTest {
 
 	@Test
 	@DisplayName("Validate get order by id - non existent id")
-	void givenEmployeeById_whenEmployeeByIdNotFound_thenStatus204() throws Exception {
+	void givenOrderById_whenOrderByIdNotFound_thenStatus204() throws Exception {
 		UUID nonExtistentId = UUID.fromString("06d70bed-7424-43ab-954e-385fcd68997a");
 		String accessToken = obtainAccessToken();
 		
@@ -120,18 +92,35 @@ public class OrderControllerTest {
 		.andExpect(status().isNoContent());
 	}
 
+
 	@Test
 	@DisplayName("Validate bad endpoint get order by id - wrong id format")
-	void givenEmployeeById_whenEmployeeByIdNotFound_thenStatus400() throws Exception {
-		UUID nonExtistentId = UUID.fromString("yertueriy");
+	void givenEmployeeById_whenOrderIdNotFound_thenStatus400() throws Exception {
+		String wrongIdFormat = "yertueriy";
 		String accessToken = obtainAccessToken();
 		
 		this.mockMvc
-		.perform(get("/api/orders/{id}", nonExtistentId)
+		.perform(get("/api/orders/{id}", wrongIdFormat)
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().isBadRequest());
 	}
+
+	
+//	@Test
+//	@DisplayName("Validate 204 http response when no orders exist")
+//	void noOrders_whenGetOrders_thenStatus204() throws Exception {
+//		// delete all orders - necessary first delete all order details
+//		orderDetailRepository.deleteAll();
+//		orderRepository.deleteAll();
+//		String accessToken = obtainAccessToken();
+//		
+//		this.mockMvc
+//		.perform(get("/api/orders")
+//				.header("Authorization", "Bearer " + accessToken)
+//				.accept(MediaType.APPLICATION_JSON))
+//		.andExpect(status().isNoContent());
+//	}
 
 	private String obtainAccessToken() throws Exception {
 		JwtLogin jwtLogin = new JwtLogin("admin@erp.com", "ReW9a0&+TP");
