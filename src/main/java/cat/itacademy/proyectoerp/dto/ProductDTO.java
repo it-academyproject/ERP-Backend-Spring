@@ -1,7 +1,10 @@
 package cat.itacademy.proyectoerp.dto;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Set;
+
+import javax.persistence.Column;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
@@ -24,6 +27,11 @@ public class ProductDTO implements Serializable {
 	private double vat;
 	private double wholesalePrice;
 	private int wholesaleQuantity;
+	
+	private double discount;	
+	private LocalDate dateBeginDiscount;	
+	private LocalDate dateEndDiscount;
+	
 	private Set<CategoryDTO> categories;
 	
 	public int getId() {
@@ -98,6 +106,26 @@ public class ProductDTO implements Serializable {
 	public void setCategories(Set<CategoryDTO> categories) {
 		this.categories = categories;
 	}
+	public double getDiscount() {
+		return discount;
+	}
+	public void setDiscount(double discount) {
+		this.discount = discount;
+	}
+	public LocalDate getDateBeginDiscount() {
+		return dateBeginDiscount;
+	}
+	public void setDateBeginDiscount(LocalDate dateBeginDiscount) {
+		this.dateBeginDiscount = dateBeginDiscount;
+	}
+	public LocalDate getDateEndDiscount() {
+		return dateEndDiscount;
+	}
+	public void setDateEndDiscount(LocalDate dateEndDiscount) {
+		this.dateEndDiscount = dateEndDiscount;
+	}
+	
+	
 	
 	
 }
