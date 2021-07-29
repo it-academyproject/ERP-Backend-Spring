@@ -25,6 +25,7 @@ public class ProductDTO implements Serializable {
 	private double wholesalePrice;
 	private int wholesaleQuantity;
 	private Set<CategoryDTO> categories;
+	private OfferDTO offer;
 	
 	public int getId() {
 		return id;
@@ -98,6 +99,11 @@ public class ProductDTO implements Serializable {
 	public void setCategories(Set<CategoryDTO> categories) {
 		this.categories = categories;
 	}
-	
+	public OfferDTO getOffer() {
+		return offer;
+	}
+	public void setOffer(OfferDTO offer) {
+		this.offer = offer;
+	}		
 	
 }

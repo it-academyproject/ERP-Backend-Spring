@@ -54,6 +54,9 @@ public class Product implements Serializable {
 	//@NotNull(message = "You have to assign shop to this product")
 	@Valid
 	private Shop shop;
+	
+	@ManyToOne
+	private Offer offer;
 
 	public Product() {
 
@@ -195,5 +198,14 @@ public class Product implements Serializable {
 	public void setShop(Shop shop) {
 		this.shop = shop;
 	}
+
+	public Offer getOffer() {
+		return offer;
+	}
+
+	public void setOffer(Offer offer) {
+		this.offer = offer;
+	}
+	
 	
 }
