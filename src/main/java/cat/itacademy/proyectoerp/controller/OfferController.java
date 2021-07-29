@@ -2,18 +2,24 @@ package cat.itacademy.proyectoerp.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cat.itacademy.proyectoerp.domain.Offer;
+import cat.itacademy.proyectoerp.domain.Order;
+import cat.itacademy.proyectoerp.dto.OfferDTO;
 import cat.itacademy.proyectoerp.dto.OfferDTO;
 import cat.itacademy.proyectoerp.service.IOfferService;
 
@@ -62,5 +68,24 @@ public class OfferController {
 		}
 		return map;
 	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/{id}")
+	public Map<String, Object> getOfferById(@PathVariable(name="id") UUID id){
+		HashMap<String, Object> map = new HashMap<>();
+		
+		try {
+			OfferDTO offerDTO = offerService.findOfferById(id);
+			map.put("success", "true");
+			map.put("message", "offer found");
+			map.put("offer", offerDTO);
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", e.getMessage());
+		}
+		
+		return map;
+	}
+	
 
 }
