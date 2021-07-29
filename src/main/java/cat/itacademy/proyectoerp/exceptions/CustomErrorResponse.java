@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
- * Custom error response for Shops.
+ * Custom error response.
  */
 
 public class CustomErrorResponse {
