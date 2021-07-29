@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
+import cat.itacademy.proyectoerp.domain.Offer;
 import cat.itacademy.proyectoerp.dto.OfferDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.repository.IOfferRepository;
@@ -19,16 +19,9 @@ public class OfferServiceImpl implements IOfferService {
 	@Autowired
 	IOfferRepository OfferRepository;
 	
-	ModelMapper modelMapper = new ModelMapper();
-	
-	@Override
-	public OfferDTO createOffer(OfferDTO OfferDto) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	ModelMapper modelMapper = new ModelMapper();		
 
-	@Override
-	@GetMapping
+	@Override	
 	public List<OfferDTO> findAll() throws ArgumentNotFoundException {
 		
 				if(OfferRepository.findAll().isEmpty())
@@ -36,9 +29,16 @@ public class OfferServiceImpl implements IOfferService {
 				
 				List<OfferDTO> OffersDTO = OfferRepository.findAll().stream().map(Offer -> modelMapper.map(Offer, OfferDTO.class)).collect(Collectors.toList());
 						
-				return OffersDTO;
-			
+				return OffersDTO;			
 		
 	}
+
+	@Override
+	public OfferDTO createOffer(Offer offer) {		
+		
+		OfferRepository.save(offer);
+		
+		return modelMapper.map(offer, OfferDTO.class );
+	}	
 
 }

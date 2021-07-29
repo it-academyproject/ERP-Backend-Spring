@@ -13,6 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
@@ -31,13 +33,18 @@ public class Offer implements Serializable {
 	@Type(type="uuid-char")
 	private UUID id;
 	
+	@NotNull(message = "description is mandatory")
 	private String description;	
+	
+	@NotNull(message = "discount is mandatory")	
 	private double discount;
 	
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	@Column(name="start_date")
+	@NotNull(message = "startDate is mandatory")
 	private LocalDate startDate;
 	
+	@NotNull(message = "endDate is mandatory")
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	@Column(name="end_date")
 	private LocalDate endDate;
