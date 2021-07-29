@@ -13,13 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -28,12 +26,9 @@ import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestPropertySource(locations = "classpath:application-integrationtest.properties")
+@TestPropertySource("classpath:application-integrationtest.properties")
 @Transactional
 public class ShopControllerTest {
-	
-	@MockBean
-	Runner runner;
 	
 	@Autowired
 	private MockMvc mvc;
@@ -43,7 +38,7 @@ public class ShopControllerTest {
 	
 	@Test
 	@DisplayName("Data correctly loaded into db")
-	public void dataIsLoaded() {
+	public void testData() {
 		UUID id = UUID.fromString("11110000-0000-0000-0000-000000000000");
 		
 		assertThat(repository.existsById(id));
@@ -52,7 +47,9 @@ public class ShopControllerTest {
 	private String obtainAdminAccessToken() throws Exception {
 		String endpoint = "/api/login";
 		
-		String content = new ObjectMapper().writeValueAsString(new JwtLogin("admin@erp.com", "ReW9a0&+TP"));
+		String username = "admin@erp.com", password = "ReW9a0&+TP";
+		
+		String content = new ObjectMapper().writeValueAsString(new JwtLogin(username, password));
 		
 		String response = mvc
 			.perform(post(endpoint)
@@ -95,7 +92,7 @@ public class ShopControllerTest {
 	}
 	
 	@Test
-	@DisplayName("200 Ok GET /api/shops/{id}")
+	@DisplayName("200 Ok GET /api/shops/{id} ArgumentNotFoundException")
 	public void givenGetShopById_whenArgumentNotFoundException_thenStatus200() throws Exception {
 		String id = "33330000-0000-0000-0000-000000000000";
 		String endpoint = "/api/shops/" + id;
@@ -108,7 +105,7 @@ public class ShopControllerTest {
 	}
 	
 	@Test
-	@DisplayName("400 Bad Request GET /api/shops/{id}")
+	@DisplayName("400 Bad Request GET /api/shops/{id} MethodArgumentTypeMismatchException")
 	public void givenGetShopById_whenMethodArgumentTypeMismatchException_thenStatus400() throws Exception {
 		String id = "1";
 		String endpoint = "/api/shops/" + id;
@@ -121,7 +118,7 @@ public class ShopControllerTest {
 	}
 	
 	@Test
-	@DisplayName("500 Internal Server Error GET /api/shops/{id}")
+	@DisplayName("500 Internal Server Error GET /api/shops/{id} MissingPathVariableException")
 	public void givenGetShopById_whenMissingPathVariableException_thenStatus500() throws Exception {
 		String id = " ";
 		String endpoint = "/api/shops/" + id;
