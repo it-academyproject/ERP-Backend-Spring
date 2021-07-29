@@ -20,13 +20,13 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public CustomErrorResponse handleExcpetion(MethodArgumentTypeMismatchException e) {
+	public CustomErrorResponse handleException(MethodArgumentTypeMismatchException e) {
 		return new CustomErrorResponse(LocalDateTime.now(), HttpStatus.BAD_REQUEST, "Method argument type mismatch");
 	}
 	
 	@ExceptionHandler(MissingPathVariableException.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public CustomErrorResponse handleExcpetion(MissingPathVariableException e) {
+	public CustomErrorResponse handleException(MissingPathVariableException e) {
 		return new CustomErrorResponse(LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR, "Missing path variable");
 	}
 	
