@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cat.itacademy.proyectoerp.domain.Offer;
-import cat.itacademy.proyectoerp.domain.Offer;
-import cat.itacademy.proyectoerp.dto.OfferDTO;
 import cat.itacademy.proyectoerp.dto.OfferDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.repository.IOfferRepository;
@@ -48,6 +46,11 @@ public class OfferServiceImpl implements IOfferService {
 	public OfferDTO findOfferById(UUID id) throws ArgumentNotFoundException  {
 			Offer offer = OfferRepository.findById(id).orElseThrow(() -> new ArgumentNotFoundException("Offer not found. The id " + id + " doesn't exist"));
 			return modelMapper.map(offer, OfferDTO.class);
+	}
+
+	@Override
+	public void deleteOfferById(UUID id) {	
+		OfferRepository.deleteById(id);				
 	}	
 
 }

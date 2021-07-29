@@ -14,4 +14,6 @@ public interface IOfferService {
 
 	public OfferDTO findOfferById(UUID id);
 
+	public void deleteOfferById(UUID id);
+
 }

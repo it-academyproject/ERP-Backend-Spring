@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cat.itacademy.proyectoerp.domain.Offer;
-import cat.itacademy.proyectoerp.domain.Order;
-import cat.itacademy.proyectoerp.dto.OfferDTO;
 import cat.itacademy.proyectoerp.dto.OfferDTO;
 import cat.itacademy.proyectoerp.service.IOfferService;
 
@@ -84,6 +82,27 @@ public class OfferController {
 			map.put("message", e.getMessage());
 		}
 		
+		return map;
+	}
+	
+	@DeleteMapping("/{id}")
+	public Map<String, Object> deleteOfferById(@PathVariable(name="id") UUID id) {
+
+		HashMap<String, Object> map = new HashMap<>();
+
+		try {
+			
+			offerService.deleteOfferById(id);
+
+			map.put("success", "true");
+			map.put("message", "Offer with id: " + id + " has been deleted");
+
+		} catch (Exception e) {
+
+			map.put("success", "False");
+			map.put("message", "error" + e.getMessage());
+
+		}
 		return map;
 	}
 	
