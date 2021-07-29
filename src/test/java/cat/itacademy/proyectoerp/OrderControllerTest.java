@@ -16,11 +16,14 @@ import java.util.UUID;
 import org.junit.Before;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,8 +37,10 @@ import cat.itacademy.proyectoerp.domain.Address;
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.PaymentMethod;
 import cat.itacademy.proyectoerp.dto.CreateOrderDTO;
+import cat.itacademy.proyectoerp.dto.OrderDTO;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
+import cat.itacademy.proyectoerp.service.IOrderService;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = ProyectoErpApplication.class)
@@ -50,9 +55,6 @@ public class OrderControllerTest {
 
 	@Autowired
 	IOrderRepository orderRepository;
-	
-//	@MockBean
-//	private IOrderService orderService;
 
 	@Autowired
 	private WebApplicationContext webApplicationContext;
@@ -74,24 +76,6 @@ public class OrderControllerTest {
 				.accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().isOk());
 	}
-
-//	@Test
-//	@DisplayName("Validate 204 http response when no orders exist")
-//	void noOrders_whenGetOrders_thenStatus204() throws Exception {
-//		String accessToken = obtainAccessToken();
-//		List<Order> emptyOrdersTable = new ArrayList<>();
-////		List<Order> emptyOrdersTable = orderRepository.findAll();
-//		
-//		given(orderRepository.findAll()).willReturn(emptyOrdersTable);
-//		
-//		String endPoint = "/api/orders";
-//		this.mockMvc
-//		.perform(get(endPoint)
-//				.header("Authorization", "Bearer " + accessToken)
-//				.accept(MediaType.APPLICATION_JSON))
-//		.andExpect(status().isNoContent());
-//	}
-
 
 	@Test
 	@DisplayName("Validate endpoint get order by id")
@@ -175,21 +159,7 @@ public class OrderControllerTest {
 		PaymentMethod paymentMethod = PaymentMethod.CASH;
 		Map<Integer, Integer> productsQuantity = new HashMap<>();
 		productsQuantity.put(5, 5);
-		Address billingAddress = new Address("Rocafort", "45", "Barna", "Aspain", "08023");
-		
-		CreateOrderDTO newOrder = new CreateOrderDTO();
-		newOrder.setPaymentMethod(paymentMethod);
-		newOrder.setProductsQuantity(productsQuantity);
-		newOrder.setBillingAddress(billingAddress);
-		
-		return newOrder;
-	}
-
-	private CreateOrderDTO createInvalidNewOrder() {
-		PaymentMethod paymentMethod = PaymentMethod.CASH;
-		Map<Integer, Integer> productsQuantity = new HashMap<>();
-		productsQuantity.put(5, 5);
-		Address billingAddress = new Address("Rocafort", "45", "Barna", "Aspain", "08023");
+		Address billingAddress = new Address("Rocafort", "45", "Barna", "Spain", "08023");
 		
 		CreateOrderDTO newOrder = new CreateOrderDTO();
 		newOrder.setPaymentMethod(paymentMethod);
