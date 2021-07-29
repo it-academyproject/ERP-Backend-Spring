@@ -5,9 +5,9 @@ INSERT INTO users (id, active, last_session, password, user_type, username) VALU
 ('94', '1', '2021-06-11 09:27:07', '$2a$10$o8tcNE1BVYvrXLSyMCfWEuFgcnu6NU0UXKb1D5.qBgLl8eeXzH/am', 'EMPLOYEE', 'testEmployee01@erp.com'),
 ('95', '1', '2021-06-11 09:27:07', '$2a$10$o8tcNE1BVYvrXLSyMCfWEuFgcnu6NU0UXKb1D5.qBgLl8eeXzH/am', 'EMPLOYEE', 'testEmployee02@erp.com');
 
-INSERT INTO employee (id,dni,in_date,phone,salary,user_id) VALUES 
-('11110000-0000-0000-0000-000000000000', 'C3333333C', '2021-2-11', '777777777', '30000', '94'),
-('22220000-0000-0000-0000-000000000000', 'C3333334C', '2021-2-11', '777777778', '20000', '95');
+INSERT INTO employee (id, name, surname, dni,in_date,phone,salary,user_id) VALUES 
+('11110000-0000-0000-0000-000000000000', 'juan', 'perez','C3333333C', '2021-2-11', '777777777', '30000', '94'),
+('22220000-0000-0000-0000-000000000000', 'juan', 'perez','C3333334C', '2021-2-11', '777777778', '20000', '95');
 
 INSERT INTO addresses (id, city, country, number, street, zip_code) VALUES
 ('11110000-0000-0000-0000-000000000000', 'Barcelona', 'Spain', '1 C', 'Calle Escorial', '08024');

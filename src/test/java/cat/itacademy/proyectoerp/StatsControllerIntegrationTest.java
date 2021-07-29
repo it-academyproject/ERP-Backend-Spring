@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
@@ -45,9 +44,7 @@ public class StatsControllerIntegrationTest {
 	 * @MockBean avoid the execution of real Runner.class as we don't need it's entities. 
 	 * Benefits: we win some testing time and avoid loading problems or bad testing results.
 	 */
-	@MockBean
-	Runner runner;
-	
+		
 	@Autowired
 	private MockMvc mockMvc;
 

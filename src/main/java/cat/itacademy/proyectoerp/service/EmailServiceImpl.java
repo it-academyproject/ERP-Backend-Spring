@@ -33,7 +33,7 @@ public class EmailServiceImpl implements IEmailService {
             message.setTo(user.getUsername());
             message.setSubject("Welcome to ProyectoERP");
             message.setText("Welcome to ProyectoERP \n\nThanks for signing up!");
-
+            
             // send email
             javaMailSender.send(message);
         } catch (MailException e) {
@@ -56,8 +56,8 @@ public class EmailServiceImpl implements IEmailService {
 
             // set email properties/body
             message.setTo(user.getUsername());
-            //	message.setFrom("example@gmail.com");
-            message.setSubject("Forgot Password");
+            
+            message.setSubject("Recover email account  ");
             message.setText("Your new password is: " + password
                     + "\n\nNow you can login with your new password and navigate through the app, see you soon!");
 

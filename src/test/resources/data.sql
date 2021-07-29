@@ -1,3 +1,6 @@
+INSERT INTO users (username, password, user_type) VALUES
+('admin@erp.com', '$2a$10$o8tcNE1BVYvrXLSyMCfWEuFgcnu6NU0UXKb1D5.qBgLl8eeXzH/am', 'ADMIN');
+
 INSERT INTO addresses (id, city, country, number, street, zip_code) VALUES
 ('11110000-0000-0000-0000-000000000000', 'City1', 'Country1', '1 A', 'C/ Aaa', '11111'),
 ('22220000-0000-0000-0000-000000000000', 'City2', 'Country2', '2 B', 'C/ Bbb', '22222');

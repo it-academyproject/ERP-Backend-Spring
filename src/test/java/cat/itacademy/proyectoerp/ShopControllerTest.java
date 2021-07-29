@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
@@ -31,12 +30,9 @@ import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestPropertySource(locations = "classpath:application-integrationtest.properties")
+@TestPropertySource("classpath:application-shops.properties")
 @Transactional
 public class ShopControllerTest {
-	
-	@MockBean
-	Runner runner;
 	
 	@Autowired
 	private MockMvc mvc;
@@ -46,7 +42,7 @@ public class ShopControllerTest {
 	
 	@Test
 	@DisplayName("Data correctly loaded into db")
-	public void dataIsLoaded() {
+	public void testData() {
 		UUID id = UUID.fromString("11110000-0000-0000-0000-000000000000");
 		
 		assertThat(repository.existsById(id));
@@ -55,7 +51,9 @@ public class ShopControllerTest {
 	private String obtainAdminAccessToken() throws Exception {
 		String endpoint = "/api/login";
 		
-		String content = new ObjectMapper().writeValueAsString(new JwtLogin("admin@erp.com", "ReW9a0&+TP"));
+		String username = "admin@erp.com", password = "ReW9a0&+TP";
+		
+		String content = new ObjectMapper().writeValueAsString(new JwtLogin(username, password));
 		
 		String response = mvc
 			.perform(post(endpoint)
@@ -72,7 +70,7 @@ public class ShopControllerTest {
 	
 	@Test
 	@DisplayName("200 Ok GET /api/shops")
-	public void givenShops_whenGetShops_thenStatus200() throws Exception {
+	public void givenGetShops_thenStatus200() throws Exception {
 		String endpoint = "/api/shops";
 		
 		mvc
@@ -86,7 +84,7 @@ public class ShopControllerTest {
 	
 	@Test
 	@DisplayName("200 Ok GET /api/shops/{id}")
-	public void givenShops_whenGetShopById_thenStatus200() throws Exception {
+	public void givenGetShopById_thenStatus200() throws Exception {
 		String id = "11110000-0000-0000-0000-000000000000";
 		String endpoint = "/api/shops/" + id;
 		
@@ -98,8 +96,8 @@ public class ShopControllerTest {
 	}
 	
 	@Test
-	@DisplayName("204 No Content GET /api/shops/{id}")
-	public void givenShops_whenGetShopById_thenStatus204() throws Exception {
+	@DisplayName("200 Ok GET /api/shops/{id} ArgumentNotFoundException")
+	public void givenGetShopById_whenArgumentNotFoundException_thenStatus200() throws Exception {
 		String id = "33330000-0000-0000-0000-000000000000";
 		String endpoint = "/api/shops/" + id;
 		
@@ -107,12 +105,12 @@ public class ShopControllerTest {
 			.perform(get(endpoint)
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainAdminAccessToken())
 				.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isNoContent());
+			.andExpect(status().isOk());
 	}
 	
 	@Test
-	@DisplayName("400 Bad Request GET /api/shops/{id}")
-	public void givenShops_whenGetShopById_thenStatus400() throws Exception {
+	@DisplayName("400 Bad Request GET /api/shops/{id} MethodArgumentTypeMismatchException")
+	public void givenGetShopById_whenMethodArgumentTypeMismatchException_thenStatus400() throws Exception {
 		String id = "1";
 		String endpoint = "/api/shops/" + id;
 		
@@ -123,11 +121,24 @@ public class ShopControllerTest {
 			.andExpect(status().isBadRequest());
 	}
 	
+	@Test
+	@DisplayName("500 Internal Server Error GET /api/shops/{id} MissingPathVariableException")
+	public void givenGetShopById_whenMissingPathVariableException_thenStatus500() throws Exception {
+		String id = " ";
+		String endpoint = "/api/shops/" + id;
+		
+		mvc
+			.perform(get(endpoint)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainAdminAccessToken())
+				.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isInternalServerError());
+	}
+	
 	// POST /api/shop
 	
 	@Test
 	@DisplayName("200 Ok POST /api/shop")
-	public void givenShops_whenPostShop_thenStatus200() throws Exception {
+	public void givenPostShop_thenStatus200() throws Exception {
 		String endpoint = "/api/shop";
 		
 		UUID id = UUID.fromString("33330000-0000-0000-0000-000000000000");
@@ -149,7 +160,7 @@ public class ShopControllerTest {
 	
 	@Test
 	@DisplayName("200 Ok PUT /api/shop")
-	public void givenShops_whenPutShop_thenStatus200() throws Exception {
+	public void givenPutShop_thenStatus200() throws Exception {
 		String endpoint = "/api/shop";
 		
 		UUID id = UUID.fromString("22220000-0000-0000-0000-000000000000");
@@ -171,7 +182,7 @@ public class ShopControllerTest {
 	
 	@Test
 	@DisplayName("200 Ok DELETE /api/shop")
-	public void givenShops_whenDeleteShop_thenStatus200() throws Exception {
+	public void givenDeleteShop_thenStatus200() throws Exception {
 		String endpoint = "/api/shop";
 		
 		UUID id = UUID.fromString("22220000-0000-0000-0000-000000000000");
