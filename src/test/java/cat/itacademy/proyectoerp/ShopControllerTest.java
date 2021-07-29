@@ -26,7 +26,7 @@ import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestPropertySource("classpath:application-integrationtest.properties")
+@TestPropertySource("classpath:application-shops.properties")
 @Transactional
 public class ShopControllerTest {
 	
