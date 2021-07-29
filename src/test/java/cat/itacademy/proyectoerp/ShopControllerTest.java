@@ -19,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -66,6 +67,40 @@ public class ShopControllerTest {
 		return new JacksonJsonParser().parseMap(response).get("token").toString();
 	}
 	
+	private ResultActions performGetRequest(String endpoint) throws Exception {
+		return mvc
+			.perform(get(endpoint)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainAdminAccessToken())
+				.accept(MediaType.APPLICATION_JSON));
+	}
+	
+	private ResultActions performPostRequest(String endpoint, String content) throws Exception {
+		return mvc
+			.perform(post(endpoint)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainAdminAccessToken())
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(content));
+	}
+	
+	private ResultActions performPutRequest(String endpoint, String content) throws Exception {
+		return mvc
+			.perform(put(endpoint)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainAdminAccessToken())
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(content));
+	}
+	
+	private ResultActions performDeleteRequest(String endpoint, String content) throws Exception {
+		return mvc
+			.perform(delete(endpoint)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainAdminAccessToken())
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(content));
+	}
+	
 	// GET /api/shops
 	
 	@Test
@@ -73,10 +108,7 @@ public class ShopControllerTest {
 	public void givenGetShops_thenStatus200() throws Exception {
 		String endpoint = "/api/shops";
 		
-		mvc
-			.perform(get(endpoint)
-					.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainAdminAccessToken())
-					.accept(MediaType.APPLICATION_JSON))
+		this.performGetRequest(endpoint)
 			.andExpect(status().isOk());
 	}
 	
@@ -88,10 +120,7 @@ public class ShopControllerTest {
 		String id = "11110000-0000-0000-0000-000000000000";
 		String endpoint = "/api/shops/" + id;
 		
-		mvc
-			.perform(get(endpoint)
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainAdminAccessToken())
-				.accept(MediaType.APPLICATION_JSON))
+		this.performGetRequest(endpoint)
 			.andExpect(status().isOk());
 	}
 	
@@ -101,10 +130,7 @@ public class ShopControllerTest {
 		String id = "33330000-0000-0000-0000-000000000000";
 		String endpoint = "/api/shops/" + id;
 		
-		mvc
-			.perform(get(endpoint)
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainAdminAccessToken())
-				.accept(MediaType.APPLICATION_JSON))
+		this.performGetRequest(endpoint)
 			.andExpect(status().isOk());
 	}
 	
@@ -114,10 +140,7 @@ public class ShopControllerTest {
 		String id = "1";
 		String endpoint = "/api/shops/" + id;
 		
-		mvc
-			.perform(get(endpoint)
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainAdminAccessToken())
-				.accept(MediaType.APPLICATION_JSON))
+		this.performGetRequest(endpoint)
 			.andExpect(status().isBadRequest());
 	}
 	
@@ -127,10 +150,7 @@ public class ShopControllerTest {
 		String id = " ";
 		String endpoint = "/api/shops/" + id;
 		
-		mvc
-			.perform(get(endpoint)
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainAdminAccessToken())
-				.accept(MediaType.APPLICATION_JSON))
+		this.performGetRequest(endpoint)
 			.andExpect(status().isInternalServerError());
 	}
 	
@@ -141,19 +161,38 @@ public class ShopControllerTest {
 	public void givenPostShop_thenStatus200() throws Exception {
 		String endpoint = "/api/shop";
 		
-		UUID id = UUID.fromString("33330000-0000-0000-0000-000000000000");
-		Address address = new Address(id, "City3", "Country3", "3 C", "C/ Ccc", "33333");
-		Shop shop = new Shop(id, "Brand3", "Company3", "33333333C", 888888888, address, "www.shop3.com");
+		Address address = new Address("City3", "Country3", "3 C", "C/ Ccc", "33333");
+		Shop shop = new Shop("Brand3", "Company3", "33333333C", 888888888, address, "www.shop3.com");
 		
 		String content = new ObjectMapper().writeValueAsString(shop);
 		
-		mvc
-			.perform(post(endpoint)
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainAdminAccessToken())
-				.accept(MediaType.APPLICATION_JSON)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(content))
+		this.performPostRequest(endpoint, content)
 			.andExpect(status().isOk());
+	}
+	
+	@Test
+	@DisplayName("400 Bad Request POST /api/shop HttpMessageNotReadableException")
+	public void givenPostShop_whenHttpMessageNotReadableException_thenStatus400() throws Exception {
+		String endpoint = "/api/shop";
+		
+		String content = new ObjectMapper().writeValueAsString(null);
+		
+		this.performPostRequest(endpoint, content)
+			.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	@DisplayName("400 Bad Request POST /api/shop MethodArgumentNotValidException")
+	public void givenPostShop_whenMethodArgumentNotValidException_thenStatus400() throws Exception {
+		String endpoint = "/api/shop";
+		
+		Address address = new Address("City3", "Country3", "3 C", "C/ Ccc", "33333");
+		Shop shop = new Shop(" ", "Company3", "33333333C", 888888888, address, "www.shop3.com");
+		
+		String content = new ObjectMapper().writeValueAsString(shop);
+		
+		this.performPostRequest(endpoint, content)
+			.andExpect(status().isBadRequest()); // Brand name is mandatory
 	}
 	
 	// PUT /api/shop
@@ -169,13 +208,19 @@ public class ShopControllerTest {
 		
 		String content = new ObjectMapper().writeValueAsString(shop);
 		
-		mvc
-			.perform(put(endpoint)
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainAdminAccessToken())
-				.accept(MediaType.APPLICATION_JSON)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(content))
+		this.performPutRequest(endpoint, content)
 			.andExpect(status().isOk());
+	}
+	
+	@Test
+	@DisplayName("400 Bad Request PUT /api/shop HttpMessageNotReadableException")
+	public void givenPutShop_whenHttpMessageNotReadableException_thenStatus400() throws Exception {
+		String endpoint = "/api/shop";
+		
+		String content = new ObjectMapper().writeValueAsString(null);
+		
+		this.performPutRequest(endpoint, content)
+			.andExpect(status().isBadRequest());
 	}
 	
 	// DELETE /api/shop
@@ -191,13 +236,19 @@ public class ShopControllerTest {
 		
 		String content = new ObjectMapper().writeValueAsString(shop);
 		
-		mvc
-			.perform(delete(endpoint)
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainAdminAccessToken())
-				.accept(MediaType.APPLICATION_JSON)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(content))
+		this.performDeleteRequest(endpoint, content)
 			.andExpect(status().isOk());
+	}
+	
+	@Test
+	@DisplayName("400 Bad Request DELETE /api/shop HttpMessageNotReadableException")
+	public void givenDeleteShop_whenHttpMessageNotReadableException_thenStatus400() throws Exception {
+		String endpoint = "/api/shop";
+		
+		String content = new ObjectMapper().writeValueAsString(null);
+		
+		this.performDeleteRequest(endpoint, content)
+			.andExpect(status().isBadRequest());
 	}
 
 }
