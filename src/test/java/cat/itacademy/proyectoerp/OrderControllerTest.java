@@ -1,12 +1,17 @@
 package cat.itacademy.proyectoerp;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
-import javax.annotation.Resource;
 
+import org.junit.Before;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -16,17 +21,20 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.event.annotation.BeforeTestExecution;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import cat.itacademy.proyectoerp.domain.Address;
 import cat.itacademy.proyectoerp.domain.Order;
-import cat.itacademy.proyectoerp.repository.IOrderDetailRepository;
+import cat.itacademy.proyectoerp.domain.PaymentMethod;
+import cat.itacademy.proyectoerp.dto.CreateOrderDTO;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = ProyectoErpApplication.class)
 @AutoConfigureMockMvc
@@ -40,16 +48,16 @@ public class OrderControllerTest {
 
 	@Autowired
 	IOrderRepository orderRepository;
+	
+//	@MockBean
+//	private IOrderService orderService;
 
 	@Autowired
-	IOrderDetailRepository orderDetailRepository;
-
-	@Resource
 	private WebApplicationContext webApplicationContext;
 
-	@BeforeTestExecution
+	@Before
 	public void setUp() {
-		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
 
 	@Test
@@ -57,12 +65,30 @@ public class OrderControllerTest {
 	void givenOrders_whenGetOrders_thenStatus200() throws Exception {
 		String accessToken = obtainAccessToken();
 		
+		String endPoint = "/api/orders";
 		this.mockMvc
-		.perform(get("/api/orders")
+		.perform(get(endPoint)
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().isOk());
 	}
+
+//	@Test
+//	@DisplayName("Validate 204 http response when no orders exist")
+//	void noOrders_whenGetOrders_thenStatus204() throws Exception {
+//		String accessToken = obtainAccessToken();
+//		List<Order> emptyOrdersTable = new ArrayList<>();
+////		List<Order> emptyOrdersTable = orderRepository.findAll();
+//		
+//		given(orderRepository.findAll()).willReturn(emptyOrdersTable);
+//		
+//		String endPoint = "/api/orders";
+//		this.mockMvc
+//		.perform(get(endPoint)
+//				.header("Authorization", "Bearer " + accessToken)
+//				.accept(MediaType.APPLICATION_JSON))
+//		.andExpect(status().isNoContent());
+//	}
 
 
 	@Test
@@ -72,8 +98,9 @@ public class OrderControllerTest {
 		UUID id = firstOrder.getId();
 		String accessToken = obtainAccessToken();
 		
+		String endPoint = "/api/orders/{id}";
 		this.mockMvc
-		.perform(get("/api/orders/{id}", id)
+		.perform(get(endPoint, id)
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().isOk());
@@ -85,45 +112,95 @@ public class OrderControllerTest {
 		UUID nonExtistentId = UUID.fromString("06d70bed-7424-43ab-954e-385fcd68997a");
 		String accessToken = obtainAccessToken();
 		
+		String endPoint = "/api/orders/{id}";
 		this.mockMvc
-		.perform(get("/api/orders/{id}", nonExtistentId)
+		.perform(get(endPoint, nonExtistentId)
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().isNoContent());
 	}
 
-
 	@Test
 	@DisplayName("Validate bad endpoint get order by id - wrong id format")
-	void givenEmployeeById_whenOrderIdNotFound_thenStatus400() throws Exception {
+	void givenOrderById_whenOrderIdNotFound_thenStatus400() throws Exception {
 		String wrongIdFormat = "yertueriy";
 		String accessToken = obtainAccessToken();
 		
+		String endPoint = "/api/orders/{id}";
 		this.mockMvc
-		.perform(get("/api/orders/{id}", wrongIdFormat)
+		.perform(get(endPoint, wrongIdFormat)
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().isBadRequest());
 	}
-
 	
-//	@Test
-//	@DisplayName("Validate 204 http response when no orders exist")
-//	void noOrders_whenGetOrders_thenStatus204() throws Exception {
-//		// delete all orders - necessary first delete all order details
-//		orderDetailRepository.deleteAll();
-//		orderRepository.deleteAll();
-//		String accessToken = obtainAccessToken();
-//		
-//		this.mockMvc
-//		.perform(get("/api/orders")
-//				.header("Authorization", "Bearer " + accessToken)
-//				.accept(MediaType.APPLICATION_JSON))
-//		.andExpect(status().isNoContent());
-//	}
+
+	@Test
+	@DisplayName("Validate endpoint create order")
+	void givenCreateOrder_thenStatus200() throws Exception {
+		String accessToken = obtainAccessToken();		
+		String endPoint = "/api/orders";
+		CreateOrderDTO newOrder = createValidNewOrder();
+		String body = new ObjectMapper().writeValueAsString(newOrder);
+		
+		this.mockMvc
+		.perform(post(endPoint)
+				.header("Authorization", "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(body))
+		.andExpect(status().isOk());
+	}
+		
+	@Test
+	@DisplayName("Validate endpoint delete order")
+	void givenDeleteOrder_thenStatus200() throws Exception {
+		String accessToken = obtainAccessToken();
+		String endPoint = "/api/orders";		
+		CreateOrderDTO newOrder = createValidNewOrder();
+		String body = new ObjectMapper().writeValueAsString(newOrder);
+		
+		this.mockMvc
+		.perform(delete(endPoint)
+				.header("Authorization", "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(body))
+		.andExpect(status().isOk());
+	}
+	
+	private CreateOrderDTO createValidNewOrder() {
+		PaymentMethod paymentMethod = PaymentMethod.CASH;
+		Map<Integer, Integer> productsQuantity = new HashMap<>();
+		productsQuantity.put(5, 5);
+		Address billingAddress = new Address("Rocafort", "45", "Barna", "Aspain", "08023");
+		
+		CreateOrderDTO newOrder = new CreateOrderDTO();
+		newOrder.setPaymentMethod(paymentMethod);
+		newOrder.setProductsQuantity(productsQuantity);
+		newOrder.setBillingAddress(billingAddress);
+		
+		return newOrder;
+	}
+
+	private CreateOrderDTO createInvalidNewOrder() {
+		PaymentMethod paymentMethod = PaymentMethod.CASH;
+		Map<Integer, Integer> productsQuantity = new HashMap<>();
+		productsQuantity.put(5, 5);
+		Address billingAddress = new Address("Rocafort", "45", "Barna", "Aspain", "08023");
+		
+		CreateOrderDTO newOrder = new CreateOrderDTO();
+		newOrder.setPaymentMethod(paymentMethod);
+		newOrder.setProductsQuantity(productsQuantity);
+		newOrder.setBillingAddress(billingAddress);
+		
+		return newOrder;
+	}
 
 	private String obtainAccessToken() throws Exception {
-		JwtLogin jwtLogin = new JwtLogin("admin@erp.com", "ReW9a0&+TP");
+		String testUsername= "admin@erp.com";
+		String testPassword= "ReW9a0&+TP";
+		JwtLogin jwtLogin = new JwtLogin(testUsername, testPassword);
 
 		ResultActions resultPost = this.mockMvc
 				.perform(post("/api/login")
