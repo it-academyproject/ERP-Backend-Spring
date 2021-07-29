@@ -2,7 +2,6 @@ package cat.itacademy.proyectoerp.domain;
 
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,12 +40,6 @@ public class Product implements Serializable {
 	private long created;
 	private long modified;
 	
-	private double discount;
-	@Column(name="date_begin_discount")
-	private LocalDate dateBeginDiscount;
-	@Column(name="date_end_discount")
-	private LocalDate dateEndDiscount;
-	
 	@ManyToMany
 	private Set<Category> categories;
 	
@@ -60,6 +53,9 @@ public class Product implements Serializable {
 	//@NotNull(message = "You have to assign shop to this product")
 	@Valid
 	private Shop shop;
+	
+	@ManyToOne
+	private Offer offer;
 
 	public Product() {
 
@@ -202,30 +198,13 @@ public class Product implements Serializable {
 		this.shop = shop;
 	}
 
-	public double getDiscount() {
-		return discount;
+	public Offer getOffer() {
+		return offer;
 	}
 
-	public void setDiscount(double discount) {
-		this.discount = discount;
+	public void setOffer(Offer offer) {
+		this.offer = offer;
 	}
-
-	public LocalDate getDateBeginDiscount() {
-		return dateBeginDiscount;
-	}
-
-	public void setDateBeginDiscount(LocalDate dateBeginDiscount) {
-		this.dateBeginDiscount = dateBeginDiscount;
-	}
-
-	public LocalDate getDateEndDiscount() {
-		return dateEndDiscount;
-	}
-
-	public void setDateEndDiscount(LocalDate dateEndDiscount) {
-		this.dateEndDiscount = dateEndDiscount;
-	}
-	
 	
 	
 }
