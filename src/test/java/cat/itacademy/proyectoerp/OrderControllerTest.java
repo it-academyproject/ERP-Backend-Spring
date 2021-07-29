@@ -5,6 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import static org.mockito.BDDMockito.given;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -137,7 +139,7 @@ public class OrderControllerTest {
 
 	@Test
 	@DisplayName("Validate endpoint create order")
-	void givenCreateOrder_thenStatus200() throws Exception {
+	void givenCreatedOrder_thenStatus200() throws Exception {
 		String accessToken = obtainAccessToken();		
 		String endPoint = "/api/orders";
 		CreateOrderDTO newOrder = createValidNewOrder();
@@ -154,7 +156,7 @@ public class OrderControllerTest {
 		
 	@Test
 	@DisplayName("Validate endpoint delete order")
-	void givenDeleteOrder_thenStatus200() throws Exception {
+	void givenDeletedOrder_thenStatus200() throws Exception {
 		String accessToken = obtainAccessToken();
 		String endPoint = "/api/orders";		
 		CreateOrderDTO newOrder = createValidNewOrder();
