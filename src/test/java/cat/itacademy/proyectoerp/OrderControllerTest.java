@@ -3,11 +3,14 @@ package cat.itacademy.proyectoerp;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import static org.hamcrest.Matchers.is;
 
 import org.junit.Before;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +35,6 @@ import cat.itacademy.proyectoerp.domain.PaymentMethod;
 import cat.itacademy.proyectoerp.dto.CreateOrderDTO;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
-
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = ProyectoErpApplication.class)
 @AutoConfigureMockMvc
@@ -59,13 +61,11 @@ public class OrderControllerTest {
 	@DisplayName("Validate endpoint get all orders")
 	void givenOrders_whenGetOrders_thenStatus200() throws Exception {
 		String accessToken = obtainAccessToken();
-		
+
 		String endPoint = "/api/orders";
-		this.mockMvc
-		.perform(get(endPoint)
-				.header("Authorization", "Bearer " + accessToken)
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isOk());
+		this.mockMvc.perform(
+				get(endPoint).header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
 	}
 
 	@Test
@@ -74,13 +74,11 @@ public class OrderControllerTest {
 		Order firstOrder = orderRepository.findAll().get(0);
 		UUID id = firstOrder.getId();
 		String accessToken = obtainAccessToken();
-		
+
 		String endPoint = "/api/orders/{id}";
-		this.mockMvc
-		.perform(get(endPoint, id)
-				.header("Authorization", "Bearer " + accessToken)
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isOk());
+		this.mockMvc.perform(
+				get(endPoint, id).header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
 	}
 
 	@Test
@@ -88,13 +86,10 @@ public class OrderControllerTest {
 	void givenOrderById_whenOrderByIdNotFound_thenStatus204() throws Exception {
 		UUID nonExtistentId = UUID.fromString("06d70bed-7424-43ab-954e-385fcd68997a");
 		String accessToken = obtainAccessToken();
-		
+
 		String endPoint = "/api/orders/{id}";
-		this.mockMvc
-		.perform(get(endPoint, nonExtistentId)
-				.header("Authorization", "Bearer " + accessToken)
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isNoContent());
+		this.mockMvc.perform(get(endPoint, nonExtistentId).header("Authorization", "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
 	}
 
 	@Test
@@ -102,72 +97,103 @@ public class OrderControllerTest {
 	void givenOrderById_whenOrderIdNotFound_thenStatus400() throws Exception {
 		String wrongIdFormat = "yertueriy";
 		String accessToken = obtainAccessToken();
-		
+
 		String endPoint = "/api/orders/{id}";
-		this.mockMvc
-		.perform(get(endPoint, wrongIdFormat)
-				.header("Authorization", "Bearer " + accessToken)
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isBadRequest());
+		this.mockMvc.perform(get(endPoint, wrongIdFormat).header("Authorization", "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
 	}
-	
 
 	@Test
 	@DisplayName("Validate endpoint create order")
 	void givenCreatedOrder_thenStatus200() throws Exception {
-		String accessToken = obtainAccessToken();		
+		String accessToken = obtainAccessToken();
 		String endPoint = "/api/orders";
-		CreateOrderDTO newOrder = createValidNewOrder();
+		CreateOrderDTO newOrder = createValidOrder();
 		String body = new ObjectMapper().writeValueAsString(newOrder);
-		
+
 		this.mockMvc
-		.perform(post(endPoint)
-				.header("Authorization", "Bearer " + accessToken)
-				.accept(MediaType.APPLICATION_JSON)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(body))
-		.andExpect(status().isOk());
+				.perform(post(endPoint).header("Authorization", "Bearer " + accessToken)
+						.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(body))
+				.andExpect(status().isOk());
 	}
-		
+
+	@Test
+	@DisplayName("Bad Request when CREATE order with empty billing address")
+	void givenEmtyBillingAddressthenErrorMessage() throws Exception {
+		String accessToken = obtainAccessToken();
+		String endPoint = "/api/orders";
+		CreateOrderDTO invalidOrder = createInvalidOrder("billingAddress");
+		String body = new ObjectMapper().writeValueAsString(invalidOrder);
+
+		this.mockMvc
+				.perform(post(endPoint)
+						.header("Authorization", "Bearer " + accessToken)
+						.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(body))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.message", is("Error: A billing address is necessary to process a new order from an unregistered client")));
+
+	}
+
 	@Test
 	@DisplayName("Validate endpoint delete order")
 	void givenDeletedOrder_thenStatus200() throws Exception {
 		String accessToken = obtainAccessToken();
-		String endPoint = "/api/orders";		
-		CreateOrderDTO newOrder = createValidNewOrder();
+		String endPoint = "/api/orders";
+		CreateOrderDTO newOrder = createValidOrder();
 		String body = new ObjectMapper().writeValueAsString(newOrder);
-		
+
 		this.mockMvc
-		.perform(delete(endPoint)
-				.header("Authorization", "Bearer " + accessToken)
-				.accept(MediaType.APPLICATION_JSON)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(body))
-		.andExpect(status().isOk());
+				.perform(delete(endPoint).header("Authorization", "Bearer " + accessToken)
+						.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(body))
+				.andExpect(status().isOk());
 	}
-	
-	private CreateOrderDTO createValidNewOrder() {
+
+	private CreateOrderDTO createValidOrder() {
 		PaymentMethod paymentMethod = PaymentMethod.CASH;
 		Map<Integer, Integer> productsQuantity = new HashMap<>();
 		productsQuantity.put(5, 5);
 		Address billingAddress = new Address("Rocafort", "45", "Barna", "Spain", "08023");
-		
+
 		CreateOrderDTO newOrder = new CreateOrderDTO();
 		newOrder.setPaymentMethod(paymentMethod);
 		newOrder.setProductsQuantity(productsQuantity);
 		newOrder.setBillingAddress(billingAddress);
-		
+
 		return newOrder;
 	}
 
+	private CreateOrderDTO createInvalidOrder(String field) {
+		PaymentMethod paymentMethod = PaymentMethod.CASH;
+		Map<Integer, Integer> productsQuantity = new HashMap<>();
+		productsQuantity.put(5, 5);
+		Address billingAddress = new Address("Rocafort", "45", "Barna", "Spain", "08023");
+
+		switch (field) {
+		case "productsQuantity":
+			productsQuantity = null;
+			break;
+		case "billingAddress":
+			billingAddress = null;
+			break;
+		default:
+			break;
+		}
+
+		CreateOrderDTO invalidOrder = new CreateOrderDTO();
+		invalidOrder.setPaymentMethod(paymentMethod);
+		invalidOrder.setProductsQuantity(productsQuantity);
+		invalidOrder.setBillingAddress(billingAddress);
+		System.out.println(invalidOrder.getPaymentMethod());
+		return invalidOrder;
+	}
+
 	private String obtainAccessToken() throws Exception {
-		String testUsername= "admin@erp.com";
-		String testPassword= "ReW9a0&+TP";
+		String testUsername = "admin@erp.com";
+		String testPassword = "ReW9a0&+TP";
 		JwtLogin jwtLogin = new JwtLogin(testUsername, testPassword);
 
 		ResultActions resultPost = this.mockMvc
-				.perform(post("/api/login")
-						.content(new ObjectMapper().writeValueAsString(jwtLogin))
+				.perform(post("/api/login").content(new ObjectMapper().writeValueAsString(jwtLogin))
 						.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 
