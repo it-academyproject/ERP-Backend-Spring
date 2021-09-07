@@ -6,9 +6,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+//import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.persistence.PersistenceException;
+import javax.persistence.RollbackException;
 
 import static org.hamcrest.Matchers.is;
 
@@ -21,6 +28,7 @@ import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -118,21 +126,51 @@ public class OrderControllerTest {
 	}
 
 	@Test
-	@DisplayName("Bad Request when CREATE order with empty billing address")
-	void givenEmtyBillingAddressthenErrorMessage() throws Exception {
+	@DisplayName("Bad Request when CREATE order with empty address")
+	void givenEmptyAddressThenErrorMessage() throws Exception {
 		String accessToken = obtainAccessToken();
 		String endPoint = "/api/orders";
 		CreateOrderDTO invalidOrder = createInvalidOrder("billingAddress");
 		String body = new ObjectMapper().writeValueAsString(invalidOrder);
 
-		this.mockMvc
-				.perform(post(endPoint)
+		this.mockMvc.perform(post(endPoint)
 						.header("Authorization", "Bearer " + accessToken)
 						.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(body))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.message", is("Error: A billing address is necessary to process a new order from an unregistered client")));
+						.andExpect(status().isOk())
+						.andExpect(jsonPath("$.message", is( "Error: Could not commit JPA transaction; nested exception is javax.persistence.RollbackException: Error while committing the transaction")));
 
 	}
+	
+	private CreateOrderDTO createInvalidOrder(String field) {
+		// valid order so far
+		PaymentMethod paymentMethod = PaymentMethod.CASH;
+		Map<Integer, Integer> productsQuantity = new HashMap<>();
+		productsQuantity.put(5, 5);
+		Address billingAddress = new Address("Carrer Nou", "45", "Barna", "Spain", "08023");
+
+		// specify the wrong field of the order
+		switch (field) {
+		case "productsQuantity":
+			paymentMethod = PaymentMethod.CASH;
+			productsQuantity = null;
+			break;
+		case "billingAddress":
+			paymentMethod = PaymentMethod.CASH;
+			billingAddress.setStreet("");
+			break;
+			
+		default:
+			break;
+		}
+
+		CreateOrderDTO invalidOrder = new CreateOrderDTO();
+		invalidOrder.setPaymentMethod(paymentMethod);
+		invalidOrder.setProductsQuantity(productsQuantity);
+		invalidOrder.setBillingAddress(billingAddress);
+		System.out.println(invalidOrder.getPaymentMethod());
+		return invalidOrder;
+	}
+
 
 	@Test
 	@DisplayName("Validate endpoint delete order")
@@ -160,31 +198,6 @@ public class OrderControllerTest {
 		newOrder.setBillingAddress(billingAddress);
 
 		return newOrder;
-	}
-
-	private CreateOrderDTO createInvalidOrder(String field) {
-		PaymentMethod paymentMethod = PaymentMethod.CASH;
-		Map<Integer, Integer> productsQuantity = new HashMap<>();
-		productsQuantity.put(5, 5);
-		Address billingAddress = new Address("Rocafort", "45", "Barna", "Spain", "08023");
-
-		switch (field) {
-		case "productsQuantity":
-			productsQuantity = null;
-			break;
-		case "billingAddress":
-			billingAddress = null;
-			break;
-		default:
-			break;
-		}
-
-		CreateOrderDTO invalidOrder = new CreateOrderDTO();
-		invalidOrder.setPaymentMethod(paymentMethod);
-		invalidOrder.setProductsQuantity(productsQuantity);
-		invalidOrder.setBillingAddress(billingAddress);
-		System.out.println(invalidOrder.getPaymentMethod());
-		return invalidOrder;
 	}
 
 	private String obtainAccessToken() throws Exception {
