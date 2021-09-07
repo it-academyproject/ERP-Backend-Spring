@@ -126,18 +126,20 @@ public class OrderControllerTest {
 	}
 
 	@Test
-	@DisplayName("Bad Request when CREATE order with empty address")
-	void givenEmptyAddressThenErrorMessage() throws Exception {
+	@DisplayName("Bad Request when CREATE order with empty billing address")
+	void givenEmptyAddressThenStatusOkAndErrorMessage() throws Exception {
 		String accessToken = obtainAccessToken();
 		String endPoint = "/api/orders";
 		CreateOrderDTO invalidOrder = createInvalidOrder("billingAddress");
 		String body = new ObjectMapper().writeValueAsString(invalidOrder);
 
 		this.mockMvc.perform(post(endPoint)
-						.header("Authorization", "Bearer " + accessToken)
-						.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(body))
-						.andExpect(status().isOk())
-						.andExpect(jsonPath("$.message", is( "Error: Could not commit JPA transaction; nested exception is javax.persistence.RollbackException: Error while committing the transaction")));
+				.header("Authorization", "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(body))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.message", 
+							is( "Error: Could not commit JPA transaction;"
+								+ " nested exception is javax.persistence.RollbackException: Error while committing the transaction")));
 
 	}
 	
