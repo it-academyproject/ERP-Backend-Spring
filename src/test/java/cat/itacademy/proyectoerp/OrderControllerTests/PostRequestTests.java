@@ -74,7 +74,7 @@ public class PostRequestTests {
 				.content(body))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.message", is( "Error:"
-						+ " billing address is necessary to process a new order from an unregistered client")));
+						+ " A billing address is necessary to process a new order from an unregistered client")));
 	}
 
 	@Test
