@@ -62,8 +62,8 @@ public class GetRequestTests {
 		Order firstOrder = orderRepository.findAll().get(0);
 		UUID id = firstOrder.getId();
 		String accessToken = obtainAccessToken();
-
 		String endPoint = "/api/orders/{id}";
+		
 		this.mockMvc.perform(get(endPoint, id)
 				.header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
@@ -75,6 +75,7 @@ public class GetRequestTests {
 		UUID nonExtistentId = UUID.fromString("06d70bed-7424-43ab-954e-385fcd68997a");
 		String accessToken = this.obtainAccessToken();
 		String endPoint = "/api/orders/{id}";
+		
 		this.mockMvc.perform(get(endPoint, nonExtistentId)
 				.header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNoContent());
@@ -86,6 +87,7 @@ public class GetRequestTests {
 		String wrongIdFormat = "yertueriy";
 		String accessToken = this.obtainAccessToken();
 		String endPoint = "/api/orders/{id}";
+		
 		this.mockMvc.perform(get(endPoint, wrongIdFormat)
 				.header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest());
@@ -97,22 +99,21 @@ public class GetRequestTests {
 		String wrongIdFormat = "   ";
 		String accessToken = this.obtainAccessToken();
 		String endPoint = "/api/orders/{id}";
+		
 		this.mockMvc.perform(get(endPoint, wrongIdFormat)
 				.header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isInternalServerError());
 	}
 	
 	
-
-	
 	private String obtainAccessToken() throws Exception {
 		String testUsername = "admin@erp.com";
 		String testPassword = "ReW9a0&+TP";
 		JwtLogin jwtLogin = new JwtLogin(testUsername, testPassword);
 
-		ResultActions resultPost = this.mockMvc
-				.perform(post("/api/login").content(new ObjectMapper().writeValueAsString(jwtLogin))
-						.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON))
+		ResultActions resultPost = this.mockMvc.perform(post("/api/login")
+				.content(new ObjectMapper().writeValueAsString(jwtLogin))
+				.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 
 		String resultString = resultPost.andReturn().getResponse().getContentAsString();

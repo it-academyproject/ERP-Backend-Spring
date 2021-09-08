@@ -57,14 +57,14 @@ public class DeleteRequestTests {
 		Map<String, UUID> idMap = this.createId("existentId");
 		String body = new ObjectMapper().writeValueAsString(idMap);
 		
-		this.mockMvc.perform(delete(endPoint)
-				.header("Authorization", "Bearer " + accessToken)
-				.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(body))
+		this.mockMvc.perform(delete(endPoint).header("Authorization", "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+				.content(body))
 				.andExpect(status().isOk());
 	}
 
 	@Test
-	@DisplayName("delete order - success but error message when null id")
+	@DisplayName("delete order - ok but error message when null id")
 	void givenNullId_whenDeleteOrder_thenStatus200AndErrorMessage() throws Exception {
 		String accessToken = obtainAccessToken();
 		String endPoint = "/api/orders";
@@ -80,7 +80,7 @@ public class DeleteRequestTests {
 	}
 
 	@Test
-	@DisplayName("delete order - success but error message when non existent id")
+	@DisplayName("delete order - ok but error message when non existent id")
 	void givenNonExistentId_whenDeleteOrder_thenStatus200AndErrorMesage() throws Exception {
 		String accessToken = obtainAccessToken();
 		String endPoint = "/api/orders";
@@ -96,7 +96,11 @@ public class DeleteRequestTests {
 								+ " entity with id 11110000-0000-0000-0000-000000000000 exists!")));
 	}
 	
-	
+	/**
+	 * 
+	 * @param idType, string to define the id used in each test (existent, null or non-existent)
+	 * @return idMap, map "id":id
+	 */
 	private Map<String, UUID> createId(String idType) {
 		Map<String, UUID> idMap = new HashMap<String, UUID>();
 		UUID id;
