@@ -164,7 +164,7 @@ public class ProductController {
 	public HashMap<String, Object> createCategory(@RequestBody CategoryDTO categoryDto) {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
-			CategoryDTO category = categoryService.createCategory(categoryDto);
+			CategoryDTO category = categoryService.create(categoryDto);
 			map.put("success", "true");
 			map.put("message", "category created");
 			map.put("category", category);
@@ -179,7 +179,7 @@ public class ProductController {
 	public HashMap<String, Object> getCategoryById(@PathVariable UUID id) {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
-			CategoryDTO category = categoryService.getCategoryById(id);
+			CategoryDTO category = categoryService.readById(id);
 			map.put("success", "true");
 			map.put("message", "category found");
 			map.put("category", category);
@@ -194,7 +194,7 @@ public class ProductController {
 	public HashMap<String, Object> getCategories() {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
-			List<CategoryDTO> categories = categoryService.getCategories();
+			List<CategoryDTO> categories = categoryService.read();
 			map.put("success", "true");
 			map.put("message", "categories found");
 			map.put("categories", categories);
@@ -209,7 +209,7 @@ public class ProductController {
 	public HashMap<String, Object> getCategoriesByParentCategoryName(@PathVariable String parentCategoryName) {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
-			List<CategoryDTO> categories = categoryService.getCategoriesByParentCategoryName(parentCategoryName);
+			CategoryDTO categories = categoryService.readByName(parentCategoryName);
 			map.put("success", "true");
 			map.put("message", "categories found");
 			map.put("categories", categories);
@@ -222,10 +222,10 @@ public class ProductController {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/categories/{id}")
-	public HashMap<String, Object> updateCategoryById(@PathVariable UUID id, @RequestBody CategoryDTO categoryDto) {
+	public HashMap<String, Object> updateCategoryById(@RequestBody CategoryDTO categoryDto) {
 		HashMap<String, Object> map = new HashMap<>();
 		try {
-			CategoryDTO category = categoryService.updateCategory(id, categoryDto);
+			CategoryDTO category = categoryService.update(categoryDto);
 			map.put("success", "true");
 			map.put("message", "category updated");
 			map.put("category", category);
@@ -242,7 +242,7 @@ public class ProductController {
 		HashMap<String, Object> map = new HashMap<>();
 		
 		try {
-			categoryService.deleteCategory(categoryDto);
+			categoryService.delete(categoryDto);
 			
 			map.put("success", "true");
 			map.put("message", "category deleted");

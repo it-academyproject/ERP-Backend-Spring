@@ -24,8 +24,8 @@ import cat.itacademy.proyectoerp.repository.IShopRepository;
 import cat.itacademy.proyectoerp.repository.IUserRepository;
 
 @TestComponent
-public class TestData {
-
+public class TestData { // FIXME There's no parent and child categories anymore.
+	
 	public static final String DEFAULT_ADMIN_USERNAME = "admin@erp.com";
 	
 	public static final String DEFAULT_EMPLOYEE_USERNAME = "employee@erp.com";
@@ -88,16 +88,16 @@ public class TestData {
 		userRepository.save(new User(DEFAULT_EMPLOYEE_USERNAME, passwordEncoder.encode(DEFAULT_PASSWORD), UserType.EMPLOYEE));
 	}
 	
-	public Category createCategory(String name, String description, Category parentCategory) {
-		Category category = new Category(name, description, parentCategory);
+	public Category createCategory(String name, String description) {
+		Category category = new Category(name, description);
 		return categoryRepository.save(category);
 	}
 	
-	public CategoryDTO buildCategoryDto(String name, String description, UUID parentCategoryId) {
+	public CategoryDTO buildCategoryDto(String name, String description) {//, UUID parentCategoryId) {
 		CategoryDTO categoryDto = new CategoryDTO();
 		categoryDto.setName(name);
 		categoryDto.setDescription(description);
-		categoryDto.setParentCategoryId(parentCategoryId);
+		//categoryDto.setParentCategoryId(parentCategoryId);
 		return categoryDto;
 	}
 	
@@ -115,7 +115,7 @@ public class TestData {
 	}
 	
 	public Product createProduct(String name, int stock, String image, String family, double price, double vat, double wholesalePrice, int wholesaleQuantity, long created, long modified) {
-		Product product = new Product(name, stock, image, family, price, vat, wholesalePrice, wholesaleQuantity, created, modified, createRandomShop());
+		Product product = null;//new Product(name, stock, image, family, price, vat, wholesalePrice, wholesaleQuantity, created, modified, createRandomShop());
 		return productRepository.save(product);
 	}
 	
@@ -124,12 +124,12 @@ public class TestData {
 		productDto.setName(name);
 		productDto.setStock(stock);
 		productDto.setImage(image);
-		productDto.setFamily(family);
+		//productDto.setFamily(family);
 		productDto.setPrice(price);
 		productDto.setVat(vat);
 		productDto.setWholesalePrice(wholesalePrice);
 		productDto.setWholesaleQuantity(wholesaleQuantity);
-		productDto.setCategories(categoriesDto);
+		//productDto.setCategories(categoriesDto);
 		return productDto;
 	}
 	
