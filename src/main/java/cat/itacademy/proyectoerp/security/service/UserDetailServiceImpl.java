@@ -22,6 +22,12 @@ public class UserDetailServiceImpl implements UserDetailsService {
 	@Autowired
 	IUserRepository userDao;
 	
+//	private User user;
+	
+//	public boolean isAccountNonLocked() {
+//        return user.isAccountNonLocked();
+//    }
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		//final org.springframework.security.core.userdetails.User UserSecurity;
