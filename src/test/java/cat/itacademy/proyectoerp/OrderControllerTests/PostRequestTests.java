@@ -165,7 +165,7 @@ public class PostRequestTests {
 	
 	
 	private String obtainAccessToken() throws Exception {
-		String testUsername = "client@erp.com";
+		String testUsername = "admin@erp.com";
 		String testPassword = "ReW9a0&+TP";
 		JwtLogin jwtLogin = new JwtLogin(testUsername, testPassword);
 		
