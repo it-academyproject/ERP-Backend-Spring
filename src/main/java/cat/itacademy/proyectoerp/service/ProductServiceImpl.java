@@ -101,7 +101,7 @@ public class ProductServiceImpl implements IProductService { // FIXME There's no
 	@Override
 	public List<ProductDTO> getProductsByCategoryName(String name) {
 		//categoryService.existsCategoryByName(name);
-		return productRepository.findAllByCategoriesName(name).stream().collect(Collectors.mapping(product -> modelMapper.map(product, ProductDTO.class), Collectors.toList()));
+		return productRepository.findAllByCategoryName(name).stream().collect(Collectors.mapping(product -> modelMapper.map(product, ProductDTO.class), Collectors.toList()));
 	}
 	
 	@Override
