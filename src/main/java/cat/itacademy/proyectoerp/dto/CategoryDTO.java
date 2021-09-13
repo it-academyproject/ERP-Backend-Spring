@@ -10,45 +10,52 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CategoryDTO implements Serializable {
-
+	
 	private static final long serialVersionUID = 1L;
-
-	private UUID id;
-	private String name;
-	private String description;
-	private UUID parentCategoryId;
-	private String parentCategoryName;
+	
+	private UUID id, parentCategoryId;
+	private String name, parentCategoryName, description;
+	
+	public void setId(UUID id) {
+		this.id = id;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public void setParentCategoryId(UUID parentCategoryId) {
+		this.parentCategoryId = parentCategoryId;
+	}
+	
+	public void setParentCategoryName(String parentCategoryName) {
+		this.parentCategoryName = parentCategoryName;
+	}
 	
 	public UUID getId() {
 		return id;
 	}
-	public void setId(UUID id) {
-		this.id = id;
-	}
+	
 	public String getName() {
 		return name;
 	}
-	public void setName(String name) {
-		this.name = name;
-	}
+	
 	public String getDescription() {
 		return description;
 	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
+	
 	public UUID getParentCategoryId() {
 		return parentCategoryId;
 	}
-	public void setParentCategoryId(UUID parentCategoryId) {
-		this.parentCategoryId = parentCategoryId;
-	}
+	
 	public String getParentCategoryName() {
 		return parentCategoryName;
 	}
-	public void setParentCategoryName(String parentCategoryName) {
-		this.parentCategoryName = parentCategoryName;
-	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -60,6 +67,7 @@ public class CategoryDTO implements Serializable {
 		result = prime * result + ((parentCategoryName == null) ? 0 : parentCategoryName.hashCode());
 		return result;
 	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -96,5 +104,5 @@ public class CategoryDTO implements Serializable {
 			return false;
 		return true;
 	}
-		
+	
 }
