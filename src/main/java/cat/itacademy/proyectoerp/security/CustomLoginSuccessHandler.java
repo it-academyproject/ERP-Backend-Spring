@@ -25,19 +25,19 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 	@Autowired
 	private IUserRepository userRepository;
 
-//	@Override
-//	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-//								Authentication authentication) throws IOException, ServletException {
-//
-//		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//		String username = userDetails.getUsername();
-//		User user = userRepository.findByUsername(username);
-//
-//		if (user.getFailedAttempts() > 0) {
-//			loginAttemptsService.resetFailedAttempts(username);
-//		}
-//
-//		super.onAuthenticationSuccess(request, response, authentication);
-//	}
+	@Override
+	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+								Authentication authentication) throws IOException, ServletException {
+
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		String username = userDetails.getUsername();
+		User user = userRepository.findByUsername(username);
+
+		if (user.getFailedAttempts() > 0) {
+			loginAttemptsService.resetFailedAttempts(username);
+		}
+
+		super.onAuthenticationSuccess(request, response, authentication);
+	}
 
 }

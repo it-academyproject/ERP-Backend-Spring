@@ -17,7 +17,7 @@ import cat.itacademy.proyectoerp.security.service.LoginAttemptsService;
 import cat.itacademy.proyectoerp.service.IUserService;
 
 @Component
-public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
+public class CustomLoginFailureHandler {
 
 	@Autowired
 	private LoginAttemptsService loginAttemptService;
@@ -25,31 +25,28 @@ public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHan
 	@Autowired
 	private IUserService userService;
 
-	@Override
-	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-							AuthenticationException exception) throws IOException, ServletException {
+	public void onAuthenticationFailure(String username) {
 		
-		String username = request.getParameter("username");
 		User user = userService.findByUsername(username);
 
-//		if (user != null) {
-//			if (user.getActive() && user.getAccountNonLocked()) {
-//				if (user.getFailedAttempts() < loginAttemptService.MAX_FAILED_ATTEMPTS - 1) {
-//					loginAttemptService.increaseFailedAttempts(user);
-//				} else {
-//					loginAttemptService.lock(user);
-//					exception = new LockedException("Your account has been locked due to 3 failed attempts."
-//							+ " It will be unlocked after 24 hours.");
-//				}
-//			} else if (!user.getAccountNonLocked()) {
-//				if (loginAttemptService.unlockWhenTimeExpired(user)) {
-//					exception = new LockedException("Your account has been unlocked. Please try to login again.");
-//				}
-//			}
-//
-//		}
-//
-////		super.setDefaultFailureUrl("/login");
+		if (user != null) {
+			if (user.getActive() && user.getAccountNonLocked()) {
+				if (user.getFailedAttempts() < loginAttemptService.MAX_FAILED_ATTEMPTS - 1) {
+					loginAttemptService.increaseFailedAttempts(user);
+				} else {
+					loginAttemptService.lock(user);
+					throw new LockedException("Your account has been locked due to 3 failed attempts."
+							+ " It will be unlocked after 24 hours.");
+				}
+			} else if (!user.getAccountNonLocked()) {
+				if (loginAttemptService.unlockWhenTimeExpired(user)) {
+					throw new LockedException("Your account has been unlocked. Please try to login again.");
+				}
+			}
+
+		}
+
+//		super.setDefaultFailureUrl("/login");
 //		super.onAuthenticationFailure(request, response, exception);
 	}
 }

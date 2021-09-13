@@ -2,6 +2,8 @@ package cat.itacademy.proyectoerp.repository;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +19,7 @@ import cat.itacademy.proyectoerp.domain.UserType;
  *
  */
 @Repository
+@Transactional
 public interface IUserRepository extends JpaRepository<User, Long> {
 
 	/**
@@ -48,8 +51,8 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 	 * @param failAttempts
 	 * @param username
 	 */
-//	@Query("UPDATE User u SET u.failedAttempts = ?1 WHERE u.username = ?2")
-//	@Modifying
-//	public void updateFailedAttempts(int failAttempts, String username);
+	@Query("UPDATE User u SET u.failedAttempts = ?1 WHERE u.username = ?2")
+	@Modifying
+	public void updateFailedAttempts(int failAttempts, String username);
 
 }

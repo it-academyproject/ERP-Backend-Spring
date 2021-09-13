@@ -9,10 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import cat.itacademy.proyectoerp.security.CustomLoginFailureHandler;
+import cat.itacademy.proyectoerp.security.CustomLoginSuccessHandler;
 import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
 
 public class JwtFilters extends OncePerRequestFilter{
@@ -22,11 +25,17 @@ public class JwtFilters extends OncePerRequestFilter{
 
 	@Autowired
 	UserDetailServiceImpl userDetailsService;
+	
+	@Autowired
+    private CustomLoginFailureHandler loginFailureHandler;
+     
+    @Autowired
+    private CustomLoginSuccessHandler loginSuccessHandler;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
-	        
 	try {
+		
 		// if token is valid configure Spring Security
 		String token = theToken(req);
 	    if(token != null && jwtUtil.validateToken(token)){
@@ -35,6 +44,8 @@ public class JwtFilters extends OncePerRequestFilter{
 
 	        UsernamePasswordAuthenticationToken auth =
 	           new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+	        
+	        
 	            
 	        // Wwe specify that the current user is authenticated. We pass the
 			// Spring Security Configurations successfully.

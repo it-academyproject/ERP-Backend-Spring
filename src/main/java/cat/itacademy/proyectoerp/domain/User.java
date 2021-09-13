@@ -60,7 +60,7 @@ public class User {
 	@Column(nullable = false, columnDefinition = "boolean default true")
 	private Boolean AccountNonLocked;
 
-	@Column
+	@Column(columnDefinition = "integer default 0")
 	private Integer failedAttempts;
 
 	@Column

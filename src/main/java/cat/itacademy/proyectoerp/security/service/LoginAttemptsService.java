@@ -17,15 +17,15 @@ public class LoginAttemptsService {
 	@Autowired
 	IUserRepository userRepository;
 
-//	public void increaseFailedAttempts(User user) {
-//		String username = user.getUsername();
-//		int newFailAttempts = user.getFailedAttempts() + 1;
-//		userRepository.updateFailedAttempts(newFailAttempts, username);
-//	}
-//
-//	public void resetFailedAttempts(String username) {
-//		userRepository.updateFailedAttempts(0, username);
-//	}
+	public void increaseFailedAttempts(User user) {
+		String username = user.getUsername();
+		Integer newFailAttempts = user.getFailedAttempts() + 1;
+		userRepository.updateFailedAttempts(newFailAttempts, username);
+	}
+
+	public void resetFailedAttempts(String username) {
+		userRepository.updateFailedAttempts(0, username);
+	}
 
 	public void lock(User user) {
 		user.setAccountNonLocked(false);

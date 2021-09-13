@@ -8,19 +8,33 @@ import org.springframework.stereotype.Service;
 
 import cat.itacademy.proyectoerp.domain.UserType;
 import cat.itacademy.proyectoerp.repository.IUserRepository;
+import cat.itacademy.proyectoerp.security.CustomLoginFailureHandler;
+import cat.itacademy.proyectoerp.security.CustomLoginSuccessHandler;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
 
 	@Autowired
 	IUserRepository userDao;
+
+	@Autowired
+	LoginAttemptsService loginAttemptsService;
+	
+	@Autowired
+    private CustomLoginFailureHandler loginFailureHandler;
+     
+    @Autowired
+    private CustomLoginSuccessHandler loginSuccessHandler;
 	
 //	private User user;
 	
@@ -39,11 +53,28 @@ public class UserDetailServiceImpl implements UserDetailsService {
 		if (null == userDao.findByUsername(username)) {
 			throw new UsernameNotFoundException("Username not found");
 		}
+		
+		
 
 		//for (String role : user.getUserType())
 		authoritiesUser.add(new SimpleGrantedAuthority("ROLE_" + userDao.findByUsername(username).getUserType().toString()));
 
+		
+		
 		UserDetails userDetails = User.withUsername(userDao.findByUsername(username).getUsername()).password(userDao.findByUsername(username).getPassword()).authorities(authoritiesUser).build();
-		return userDetails;
+		System.out.println(userDetails.toString());
+		if (userDetails == null) {
+			loginFailureHandler.onAuthenticationFailure(username);
+			return null;
+		} else {
+			return userDetails;			
+		}
+		
+	
+		//		
+//		cat.itacademy.proyectoerp.domain.User user = userDao.findByUsername(username);
+//		
+//		loginAttemptsService.increaseFailedAttempts(user);
+		
 	}
 }

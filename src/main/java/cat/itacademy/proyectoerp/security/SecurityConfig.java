@@ -15,8 +15,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.security.jwt.JwtAuthenticationEntryPoint;
 import cat.itacademy.proyectoerp.security.jwt.JwtFilters;
+import cat.itacademy.proyectoerp.security.service.LoginAttemptsService;
 import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
 
 @Configuration
@@ -34,10 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	PasswordEncoder passwordEncoder;
 
 	@Autowired
-	private CustomLoginFailureHandler loginFailureHandler;
-
-	@Autowired
-	private CustomLoginSuccessHandler loginSuccessHandler;
+	LoginAttemptsService loginAttempsService;
 
 	@Bean
 	public JwtFilters jwtFilters() {
@@ -72,25 +71,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/api/login", "/api/users/clients", "/api/users/recoverpassword").permitAll().anyRequest()
 				.authenticated()
 				.and()
-				.formLogin()
-					.loginPage("api/login")
-					.usernameParameter("username")
-					.failureHandler(loginFailureHandler)
-					.successHandler(loginSuccessHandler)
-					.permitAll()
-				.and()
 				// Exception control. 401 no authorized
-				.exceptionHandling().authenticationEntryPoint(jwtEntryPoint).and().sessionManagement()
+				.exceptionHandling().authenticationEntryPoint(jwtEntryPoint).and()
+				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		// Filter to validate the tokens with every request
 		http.addFilterBefore(jwtFilters(), UsernamePasswordAuthenticationFilter.class);
+		
 	}
 
 	@Bean
 	public DaoAuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 		provider.setPasswordEncoder(passwordEncoder);
-		provider.setUserDetailsService(userDetailService);
+		provider.setUserDetailsService(userDetailService);	
+		
 		return provider;
 	}
 }
