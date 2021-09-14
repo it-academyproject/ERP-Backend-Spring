@@ -13,74 +13,83 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table (name = "order_details")
+@Table(name = "order_details")
 @JsonIgnoreProperties("order")
 public class OrderDetail {
 	
 	@Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-	@Column(name = "id")
 	@Type(type="uuid-char")
+	@Column(name = "id")
 	private UUID id;
 	
+	@Column(name = "quantity")
+	private int quantity;
+	@Column(name = "subtotal")
+	private double subtotal;
+	
 	@ManyToOne
-	@JoinColumn(name = "product_id")
-	@JsonBackReference (value="order_details-product") //Without value -> 415 in Post Order
+	@JoinColumn(name = "product_id", referencedColumnName = "product_id")
+	//@JsonBackReference(value="order_details-product") //Without value -> 415 in Post Order
 	private Product product;
 	
 	@ManyToOne
-	@JoinColumn(name = "order_id")
-	@JsonBackReference (value="order_details-order") //Without value -> 415 in Post Order
+	@JoinColumn(name = "order_id", referencedColumnName = "order_id")
+	//@JsonBackReference(value="order_details-order") //Without value -> 415 in Post Order
 	private Order order;
 	
-	private Integer quantity;
-	private Double subtotal;
-	
 	public OrderDetail() {
-		
 	}
-		
-	public OrderDetail(Product product, Order order, Integer quantity, Double subtotal) {
-		this.product = product;
-		this.order = order;
+	
+	public OrderDetail(int quantity, double subtotal, Product product, Order order) {
 		this.quantity = quantity;
 		this.subtotal = subtotal;
+		this.product = product;
+		this.order = order;
+	}
+	
+	public void setId(UUID id) {
+		this.id = id;
+	}
+	
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+	
+	public void setSubtotal(double subtotal) {
+		this.subtotal = subtotal;
+	}
+	
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+	
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 	
 	public UUID getId() {
 		return id;
 	}
-	public void setId(UUID id) {
-		this.id = id;
+	
+	public int getQuantity() {
+		return quantity;
 	}
+	
+	public double getSubtotal() {
+		return subtotal;
+	}
+	
 	public Product getProduct() {
 		return product;
 	}
-	public void setProduct(Product product) {
-		this.product = product;
-	}
+	
 	public Order getOrder() {
 		return order;
 	}
-	public void setOrder(Order order) {
-		this.order = order;
-	}
-	public Integer getQuantity() {
-		return quantity;
-	}
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
-	}
-	public Double getSubtotal() {
-		return subtotal;
-	}
-	public void setSubtotal(Double subtotal) {
-		this.subtotal = subtotal;
-	}	
 	
 }
