@@ -89,8 +89,7 @@ public class PostRequestTests {
 				.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
 				.content(body))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.message", is( "Error: Could not commit JPA transaction;"
-								+ " nested exception is javax.persistence.RollbackException: Error while committing the transaction")));
+				.andExpect(jsonPath("$.message", is("Error: Product not found. The id 2 doesn't exist")));
 	}
 
 	@Test
@@ -122,7 +121,7 @@ public class PostRequestTests {
 				.content(body))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.message", 
-						is( "Error: Product not found. The id 456 doesn't exist")));
+						is( "Error: Product not found. The id 2 doesn't exist")));
 	}
 	
 	
