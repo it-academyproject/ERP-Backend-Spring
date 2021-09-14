@@ -9,14 +9,14 @@ import cat.itacademy.proyectoerp.domain.Product;
 
 public interface IOrderDetailService {
 	
-	public OrderDetail createOrderDetail(Order order, Product product, Integer quantity);
-	 
+	public OrderDetail createOrderDetail(int quantity, Product product, Order order);
+	
 	public OrderDetail findOrderDetailById(UUID id);
-	 
+	
 	public List<OrderDetail> findAllOrderDetail();
-	 
-	public OrderDetail updateOrderDetail (OrderDetail orderDetail);
-
-	public void deleteOrderDetail(UUID id);
+	
+	public OrderDetail updateOrderDetail(OrderDetail orderDetail);
+	
+	public void deleteOrderDetailById(UUID id);
+	
 }
-

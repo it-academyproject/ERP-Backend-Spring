@@ -1,17 +1,16 @@
 package cat.itacademy.proyectoerp.domain;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -24,85 +23,111 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Table(name = "offers")
 public class Offer implements Serializable {
 	
-
+	private static final long serialVersionUID = 1L;
+	
 	@Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-	@Column(name = "id")
+	@GeneratedValue(generator = "UUID")
+	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
 	@Type(type="uuid-char")
+	@Column(name = "offer_id")
 	private UUID id;
 	
-	@NotNull(message = "description is mandatory")
-	private String description;	
-	
-	@NotNull(message = "discount is mandatory")	
+	@Column(name = "name")
+	@NotNull(message = "name is mandatory")
+	private String name;
+	@Column(name = "discount")
+	@NotNull(message = "discount is mandatory")
 	private double discount;
+	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+	@Column(name="starts_on")
+	private LocalDateTime startsOn;
+	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+	@Column(name="ends_on")
+	private LocalDateTime endsOn;
+	@Column(name = "paid_quantity")
+	private int paidQuantity;
+	@Column(name = "free_quantity")
+	private int freeQuantity;
 	
-	@JsonFormat(pattern = "dd-MM-yyyy")
-	@Column(name="start_date")
-	@NotNull(message = "startDate is mandatory")
-	private LocalDate startDate;
+	@OneToMany(mappedBy = "offer")
+	private List<Product> products;
 	
-	@NotNull(message = "endDate is mandatory")
-	@JsonFormat(pattern = "dd-MM-yyyy")
-	@Column(name="end_date")
-	private LocalDate endDate;
-	
-	@OneToMany(mappedBy = "offer", cascade = {CascadeType.ALL})
-	private List<Product> productos = new ArrayList<Product>();
+	@OneToOne(mappedBy = "offer")
+	private Category category;
 	
 	public Offer() {
-		
 	}
-
-	public UUID getId() {
-		return id;
-	}
-
+	
 	public void setId(UUID id) {
 		this.id = id;
 	}
-
-	public String getDescription() {
-		return description;
+	
+	public void setName(String name) {
+		this.name = name;
 	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public double getDiscount() {
-		return discount;
-	}
-
+	
 	public void setDiscount(double discount) {
 		this.discount = discount;
 	}
 	
-	public LocalDate getStartDate() {
-		return startDate;
+	public void setStartsOn(LocalDateTime startsOn) {
+		this.startsOn = startsOn;
 	}
-
-	public void setStartDate(LocalDate startDate) {
-		this.startDate = startDate;
+	
+	public void setEndsOn(LocalDateTime endsOn) {
+		this.endsOn = endsOn;
 	}
-
-	public LocalDate getEndDate() {
-		return endDate;
+	
+	public void setProducts(List<Product> products) {
+		this.products = products;
 	}
-
-	public void setEndDate(LocalDate endDate) {
-		this.endDate = endDate;
-	}	
-
-	public List<Product> getProductos() {
-		return productos;
+	
+	public void setPaidQuantity(int paidQuantity) {
+		this.paidQuantity = paidQuantity;
 	}
-
-	public void setProductos(List<Product> productos) {
-		this.productos = productos;
+	
+	public void setFreeQuantity(int freeQuantity) {
+		this.freeQuantity = freeQuantity;
 	}
-
-	private static final long serialVersionUID = 1L;
-
+	
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+	
+	public UUID getId() {
+		return id;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public double getDiscount() {
+		return discount;
+	}
+	
+	public LocalDateTime getStartsOn() {
+		return startsOn;
+	}
+	
+	public LocalDateTime getEndsOn() {
+		return endsOn;
+	}
+	
+	public int getPaidQuantity() {
+		return paidQuantity;
+	}
+	
+	public int getFreeQuantity() {
+		return freeQuantity;
+	}
+	
+	public List<Product> getProducts() {
+		return products;
+	}
+	
+	public Category getCategory() {
+		return category;
+	}
+	
 }
