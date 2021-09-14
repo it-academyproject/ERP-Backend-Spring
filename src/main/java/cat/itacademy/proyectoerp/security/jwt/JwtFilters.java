@@ -9,14 +9,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+
 import cat.itacademy.proyectoerp.security.CustomLoginFailureHandler;
 import cat.itacademy.proyectoerp.security.CustomLoginSuccessHandler;
 import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
+import cat.itacademy.proyectoerp.service.UserServiceImpl;
 
 public class JwtFilters extends OncePerRequestFilter{
 	
@@ -25,13 +28,11 @@ public class JwtFilters extends OncePerRequestFilter{
 
 	@Autowired
 	UserDetailServiceImpl userDetailsService;
-	
-	@Autowired
-    private CustomLoginFailureHandler loginFailureHandler;
-     
-    @Autowired
-    private CustomLoginSuccessHandler loginSuccessHandler;
 
+	@Autowired
+	UserServiceImpl userService;
+	
+		
 	@Override
 	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
 	try {
@@ -44,13 +45,12 @@ public class JwtFilters extends OncePerRequestFilter{
 
 	        UsernamePasswordAuthenticationToken auth =
 	           new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-	        
-	        
 	            
 	        // Wwe specify that the current user is authenticated. We pass the
 			// Spring Security Configurations successfully.
-	        SecurityContextHolder.getContext().setAuthentication(auth);
+	        SecurityContextHolder.getContext().setAuthentication(auth);     	       
 	    }
+		
 	} catch (Exception e){
 		System.out.println("fail en el método doFilter " + e.getMessage());
 	}

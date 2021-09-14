@@ -19,25 +19,25 @@ import cat.itacademy.proyectoerp.security.service.LoginAttemptsService;
 @Component
 public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-	@Autowired
-	private LoginAttemptsService loginAttemptsService;
-
-	@Autowired
-	private IUserRepository userRepository;
-
-	@Override
-	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-								Authentication authentication) throws IOException, ServletException {
-
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		String username = userDetails.getUsername();
-		User user = userRepository.findByUsername(username);
-
-		if (user.getFailedAttempts() > 0) {
-			loginAttemptsService.resetFailedAttempts(username);
-		}
-
-		super.onAuthenticationSuccess(request, response, authentication);
-	}
+//	@Autowired
+//	private LoginAttemptsService loginAttemptsService;
+//
+//	@Autowired
+//	private IUserRepository userRepository;
+//
+//	@Override
+//	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+//								Authentication authentication) throws IOException, ServletException {
+//
+//		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//		String username = userDetails.getUsername();
+//		User user = userRepository.findByUsername(username);
+//
+//		if (user.getFailedAttempts() > 0) {
+//			loginAttemptsService.resetFailedAttempts(username);
+//		}
+//
+//		super.onAuthenticationSuccess(request, response, authentication);
+//	}
 
 }

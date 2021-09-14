@@ -2,6 +2,7 @@ package cat.itacademy.proyectoerp.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -12,6 +13,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.NameTokenizers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +22,7 @@ import cat.itacademy.proyectoerp.domain.*;
 import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.repository.IUserRepository;
-
+import cat.itacademy.proyectoerp.security.service.LoginAttemptsService;
 import cat.itacademy.proyectoerp.util.PasswordGenerator;
 
 /**
@@ -36,6 +39,9 @@ public class UserServiceImpl implements IUserService {
 
 	@Autowired
 	EmailServiceImpl emailService;
+
+	@Autowired
+	LoginAttemptsService loginAttemptsService;
 
 	// We use ModelMapper for map User entity with the DTO.
 	ModelMapper modelMapper = new ModelMapper();
@@ -81,9 +87,9 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public MessageDTO getErrorMessageUsernameExists(String username) {
-		MessageDTO errorMessage=null;
-		if(existsByUsername(username)){
-			errorMessage = new MessageDTO("False", "Username Exists: '"+ username +"'");
+		MessageDTO errorMessage = null;
+		if (existsByUsername(username)) {
+			errorMessage = new MessageDTO("False", "Username Exists: '" + username + "'");
 		}
 		return errorMessage;
 	}
@@ -138,7 +144,7 @@ public class UserServiceImpl implements IUserService {
 	public String passEconder(String pass) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String encodedPassword = passwordEncoder.encode(pass);
-		//System.out.println("pass encrip " + encodedPassword);
+		// System.out.println("pass encrip " + encodedPassword);
 		return encodedPassword;
 	}
 
@@ -222,7 +228,7 @@ public class UserServiceImpl implements IUserService {
 	/**
 	 * Method to set data of User.
 	 * 
-	 * @param id      id of user to modify.
+	 * @param id   id of user to modify.
 	 * @param user user data to modify.
 	 */
 	@Transactional
@@ -235,7 +241,7 @@ public class UserServiceImpl implements IUserService {
 
 		if (user.getPassword() != null)
 			password = user.getPassword();
-		
+
 		UserDTO userDto = modelMapper.map(user, UserDTO.class);
 		// Verify if user id exist
 		if (!userRepository.existsById(id)) {
@@ -256,36 +262,35 @@ public class UserServiceImpl implements IUserService {
 		 * We Verified what properties has received.
 		 */
 
-	if (userDto.getUsername() != null)
+		if (userDto.getUsername() != null)
 			user.setUsername(userDto.getUsername());
 		if (password != null)
 			user.setPassword(passEconder(password));
-	
 
 		userRepository.save(user);
 		userDto.setSuccess("True");
 		userDto.setMessage("User modified");
 		return Optional.of(userDto);
 
-	} 
-	
+	}
+
 	/**
 	 * Method to set active field of user to "false".
 	 * 
-	 * @param id      id of user to modify.
+	 * @param id   id of user to modify.
 	 * @param user user data to modify.
-	 */	
+	 */
 	@Override
 	public UserDTO setSubscription(@Valid User user) {
-		
+
 		UserDTO userDto = verifyUser(user);
-		
-		if (!(userDto.getSuccess()=="False")) {
-		
+
+		if (!(userDto.getSuccess() == "False")) {
+
 			userDto = verifySubscription(user);
 		}
-	
-		if (!(userDto.getSuccess()=="False")) {
+
+		if (!(userDto.getSuccess() == "False")) {
 			emailService.sendFarewellEmail(user);
 			user.setUserType(userRepository.findById(user.getId()).get().getUserType());
 			user.setPassword(userRepository.findById(user.getId()).get().getPassword());
@@ -294,47 +299,47 @@ public class UserServiceImpl implements IUserService {
 			userDto.setMessage("User is now unsubscribed");
 			return userDto;
 		}
-		
+
 		return userDto;
-	}	
-	
-	public UserDTO verifyUser (User user) {
-		
+	}
+
+	public UserDTO verifyUser(User user) {
+
 		UserDTO userDto = modelMapper.map(user, UserDTO.class);
-		
+
 		if (!userRepository.existsById(user.getId())) {
 			userDto.setSuccess("False");
 			userDto.setMessage("User doesn't exist");
 			return userDto;
 		}
-		
+
 		// Verifies if username matches
-		if (!(userDto.getSuccess()=="False")) {
-			
+		if (!(userDto.getSuccess() == "False")) {
+
 			String usernamerepo = userRepository.findById(user.getId()).get().getUsername();
-			
-			if ( !usernamerepo.equals(user.getUsername())) {
+
+			if (!usernamerepo.equals(user.getUsername())) {
 				userDto.setSuccess("False");
 				userDto.setMessage("The username does not match, please check it again");
 				return userDto;
-			}	
+			}
 		}
-		
+
 		userDto.setSuccess("True");
 		return userDto;
 	}
-	
-	public UserDTO verifySubscription (User user) {
-		
+
+	public UserDTO verifySubscription(User user) {
+
 		UserDTO userDto = modelMapper.map(user, UserDTO.class);
-		
+
 		if (userRepository.findById(user.getId()).get().getActive() == false) {
 			userDto.setSuccess("False");
 			userDto.setMessage("User is already unsubscribed");
-			return userDto;			
+			return userDto;
 		}
-		
-		userDto.setSuccess("True");		
+
+		userDto.setSuccess("True");
 		return userDto;
 	}
 
@@ -382,20 +387,20 @@ public class UserServiceImpl implements IUserService {
 	 */
 	@Override
 	public User updatePassword(@Valid ChangeUserPassword changeuserpassword) throws ArgumentNotFoundException {
-		 
+
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 		// Verify if user exist
 		User updatedUser = userRepository.findByUsername(changeuserpassword.getUser().getUsername());
-		
+
 		if (updatedUser != null) {
-			//Check password
+			// Check password
 			if (passwordEncoder.matches(changeuserpassword.getUser().getPassword(), updatedUser.getPassword())) {
 
 				// set user password (encrypted)
-				
+
 				updatedUser.setPassword(passEconder(changeuserpassword.getNew_password()));
-	
+
 				return userRepository.save(updatedUser);
 			} else {
 				throw new ArgumentNotFoundException("wrong password");
@@ -413,6 +418,43 @@ public class UserServiceImpl implements IUserService {
 	 */
 	public void updateLastSession(String username) {
 		User user = userRepository.findByUsername(username);
+
+		if (user.getAccountNonLocked() == false) {
+			loginAttemptsService.unlockWhenTimeExpired(user);
+			String timeToUnlock = loginAttemptsService.getTimeToUnlockUser(user);
+			throw new LockedException("Your account has been locked due to 3 failed attempts."
+					+ " It will be unlocked after " + timeToUnlock);
+		}
 		user.setLastSession(LocalDateTime.now());
+		if (user.getFailedAttempts() > 0) {
+			loginAttemptsService.resetFailedAttempts(username);
+		}
 	}
+
+	@Override
+	public String handlePasswordFailure(String username) {
+		User user = userRepository.findByUsername(username);
+//		String timeToUnlock = loginAttemptsService.getTimeToUnlockUser(user);
+		if (user.getActive() && user.getAccountNonLocked()) {
+			if (user.getFailedAttempts() < LoginAttemptsService.MAX_FAILED_ATTEMPTS - 1) {
+				loginAttemptsService.increaseFailedAttempts(user);
+				return "Invalid user credentials";
+			} else {
+				loginAttemptsService.lock(user);						
+				return "Your account has been locked due to 3 failed attempts."
+						+ " It will be unlocked after " + loginAttemptsService.getTimeToUnlockUser(user);
+			}
+		} else if (user.getAccountNonLocked() == false) {
+			return "Your account has been locked due to 3 failed attempts."
+					+ " It will be unlocked after " + loginAttemptsService.getTimeToUnlockUser(user);
+
+		}
+		return null;
+//		else if (!user.getAccountNonLocked()) {
+//			if (loginAttemptsService.unlockWhenTimeExpired(user)) {
+//				throw new LockedException("Your account has been unlocked. Please try to login again.");
+//			}
+//		}
+	}
+
 }

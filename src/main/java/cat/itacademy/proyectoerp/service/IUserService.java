@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import org.springframework.security.core.userdetails.UserDetails;
+
 import cat.itacademy.proyectoerp.domain.ChangeUserPassword;
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.User;
@@ -32,5 +34,6 @@ public interface IUserService {
 	boolean existsByUsername(String username);
 	MessageDTO getErrorMessageUsernameExists(String username);
 	public void updateLastSession(String username);
+	public String handlePasswordFailure(String username);
 
 }

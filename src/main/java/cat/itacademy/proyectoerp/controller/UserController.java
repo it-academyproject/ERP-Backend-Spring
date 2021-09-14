@@ -2,9 +2,11 @@ package cat.itacademy.proyectoerp.controller;
 
 import cat.itacademy.proyectoerp.domain.*;
 import cat.itacademy.proyectoerp.dto.*;
+import cat.itacademy.proyectoerp.security.CustomLoginFailureHandler;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 import cat.itacademy.proyectoerp.security.entity.JwtResponse;
 import cat.itacademy.proyectoerp.security.jwt.JwtUtil;
+import org.springframework.security.authentication.LockedException;
 import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
 import cat.itacademy.proyectoerp.service.ClientServiceImpl;
 import cat.itacademy.proyectoerp.service.IClientService;
@@ -30,7 +32,7 @@ import java.util.List;
 /**
  * Class of User Controller
  * 
- * @author 
+ * @author
  *
  */
 
@@ -50,15 +52,18 @@ public class UserController {
 
 	@Autowired
 	JwtUtil jwtUtil;
-	
+
 	@Autowired
 	ClientServiceImpl clientService;
 
 	@Autowired
 	IEmployeeService iEmployeeService;
-	
+
 	@Autowired
 	IClientService iClientService;
+
+//	@Autowired
+//	CustomLoginFailureHandler loginFailureHandler;
 
 	/**
 	 * Method for all url which don't exist
@@ -87,22 +92,22 @@ public class UserController {
 		else
 			return new ResponseEntity<>(userDTO, HttpStatus.OK);
 	}
-	
+
 	/**
 	 * Method for create a new user and client.
 	 * 
-	 * It is not required to be authenticated to use this method. 
-	 * Opened access in issue B-101.
+	 * It is not required to be authenticated to use this method. Opened access in
+	 * issue B-101.
 	 * 
 	 * @param standard JSON with StandarRegistration data
 	 * @return Welcome String.
-	*/
+	 */
 	@RequestMapping(value = "/users/clients", method = RequestMethod.POST)
 	public ResponseEntity<?> newUserAndClient(@Valid @RequestBody StandardRegistration standard) {
 		ClientDTO clientDTO;
 
 		MessageDTO errorMessageDTO = getErrorMessage(standard);
-		if(errorMessageDTO.getSuccess().equalsIgnoreCase("False")){
+		if (errorMessageDTO.getSuccess().equalsIgnoreCase("False")) {
 			return new ResponseEntity<>(errorMessageDTO, HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 
@@ -120,14 +125,12 @@ public class UserController {
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(clientDTO);
 	}
-	 
-	
 
 	private MessageDTO getErrorMessage(StandardRegistration standard) {
-		MessageDTO errorMessageDTO = new MessageDTO("True","");
+		MessageDTO errorMessageDTO = new MessageDTO("True", "");
 		MessageDTO errorMessageDni = clientService.getErrorMessageDniExists(standard.getDni());
 		MessageDTO errorMessageUsername = userService.getErrorMessageUsernameExists(standard.getUsername());
-		
+
 		if (null != errorMessageDni) {
 			errorMessageDTO.setSuccess("False");
 			errorMessageDTO.setMessage(errorMessageDni.getMessage());
@@ -135,21 +138,22 @@ public class UserController {
 			errorMessageDTO.setSuccess("False");
 			errorMessageDTO.setMessage(errorMessageUsername.getMessage());
 		}
-		
+
 		return errorMessageDTO;
 	}
 
 	private Client getClient(StandardRegistration standard) {
 		User user = new User(standard.getUsername(), standard.getPassword());
-		
+
 		Client client = new Client(standard.getDni(), standard.getImage(), standard.getNameAndSurname(),
 				standard.getAddress(), standard.getShippingAddress(), user);
-		
+
 		return client;
 	}
 
 	/**
 	 * Create a new user and employee
+	 * 
 	 * @param employee
 	 * @return
 	 */
@@ -158,24 +162,24 @@ public class UserController {
 	public ResponseEntity<?> newUserAndEmployee(@Valid @RequestBody Employee employee) {
 		EmployeeDTO employeeDTO;
 
-		User user = new User(employee.getUser().getUsername(),employee.getUser().getPassword(), UserType.EMPLOYEE);
+		User user = new User(employee.getUser().getUsername(), employee.getUser().getPassword(), UserType.EMPLOYEE);
 		userService.registerNewUserAccount(user);
 
 		employee.setOutDate(null != employee.getOutDate() ? employee.getOutDate() : null);
-		Employee newEmployee = new Employee(employee.getName(), employee.getSurname(), employee.getSalary(), employee.getDni(),
-				employee.getPhone(), employee.getInDate(), employee.getOutDate(), user);
-		
+		Employee newEmployee = new Employee(employee.getName(), employee.getSurname(), employee.getSalary(),
+				employee.getDni(), employee.getPhone(), employee.getInDate(), employee.getOutDate(), user);
+
 		try {
 			employeeDTO = iEmployeeService.createEmployee(newEmployee);
 		} catch (Exception e) {
-			//MessageDTO messageDTO = new MessageDTO("False", "Unexpected error");
+			// MessageDTO messageDTO = new MessageDTO("False", "Unexpected error");
 			MessageDTO messageDTO = new MessageDTO("False", e.getMessage());
 			return ResponseEntity.unprocessableEntity().body(messageDTO);
 		}
 
 		if (employeeDTO.getMessage().getSuccess().equalsIgnoreCase("True"))
 			return ResponseEntity.status(HttpStatus.CREATED).body(employeeDTO);
-		
+
 		return new ResponseEntity<>(employeeDTO, HttpStatus.UNPROCESSABLE_ENTITY);
 	}
 
@@ -186,26 +190,32 @@ public class UserController {
 	 * @return String with message: Success or unauthorized.
 	 * @throws Exception
 	 */
-	
+
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<?> loginUser(@Valid @RequestBody JwtLogin jwtLogin){
+	public ResponseEntity<?> loginUser(@Valid @RequestBody JwtLogin jwtLogin) {
 
 		JwtResponse jwtResponse;
 		UserDetails userDetails;
 
 		try {
 			/*
-			SecurityContextHolder.getContext()
-					.setAuthentication(authenticate(jwtLogin.getUsername(), jwtLogin.getPassword()));
+			 * SecurityContextHolder.getContext()
+			 * .setAuthentication(authenticate(jwtLogin.getUsername(),
+			 * jwtLogin.getPassword()));
 			 */
-			userDetails = userDetailService.loadUserByUsername(jwtLogin.getUsername());
+			userDetails = userDetailService.loadUserByUsername(jwtLogin.getUsername());	
 
 			SecurityContextHolder.getContext()
 					.setAuthentication(authenticate(jwtLogin.getUsername(), jwtLogin.getPassword()));
-			
+
 			// Update User lastSession after successful login
 			userService.updateLastSession(userDetails.getUsername());
 
+		} catch (BadCredentialsException badCredentsEx) {
+				String message = userService.handlePasswordFailure(jwtLogin.getUsername());
+				MessageDTO messageDto = new MessageDTO("False", message);
+//				MessageDTO messageDto = new MessageDTO("False", badCredentsEx.getMessage());
+				return ResponseEntity.unprocessableEntity().body(messageDto);				
 		} catch (Exception e) {
 			MessageDTO messageDto = new MessageDTO("False", e.getMessage());
 			return ResponseEntity.unprocessableEntity().body(messageDto);
@@ -290,16 +300,16 @@ public class UserController {
 	 * @param user
 	 * @return user "active" field updated
 	 */
-	
+
 	@PutMapping("/users/unsubscribe")
 	public ResponseEntity<UserDTO> unsubscribeUser(@RequestBody User user) {
-		
+
 		UserDTO userDto = userService.setSubscription(user);
 		if (userDto.getSuccess() == "False")
 			return new ResponseEntity<>(userDto, HttpStatus.UNPROCESSABLE_ENTITY);
 		return new ResponseEntity<>(userDto, HttpStatus.OK);
 	}
-	
+
 	/**
 	 * Method to recover password (Generate a new password and send it by email to
 	 * the user)
@@ -344,13 +354,13 @@ public class UserController {
 	 * @return user updated
 	 */
 	@PutMapping("/users/resetpassword")
-		
+
 	public HashMap<String, Object> resetPassword(@Valid @RequestBody ChangeUserPassword changeuserpassword) {
-	
+
 		HashMap<String, Object> map = new HashMap<String, Object>();
-	
+
 		try {
-			
+
 			userService.updatePassword(changeuserpassword);
 
 			map.put("success", "true");
@@ -363,5 +373,5 @@ public class UserController {
 
 		return map;
 	}
-		
+
 }

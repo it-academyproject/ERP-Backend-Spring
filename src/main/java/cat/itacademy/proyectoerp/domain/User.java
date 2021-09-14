@@ -58,7 +58,7 @@ public class User {
 	private Boolean active = true;
 
 	@Column(nullable = false, columnDefinition = "boolean default true")
-	private Boolean AccountNonLocked;
+	private Boolean accountNonLocked;
 
 	@Column(columnDefinition = "integer default 0")
 	private Integer failedAttempts;
@@ -165,11 +165,11 @@ public class User {
 	}
 
 	public Boolean getAccountNonLocked() {
-		return AccountNonLocked;
+		return accountNonLocked;
 	}
 
-	public void setAccountNonLocked(Boolean AccountNonLocked) {
-		this.AccountNonLocked = AccountNonLocked;
+	public void setAccountNonLocked(Boolean accountNonLocked) {
+		this.accountNonLocked = accountNonLocked;
 	}
 
 	public Integer getFailedAttempts() {

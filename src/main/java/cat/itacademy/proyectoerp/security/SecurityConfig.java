@@ -37,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	LoginAttemptsService loginAttempsService;
-
+	
 	@Bean
 	public JwtFilters jwtFilters() {
 		return new JwtFilters();
@@ -66,18 +66,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable().authorizeRequests().antMatchers(HttpMethod.GET, "/api/products").permitAll()
-				.antMatchers(HttpMethod.POST, "/api/users").permitAll()
-				.antMatchers("/api/login", "/api/users/clients", "/api/users/recoverpassword").permitAll().anyRequest()
-				.authenticated()
-				.and()
-				// Exception control. 401 no authorized
-				.exceptionHandling().authenticationEntryPoint(jwtEntryPoint).and()
-				.sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.cors().and().csrf().disable().authorizeRequests()
+						.antMatchers(HttpMethod.GET, "/api/products").permitAll()
+						.antMatchers(HttpMethod.POST, "/api/users").permitAll()
+						.antMatchers("/api/login", "/api/users/clients", "/api/users/recoverpassword")
+						.permitAll().anyRequest().authenticated().and()
+						// Exception control. 401 no authorized
+						.exceptionHandling().authenticationEntryPoint(jwtEntryPoint).and().sessionManagement()
+						.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		// Filter to validate the tokens with every request
 		http.addFilterBefore(jwtFilters(), UsernamePasswordAuthenticationFilter.class);
-		
+	
 	}
 
 	@Bean
