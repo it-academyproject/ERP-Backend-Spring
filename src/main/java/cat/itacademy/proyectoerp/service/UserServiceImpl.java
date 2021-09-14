@@ -459,9 +459,13 @@ public class UserServiceImpl implements IUserService {
 			// lock user if non-locked when max reached
 			if (user.getLockTime() == null) {
 				wrongPasswordAttemptsService.lock(user);
-				return "Your account has been locked due to 3 failed attempts." + " It will be unlocked by "
-						+ wrongPasswordAttemptsService.getTimeToUnlock(user);
 			}
+			
+			/* failed attempt and account has just been locked - outside the if(user.getLocktime);
+			 * this return statement located outside the if() right above prevents a successful login after account locked 
+			 */
+			return "Your account has been locked due to 3 failed attempts." + " It will be unlocked by "
+			+ wrongPasswordAttemptsService.getTimeToUnlock(user);
 
 		// failed password attempt right after lock period expired, increase count
 		} else if (wrongPasswordAttemptsService.unlockWhenTimeExpired(user)) {

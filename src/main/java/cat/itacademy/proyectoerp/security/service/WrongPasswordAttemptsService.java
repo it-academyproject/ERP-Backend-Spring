@@ -14,7 +14,7 @@ public class WrongPasswordAttemptsService {
 
 	public static final int MAX_FAILED_ATTEMPTS = 3;
 //	private static final int LOCK_TIME_SECONDS_DURATION = 86400; // 24 hours - requirement
-	private static final int LOCK_TIME_SECONDS_DURATION = 25; // 20 seconds - for testing
+	private static final int LOCK_TIME_SECONDS_DURATION = 20; // 20 seconds - for testing
 
 	@Autowired
 	IUserRepository userRepository;
