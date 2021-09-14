@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Table(name = "employees")
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Employee {
