@@ -56,8 +56,8 @@ public class User {
 	@Column(nullable = false, columnDefinition = "boolean default true")
 	private Boolean active = true;
 
-	@Column(nullable = false, columnDefinition = "boolean default true")
-	private Boolean accountNonLocked;
+	@Column(nullable = false, columnDefinition = "boolean default false")
+	private Boolean accountLocked;
 
 	@Column(columnDefinition = "integer default 0")
 	private Integer failedLoginAttempts;
@@ -163,12 +163,12 @@ public class User {
 		this.registrationDate = registrationDate;
 	}
 
-	public Boolean getAccountNonLocked() {
-		return accountNonLocked;
+	public Boolean isAccountLocked() {
+		return accountLocked;
 	}
 
-	public void setAccountNonLocked(Boolean accountNonLocked) {
-		this.accountNonLocked = accountNonLocked;
+	public void setAccountLocked(Boolean accountLocked) {
+		this.accountLocked = accountLocked;
 	}
 
 	public Integer getFailedLoginAttempts() {

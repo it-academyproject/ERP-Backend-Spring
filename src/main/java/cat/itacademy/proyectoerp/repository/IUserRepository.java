@@ -52,16 +52,8 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 	 * @param failAttempts
 	 * @param username
 	 */
-	@Query("UPDATE User u SET u.failedAttempts = ?1 WHERE u.username = ?2")
+	@Query("UPDATE User u SET u.failedLoginAttempts = ?1 WHERE u.username = ?2")
 	@Modifying
-	public void updateFailedAttempts(int failAttempts, String username);
-
-//	@Query("UPDATE User u SET u.accountNonLocked = ?1 WHERE u.username = ?2")
-//	@Modifying
-//	public void updateAccountNonLocked(boolean lockedOrNot, String username);
-//	
-//	@Query("UPDATE User u SET u.lockTime = ?1 WHERE u.username = ?2")
-//	@Modifying
-//	public void updateLockTime(Date lockTime, String username);
+	public void updateFailedLoginAttempts(int failAttempts, String username);
 
 }

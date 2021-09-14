@@ -436,7 +436,7 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public String handlePasswordFailure(String username) {
 		User user = userRepository.findByUsername(username);
-		if (user.getActive() && user.getAccountNonLocked()) {
+		if (user.getActive() && !user.isAccountLocked()) {
 			
 			if (user.getFailedLoginAttempts() < LoginAttemptsService.MAX_FAILED_ATTEMPTS - 1) {
 				loginAttemptsService.increaseFailedAttempts(user);
@@ -449,7 +449,7 @@ public class UserServiceImpl implements IUserService {
 						+ loginAttemptsService.getTimeToUnlockUser(user);
 			}
 			
-		} else if (user.getAccountNonLocked() == false) {
+		} else if (!user.isAccountLocked()) {
 			return "Your account has been locked due to 3 failed attempts." + " It will be unlocked by "
 					+ loginAttemptsService.getTimeToUnlockUser(user);
 

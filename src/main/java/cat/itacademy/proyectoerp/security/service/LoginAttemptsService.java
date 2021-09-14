@@ -18,8 +18,8 @@ import cat.itacademy.proyectoerp.repository.IUserRepository;
 public class LoginAttemptsService {
 
 	public static final int MAX_FAILED_ATTEMPTS = 3;
-//	private static final int LOCK_TIME_SECONDS_DURATION = 86400; // 24 hours
-	private static final int LOCK_TIME_SECONDS_DURATION = 25; // 25 seconds
+//	private static final int LOCK_TIME_SECONDS_DURATION = 86400; // 24 hours - requirement
+	private static final int LOCK_TIME_SECONDS_DURATION = 25; // 25 seconds - to test
 
 	@Autowired
 	IUserRepository userRepository;
@@ -27,15 +27,15 @@ public class LoginAttemptsService {
 	public void increaseFailedAttempts(User user) {
 		String username = user.getUsername();
 		Integer newFailAttempts = user.getFailedLoginAttempts() + 1;
-		userRepository.updateFailedAttempts(newFailAttempts, username);
+		userRepository.updateFailedLoginAttempts(newFailAttempts, username);
 	}
 
 	public void resetFailedLoginAttempts(String username) {
-		userRepository.updateFailedAttempts(0, username);
+		userRepository.updateFailedLoginAttempts(0, username);
 	}
 
 	public void lock(User user) {
-		user.setAccountNonLocked(false);
+		user.setAccountLocked(true);
 		user.setLockTime(LocalDateTime.now());
 		userRepository.save(user);
 	}
@@ -47,7 +47,7 @@ public class LoginAttemptsService {
 		int secondsToUnlock = (int) ChronoUnit.SECONDS.between(currentTime, dateTimeToUnlock);
 		
 		if (secondsToUnlock <= 0) {
-			user.setAccountNonLocked(true);
+			user.setAccountLocked(false);
 			user.setLockTime(null);
 			user.setFailedLoginAttempts(0);
 			userRepository.save(user);
