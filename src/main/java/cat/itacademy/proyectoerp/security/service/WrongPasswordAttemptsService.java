@@ -1,13 +1,8 @@
 package cat.itacademy.proyectoerp.security.service;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +10,11 @@ import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.repository.IUserRepository;
 
 @Service
-public class LoginAttemptsService {
+public class WrongPasswordAttemptsService {
 
 	public static final int MAX_FAILED_ATTEMPTS = 3;
 //	private static final int LOCK_TIME_SECONDS_DURATION = 86400; // 24 hours - requirement
-	private static final int LOCK_TIME_SECONDS_DURATION = 25; // 25 seconds - to test
+	private static final int LOCK_TIME_SECONDS_DURATION = 25; // 20 seconds - for testing
 
 	@Autowired
 	IUserRepository userRepository;
@@ -42,8 +37,10 @@ public class LoginAttemptsService {
 
 	public boolean unlockWhenTimeExpired(User user) {
 		LocalDateTime currentTime = LocalDateTime.now();
-		LocalDateTime dateTimeToUnlock;
-		dateTimeToUnlock = user.getLockTime().plusSeconds(LOCK_TIME_SECONDS_DURATION);
+		LocalDateTime dateTimeToUnlock; // when the account will be unlocked
+		
+		dateTimeToUnlock = user.getLockTime().plusSeconds(LOCK_TIME_SECONDS_DURATION); 
+		//difference between the current time and the unlocking time
 		int secondsToUnlock = (int) ChronoUnit.SECONDS.between(currentTime, dateTimeToUnlock);
 		
 		if (secondsToUnlock <= 0) {
@@ -53,11 +50,10 @@ public class LoginAttemptsService {
 			userRepository.save(user);
 			return true;
 		}
-
 		return false;
 	}
 
-	public String getTimeToUnlockUser(User user) {
+	public String getTimeToUnlock(User user) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		LocalDateTime dateTimeToUnlock = user.getLockTime().plusSeconds(LOCK_TIME_SECONDS_DURATION);
 		String dateTimeToUnlockText = dateTimeToUnlock.format(formatter);

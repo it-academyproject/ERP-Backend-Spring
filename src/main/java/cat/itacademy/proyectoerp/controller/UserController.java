@@ -2,11 +2,9 @@ package cat.itacademy.proyectoerp.controller;
 
 import cat.itacademy.proyectoerp.domain.*;
 import cat.itacademy.proyectoerp.dto.*;
-import cat.itacademy.proyectoerp.security.CustomLoginFailureHandler;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 import cat.itacademy.proyectoerp.security.entity.JwtResponse;
 import cat.itacademy.proyectoerp.security.jwt.JwtUtil;
-import org.springframework.security.authentication.LockedException;
 import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
 import cat.itacademy.proyectoerp.service.ClientServiceImpl;
 import cat.itacademy.proyectoerp.service.IClientService;
@@ -61,9 +59,6 @@ public class UserController {
 
 	@Autowired
 	IClientService iClientService;
-
-//	@Autowired
-//	CustomLoginFailureHandler loginFailureHandler;
 
 	/**
 	 * Method for all url which don't exist
@@ -188,6 +183,7 @@ public class UserController {
 	 * 
 	 * @param jwtLogin JSON with credentials.
 	 * @return String with message: Success or unauthorized.
+	 * @throws BadCredentialsException, when login fails due to wrong password
 	 * @throws Exception
 	 */
 
@@ -203,20 +199,20 @@ public class UserController {
 			 * .setAuthentication(authenticate(jwtLogin.getUsername(),
 			 * jwtLogin.getPassword()));
 			 */
-			userDetails = userDetailService.loadUserByUsername(jwtLogin.getUsername());	
+			userDetails = userDetailService.loadUserByUsername(jwtLogin.getUsername());
 
 			SecurityContextHolder.getContext()
 					.setAuthentication(authenticate(jwtLogin.getUsername(), jwtLogin.getPassword()));
 
-			// Update User lastSession after successful login
+			/* Update User lastSession after successful login 
+			 * or throw LockException if user account is locked */
 			userService.updateLastSession(userDetails.getUsername());
 
+		// wrong password exception catch
 		} catch (BadCredentialsException badCredentsEx) {
-//			System.out.println("BadCred");
-				String message = userService.handlePasswordFailure(jwtLogin.getUsername());
-				MessageDTO messageDto = new MessageDTO("False", message);
-//				MessageDTO messageDto = new MessageDTO("False", badCredentsEx.getMessage());
-				return ResponseEntity.unprocessableEntity().body(messageDto);				
+			String message = userService.handlePasswordFail(jwtLogin.getUsername());
+			MessageDTO messageDto = new MessageDTO("False", message);
+			return ResponseEntity.unprocessableEntity().body(messageDto);
 		} catch (Exception e) {
 			MessageDTO messageDto = new MessageDTO("False", e.getMessage());
 			return ResponseEntity.unprocessableEntity().body(messageDto);

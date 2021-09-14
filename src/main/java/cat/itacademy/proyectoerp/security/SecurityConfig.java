@@ -15,10 +15,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.security.jwt.JwtAuthenticationEntryPoint;
 import cat.itacademy.proyectoerp.security.jwt.JwtFilters;
-import cat.itacademy.proyectoerp.security.service.LoginAttemptsService;
 import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
 
 @Configuration
@@ -34,9 +32,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	PasswordEncoder passwordEncoder;
-
-	@Autowired
-	LoginAttemptsService loginAttempsService;
 	
 	@Bean
 	public JwtFilters jwtFilters() {

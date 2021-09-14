@@ -9,17 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-
-import cat.itacademy.proyectoerp.security.CustomLoginFailureHandler;
-import cat.itacademy.proyectoerp.security.CustomLoginSuccessHandler;
 import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
-import cat.itacademy.proyectoerp.service.UserServiceImpl;
 
 public class JwtFilters extends OncePerRequestFilter{
 	
@@ -27,11 +21,7 @@ public class JwtFilters extends OncePerRequestFilter{
 	JwtUtil jwtUtil;
 
 	@Autowired
-	UserDetailServiceImpl userDetailsService;
-
-	@Autowired
-	UserServiceImpl userService;
-	
+	UserDetailServiceImpl userDetailsService;	
 		
 	@Override
 	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
@@ -50,7 +40,7 @@ public class JwtFilters extends OncePerRequestFilter{
 			// Spring Security Configurations successfully.
 	        SecurityContextHolder.getContext().setAuthentication(auth);     	       
 	    }
-		
+	    
 	} catch (Exception e){
 		System.out.println("fail en el método doFilter " + e.getMessage());
 	}

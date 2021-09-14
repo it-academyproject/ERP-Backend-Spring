@@ -2,7 +2,6 @@ package cat.itacademy.proyectoerp.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -14,7 +13,6 @@ import org.modelmapper.convention.NameTokenizers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.security.authentication.LockedException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +20,7 @@ import cat.itacademy.proyectoerp.domain.*;
 import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.repository.IUserRepository;
-import cat.itacademy.proyectoerp.security.service.LoginAttemptsService;
+import cat.itacademy.proyectoerp.security.service.WrongPasswordAttemptsService;
 import cat.itacademy.proyectoerp.util.PasswordGenerator;
 
 /**
@@ -41,7 +39,7 @@ public class UserServiceImpl implements IUserService {
 	EmailServiceImpl emailService;
 
 	@Autowired
-	LoginAttemptsService loginAttemptsService;
+	WrongPasswordAttemptsService wrongPasswordAttemptsService;
 
 	// We use ModelMapper for map User entity with the DTO.
 	ModelMapper modelMapper = new ModelMapper();
@@ -416,45 +414,63 @@ public class UserServiceImpl implements IUserService {
 	 * 
 	 * @param username
 	 * 
-	 * @throws LockedException if user account is locked 
+	 * @throws LockedException if user account is locked
 	 * 
 	 */
 	public void updateLastSession(String username) {
 		User user = userRepository.findByUsername(username);
 
-		if (user.getLockTime() == null) {
-			loginAttemptsService.resetFailedLoginAttempts(username);
-		} else if (loginAttemptsService.unlockWhenTimeExpired(user)) {
+		// successful login with user non-locked and no password failed attempts
+		if (!user.isAccountLocked() && user.getFailedLoginAttempts() == 0) {
 			user.setLastSession(LocalDateTime.now());
 		} else {
-			String timeToUnlock = loginAttemptsService.getTimeToUnlockUser(user);
-			throw new LockedException("Your account has been locked due to 3 failed attempts."
-					+ " It will be unlocked by " + timeToUnlock);
+			
+			// successful login after one or two password fails (max=3), resets count
+			if (user.getFailedLoginAttempts() > 0 && !user.isAccountLocked()) {
+				user.setLastSession(LocalDateTime.now());
+				wrongPasswordAttemptsService.resetFailedLoginAttempts(username);
+				
+			// successful login when user unlocked right after lock time expired and 0 failed attempts
+			} else if (wrongPasswordAttemptsService.unlockWhenTimeExpired(user)) {
+				user.setLastSession(LocalDateTime.now());
+			
+			// user account locked
+			} else if (user.isAccountLocked()) {
+				String timeToUnlock = wrongPasswordAttemptsService.getTimeToUnlock(user);
+				throw new LockedException("Your account has been locked due to 3 failed attempts."
+						+ " It will be unlocked by " + timeToUnlock);
+			}
 		}
 	}
 
 	@Override
-	public String handlePasswordFailure(String username) {
+	public String handlePasswordFail(String username) {
 		User user = userRepository.findByUsername(username);
+
 		if (user.getActive() && !user.isAccountLocked()) {
-			
-			if (user.getFailedLoginAttempts() < LoginAttemptsService.MAX_FAILED_ATTEMPTS - 1) {
-				loginAttemptsService.increaseFailedAttempts(user);
+
+			// user non-locked and failed attempts less than max, increase count and set last session to null
+			if (user.getFailedLoginAttempts() < WrongPasswordAttemptsService.MAX_FAILED_ATTEMPTS - 1) {
+				wrongPasswordAttemptsService.increaseFailedAttempts(user);
+				user.setLastSession(null);
 				return "Invalid user credentials";
-			} else {
-				if (user.getLockTime() == null) {
-					loginAttemptsService.lock(user);
-				}
-				return "Your account has been locked due to 3 failed attempts." + " It will be unlocked by "
-						+ loginAttemptsService.getTimeToUnlockUser(user);
 			}
 			
-		} else if (!user.isAccountLocked()) {
-			return "Your account has been locked due to 3 failed attempts." + " It will be unlocked by "
-					+ loginAttemptsService.getTimeToUnlockUser(user);
+			// lock user if non-locked when max reached
+			if (user.getLockTime() == null) {
+				wrongPasswordAttemptsService.lock(user);
+				return "Your account has been locked due to 3 failed attempts." + " It will be unlocked by "
+						+ wrongPasswordAttemptsService.getTimeToUnlock(user);
+			}
 
+		// failed password attempt right after lock period expired, increase count
+		} else if (wrongPasswordAttemptsService.unlockWhenTimeExpired(user)) {
+			wrongPasswordAttemptsService.increaseFailedAttempts(user);
+			return "Invalid user credentials";
 		}
-		return null;
-	}
 
+		// failed attempt while lock period in force
+		return "Your account has been locked due to 3 failed attempts." + " It will be unlocked by "
+				+ wrongPasswordAttemptsService.getTimeToUnlock(user);
+	}
 }

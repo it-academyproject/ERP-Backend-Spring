@@ -1,6 +1,5 @@
 package cat.itacademy.proyectoerp.repository;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -47,7 +46,7 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 	List<User> findByUserType(UserType user_type);
 
 	/**
-	 * Update the number of failed login attempts for a user
+	 * Update the number of wrong password login attempts for a user
 	 * 
 	 * @param failAttempts
 	 * @param username
