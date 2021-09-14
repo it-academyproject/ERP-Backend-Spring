@@ -212,6 +212,7 @@ public class UserController {
 			userService.updateLastSession(userDetails.getUsername());
 
 		} catch (BadCredentialsException badCredentsEx) {
+//			System.out.println("BadCred");
 				String message = userService.handlePasswordFailure(jwtLogin.getUsername());
 				MessageDTO messageDto = new MessageDTO("False", message);
 //				MessageDTO messageDto = new MessageDTO("False", badCredentsEx.getMessage());

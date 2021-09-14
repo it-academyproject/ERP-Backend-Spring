@@ -415,46 +415,46 @@ public class UserServiceImpl implements IUserService {
 	 * Method to update User lastSession with the current LocalDateTime.
 	 * 
 	 * @param username
+	 * 
+	 * @throws LockedException if user account is locked 
+	 * 
 	 */
 	public void updateLastSession(String username) {
 		User user = userRepository.findByUsername(username);
 
-		if (user.getAccountNonLocked() == false) {
-			loginAttemptsService.unlockWhenTimeExpired(user);
+		if (user.getLockTime() == null) {
+			loginAttemptsService.resetFailedLoginAttempts(username);
+		} else if (loginAttemptsService.unlockWhenTimeExpired(user)) {
+			user.setLastSession(LocalDateTime.now());
+		} else {
 			String timeToUnlock = loginAttemptsService.getTimeToUnlockUser(user);
 			throw new LockedException("Your account has been locked due to 3 failed attempts."
-					+ " It will be unlocked after " + timeToUnlock);
-		}
-		user.setLastSession(LocalDateTime.now());
-		if (user.getFailedAttempts() > 0) {
-			loginAttemptsService.resetFailedAttempts(username);
+					+ " It will be unlocked by " + timeToUnlock);
 		}
 	}
 
 	@Override
 	public String handlePasswordFailure(String username) {
 		User user = userRepository.findByUsername(username);
-//		String timeToUnlock = loginAttemptsService.getTimeToUnlockUser(user);
 		if (user.getActive() && user.getAccountNonLocked()) {
-			if (user.getFailedAttempts() < LoginAttemptsService.MAX_FAILED_ATTEMPTS - 1) {
+			
+			if (user.getFailedLoginAttempts() < LoginAttemptsService.MAX_FAILED_ATTEMPTS - 1) {
 				loginAttemptsService.increaseFailedAttempts(user);
 				return "Invalid user credentials";
 			} else {
-				loginAttemptsService.lock(user);						
-				return "Your account has been locked due to 3 failed attempts."
-						+ " It will be unlocked after " + loginAttemptsService.getTimeToUnlockUser(user);
+				if (user.getLockTime() == null) {
+					loginAttemptsService.lock(user);
+				}
+				return "Your account has been locked due to 3 failed attempts." + " It will be unlocked by "
+						+ loginAttemptsService.getTimeToUnlockUser(user);
 			}
+			
 		} else if (user.getAccountNonLocked() == false) {
-			return "Your account has been locked due to 3 failed attempts."
-					+ " It will be unlocked after " + loginAttemptsService.getTimeToUnlockUser(user);
+			return "Your account has been locked due to 3 failed attempts." + " It will be unlocked by "
+					+ loginAttemptsService.getTimeToUnlockUser(user);
 
 		}
 		return null;
-//		else if (!user.getAccountNonLocked()) {
-//			if (loginAttemptsService.unlockWhenTimeExpired(user)) {
-//				throw new LockedException("Your account has been unlocked. Please try to login again.");
-//			}
-//		}
 	}
 
 }

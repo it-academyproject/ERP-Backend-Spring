@@ -2,7 +2,6 @@ package cat.itacademy.proyectoerp.domain;
 
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -61,10 +60,10 @@ public class User {
 	private Boolean accountNonLocked;
 
 	@Column(columnDefinition = "integer default 0")
-	private Integer failedAttempts;
+	private Integer failedLoginAttempts;
 
 	@Column
-	private Date lockTime;
+	private LocalDateTime lockTime;
 
 	@OneToOne(mappedBy = "user")
 	private Client client;
@@ -172,19 +171,19 @@ public class User {
 		this.accountNonLocked = accountNonLocked;
 	}
 
-	public Integer getFailedAttempts() {
-		return failedAttempts;
+	public Integer getFailedLoginAttempts() {
+		return failedLoginAttempts;
 	}
 
-	public void setFailedAttempts(Integer failedAttempts) {
-		this.failedAttempts = failedAttempts;
+	public void setFailedLoginAttempts(Integer failedAttempts) {
+		this.failedLoginAttempts = failedAttempts;
 	}
 
-	public Date getLockTime() {
+	public LocalDateTime getLockTime() {
 		return lockTime;
 	}
 
-	public void setLockTime(Date lockTime) {
+	public void setLockTime(LocalDateTime lockTime) {
 		this.lockTime = lockTime;
 	}
 
