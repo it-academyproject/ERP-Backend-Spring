@@ -38,7 +38,7 @@ public class Category {
 	
 	@OneToOne(mappedBy = "category")
 	private Product product;
-	
+//	
 	public Category() {
 	}
 	
