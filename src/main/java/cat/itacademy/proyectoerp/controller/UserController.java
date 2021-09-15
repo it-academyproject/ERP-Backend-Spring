@@ -212,8 +212,10 @@ public class UserController {
 		}
 
 		final String token = jwtUtil.generateToken(userDetails);
+
+		Long userId = userService.findByUsername(userDetails.getUsername()).getId(); 
 		// Create JSON to Response to client.
-		jwtResponse = new JwtResponse(token, jwtLogin.getUsername(), userDetails.getAuthorities());
+		jwtResponse = new JwtResponse(token, jwtLogin.getUsername(), userId, userDetails.getAuthorities());
 		return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
 	}
 
