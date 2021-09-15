@@ -11,7 +11,7 @@ public interface IProductService {
 
 	public List<ProductDTO> getProducts();
 	
-	public List<ProductDTO> getProductsByCategoryName(String name);
+	public List<ProductDTO> getByCategoryName(String name);
 
 	public Product findProductById(int id);
 

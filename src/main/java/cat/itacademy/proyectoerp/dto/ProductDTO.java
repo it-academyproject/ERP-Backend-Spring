@@ -12,12 +12,53 @@ public class ProductDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private int id, stock, wholesaleQuantity;
-	private String name, image;
-	private double price, vat, wholesalePrice;
-	private long created, modified;
-	private CategoryDTO categoryDto;
+	private int id;
+	private String name;
+	private int stock;
+	private String image;
+	private double price;
+	private double vat;
+	private double wholesalePrice;
+	private int wholesaleQuantity;
+	private long created;
+	private long modified;
 	private OfferDTO offerDto;
+	private CategoryDTO categoryDto;
+	private ShopDTO shopDto;
+	
+	public ProductDTO() {
+	}
+	
+	public ProductDTO(String name, int stock, String image, double price, double vat, double wholesalePrice, int wholesaleQuantity,
+			OfferDTO offerDto, CategoryDTO categoryDto, ShopDTO shopDto) {
+		this.name = name;
+		this.stock = stock;
+		this.image = image;
+		this.price = price;
+		this.vat = vat;
+		this.wholesalePrice = wholesalePrice;
+		this.wholesaleQuantity = wholesaleQuantity;
+		this.offerDto = offerDto;
+		this.categoryDto = categoryDto;
+		this.shopDto = shopDto;
+	}
+	
+	public ProductDTO(int id, String name, int stock, String image, double price, double vat, double wholesalePrice, int wholesaleQuantity,
+			long created, long modified, OfferDTO offerDto, CategoryDTO categoryDto, ShopDTO shopDto) {
+		this.id = id;
+		this.name = name;
+		this.stock = stock;
+		this.image = image;
+		this.price = price;
+		this.vat = vat;
+		this.wholesalePrice = wholesalePrice;
+		this.wholesaleQuantity = wholesaleQuantity;
+		this.created = created;
+		this.modified = modified;
+		this.offerDto = offerDto;
+		this.categoryDto = categoryDto;
+		this.shopDto = shopDto;
+	}
 	
 	public void setId(int id) {
 		this.id = id;
@@ -67,6 +108,10 @@ public class ProductDTO implements Serializable {
 		this.categoryDto = categoryDto;
 	}
 	
+	public void setShopDto(ShopDTO shopDto) {
+		this.shopDto = shopDto;
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -113,6 +158,10 @@ public class ProductDTO implements Serializable {
 	
 	public CategoryDTO getCategoryDto() {
 		return categoryDto;
+	}
+	
+	public ShopDTO getShopDto() {
+		return shopDto;
 	}
 	
 }
