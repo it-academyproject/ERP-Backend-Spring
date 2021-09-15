@@ -36,7 +36,6 @@ public class Offer implements Serializable {
 	@NotNull(message = "name is mandatory")
 	private String name;
 	@Column(name = "discount")
-	@NotNull(message = "discount is mandatory")
 	private double discount;
 	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
 	@Column(name="starts_on")
