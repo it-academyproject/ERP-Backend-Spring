@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -61,7 +62,7 @@ public class StatsController {
   }
 
   @GetMapping("/ordersByClient/{id}")
-  public Map<String, Object> getOrdersByClient(@PathVariable(value = "id") String id) throws Exception{
+  public Map<String, Object> getOrdersByClient(@PathVariable(value = "id") UUID id) throws Exception{
     HashMap<String, Object> map = new HashMap<>();
 
     try {

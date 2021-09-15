@@ -17,9 +17,9 @@ import cat.itacademy.proyectoerp.domain.OrderDetail;
 @Repository
 public interface IOrderRepository extends JpaRepository<Order, UUID>{
 
-  List<Order> findOrdersByStatus(OrderStatus status);
+  List<Order> findByStatus(OrderStatus status);
 
-  List<Order> findOrdersByClientId(String clientId);  
+  List<Order> findByClientId(UUID clientId);  
   
   List<Order> findByEmployeeId(UUID employeeId);
   
