@@ -1,11 +1,9 @@
 package cat.itacademy.proyectoerp.service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import cat.itacademy.proyectoerp.domain.Client;
-import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.dto.ClientDTO;
 import cat.itacademy.proyectoerp.dto.MessageDTO;
 
