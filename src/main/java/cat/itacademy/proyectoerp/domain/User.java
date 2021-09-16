@@ -59,6 +59,15 @@ public class User {
   @Column(nullable=false, columnDefinition = "boolean default true")
   private Boolean active = true;
 
+  @Column(nullable = false, columnDefinition = "boolean default false")
+	private Boolean accountLocked;
+  
+  @Column(columnDefinition = "integer default 0")
+	private Integer failedLoginAttempts;
+  
+  @Column
+	private LocalDateTime lockTime;
+
   @OneToOne(mappedBy = "user")
   private Client client;
 
@@ -163,6 +172,30 @@ public class User {
 	  this.registrationDate = registrationDate;
   }
 	
+  public Boolean isAccountLocked() {
+		return accountLocked;
+	}
+
+  public void setAccountLocked(Boolean accountLocked) {
+		this.accountLocked = accountLocked;
+	}
+
+  public Integer getFailedLoginAttempts() {
+		return failedLoginAttempts;
+	}
+
+  public void setFailedLoginAttempts(Integer failedAttempts) {
+		this.failedLoginAttempts = failedAttempts;
+	}
+
+  public LocalDateTime getLockTime() {
+		return lockTime;
+	}
+
+  public void setLockTime(LocalDateTime lockTime) {
+		this.lockTime = lockTime;
+	}
+  
   @Override
   public String toString() {
 	return "User [id=" + id + ", username=" + username + ", password=" + password + ", lastSession=" + lastSession
