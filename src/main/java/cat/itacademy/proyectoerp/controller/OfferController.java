@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,24 +51,6 @@ public class OfferController {
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping
-	public HashMap<String, Object> createOffer( @Valid @RequestBody Offer offer) {
-		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		
-		try {
-			OfferDTO offerDTO = offerService.createOffer(offer);
-			map.put("success", "true");
-			map.put("message", "offer created");
-			map.put("offer",offerDTO);
-		} catch (Exception e) {
-			map.put("success", "false");
-			map.put("message", "error: " + e.getMessage());
-		}
-		return map;
-	}
-	
-	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/{id}")
 	public Map<String, Object> getOfferById(@PathVariable(name="id") UUID id){
 		HashMap<String, Object> map = new HashMap<>();
@@ -85,26 +68,60 @@ public class OfferController {
 		return map;
 	}
 	
-	@DeleteMapping("/{id}")
-	public Map<String, Object> deleteOfferById(@PathVariable(name="id") UUID id) {
-
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping
+	public Map<String, Object> create(@RequestBody OfferDTO offerDto) {
 		HashMap<String, Object> map = new HashMap<>();
-
+		
 		try {
+			offerDto = offerService.create(offerDto);
 			
-			offerService.deleteOfferById(id);
-
-			map.put("success", "true");
-			map.put("message", "Offer with id: " + id + " has been deleted");
-
-		} catch (Exception e) {
-
-			map.put("success", "False");
+			map.put("success", true);
+			map.put("message", "Offer with id: " + offerDto.getId() + " has been created");
+			map.put("offer", offerDto);
+		} catch(Exception e) {
+			map.put("success", false);
 			map.put("message", "error" + e.getMessage());
-
 		}
+		
 		return map;
 	}
 	
-
+	@PreAuthorize("hasRole('ADMIN')")
+	@PutMapping
+	public Map<String, Object> update(@RequestBody OfferDTO offerDto) {
+		HashMap<String, Object> map = new HashMap<>();
+		
+		try {
+			offerDto = offerService.update(offerDto);
+			
+			map.put("success", true);
+			map.put("message", "Offer with id: " + offerDto.getId() + " has been updated");
+			map.put("offer", offerDto);
+		} catch(Exception e) {
+			map.put("success", false);
+			map.put("message", "error" + e.getMessage());
+		}
+		
+		return map;
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@DeleteMapping
+	public Map<String, Object> delete(@RequestBody OfferDTO offerDto) {
+		HashMap<String, Object> map = new HashMap<>();
+		
+		try {
+			offerService.delete(offerDto);
+			
+			map.put("success", true);
+			map.put("message", "Offer with id: " + offerDto.getId() + " has been deleted");
+		} catch(Exception e) {
+			map.put("success", false);
+			map.put("message", "error" + e.getMessage());
+		}
+		
+		return map;
+	}
+	
 }
