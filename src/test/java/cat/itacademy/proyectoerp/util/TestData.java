@@ -54,18 +54,9 @@ public class TestData {
 	private IShopRepository shopRepository;
 	
 	public void resetData() {
-		userRepository.deleteAll();
 		shopRepository.deleteAll();
 		productRepository.deleteAll();
 		categoryRepository.deleteAll();
-	}
-	
-	public void createAdminUser() {
-		userRepository.save(new User(DEFAULT_ADMIN_USERNAME, passwordEncoder.encode(DEFAULT_PASSWORD), UserType.ADMIN));
-	}
-	
-	public void createEmployeeUser() {
-		userRepository.save(new User(DEFAULT_EMPLOYEE_USERNAME, passwordEncoder.encode(DEFAULT_PASSWORD), UserType.EMPLOYEE));
 	}
 	
 	public Category createCategory(String name, String description, Offer offer) {

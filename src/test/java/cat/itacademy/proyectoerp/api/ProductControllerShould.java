@@ -42,7 +42,7 @@ import cat.itacademy.proyectoerp.util.TestData;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @Import(TestData.class)
-@TestPropertySource("classpath:application-shops.properties")
+@TestPropertySource("classpath:application-integrationtest.properties")
 public class ProductControllerShould {
 	
 	private static final String PRODUCT_BASE_URI  = "/api/products/",
@@ -62,8 +62,6 @@ public class ProductControllerShould {
 	@BeforeEach
 	void beforeEach() {
 		testData.resetData();
-		testData.createAdminUser();
-		testData.createEmployeeUser();
 	}
 	
 	private String obtainAccessToken(boolean isAdmin) throws Exception {
