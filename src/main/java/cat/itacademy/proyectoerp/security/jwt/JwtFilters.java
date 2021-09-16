@@ -21,12 +21,12 @@ public class JwtFilters extends OncePerRequestFilter{
 	JwtUtil jwtUtil;
 
 	@Autowired
-	UserDetailServiceImpl userDetailsService;
-
+	UserDetailServiceImpl userDetailsService;	
+		
 	@Override
 	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
-	        
 	try {
+		
 		// if token is valid configure Spring Security
 		String token = theToken(req);
 	    if(token != null && jwtUtil.validateToken(token)){
@@ -38,8 +38,9 @@ public class JwtFilters extends OncePerRequestFilter{
 	            
 	        // Wwe specify that the current user is authenticated. We pass the
 			// Spring Security Configurations successfully.
-	        SecurityContextHolder.getContext().setAuthentication(auth);
+	        SecurityContextHolder.getContext().setAuthentication(auth);     	       
 	    }
+	    
 	} catch (Exception e){
 		System.out.println("fail en el método doFilter " + e.getMessage());
 	}

@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.NameTokenizers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ import cat.itacademy.proyectoerp.domain.*;
 import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.repository.IUserRepository;
-
+import cat.itacademy.proyectoerp.security.service.WrongPasswordAttemptsService;
 import cat.itacademy.proyectoerp.util.PasswordGenerator;
 
 /**
@@ -36,6 +37,9 @@ public class UserServiceImpl implements IUserService {
 
 	@Autowired
 	EmailServiceImpl emailService;
+
+	@Autowired
+	WrongPasswordAttemptsService wrongPasswordAttemptsService;
 
 	// We use ModelMapper for map User entity with the DTO.
 	ModelMapper modelMapper = new ModelMapper();
@@ -81,9 +85,9 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public MessageDTO getErrorMessageUsernameExists(String username) {
-		MessageDTO errorMessage=null;
-		if(existsByUsername(username)){
-			errorMessage = new MessageDTO("False", "Username Exists: '"+ username +"'");
+		MessageDTO errorMessage = null;
+		if (existsByUsername(username)) {
+			errorMessage = new MessageDTO("False", "Username Exists: '" + username + "'");
 		}
 		return errorMessage;
 	}
@@ -138,7 +142,7 @@ public class UserServiceImpl implements IUserService {
 	public String passEconder(String pass) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String encodedPassword = passwordEncoder.encode(pass);
-		//System.out.println("pass encrip " + encodedPassword);
+		// System.out.println("pass encrip " + encodedPassword);
 		return encodedPassword;
 	}
 
@@ -222,7 +226,7 @@ public class UserServiceImpl implements IUserService {
 	/**
 	 * Method to set data of User.
 	 * 
-	 * @param id      id of user to modify.
+	 * @param id   id of user to modify.
 	 * @param user user data to modify.
 	 */
 	@Transactional
@@ -235,7 +239,7 @@ public class UserServiceImpl implements IUserService {
 
 		if (user.getPassword() != null)
 			password = user.getPassword();
-		
+
 		UserDTO userDto = modelMapper.map(user, UserDTO.class);
 		// Verify if user id exist
 		if (!userRepository.existsById(id)) {
@@ -256,36 +260,35 @@ public class UserServiceImpl implements IUserService {
 		 * We Verified what properties has received.
 		 */
 
-	if (userDto.getUsername() != null)
+		if (userDto.getUsername() != null)
 			user.setUsername(userDto.getUsername());
 		if (password != null)
 			user.setPassword(passEconder(password));
-	
 
 		userRepository.save(user);
 		userDto.setSuccess("True");
 		userDto.setMessage("User modified");
 		return Optional.of(userDto);
 
-	} 
-	
+	}
+
 	/**
 	 * Method to set active field of user to "false".
 	 * 
-	 * @param id      id of user to modify.
+	 * @param id   id of user to modify.
 	 * @param user user data to modify.
-	 */	
+	 */
 	@Override
 	public UserDTO setSubscription(@Valid User user) {
-		
+
 		UserDTO userDto = verifyUser(user);
-		
-		if (!(userDto.getSuccess()=="False")) {
-		
+
+		if (!(userDto.getSuccess() == "False")) {
+
 			userDto = verifySubscription(user);
 		}
-	
-		if (!(userDto.getSuccess()=="False")) {
+
+		if (!(userDto.getSuccess() == "False")) {
 			emailService.sendFarewellEmail(user);
 			user.setUserType(userRepository.findById(user.getId()).get().getUserType());
 			user.setPassword(userRepository.findById(user.getId()).get().getPassword());
@@ -294,47 +297,47 @@ public class UserServiceImpl implements IUserService {
 			userDto.setMessage("User is now unsubscribed");
 			return userDto;
 		}
-		
+
 		return userDto;
-	}	
-	
-	public UserDTO verifyUser (User user) {
-		
+	}
+
+	public UserDTO verifyUser(User user) {
+
 		UserDTO userDto = modelMapper.map(user, UserDTO.class);
-		
+
 		if (!userRepository.existsById(user.getId())) {
 			userDto.setSuccess("False");
 			userDto.setMessage("User doesn't exist");
 			return userDto;
 		}
-		
+
 		// Verifies if username matches
-		if (!(userDto.getSuccess()=="False")) {
-			
+		if (!(userDto.getSuccess() == "False")) {
+
 			String usernamerepo = userRepository.findById(user.getId()).get().getUsername();
-			
-			if ( !usernamerepo.equals(user.getUsername())) {
+
+			if (!usernamerepo.equals(user.getUsername())) {
 				userDto.setSuccess("False");
 				userDto.setMessage("The username does not match, please check it again");
 				return userDto;
-			}	
+			}
 		}
-		
+
 		userDto.setSuccess("True");
 		return userDto;
 	}
-	
-	public UserDTO verifySubscription (User user) {
-		
+
+	public UserDTO verifySubscription(User user) {
+
 		UserDTO userDto = modelMapper.map(user, UserDTO.class);
-		
+
 		if (userRepository.findById(user.getId()).get().getActive() == false) {
 			userDto.setSuccess("False");
 			userDto.setMessage("User is already unsubscribed");
-			return userDto;			
+			return userDto;
 		}
-		
-		userDto.setSuccess("True");		
+
+		userDto.setSuccess("True");
 		return userDto;
 	}
 
@@ -382,20 +385,20 @@ public class UserServiceImpl implements IUserService {
 	 */
 	@Override
 	public User updatePassword(@Valid ChangeUserPassword changeuserpassword) throws ArgumentNotFoundException {
-		 
+
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 		// Verify if user exist
 		User updatedUser = userRepository.findByUsername(changeuserpassword.getUser().getUsername());
-		
+
 		if (updatedUser != null) {
-			//Check password
+			// Check password
 			if (passwordEncoder.matches(changeuserpassword.getUser().getPassword(), updatedUser.getPassword())) {
 
 				// set user password (encrypted)
-				
+
 				updatedUser.setPassword(passEconder(changeuserpassword.getNew_password()));
-	
+
 				return userRepository.save(updatedUser);
 			} else {
 				throw new ArgumentNotFoundException("wrong password");
@@ -410,9 +413,68 @@ public class UserServiceImpl implements IUserService {
 	 * Method to update User lastSession with the current LocalDateTime.
 	 * 
 	 * @param username
+	 * 
+	 * @throws LockedException if user account is locked
+	 * 
 	 */
 	public void updateLastSession(String username) {
 		User user = userRepository.findByUsername(username);
-		user.setLastSession(LocalDateTime.now());
+
+		// successful login with user non-locked and no password failed attempts
+		if (!user.isAccountLocked() && user.getFailedLoginAttempts() == 0) {
+			user.setLastSession(LocalDateTime.now());
+		} else {
+			
+			// successful login after one or two password fails (max=3), resets count
+			if (user.getFailedLoginAttempts() > 0 && !user.isAccountLocked()) {
+				user.setLastSession(LocalDateTime.now());
+				wrongPasswordAttemptsService.resetFailedLoginAttempts(username);
+				
+			// successful login when user unlocked right after lock time expired and 0 failed attempts
+			} else if (wrongPasswordAttemptsService.unlockWhenTimeExpired(user)) {
+				user.setLastSession(LocalDateTime.now());
+			
+			// user account locked
+			} else if (user.isAccountLocked()) {
+				String timeToUnlock = wrongPasswordAttemptsService.getTimeToUnlock(user);
+				throw new LockedException("Your account has been locked due to 3 failed attempts."
+						+ " It will be unlocked by " + timeToUnlock);
+			}
+		}
+	}
+
+	@Override
+	public String handlePasswordFail(String username) {
+		User user = userRepository.findByUsername(username);
+
+		if (user.getActive() && !user.isAccountLocked()) {
+
+			// user non-locked and failed attempts less than max, increase count and set last session to null
+			if (user.getFailedLoginAttempts() < WrongPasswordAttemptsService.MAX_FAILED_ATTEMPTS - 1) {
+				wrongPasswordAttemptsService.increaseFailedAttempts(user);
+				user.setLastSession(null);
+				return "Invalid user credentials";
+			}
+			
+			// lock user if non-locked when max reached
+			if (user.getLockTime() == null) {
+				wrongPasswordAttemptsService.lock(user);
+			}
+			
+			/* failed attempt and account has just been locked - outside the if(user.getLocktime);
+			 * this return statement located outside the if() right above prevents a successful login after account locked 
+			 */
+			return "Your account has been locked due to 3 failed attempts." + " It will be unlocked by "
+			+ wrongPasswordAttemptsService.getTimeToUnlock(user);
+
+		// failed password attempt right after lock period expired, increase count
+		} else if (wrongPasswordAttemptsService.unlockWhenTimeExpired(user)) {
+			wrongPasswordAttemptsService.increaseFailedAttempts(user);
+			return "Invalid user credentials";
+		}
+
+		// failed attempt while lock period in force
+		return "Your account has been locked due to 3 failed attempts." + " It will be unlocked by "
+				+ wrongPasswordAttemptsService.getTimeToUnlock(user);
 	}
 }

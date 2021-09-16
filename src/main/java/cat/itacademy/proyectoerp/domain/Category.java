@@ -11,6 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "categories")
@@ -19,7 +20,8 @@ public class Category {
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-	@Column(name = "category_id", columnDefinition = "BINARY(16)")
+	@Column(name = "category_id")
+	@Type(type = "uuid-char")
 	private UUID id;
 	
 	@Column(name = "name", unique = true)
