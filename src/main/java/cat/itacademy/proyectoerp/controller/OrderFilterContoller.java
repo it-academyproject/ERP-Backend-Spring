@@ -45,8 +45,8 @@ public class OrderFilterContoller {
 		MessageDTO output;
 		try {
 			List<Order> orders = orderService.findOrdersByEmployeeId(id);
-			List<Order> ordersUnassigned = orderService.findOrdersByStatus(OrderStatus.UNASSIGNED);
-			orders.addAll(ordersUnassigned);
+//			List<Order> ordersUnassigned = orderService.findOrdersByStatus(OrderStatus.UNASSIGNED);
+//			orders.addAll(ordersUnassigned);
 			
 			if (orders.isEmpty()) {
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
