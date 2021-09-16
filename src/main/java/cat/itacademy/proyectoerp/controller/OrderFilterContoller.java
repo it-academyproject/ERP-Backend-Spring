@@ -1,5 +1,6 @@
 package cat.itacademy.proyectoerp.controller;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,7 +19,7 @@ import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 
 @RestController
 @RequestMapping("/api")
-public class OderFilterContoller {
+public class OrderFilterContoller {
 	
 	@Autowired
 	OrderServiceImpl orderService;
