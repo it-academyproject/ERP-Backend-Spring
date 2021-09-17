@@ -28,7 +28,7 @@ import cat.itacademy.proyectoerp.service.IOfferService;
 public class OfferController {
 	
 	@Autowired
-	IOfferService offerService ;
+	private IOfferService offerService ;
 	
 	@GetMapping
 	public MessageDTO getOffers() {
@@ -51,7 +51,7 @@ public class OfferController {
 		MessageDTO messageDto;
 		
 		try {
-			OfferDTO offerDTO = offerService.findOfferById(id);
+			OfferDTO offerDTO = offerService.findById(id);
 			
 			messageDto = new MessageDTO("true", "offer found", offerDTO);
 		} catch(Exception e) {

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,28 +13,29 @@ import cat.itacademy.proyectoerp.dto.OfferDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.repository.IOfferRepository;
 
-import org.modelmapper.ModelMapper;
-
 @Service
 public class OfferServiceImpl implements IOfferService {
 	
 	@Autowired
-	IOfferRepository offerRepository;
+	private IOfferRepository offerRepository;
 	
-	ModelMapper modelMapper = new ModelMapper();
+	private ModelMapper modelMapper = new ModelMapper();
 	
-	@Override	
+	@Override
 	public List<OfferDTO> findAll() throws ArgumentNotFoundException {
 		if(offerRepository.findAll().isEmpty())
 			throw new ArgumentNotFoundException("No Offers found");
 		
-		List<OfferDTO> OffersDTO = offerRepository.findAll().stream().map(Offer -> modelMapper.map(Offer, OfferDTO.class)).collect(Collectors.toList());
+		List<OfferDTO> offersDto = offerRepository.findAll()
+			.stream()
+			.map(offer -> modelMapper.map(offer, OfferDTO.class))
+			.collect(Collectors.toList());
 		
-		return OffersDTO;
+		return offersDto;
 	}
 	
 	@Override
-	public OfferDTO findOfferById(UUID id) throws ArgumentNotFoundException {
+	public OfferDTO findById(UUID id) throws ArgumentNotFoundException {
 		Offer offer = offerRepository.findById(id)
 			.orElseThrow(() -> new ArgumentNotFoundException("Offer not found. The id " + id + " doesn't exist"));
 		
@@ -48,7 +50,7 @@ public class OfferServiceImpl implements IOfferService {
 	}
 	
 	@Override
-	public OfferDTO update(Offer offer) {
+	public OfferDTO update(Offer offer) throws ArgumentNotFoundException {
 		UUID id = offer.getId();
 		
 		if (!offerRepository.existsById(id))
@@ -60,7 +62,7 @@ public class OfferServiceImpl implements IOfferService {
 	}
 	
 	@Override
-	public void delete(Offer offer) {
+	public void delete(Offer offer) throws ArgumentNotFoundException {
 		UUID id = offer.getId();
 		
 		if (!offerRepository.existsById(id))

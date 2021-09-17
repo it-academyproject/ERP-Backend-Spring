@@ -10,7 +10,7 @@ public interface IOfferService {
 	
 	public List<OfferDTO> findAll();
 	
-	public OfferDTO findOfferById(UUID id);
+	public OfferDTO findById(UUID id);
 	
 	public OfferDTO create(Offer offer);
 	
