@@ -53,7 +53,7 @@ public class OfferController {
 		try {
 			OfferDTO offerDto = offerService.findById(id);
 			
-			messageDto = new MessageDTO("true", "offer found", offerDto);
+			messageDto = new MessageDTO("true", "Offer found", offerDto);
 		} catch(Exception e) {
 			messageDto = new MessageDTO("false", "error: " + e.getMessage());
 		}

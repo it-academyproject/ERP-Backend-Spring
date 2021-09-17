@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class OfferDTO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

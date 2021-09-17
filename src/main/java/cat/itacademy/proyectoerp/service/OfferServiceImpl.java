@@ -24,7 +24,7 @@ public class OfferServiceImpl implements IOfferService {
 	@Override
 	public List<OfferDTO> findAll() throws ArgumentNotFoundException {
 		if(offerRepository.findAll().isEmpty())
-			throw new ArgumentNotFoundException("No Offers found");
+			throw new ArgumentNotFoundException("No offers found");
 		
 		List<OfferDTO> offerDtos = offerRepository.findAll()
 			.stream()
