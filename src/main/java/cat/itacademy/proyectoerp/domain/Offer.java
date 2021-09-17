@@ -15,6 +15,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "offers")
@@ -34,14 +35,18 @@ public class Offer implements Serializable {
 	private String name;
 	@Column(name = "discount")
 	private double discount;
+	@JsonProperty("starts_on")
 	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
 	@Column(name="starts_on")
 	private LocalDateTime startsOn;
+	@JsonProperty("ends_on")
 	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
 	@Column(name="ends_on")
 	private LocalDateTime endsOn;
+	@JsonProperty("paid_quantity")
 	@Column(name = "paid_quantity")
 	private int paidQuantity;
+	@JsonProperty("free_quantity")
 	@Column(name = "free_quantity")
 	private int freeQuantity;
 	

@@ -16,52 +16,57 @@ import org.modelmapper.ModelMapper;
 
 @Service
 public class OfferServiceImpl implements IOfferService {
-
+	
 	@Autowired
 	IOfferRepository offerRepository;
 	
-	ModelMapper modelMapper = new ModelMapper();		
-
+	ModelMapper modelMapper = new ModelMapper();
+	
 	@Override	
 	public List<OfferDTO> findAll() throws ArgumentNotFoundException {
-				if(offerRepository.findAll().isEmpty())
-					throw new ArgumentNotFoundException("No Offers found");
-				
-				List<OfferDTO> OffersDTO = offerRepository.findAll().stream().map(Offer -> modelMapper.map(Offer, OfferDTO.class)).collect(Collectors.toList());
-						
-				return OffersDTO;
+		if(offerRepository.findAll().isEmpty())
+			throw new ArgumentNotFoundException("No Offers found");
 		
-	}
-
-	@Override
-	public OfferDTO findOfferById(UUID id) throws ArgumentNotFoundException  {
-			Offer offer = offerRepository.findById(id).orElseThrow(() -> new ArgumentNotFoundException("Offer not found. The id " + id + " doesn't exist"));
-			return modelMapper.map(offer, OfferDTO.class);
+		List<OfferDTO> OffersDTO = offerRepository.findAll().stream().map(Offer -> modelMapper.map(Offer, OfferDTO.class)).collect(Collectors.toList());
+		
+		return OffersDTO;
 	}
 	
 	@Override
-	public OfferDTO create(OfferDTO offerDto) {
-		UUID id = offerDto.getId();
-		
+	public OfferDTO findOfferById(UUID id) throws ArgumentNotFoundException {
 		Offer offer = offerRepository.findById(id)
 			.orElseThrow(() -> new ArgumentNotFoundException("Offer not found. The id " + id + " doesn't exist"));
 		
-		return modelMapper.map(offerRepository.save(offer), OfferDTO.class);
+		return modelMapper.map(offer, OfferDTO.class);
 	}
-
+	
 	@Override
-	public OfferDTO update(OfferDTO offerDto) {
-		UUID id = offerDto.getId();
+	public OfferDTO create(Offer offer) {
+		offerRepository.save(offer);
 		
-		Offer offer = offerRepository.findById(id)
-			.orElseThrow(() -> new ArgumentNotFoundException("Offer not found. The id " + id + " doesn't exist"));
-		
-		return modelMapper.map(offerRepository.save(offer), OfferDTO.class);
+		return modelMapper.map(offer, OfferDTO.class);
 	}
-
+	
 	@Override
-	public void delete(OfferDTO offerDto) {
-		offerRepository.deleteById(offerDto.getId());
+	public OfferDTO update(Offer offer) {
+		UUID id = offer.getId();
+		
+		if (!offerRepository.existsById(id))
+			throw new ArgumentNotFoundException("Offer not found. The id " + id + " doesn't exist");
+		
+		offerRepository.save(offer);
+		
+		return modelMapper.map(offer, OfferDTO.class);
+	}
+	
+	@Override
+	public void delete(Offer offer) {
+		UUID id = offer.getId();
+		
+		if (!offerRepository.existsById(id))
+			throw new ArgumentNotFoundException("Offer not found. The id " + id + " doesn't exist");
+	
+		offerRepository.deleteById(id);
 	}	
-
+	
 }
