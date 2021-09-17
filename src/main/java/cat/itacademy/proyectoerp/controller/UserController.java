@@ -189,26 +189,19 @@ public class UserController {
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<?> loginUser(@Valid @RequestBody JwtLogin jwtLogin) {
-
 		JwtResponse jwtResponse;
 		UserDetails userDetails;
-
+		String userName = jwtLogin.getUsername();
+		Long userId = userService.findByUsername(userName).getId(); 
+		String password = jwtLogin.getPassword();
 		try {
-			/*
-			 * SecurityContextHolder.getContext()
-			 * .setAuthentication(authenticate(jwtLogin.getUsername(),
-			 * jwtLogin.getPassword()));
-			 */
-			userDetails = userDetailService.loadUserByUsername(jwtLogin.getUsername());
-
+			userDetails = userDetailService.loadUserByUsername(userName);
 			SecurityContextHolder.getContext()
-					.setAuthentication(authenticate(jwtLogin.getUsername(), jwtLogin.getPassword()));
+					.setAuthentication(authenticate(userName, password));
 
 			/* Update User lastSession after successful login 
 			 * or throw LockException if user account is locked */
-			userService.updateLastSession(userDetails.getUsername());
-
-		// wrong password exception catch
+			userService.updateLastSession(userName);
 		} catch (BadCredentialsException badCredentsEx) {
 			String message = userService.handlePasswordFail(jwtLogin.getUsername());
 			MessageDTO messageDto = new MessageDTO("False", message);
@@ -217,10 +210,10 @@ public class UserController {
 			MessageDTO messageDto = new MessageDTO("False", e.getMessage());
 			return ResponseEntity.unprocessableEntity().body(messageDto);
 		}
-
+		
 		final String token = jwtUtil.generateToken(userDetails);
 		// Create JSON to Response to client.
-		jwtResponse = new JwtResponse(token, jwtLogin.getUsername(), userDetails.getAuthorities());
+		jwtResponse = new JwtResponse(token, userName, userId, userDetails.getAuthorities());
 		return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
 	}
 

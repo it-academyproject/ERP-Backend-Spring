@@ -44,6 +44,19 @@ public class Category {
 		this.description = description;
 	}
 	
+	public Category(String name, String description, Offer offer) {
+		this.name = name;
+		this.description = description;
+		this.offer = offer;
+	}
+	
+	public Category(UUID id, String name, String description, Offer offer) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.offer = offer;
+	}
+	
 	public void setId(UUID id) {
 		this.id = id;
 	}

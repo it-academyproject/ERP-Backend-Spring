@@ -16,12 +16,48 @@ import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 import cat.itacademy.proyectoerp.repository.ICategoryRepository;
 
 @Service
-public class CategoryServiceImpl implements ICategoryService { // FIXME B-114 ?
+public class CategoryServiceImpl implements ICategoryService {
 	
 	@Autowired
 	ICategoryRepository categoryRepository;
 	
 	ModelMapper modelMapper = new ModelMapper();
+	
+	@Override
+	public List<CategoryDTO> read() {
+		List<Category> categories = categoryRepository.findAll();
+		
+		return categories.stream()
+			.collect(Collectors.mapping(category -> modelMapper.map(category, CategoryDTO.class), Collectors.toList()));
+	}
+	
+	@Override
+	public CategoryDTO readById(UUID id) {
+		Category category = categoryRepository.findById(id)
+			.orElseThrow(() -> new ArgumentNotFoundException("The id " + id + " doesn't correspond to any category"));
+		
+		return modelMapper.map(category, CategoryDTO.class);
+	}
+	
+	public Category findById(UUID id) {
+		return categoryRepository.findById(id)
+				.orElseThrow(() -> new ArgumentNotFoundException("The id " + id + " doesn't correspond to any category"));
+	}
+	
+	@Override
+	public CategoryDTO readByName(String name) {
+		this.existsByName(name);
+		
+		Category category = categoryRepository.findByName(name);
+		
+		return modelMapper.map(category, CategoryDTO.class);
+	}
+	
+	@Override
+	public void existsByName(String name) {
+		if (!categoryRepository.existsByName(name))
+			throw new ArgumentNotValidException("A category named " + name + " doesn't exist");
+	}
 	
 	@Override
 	public CategoryDTO create(CategoryDTO categoryDto) {
@@ -33,15 +69,15 @@ public class CategoryServiceImpl implements ICategoryService { // FIXME B-114 ?
 	}
 	
 	private Category create(String name, String description) {
-		checkCategoryName(name);
-		checkCategoryDescription(description);
+		this.checkName(name);
+		this.checkDescription(description);
 		
 		return new Category(name, description);
 	}
 	
 	@Override
 	public CategoryDTO update(CategoryDTO categoryDto) {
-		Category category = null; //readById(categoryDto.getId());
+		Category category = this.findById(categoryDto.getId());
 		
 		category = this.updateNameIfNameExists(category, categoryDto.getName());
 		category = this.updateDescriptionIfDescriptionExists(category, categoryDto.getDescription());
@@ -52,8 +88,8 @@ public class CategoryServiceImpl implements ICategoryService { // FIXME B-114 ?
 	}
 	
 	private Category updateNameIfNameExists(Category category, String name) {
-		if(name != null) {
-			checkCategoryName(name);
+		if (name != null) {
+			this.checkName(name);
 			category.setName(name);
 			return category;
 		}
@@ -61,55 +97,35 @@ public class CategoryServiceImpl implements ICategoryService { // FIXME B-114 ?
 	}
 	
 	private Category updateDescriptionIfDescriptionExists(Category category, String description) {
-		if(description != null) {
-			checkCategoryDescription(description);
+		if (description != null) {
+			this.checkDescription(description);
 			category.setDescription(description);
 			return category;
 		}
 		return category;
 	}
 	
-	private void checkCategoryName(String name) {
-		if(StringUtils.isBlank(name)) throw new ArgumentNotValidException("Name cannot be null or whitespace");
-		if(categoryRepository.existsByName(name)) throw new ArgumentNotValidException("A category named " + name + " already exists");
-	}
-	
-	private void checkCategoryDescription(String description) {
-		if(StringUtils.isBlank(description)|| description.length() < 10 || description.length() > 200) throw new ArgumentNotValidException("Description must be between 10 and 200 characters");
-		if(categoryRepository.existsByDescription(description)) throw new ArgumentNotValidException("Another category has the same description");
-	}
-	
-	@Override
-	public CategoryDTO readById(UUID id) {
-		Category category = categoryRepository.findById(id).orElseThrow(() -> new ArgumentNotFoundException("The id " + id + " doesn't correspond to any category"));
+	private void checkName(String name) {
+		if (StringUtils.isBlank(name))
+			throw new ArgumentNotValidException("Name cannot be null or whitespace");
 		
-		return modelMapper.map(category, CategoryDTO.class);
+		if (categoryRepository.existsByName(name))
+			throw new ArgumentNotValidException("A category named " + name + " already exists");
 	}
 	
-	@Override
-	public List<CategoryDTO> read() {
-		return categoryRepository.findAll().stream().collect(Collectors.mapping(category -> modelMapper.map(category, CategoryDTO.class), Collectors.toList()));
-	}
-	
-	@Override
-	public CategoryDTO readByName(String name) {
-		this.existsByName(name);
-		return null; //categoryRepository.findByName(name);
-	}
-	
-	@Override
-	public void existsByName(String name) {
-		if (!categoryRepository.existsByName(name))
-			throw new ArgumentNotValidException("A category named " + name + " doesn't exist");
+	private void checkDescription(String description) {
+		if (StringUtils.isBlank(description) || description.length() < 10 || description.length() > 200)
+			throw new ArgumentNotValidException("Description must be between 10 and 200 characters");
+		
+		if (categoryRepository.existsByDescription(description))
+			throw new ArgumentNotValidException("Another category has the same description");
 	}
 	
 	@Override
 	public void delete(CategoryDTO categoryDto) {
 		UUID id = categoryDto.getId();
-		this.readById(id);
 		
-		if (!categoryRepository.existsById(id))
-			throw new ArgumentNotFoundException("The id " + id + " doesn't correspond to any category");
+		this.readById(id);
 		
 		categoryRepository.deleteById(id);
 	}

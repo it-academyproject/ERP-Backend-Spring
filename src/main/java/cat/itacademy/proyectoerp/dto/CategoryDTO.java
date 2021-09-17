@@ -13,8 +13,26 @@ public class CategoryDTO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private UUID id, parentCategoryId;
-	private String name, parentCategoryName, description;
+	private UUID id;
+	private String name;
+	private String description;
+	private OfferDTO offerDto;
+	
+	public CategoryDTO() {
+	}
+	
+	public CategoryDTO(String name, String description, OfferDTO offerDto) {
+		this.name = name;
+		this.description = description;
+		this.offerDto = offerDto;
+	}
+	
+	public CategoryDTO(UUID id, String name, String description, OfferDTO offerDto) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.offerDto = offerDto;
+	}
 	
 	public void setId(UUID id) {
 		this.id = id;
@@ -28,12 +46,8 @@ public class CategoryDTO implements Serializable {
 		this.description = description;
 	}
 	
-	public void setParentCategoryId(UUID parentCategoryId) {
-		this.parentCategoryId = parentCategoryId;
-	}
-	
-	public void setParentCategoryName(String parentCategoryName) {
-		this.parentCategoryName = parentCategoryName;
+	public void setOfferDto(OfferDTO offerDto) {
+		this.offerDto = offerDto;
 	}
 	
 	public UUID getId() {
@@ -48,12 +62,8 @@ public class CategoryDTO implements Serializable {
 		return description;
 	}
 	
-	public UUID getParentCategoryId() {
-		return parentCategoryId;
-	}
-	
-	public String getParentCategoryName() {
-		return parentCategoryName;
+	public OfferDTO getOfferDto() {
+		return offerDto;
 	}
 	
 	@Override
@@ -63,8 +73,6 @@ public class CategoryDTO implements Serializable {
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((parentCategoryId == null) ? 0 : parentCategoryId.hashCode());
-		result = prime * result + ((parentCategoryName == null) ? 0 : parentCategoryName.hashCode());
 		return result;
 	}
 	
@@ -91,16 +99,6 @@ public class CategoryDTO implements Serializable {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
-			return false;
-		if (parentCategoryId == null) {
-			if (other.parentCategoryId != null)
-				return false;
-		} else if (!parentCategoryId.equals(other.parentCategoryId))
-			return false;
-		if (parentCategoryName == null) {
-			if (other.parentCategoryName != null)
-				return false;
-		} else if (!parentCategoryName.equals(other.parentCategoryName))
 			return false;
 		return true;
 	}

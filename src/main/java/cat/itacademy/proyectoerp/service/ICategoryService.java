@@ -5,11 +5,11 @@ import java.util.UUID;
 
 import cat.itacademy.proyectoerp.dto.CategoryDTO;
 
-public interface ICategoryService { // FIXME B-114 ?
-
-	public CategoryDTO readById(UUID id);
+public interface ICategoryService {
 	
 	public List<CategoryDTO> read();
+	
+	public CategoryDTO readById(UUID id);
 	
 	public CategoryDTO readByName(String name);
 	

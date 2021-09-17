@@ -36,9 +36,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(
-locations = "classpath:application-stats-integrationtest.properties")
+locations = "classpath:application-integrationtest.properties")
 @Transactional
-@Sql(scripts = "classpath:stats-integration-test-insert-data.sql")
 public class StatsControllerIntegrationTest {
 	/**
 	 * @MockBean avoid the execution of real Runner.class as we don't need it's entities. 
