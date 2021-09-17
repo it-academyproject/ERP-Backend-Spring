@@ -26,7 +26,5 @@ public interface IUserService {
 	public User findByUsername(String username);
 	boolean existsByUsername(String username);
 	MessageDTO getErrorMessageUsernameExists(String username);
-	public void updateLastSession(String username);
-	public String handlePasswordFail(String username);
-
+	
 }

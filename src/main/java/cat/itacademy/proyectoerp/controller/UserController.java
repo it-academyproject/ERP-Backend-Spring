@@ -5,6 +5,7 @@ import cat.itacademy.proyectoerp.dto.*;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 import cat.itacademy.proyectoerp.security.entity.JwtResponse;
 import cat.itacademy.proyectoerp.security.jwt.JwtUtil;
+import cat.itacademy.proyectoerp.security.service.LoginService;
 import cat.itacademy.proyectoerp.security.service.UserDetailServiceImpl;
 import cat.itacademy.proyectoerp.service.ClientServiceImpl;
 import cat.itacademy.proyectoerp.service.IClientService;
@@ -59,6 +60,9 @@ public class UserController {
 
 	@Autowired
 	IClientService iClientService;
+
+	@Autowired
+	LoginService loginService;
 
 	/**
 	 * Method for all url which don't exist
@@ -199,22 +203,17 @@ public class UserController {
 			SecurityContextHolder.getContext()
 					.setAuthentication(authenticate(userName, password));
 
-			/* Update User lastSession after successful login 
-			 * or throw LockException if user account is locked */
-			userService.updateLastSession(userName);
+			final String token = jwtUtil.generateToken(userDetails);
+			jwtResponse = new JwtResponse(token, userName, userId, userDetails.getAuthorities());
+			return new ResponseEntity<>(jwtResponse, HttpStatus.OK);			
 		} catch (BadCredentialsException badCredentsEx) {
-			String message = userService.handlePasswordFail(jwtLogin.getUsername());
+			String message = loginService.handlePasswordFail(jwtLogin.getUsername());
 			MessageDTO messageDto = new MessageDTO("False", message);
 			return ResponseEntity.unprocessableEntity().body(messageDto);
 		} catch (Exception e) {
 			MessageDTO messageDto = new MessageDTO("False", e.getMessage());
 			return ResponseEntity.unprocessableEntity().body(messageDto);
-		}
-		
-		final String token = jwtUtil.generateToken(userDetails);
-		// Create JSON to Response to client.
-		jwtResponse = new JwtResponse(token, userName, userId, userDetails.getAuthorities());
-		return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
+		}	
 	}
 
 	/**

@@ -22,6 +22,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
 	@Autowired
 	IUserRepository userDao;
 
+	@Autowired
+	LoginService loginService;
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Set<GrantedAuthority> authoritiesUser = new HashSet<GrantedAuthority>(UserType.values().length);
@@ -36,6 +39,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
 		UserDetails userDetails = User.withUsername(userDao.findByUsername(username).getUsername())
 				.password(userDao.findByUsername(username).getPassword()).authorities(authoritiesUser).build();
 
+		loginService.updateLastSession(username);
 		return userDetails;
 	}
 }
