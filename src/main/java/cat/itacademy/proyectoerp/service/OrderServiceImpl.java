@@ -97,7 +97,7 @@ public class OrderServiceImpl implements IOrderService{
 		}
 		Order order = modelMapper.map(createOrderDTO, Order.class);
 		Set<OrderDetail> orderDetails = createOrderDetailFromProductQuantity(order, createOrderDTO.getProductsQuantity());
-		order.setOrderDetails(orderDetails);
+//		order.setOrderDetails(orderDetails);
 		order.setTotal(calculateTotalFromOrderDetail(orderDetails));
 		orderRepository.save(order);
 		

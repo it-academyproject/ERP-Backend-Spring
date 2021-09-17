@@ -3,6 +3,8 @@ package cat.itacademy.proyectoerp.controller;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +21,7 @@ import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 
 @RestController
 @RequestMapping("/api")
-public class OrderFilterContoller {
+public class OrderFiltersContoller {
 	
 	@Autowired
 	OrderServiceImpl orderService;
@@ -44,14 +46,16 @@ public class OrderFilterContoller {
 	public ResponseEntity<MessageDTO> getOrdersByEmployeeId(@PathVariable(name = "employeeId") UUID id) {
 		MessageDTO output;
 		try {
-			List<Order> orders = orderService.findOrdersByEmployeeId(id);
-//			List<Order> ordersUnassigned = orderService.findOrdersByStatus(OrderStatus.UNASSIGNED);
-//			orders.addAll(ordersUnassigned);
+			List<Order> employeeOrders = orderService.findOrdersByEmployeeId(id);
+			List<Order> ordersUnassigned = orderService.findOrdersByStatus(OrderStatus.UNASSIGNED);
+			List<Order> ordersJoined = Stream
+										.concat(employeeOrders.stream(), ordersUnassigned.stream())
+										.collect(Collectors.toList());
 			
-			if (orders.isEmpty()) {
+			if (ordersJoined.isEmpty()) {
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			}
-			output = new MessageDTO("true", "orders successfully retrieved.", orders);
+			output = new MessageDTO("true", "orders successfully retrieved.", ordersJoined);
 			return ResponseEntity.status(HttpStatus.OK).body(output);		
 		} catch (Exception e) {
 			output = new MessageDTO("False", e.getMessage());

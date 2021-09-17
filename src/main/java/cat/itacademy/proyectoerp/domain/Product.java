@@ -54,9 +54,6 @@ public class Product implements Serializable {
 	@JoinColumn(name = "category_id", referencedColumnName = "category_id")
 	private Category category;
 	
-	@OneToMany(mappedBy = "product")
-	private List<OrderDetail> orderDetails;
-	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "shop_id", referencedColumnName = "shop_id")
 	// TODO In the future this field should be mandatory
@@ -115,10 +112,6 @@ public class Product implements Serializable {
 		this.category = category;
 	}
 	
-	public void setOrderDetails(List<OrderDetail> orderDetails) {
-		this.orderDetails = orderDetails;
-	}
-	
 	public void setShop(Shop shop) {
 		this.shop = shop;
 	}
@@ -169,10 +162,6 @@ public class Product implements Serializable {
 	
 	public Category getCategory() {
 		return category;
-	}
-	
-	public List<OrderDetail> getOrderDetails() {
-		return orderDetails;
 	}
 	
 	public Shop getShop() {

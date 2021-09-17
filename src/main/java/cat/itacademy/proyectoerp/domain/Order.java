@@ -173,7 +173,7 @@ public class Order  {
 	public void setOrderDetails(Set<OrderDetail> orderDetails) {
 		this.orderDetails = orderDetails;
 	}
-	
+
 	public Double getTotal() {
 		return total;
 	}
@@ -182,7 +182,7 @@ public class Order  {
 		this.total = total;
 	}
 	
-	//Method to add orderDetails to order
+//	//Method to add orderDetails to order
 	public void addOrderDetail(OrderDetail orderDetails) {
 		this.orderDetails.add(orderDetails);
 	}

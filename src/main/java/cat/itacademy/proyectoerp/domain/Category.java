@@ -36,9 +36,6 @@ public class Category {
 	@JoinColumn(name = "offer_id", referencedColumnName = "offer_id")
 	private Offer offer;
 	
-	@OneToOne(mappedBy = "category")
-	private Product product;
-
 	public Category() {
 	}
 	
@@ -63,10 +60,6 @@ public class Category {
 		this.offer = offer;
 	}
 	
-	public void setProduct(Product product) {
-		this.product = product;
-	}
-	
 	public UUID getId() {
 		return id;
 	}
@@ -81,10 +74,6 @@ public class Category {
 	
 	public Offer getOffer() {
 		return offer;
-	}
-	
-	public Product getProduct() {
-		return product;
 	}
 	
 }
