@@ -203,7 +203,7 @@ public class OrderServiceImpl implements IOrderService{
 	@Override
 	public List<Order> findOrdersByClient(UUID id) {
 		if (orderRepository.findByClientId(id).isEmpty())
-			throw new ArgumentNotFoundException("No orders with client id " + id + " found");
+			throw new ArgumentNotFoundException("No orders found for this client");
 		else
 			return orderRepository.findByClientId(id);
 	}
@@ -211,7 +211,7 @@ public class OrderServiceImpl implements IOrderService{
 	@Override
 	public List<Order> findOrdersByEmployeeId(UUID employeeId) {
 		if (orderRepository.findByEmployeeId(employeeId).isEmpty()) {
-			throw new ArgumentNotFoundException("No orders with employee id " + employeeId + " found");
+			throw new ArgumentNotFoundException("No orders found for this employee");
 		} else {
 			return orderRepository.findByEmployeeId(employeeId);
 		}
