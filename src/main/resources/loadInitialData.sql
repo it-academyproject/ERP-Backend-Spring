@@ -86,7 +86,9 @@ INSERT INTO orders (order_id, client_id, date_created, employee_id, payment_meth
 		('0f010722-7425-4d6d-8a48-ac6ec38bdcf6', '0aa0ed3d-d69c-4955-a265-be813c8bf8f3', '2021-07-21 06:23:47', 'b5e611b8-5cf5-460e-bd06-fe763287363c', 'PAYPAL', 'PENDING_DELIVERY', '1200', '7d643bd3-a5a7-4c9d-9812-1a2c47e18092', '7d643bd3-a5a7-4c9d-9812-1a2c47e18092'),
 		('173e9e5a-f489-49f4-a502-38b29f6e014d', '0aa0ed3d-d69c-4955-a265-be813c8bf8f3', '2021-07-21 06:23:47', 'b5e611b8-5cf5-460e-bd06-fe763287363c', 'PAYPAL', 'COMPLETED','1200', 'e3fca320-3dd4-42ce-80f1-1fe7d9f1d6aa', 'ce9e4681-5518-4eca-a7bb-461f50637ac4'),
 		('28fcaf2e-91c1-4e38-98e7-69398feca6b2', 'ff157963-7dca-4ba2-84bf-557cfe924a43', '2021-07-21 06:23:47', 'b5e611b8-5cf5-460e-bd06-fe763287363c', 'CREDIT_CARD', 'COMPLETED', '550', 'e3fca320-3dd4-42ce-80f1-1fe7d9f1d6aa', '3836cbf0-ec20-47ae-9f2f-4a59b89c0184'),
-		('9ebcaeaf-4b2f-48de-8a4e-dafa630965a6', 'ff157963-7dca-4ba2-84bf-557cfe924a43', '2021-07-21 06:23:47', 'b5e611b8-5cf5-460e-bd06-fe763287363c', 'CASH', 'IN_DELIVERY', '1200', 'e3fca320-3dd4-42ce-80f1-1fe7d9f1d6aa', '3836cbf0-ec20-47ae-9f2f-4a59b89c0184');
+		('9ebcaeaf-4b2f-48de-8a4e-dafa630965a6', 'ff157963-7dca-4ba2-84bf-557cfe924a43', '2021-07-21 06:23:47', 'b5e611b8-5cf5-460e-bd06-fe763287363c', 'CASH', 'IN_DELIVERY', '1200', 'e3fca320-3dd4-42ce-80f1-1fe7d9f1d6aa', '3836cbf0-ec20-47ae-9f2f-4a59b89c0184'),
+		('9ebcaeaf-4b2f-48de-8a4e-dafa630965b7', 'ff157963-7dca-4ba2-84bf-557cfe924a43', '2021-07-21 06:23:47', NULL, 'CASH', 'UNASSIGNED', '3500', 'e3fca320-3dd4-42ce-80f1-1fe7d9f1d6aa', '3836cbf0-ec20-47ae-9f2f-4a59b89c0184'),
+		('9ebcaeaf-4b2f-48de-8a4e-dafa630965c8', 'ff157963-7dca-4ba2-84bf-557cfe924a43', '2021-07-21 06:23:47', NULL, 'PAYPAL', 'UNASSIGNED', '180', 'e3fca320-3dd4-42ce-80f1-1fe7d9f1d6aa', '3836cbf0-ec20-47ae-9f2f-4a59b89c0184');
 
 INSERT INTO order_details (id, quantity, subtotal, order_id, product_id)
 	VALUES

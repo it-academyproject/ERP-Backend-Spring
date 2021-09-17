@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.dto.MessageDTO;
+import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 
 @RestController
@@ -31,11 +32,11 @@ public class OrderFiltersContoller {
 		MessageDTO output;
 		try {
 			List<Order> orders = orderService.findOrdersByClient(id);
-			if (orders.isEmpty()) {
-				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-			}
 			output = new MessageDTO("true", "orders successfully retrieved.", orders);
-			return ResponseEntity.status(HttpStatus.OK).body(output);		
+			return ResponseEntity.status(HttpStatus.OK).body(output);
+		} catch (ArgumentNotFoundException argNotFoundEx) {
+			output = new MessageDTO("False", argNotFoundEx.getMessage());
+			return ResponseEntity.status(HttpStatus.OK).body(output);
 		} catch (Exception e) {
 			output = new MessageDTO("False", e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(output);
@@ -51,12 +52,12 @@ public class OrderFiltersContoller {
 			List<Order> ordersJoined = Stream
 										.concat(employeeOrders.stream(), ordersUnassigned.stream())
 										.collect(Collectors.toList());
-			
-			if (ordersJoined.isEmpty()) {
-				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-			}
+
 			output = new MessageDTO("true", "orders successfully retrieved.", ordersJoined);
-			return ResponseEntity.status(HttpStatus.OK).body(output);		
+			return ResponseEntity.status(HttpStatus.OK).body(output);
+		} catch (ArgumentNotFoundException argNotFoundEx) {
+			output = new MessageDTO("False", argNotFoundEx.getMessage());
+			return ResponseEntity.status(HttpStatus.OK).body(output);
 		} catch (Exception e) {
 			output = new MessageDTO("False", e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(output);
