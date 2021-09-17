@@ -1,7 +1,6 @@
 package cat.itacademy.proyectoerp.domain;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.Valid;
@@ -53,9 +51,6 @@ public class Product implements Serializable {
 	@OneToOne
 	@JoinColumn(name = "category_id", referencedColumnName = "category_id")
 	private Category category;
-	
-	@OneToMany(mappedBy = "product")
-	private List<OrderDetail> orderDetails;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "shop_id", referencedColumnName = "shop_id")
@@ -115,10 +110,6 @@ public class Product implements Serializable {
 		this.category = category;
 	}
 	
-	public void setOrderDetails(List<OrderDetail> orderDetails) {
-		this.orderDetails = orderDetails;
-	}
-	
 	public void setShop(Shop shop) {
 		this.shop = shop;
 	}
@@ -169,10 +160,6 @@ public class Product implements Serializable {
 	
 	public Category getCategory() {
 		return category;
-	}
-	
-	public List<OrderDetail> getOrderDetails() {
-		return orderDetails;
 	}
 	
 	public Shop getShop() {

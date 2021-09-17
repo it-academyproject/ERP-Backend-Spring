@@ -20,7 +20,7 @@ import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
 
 @Service
-public class ProductServiceImpl implements IProductService { // FIXME There's no parent or child categories anymore.
+public class ProductServiceImpl implements IProductService {
 	
 	@Autowired
 	IProductRepository productRepository;
@@ -60,12 +60,15 @@ public class ProductServiceImpl implements IProductService { // FIXME There's no
 	}
 	
 	private void checkProductName(String name) {
-		if(StringUtils.isBlank(name)) throw new ArgumentNotValidException("Name cannot be null or whitespace");
-		if(productRepository.existsByName(name)) throw new ArgumentNotValidException("A category named " + name + " already exists");		
+		if (StringUtils.isBlank(name))
+			throw new ArgumentNotValidException("Name cannot be null or whitespace");
+		if (productRepository.existsByName(name))
+			throw new ArgumentNotValidException("A category named " + name + " already exists");		
 	}
 	
 	private void checkProductPriceAndWholesalePrice(double price, double wholesalePrice) {
-		if(price < wholesalePrice) throw new ArgumentNotValidException("The wholesale price cannot be higher than the regular price");		
+		if (price < wholesalePrice)
+			throw new ArgumentNotValidException("The wholesale price cannot be higher than the regular price");		
 	}
 	
 	private void setProductCreatedAndModified(ProductDTO productDto) {
@@ -89,7 +92,8 @@ public class ProductServiceImpl implements IProductService { // FIXME There's no
 	}
 	
 	private Category mapCategoryDtoToEntity(CategoryDTO categoryDto) {
-		return null; //categoryService.findCategoryById(categoryDto.getId());
+		categoryService.readById(categoryDto.getId());
+		return modelMapper.map(categoryDto, Category.class);
 	}
 	
 	@Override
@@ -99,7 +103,7 @@ public class ProductServiceImpl implements IProductService { // FIXME There's no
 	}
 	
 	@Override
-	public List<ProductDTO> getProductsByCategoryName(String name) {
+	public List<ProductDTO> getByCategoryName(String name) {
 		//categoryService.existsCategoryByName(name);
 		return productRepository.findAllByCategoryName(name).stream().collect(Collectors.mapping(product -> modelMapper.map(product, ProductDTO.class), Collectors.toList()));
 	}
@@ -115,7 +119,7 @@ public class ProductServiceImpl implements IProductService { // FIXME There's no
 	
 	@Override
 	public ProductDTO updateProduct(Product product) throws ArgumentNotValidException, ArgumentNotFoundException {
-		// verify if there is a product with that id.
+		// Verify if there is a product with that id.
 		Product productSelected = productRepository.findById(product.getId()).get();
 
 		if (productSelected == null) {
@@ -139,50 +143,42 @@ public class ProductServiceImpl implements IProductService { // FIXME There's no
 		}
 		
 		// STOCK:
-		if (product.getStock() != 0) {
+		if (product.getStock() != 0)
 			productSelected.setStock(product.getStock());
-		}
 		
 		// IMAGE:
-		if (product.getImage() != null) {
+		if (product.getImage() != null)
 			productSelected.setImage(product.getImage());
-		}
 		
-		// FAMILY
-		if (product.getCategory() != null) {
+		// CATEGORY:
+		if (product.getCategory() != null)
 			productSelected.setCategory(product.getCategory());
-		}
 
-		// PRICE
-		if (product.getPrice() != 0) {
+		// PRICE:
+		if (product.getPrice() != 0)
 			productSelected.setPrice(product.getPrice());
-		}
 
-		// VAT
-		if (product.getVat() != 0) {
+		// VAT:
+		if (product.getVat() != 0)
 			productSelected.setVat(product.getVat());
-		}
 
-		// WHOLESALE PRICE
-		// check if the wholesale price changed or if it is higher than the price
-		if (product.getWholesalePrice() != 0) {
+		// WHOLESALE PRICE:
+		// Check if the wholesale price changed or if it is higher than the price.
+		if (product.getWholesalePrice() != 0)
 			productSelected.setWholesalePrice(product.getWholesalePrice());
-		}
 		
-		if (productSelected.getWholesalePrice() > productSelected.getPrice()) {
+		if (productSelected.getWholesalePrice() > productSelected.getPrice())
 			throw new ArgumentNotValidException("The wholesale price cannot be higher than price");
-		}
 		
-		// WHOLESALE QUANTITY
-		if (product.getWholesaleQuantity() != 0) {
+		// WHOLESALE QUANTITY:
+		if (product.getWholesaleQuantity() != 0)
 			productSelected.setWholesaleQuantity(product.getWholesaleQuantity());
-		}
 		
-		if (product.getModified() >= product.getCreated()) {
+		if (product.getModified() >= product.getCreated())
 			productSelected.setModified(product.getModified());
-		}
 		
 		productRepository.save(productSelected);
+		
 		return modelMapper.map(productSelected, ProductDTO.class);
 	}
 	
