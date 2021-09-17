@@ -2,15 +2,12 @@ package cat.itacademy.proyectoerp.domain;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -48,12 +45,6 @@ public class Offer implements Serializable {
 	@Column(name = "free_quantity")
 	private int freeQuantity;
 	
-	@OneToMany(mappedBy = "offer")
-	private List<Product> products;
-	
-	@OneToOne(mappedBy = "offer")
-	private Category category;
-	
 	public Offer() {
 	}
 	
@@ -77,20 +68,12 @@ public class Offer implements Serializable {
 		this.endsOn = endsOn;
 	}
 	
-	public void setProducts(List<Product> products) {
-		this.products = products;
-	}
-	
 	public void setPaidQuantity(int paidQuantity) {
 		this.paidQuantity = paidQuantity;
 	}
 	
 	public void setFreeQuantity(int freeQuantity) {
 		this.freeQuantity = freeQuantity;
-	}
-	
-	public void setCategory(Category category) {
-		this.category = category;
 	}
 	
 	public UUID getId() {
@@ -119,14 +102,6 @@ public class Offer implements Serializable {
 	
 	public int getFreeQuantity() {
 		return freeQuantity;
-	}
-	
-	public List<Product> getProducts() {
-		return products;
-	}
-	
-	public Category getCategory() {
-		return category;
 	}
 	
 }
