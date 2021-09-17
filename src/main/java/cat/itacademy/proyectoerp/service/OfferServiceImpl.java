@@ -26,12 +26,12 @@ public class OfferServiceImpl implements IOfferService {
 		if(offerRepository.findAll().isEmpty())
 			throw new ArgumentNotFoundException("No Offers found");
 		
-		List<OfferDTO> offersDto = offerRepository.findAll()
+		List<OfferDTO> offerDtos = offerRepository.findAll()
 			.stream()
 			.map(offer -> modelMapper.map(offer, OfferDTO.class))
 			.collect(Collectors.toList());
 		
-		return offersDto;
+		return offerDtos;
 	}
 	
 	@Override

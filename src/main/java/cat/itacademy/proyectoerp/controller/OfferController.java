@@ -35,9 +35,9 @@ public class OfferController {
 		MessageDTO messageDto;
 		
 		try {
-			List<OfferDTO> OfferList = offerService.findAll();
+			List<OfferDTO> offerDtos = offerService.findAll();
 			
-			messageDto = new MessageDTO("true", "Offers found", OfferList);
+			messageDto = new MessageDTO("true", "Offers found", offerDtos);
 		} catch(Exception e) {
 			messageDto = new MessageDTO("false", "error: " + e.getMessage());
 		}
@@ -51,9 +51,9 @@ public class OfferController {
 		MessageDTO messageDto;
 		
 		try {
-			OfferDTO offerDTO = offerService.findById(id);
+			OfferDTO offerDto = offerService.findById(id);
 			
-			messageDto = new MessageDTO("true", "offer found", offerDTO);
+			messageDto = new MessageDTO("true", "offer found", offerDto);
 		} catch(Exception e) {
 			messageDto = new MessageDTO("false", "error: " + e.getMessage());
 		}
