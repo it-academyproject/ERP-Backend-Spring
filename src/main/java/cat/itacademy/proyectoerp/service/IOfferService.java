@@ -8,12 +8,14 @@ import cat.itacademy.proyectoerp.dto.OfferDTO;
 
 public interface IOfferService {
 	
-	public OfferDTO createOffer(Offer Offer);
-	
 	public List<OfferDTO> findAll();
-
-	public OfferDTO findOfferById(UUID id);
-
-	public void deleteOfferById(UUID id);
-
+	
+	public OfferDTO findById(UUID id);
+	
+	public OfferDTO create(Offer offer);
+	
+	public OfferDTO update(Offer offer);
+	
+	public void delete(Offer offer);
+	
 }
