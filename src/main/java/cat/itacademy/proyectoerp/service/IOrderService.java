@@ -29,9 +29,9 @@ public interface IOrderService {
 
 	public List<Order> findOrdersByStatus(OrderStatus status);			
 
-	public List<Order> findOrdersByClient(String id);
+	public List<Order> findOrdersByClient(UUID id);
 	
-	public List<Order> findByEmployeeId(UUID employeeId);	
+	public List<Order> findOrdersByEmployeeId(UUID employeeId);	
 	
 	public List<TopEmployeeDTO> findAllTopTen(DatesTopEmployeePOJO topemployee);
 	

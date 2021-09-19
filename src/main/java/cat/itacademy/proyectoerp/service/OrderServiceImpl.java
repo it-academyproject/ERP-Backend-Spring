@@ -97,7 +97,7 @@ public class OrderServiceImpl implements IOrderService{
 		}
 		Order order = modelMapper.map(createOrderDTO, Order.class);
 		Set<OrderDetail> orderDetails = createOrderDetailFromProductQuantity(order, createOrderDTO.getProductsQuantity());
-		order.setOrderDetails(orderDetails);
+//		order.setOrderDetails(orderDetails);
 		order.setTotal(calculateTotalFromOrderDetail(orderDetails));
 		orderRepository.save(order);
 		
@@ -194,25 +194,24 @@ public class OrderServiceImpl implements IOrderService{
 	
 	@Override
 	public List<Order> findOrdersByStatus(OrderStatus status) {
-		if(orderRepository.findOrdersByStatus(status) == null)
+		if(orderRepository.findByStatus(status) == null)
 			throw new ArgumentNotFoundException("No orders found");
 		else
-			return orderRepository.findOrdersByStatus(status);
+			return orderRepository.findByStatus(status);
 	}
 	
 	@Override
-	public List<Order> findOrdersByClient(String id) {
-	//public List<Order> findOrdersByClient(Client id) { //Dapser75
-		if (orderRepository.findOrdersByClientId(id) == null)
-			throw new ArgumentNotFoundException("No orders with client " + id + " found");
+	public List<Order> findOrdersByClient(UUID id) {
+		if (orderRepository.findByClientId(id).isEmpty())
+			throw new ArgumentNotFoundException("No orders found for this client");
 		else
-			return orderRepository.findOrdersByClientId(id);
+			return orderRepository.findByClientId(id);
 	}
 	
 	@Override
-	public List<Order> findByEmployeeId(UUID employeeId) {
-		if (orderRepository.findByEmployeeId(employeeId) == null) {
-			throw new ArgumentNotFoundException("The employee with id: " + employeeId + " does not have orders assigned");
+	public List<Order> findOrdersByEmployeeId(UUID employeeId) {
+		if (orderRepository.findByEmployeeId(employeeId).isEmpty()) {
+			throw new ArgumentNotFoundException("No orders found for this employee");
 		} else {
 			return orderRepository.findByEmployeeId(employeeId);
 		}
