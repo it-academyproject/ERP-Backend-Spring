@@ -158,6 +158,7 @@ public class UserController {
 		EmployeeDTO employeeDTO;
 
 		User user = new User(employee.getUser().getUsername(), employee.getUser().getPassword(), UserType.EMPLOYEE);
+		user.setAccountLocked(false);
 		userService.registerNewUserAccount(user);
 
 		employee.setOutDate(null != employee.getOutDate() ? employee.getOutDate() : null);
