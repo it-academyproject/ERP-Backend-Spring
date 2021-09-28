@@ -83,6 +83,7 @@ public class StatsController {
     return map;
   }
   
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/employees/sells")
   public Map<String,Object> getEmployeeSales() throws Exception{
 	  
