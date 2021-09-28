@@ -328,4 +328,15 @@ public class ClientServiceImpl implements IClientService {
 
 	}
 
+	@Override
+	public Client getClientByUserId(Long userId) {
+		Client client = repository.findByUserId(userId);
+		
+		if(client == null) {
+			throw new ArgumentNotFoundException("Client not found");
+		}
+		
+		return client;
+	}
+
 }

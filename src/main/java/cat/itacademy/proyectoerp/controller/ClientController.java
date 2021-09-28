@@ -155,6 +155,22 @@ public class ClientController {
 		}
 		return map;
 	}
+	
+	// get a client by User ID
+	@GetMapping("/users/{userId}")
+	public ResponseEntity<?> getClientByUserId(@PathVariable Long userId) {
+		MessageDTO messageDto;
+		
+		try {
+			Client client = service.getClientByUserId(userId);
+			messageDto = new MessageDTO("true", "Client found", client);
+		} catch (Exception e) {
+			messageDto = new MessageDTO("false", e.getMessage());
+			return ResponseEntity.badRequest().body(messageDto);
+		}
+		
+		return ResponseEntity.ok(messageDto);
+	}
 
 	// Update a client by id
 	@PutMapping()
