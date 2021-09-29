@@ -80,6 +80,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/users", method = RequestMethod.POST)
 	public ResponseEntity<UserDTO> newUser(@Valid @RequestBody User user) {
+		user.setAccountLocked(false);
 		UserDTO userDTO = userService.registerNewUserAccount(user);
 
 		if (userDTO.getSuccess() == "False")
@@ -107,6 +108,7 @@ public class UserController {
 		}
 
 		Client newClient = getClient(standard);
+		newClient.getUser().setAccountLocked(false);
 
 		try {
 			UserDTO userDTO = userService.registerNewUserAccount(newClient.getUser());
@@ -158,6 +160,7 @@ public class UserController {
 		EmployeeDTO employeeDTO;
 
 		User user = new User(employee.getUser().getUsername(), employee.getUser().getPassword(), UserType.EMPLOYEE);
+		user.setAccountLocked(false);
 		userService.registerNewUserAccount(user);
 
 		employee.setOutDate(null != employee.getOutDate() ? employee.getOutDate() : null);
