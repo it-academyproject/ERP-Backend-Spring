@@ -13,9 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import cat.itacademy.proyectoerp.repository.IClientRepository;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
+import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 
 @Service
 public class ClientServiceImpl implements IClientService {
@@ -328,12 +331,24 @@ public class ClientServiceImpl implements IClientService {
 
 	}
 
+	/**
+	 * Fetches a client based on a user id argument. The logged user has to be the same
+	 * that the user we are fetching, otherwise it throws an error.
+	 */
 	@Override
 	public Client getClientByUserId(Long userId) {
+		// Get client
 		Client client = repository.findByUserId(userId);
 		
 		if(client == null) {
 			throw new ArgumentNotFoundException("Client not found");
+		}
+		
+		// Get logged user
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		if(!client.getUser().getUsername().equals(userDetails.getUsername())) {
+			throw new ArgumentNotValidException("Unauthorized");
 		}
 		
 		return client;
