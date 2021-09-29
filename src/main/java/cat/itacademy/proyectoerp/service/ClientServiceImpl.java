@@ -333,21 +333,17 @@ public class ClientServiceImpl implements IClientService {
 
 	/**
 	 * Fetches a client based on a user id argument. The logged user has to be the same
-	 * that the user we are fetching, otherwise it throws an error.
+	 * that the user we are fetching, otherwise it throws an exception.
 	 */
 	@Override
 	public Client getClientByUserId(Long userId) {
 		// Get client
 		Client client = repository.findByUserId(userId);
 		
-		if(client == null) {
-			throw new ArgumentNotFoundException("Client not found");
-		}
-		
 		// Get logged user
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		if(!client.getUser().getUsername().equals(userDetails.getUsername())) {
+		if(client == null || !client.getUser().getUsername().equals(userDetails.getUsername())) {
 			throw new ArgumentNotValidException("Unauthorized");
 		}
 		
