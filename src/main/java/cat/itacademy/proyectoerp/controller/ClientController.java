@@ -80,33 +80,7 @@ public class ClientController {
 		return newClient;
 	}
 
-	// Add client without giving user
-	@PostMapping("/fastclient")
-	public ResponseEntity<?> addFastClient(@RequestBody ClientDTO client) {
-		ClientDTO finalClient;
-
-		MessageDTO messageDTO = getErrorMessageNameAndSurname(client.getNameAndSurname());
-		if (null != messageDTO) {
-			return ResponseEntity.unprocessableEntity().body(messageDTO);
-		}
-
-		try {
-			finalClient = service.createFastClient(client);
-		} catch (Exception e) {
-			messageDTO = new MessageDTO("False", e.getMessage());
-			return ResponseEntity.unprocessableEntity().body(messageDTO);
-		}
-		return ResponseEntity.ok().body(finalClient);
-	}
-
-	private MessageDTO getErrorMessageNameAndSurname(String nameAndSurname) {
-		MessageDTO errorMessage = null;
-		if (null == nameAndSurname || nameAndSurname.isBlank()) {
-			errorMessage = new MessageDTO("False", "name_and_surname is mandatory. ");
-
-		}
-		return errorMessage;
-	}
+	
 
 	// Get all the clients
 	@PreAuthorize("hasRole('ADMIN')")
@@ -154,6 +128,22 @@ public class ClientController {
 			map.put("message", "error: " + e.getMessage());
 		}
 		return map;
+	}
+	
+	// get a client by User ID
+	@GetMapping("/users/{userId}")
+	public ResponseEntity<?> getClientByUserId(@PathVariable Long userId) {
+		MessageDTO messageDto;
+		
+		try {
+			Client client = service.getClientByUserId(userId);
+			messageDto = new MessageDTO("true", "Client found", client);
+		} catch (Exception e) {
+			messageDto = new MessageDTO("false", e.getMessage());
+			return ResponseEntity.badRequest().body(messageDto);
+		}
+		
+		return ResponseEntity.ok(messageDto);
 	}
 
 	// Update a client by id

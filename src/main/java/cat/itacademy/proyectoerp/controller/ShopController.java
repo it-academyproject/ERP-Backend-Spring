@@ -30,7 +30,7 @@ public class ShopController {
 	IShopService shopService;
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/shop")
+	@PostMapping("/shops")
 	public HashMap<String, Object> createShop(@Valid @RequestBody Shop shop) {
 		HashMap<String, Object> map = new LinkedHashMap<String, Object>();
 		
