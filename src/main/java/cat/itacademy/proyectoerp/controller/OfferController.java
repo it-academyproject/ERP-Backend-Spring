@@ -26,88 +26,94 @@ import cat.itacademy.proyectoerp.service.IOfferService;
 @RestController
 @RequestMapping("/api/offers")
 public class OfferController {
-	
+
 	@Autowired
-	private IOfferService offerService ;
-	
-	@GetMapping
+	private IOfferService offerService;
+
+	/**
+	 * 
+	 * Method for Get all Offers
+	 */
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping()
 	public MessageDTO getOffers() {
 		MessageDTO messageDto;
-		
+
 		try {
 			List<OfferDTO> offerDtos = offerService.findAll();
-			
+
 			messageDto = new MessageDTO("true", "Offers found", offerDtos);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			messageDto = new MessageDTO("false", "error: " + e.getMessage());
 		}
-		
+
 		return messageDto;
 	}
-	
+
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/{id}")
-	public MessageDTO getOfferById(@PathVariable UUID id){
+	public MessageDTO getOfferById(@PathVariable UUID id) {
 		MessageDTO messageDto;
-		
+
 		try {
 			OfferDTO offerDto = offerService.findById(id);
-			
+
 			messageDto = new MessageDTO("true", "Offer found", offerDto);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			messageDto = new MessageDTO("false", "error: " + e.getMessage());
 		}
-		
+
 		return messageDto;
 	}
-	
+
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public MessageDTO create(@Valid @RequestBody Offer offer) {
 		MessageDTO messageDto;
-		
+
 		try {
 			OfferDTO offerDto = offerService.create(offer);
-			
+
 			messageDto = new MessageDTO("true", "Offer with id: " + offerDto.getId() + " has been created", offerDto);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			messageDto = new MessageDTO("false", "error: " + e.getMessage());
 		}
-		
+
 		return messageDto;
 	}
-	
+
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping
 	public MessageDTO update(@Valid @RequestBody Offer offer) {
 		MessageDTO messageDto;
-		
+
 		try {
 			OfferDTO offerDto = offerService.update(offer);
-			
+
 			messageDto = new MessageDTO("true", "Offer with id: " + offer.getId() + " has been updated", offerDto);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			messageDto = new MessageDTO("false", "error: " + e.getMessage());
 		}
-		
+
 		return messageDto;
 	}
-	
+
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping
 	public MessageDTO delete(@Valid @RequestBody Offer offer) {
 		MessageDTO messageDto;
-		
+
 		try {
 			offerService.delete(offer);
-			
+
 			messageDto = new MessageDTO("true", "Offer with id: " + offer.getId() + " has been deleted");
-		} catch(Exception e) {
+		} catch (Exception e) {
 			messageDto = new MessageDTO("false", "error: " + e.getMessage());
 		}
-		
+
 		return messageDto;
 	}
-	
+
 }
