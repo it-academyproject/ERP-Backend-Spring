@@ -33,5 +33,7 @@ public interface IClientService {
 	boolean existsByDni(String dni);
 
 	MessageDTO getErrorMessageDniExists(String dni);
+	
+	Client getClientByUserId(Long userId);
 
 }
