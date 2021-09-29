@@ -33,9 +33,11 @@ public class OfferController {
 	/**
 	 * 
 	 * Method for Get all Offers
+	 * ONLY AUTHORIZED TO ADMIN AND EMPLOYEE
 	 */
-
-	@PreAuthorize("hasRole('ADMIN')")
+		
+	@PreAuthorize("hasRole('ADMIN')" +
+            " || hasRole('EMPLOYEE')" )
 	@GetMapping()
 	public MessageDTO getOffers() {
 		MessageDTO messageDto;
