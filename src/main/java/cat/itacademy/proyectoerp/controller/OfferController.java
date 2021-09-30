@@ -53,7 +53,15 @@ public class OfferController {
 		return messageDto;
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	/**
+	 * 
+	 * Method for read Offers by Id	
+	 * ONLY AUTHORIZED TO ADMIN AND EMPLOYEE
+	 */
+		
+	@PreAuthorize("hasRole('ADMIN')" +
+            " || hasRole('EMPLOYEE')" )
+	
 	@GetMapping("/{id}")
 	public MessageDTO getOfferById(@PathVariable UUID id) {
 		MessageDTO messageDto;
