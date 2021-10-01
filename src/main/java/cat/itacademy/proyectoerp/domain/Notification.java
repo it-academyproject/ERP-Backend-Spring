@@ -38,6 +38,7 @@ public class Notification {
 
 	@Enumerated(EnumType.STRING)
 	@NotNull(message = "You have to assign notification type")
+	@Column(name = "notification_type")
 	private NotificationType type;
 
 	@NotNull(message = "You have to write a notification message")
@@ -46,6 +47,7 @@ public class Notification {
 	@Column(name = "created_At")
 	private Date createdAt;
 	
+	@Column(name = "is_read")
 	private boolean read;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
