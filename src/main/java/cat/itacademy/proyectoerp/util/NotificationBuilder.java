@@ -12,6 +12,8 @@ import cat.itacademy.proyectoerp.domain.Order;
  */
 public class NotificationBuilder {
 
+	private NotificationBuilder() {}
+	
 	/**
 	 * Returns a Notification object with a custom message based on the type and the
 	 * object received by parameter
