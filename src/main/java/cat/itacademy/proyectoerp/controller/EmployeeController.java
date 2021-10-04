@@ -1,6 +1,5 @@
 package cat.itacademy.proyectoerp.controller;
 
-import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.dto.EmployeeDTO;
 import cat.itacademy.proyectoerp.dto.MessageDTO;
@@ -68,13 +67,12 @@ public class EmployeeController {
 		return map;
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/users/{userId}")
 	public ResponseEntity<?> getEmployeeByUserId(@PathVariable Long userId) {
 		MessageDTO messageDto;
 
 		try {
-			EmployeeDTO employee = iEmployeeService.getEmployeeByUserId(userId);
+			Employee employee = iEmployeeService.getEmployeeByUserId(userId);
 			messageDto = new MessageDTO("true", "Employee found", employee);
 		} catch (Exception e) {
 			messageDto = new MessageDTO("false", e.getMessage());

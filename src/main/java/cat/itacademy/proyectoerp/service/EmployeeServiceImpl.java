@@ -8,14 +8,18 @@ import cat.itacademy.proyectoerp.dto.EmployeeDTO;
 import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.dto.UserDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
+import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 import cat.itacademy.proyectoerp.repository.IEmployeeRepository;
 import cat.itacademy.proyectoerp.repository.IUserRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -67,10 +71,21 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	}
 
 	@Override
-	public EmployeeDTO getEmployeeByUserId(Long id) throws ArgumentNotFoundException {
-		Employee employee = employeeRepository.getEmployeeByUserId(id).orElseThrow(
-				() -> new ArgumentNotFoundException("Employee not found. The user id " + id + " doesn't exist"));
-		return modelMapper.map(employee, EmployeeDTO.class);
+	public Employee getEmployeeByUserId(Long id) {
+		Employee employee = employeeRepository.getEmployeeByUserId(id);
+
+		if (employee == null) {
+			throw new ArgumentNotFoundException("Employee not found");
+		}
+
+		// Get logged user
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (!employee.getUser().getUsername().equals(userDetails.getUsername())) {
+			throw new ArgumentNotValidException("Unauthorized");
+		}
+
+		return employee;
 	}
 
 	@Override

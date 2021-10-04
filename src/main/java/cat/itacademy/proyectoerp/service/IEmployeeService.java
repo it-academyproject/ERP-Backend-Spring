@@ -23,6 +23,6 @@ public interface IEmployeeService {
 
   public double getSalariesByMonth();
 
-  public EmployeeDTO getEmployeeByUserId(Long userId);
+  public Employee getEmployeeByUserId(Long userId);
 
 }
