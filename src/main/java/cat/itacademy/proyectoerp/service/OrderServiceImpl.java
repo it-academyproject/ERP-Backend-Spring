@@ -394,6 +394,11 @@ public class OrderServiceImpl implements IOrderService{
 		
 		order.get().setStatus(orderStatus);
 		
+		// Notify client
+		Client client = clientRepository.findById(order.get().getClientId()).get();
+		Notification notification = NotificationBuilder.build(NotificationType.ORDER_STATUS_CHANGED, order.get());
+		notificationService.notifyUser(notification, client.getUser());
+		
 		return orderRepository.save(order.get());
 	}
 	
