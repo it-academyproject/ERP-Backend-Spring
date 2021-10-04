@@ -3,11 +3,9 @@ package cat.itacademy.proyectoerp.service;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import cat.itacademy.proyectoerp.domain.Offer;
 import cat.itacademy.proyectoerp.dto.OfferDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
@@ -69,6 +67,22 @@ public class OfferServiceImpl implements IOfferService {
 			throw new ArgumentNotFoundException("Offer not found. The id " + id + " doesn't exist");
 	
 		offerRepository.deleteById(id);
+	}
+
+	@Override
+	public List<OfferDTO> findByNameContainingIgnoreCase(String name) throws ArgumentNotFoundException {
+		
+		
+		if(offerRepository.findAll().isEmpty())
+			throw new ArgumentNotFoundException("No offers found");
+
+		List<OfferDTO> offerDtos = offerRepository.findAll()
+				.stream().filter(o -> o.getName().toLowerCase().contains(name.toLowerCase()))
+				.map(offer -> modelMapper.map(offer, OfferDTO.class))
+				.collect(Collectors.toList());
+		return offerDtos;
+		
 	}	
-	
 }
+	
+

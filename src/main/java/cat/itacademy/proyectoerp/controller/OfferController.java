@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -67,9 +68,37 @@ public class OfferController {
 		MessageDTO messageDto;
 
 		try {
+			
 			OfferDTO offerDto = offerService.findById(id);
 
 			messageDto = new MessageDTO("true", "Offer found", offerDto);
+		} catch (Exception e) {
+			messageDto = new MessageDTO("false", "error: " + e.getMessage());
+		}
+
+		return messageDto;
+	}
+	
+	
+	/**
+	 * 
+	 * Method for filter Offers by name 	
+	 * ONLY AUTHORIZED TO ADMIN AND EMPLOYEE
+	 */
+	
+	@PreAuthorize("hasRole('ADMIN')" +
+            " || hasRole('EMPLOYEE')" )
+	
+	@GetMapping("/")
+	public MessageDTO filterByNameContainingIgnoreCase(@RequestParam (name = "name") String name) {
+		MessageDTO messageDto;
+
+		try {
+			
+			List<OfferDTO> offerDtos = offerService.findByNameContainingIgnoreCase(name);
+					
+
+			messageDto = new MessageDTO("true", "Offer found", offerDtos);
 		} catch (Exception e) {
 			messageDto = new MessageDTO("false", "error: " + e.getMessage());
 		}

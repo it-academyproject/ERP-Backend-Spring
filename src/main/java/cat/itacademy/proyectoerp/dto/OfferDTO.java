@@ -78,5 +78,9 @@ public class OfferDTO implements Serializable {
 	public int getFreeQuantity() {
 		return freeQuantity;
 	}
+
+	/*public String getName() {
+		return name;
+	}*/
 	
 }
