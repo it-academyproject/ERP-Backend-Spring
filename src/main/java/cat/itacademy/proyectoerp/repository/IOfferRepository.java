@@ -15,5 +15,7 @@ public interface IOfferRepository  extends JpaRepository<Offer, UUID> {
 
 	public List<Offer> findByNameContainingIgnoreCase(String name);
 	
+	//public List<Offer> readByDiscountGtratherThanEaual(Double min);
+	
 	
 }

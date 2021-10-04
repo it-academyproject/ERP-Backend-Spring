@@ -82,6 +82,19 @@ public class OfferServiceImpl implements IOfferService {
 				.collect(Collectors.toList());
 		return offerDtos;
 		
+	}
+
+	@Override
+	public List<OfferDTO> readByDiscountGtratherThanEaual(Double min) {
+		if(offerRepository.findAll().isEmpty())
+			throw new ArgumentNotFoundException("No offers found");
+
+		List<OfferDTO> offerDtos = offerRepository.findAll()
+				.stream().filter(o -> o.getDiscount()>=min)
+				.map(offer -> modelMapper.map(offer, OfferDTO.class))
+				.collect(Collectors.toList());
+		return offerDtos;
+		
 	}	
 }
 	

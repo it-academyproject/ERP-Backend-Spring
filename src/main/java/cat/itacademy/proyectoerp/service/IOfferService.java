@@ -18,8 +18,8 @@ public interface IOfferService {
 	
 	public void delete(Offer offer);
 	
-	//public OfferDTO findByName(String name);
-	
 	public List<OfferDTO> findByNameContainingIgnoreCase(String name);
+	
+	public List<OfferDTO> readByDiscountGtratherThanEaual(Double min);
 	
 }

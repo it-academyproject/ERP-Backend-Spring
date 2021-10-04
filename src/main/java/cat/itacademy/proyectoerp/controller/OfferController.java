@@ -80,31 +80,7 @@ public class OfferController {
 	}
 	
 	
-	/**
-	 * 
-	 * Method for filter Offers by name 	
-	 * ONLY AUTHORIZED TO ADMIN AND EMPLOYEE
-	 */
 	
-	@PreAuthorize("hasRole('ADMIN')" +
-            " || hasRole('EMPLOYEE')" )
-	
-	@GetMapping("/")
-	public MessageDTO filterByNameContainingIgnoreCase(@RequestParam (name = "name") String name) {
-		MessageDTO messageDto;
-
-		try {
-			
-			List<OfferDTO> offerDtos = offerService.findByNameContainingIgnoreCase(name);
-					
-
-			messageDto = new MessageDTO("true", "Offer found", offerDtos);
-		} catch (Exception e) {
-			messageDto = new MessageDTO("false", "error: " + e.getMessage());
-		}
-
-		return messageDto;
-	}
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
@@ -148,6 +124,58 @@ public class OfferController {
 			offerService.delete(offer);
 
 			messageDto = new MessageDTO("true", "Offer with id: " + offer.getId() + " has been deleted");
+		} catch (Exception e) {
+			messageDto = new MessageDTO("false", "error: " + e.getMessage());
+		}
+
+		return messageDto;
+	}
+	
+	/**
+	 * 
+	 * Method for filter Offers by name 	
+	 * ONLY AUTHORIZED TO ADMIN AND EMPLOYEE
+	 */
+	
+	@PreAuthorize("hasRole('ADMIN')" +
+            " || hasRole('EMPLOYEE')" )
+	
+	@GetMapping("/")
+	public MessageDTO filterByNameContainingIgnoreCase(@RequestParam (name = "name") String name) {
+		MessageDTO messageDto;
+
+		try {
+			
+			List<OfferDTO> offerDtos = offerService.findByNameContainingIgnoreCase(name);
+					
+
+			messageDto = new MessageDTO("true", "Offer found", offerDtos);
+		} catch (Exception e) {
+			messageDto = new MessageDTO("false", "error: " + e.getMessage());
+		}
+
+		return messageDto;
+	}
+	
+	/**
+	 * 
+	 * Method for filter offers by minimum discount 	
+	 * ONLY AUTHORIZED TO ADMIN AND EMPLOYEE
+	 */
+	
+	@PreAuthorize("hasRole('ADMIN')" +
+            " || hasRole('EMPLOYEE')" )
+	
+	@GetMapping("/discount")
+	public MessageDTO readByDiscountGtratherThanEaual(@RequestParam (name = "min") Double min) {
+		MessageDTO messageDto;
+
+		try {
+			
+			List<OfferDTO> offerDtos = offerService.readByDiscountGtratherThanEaual(min);
+					
+
+			messageDto = new MessageDTO("true", "Offer found", offerDtos);
 		} catch (Exception e) {
 			messageDto = new MessageDTO("false", "error: " + e.getMessage());
 		}
