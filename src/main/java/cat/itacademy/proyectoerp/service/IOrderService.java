@@ -45,4 +45,6 @@ public interface IOrderService {
 
 	public HashMap<String, Long> countOrdersByfield(String field);
 	
+	public Order updateOrderStatus(UUID orderId, OrderStatus orderStatus);
+	
 }

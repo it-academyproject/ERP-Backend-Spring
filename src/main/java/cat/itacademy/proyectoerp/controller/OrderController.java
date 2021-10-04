@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import cat.itacademy.proyectoerp.domain.Order;
+import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.dto.CreateOrderDTO;
 import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.dto.OrderDTO;
+import cat.itacademy.proyectoerp.dto.OrderStatusDTO;
 import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 
 @RestController
@@ -110,6 +113,30 @@ public class OrderController {
 
 		}
 		return map;
+	}
+	
+	/**
+	 * 
+	 * Changes the status of an order by its ID. 
+	 * 
+	 * @param orderId
+	 * @param orderStatusDTO
+	 * @return
+	 */
+	@PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
+	@PostMapping("/orders/{orderId}/change-status")
+	public ResponseEntity<?> changeOrderStatus(@PathVariable UUID orderId, @RequestBody OrderStatusDTO orderStatusDTO) {
+		MessageDTO messageDTO;
+		
+		try {
+			Order updatedOrder = orderService.updateOrderStatus(orderId, orderStatusDTO.getStatus());
+			messageDTO = new MessageDTO("true", "Order status updated", updatedOrder);
+		} catch(Exception e) {
+			messageDTO = new MessageDTO("false", e.getMessage());
+			return ResponseEntity.badRequest().body(messageDTO);
+		}
+		
+		return ResponseEntity.ok(messageDTO);
 	}
 
 }
