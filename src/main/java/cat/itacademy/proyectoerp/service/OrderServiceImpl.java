@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
+import cat.itacademy.proyectoerp.domain.Notification;
+import cat.itacademy.proyectoerp.domain.NotificationType;
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderDetail;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
@@ -39,6 +41,7 @@ import cat.itacademy.proyectoerp.repository.IOrderDetailRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
 import cat.itacademy.proyectoerp.security.jwt.JwtUtil;
+import cat.itacademy.proyectoerp.util.NotificationBuilder;
 
 @Service
 public class OrderServiceImpl implements IOrderService{
@@ -74,6 +77,9 @@ public class OrderServiceImpl implements IOrderService{
 	EmailServiceImpl emailService;
 	
 	@Autowired
+	INotificationService notificationService;
+	
+	@Autowired
 	JwtUtil jwtUtil;
 	
 	ModelMapper modelMapper = new ModelMapper();
@@ -99,11 +105,15 @@ public class OrderServiceImpl implements IOrderService{
 		Set<OrderDetail> orderDetails = createOrderDetailFromProductQuantity(order, createOrderDTO.getProductsQuantity());
 //		order.setOrderDetails(orderDetails);
 		order.setTotal(calculateTotalFromOrderDetail(orderDetails));
-		orderRepository.save(order);
+		Order orderDb = orderRepository.save(order);
 		
 		if (createOrderDTO.getClientId() != null) {
 			emailService.sendOrderConfirmationEmail(clientService.findClientById(createOrderDTO.getClientId()));
 		}
+		
+		// Notify all employees
+		Notification notification = NotificationBuilder.build(NotificationType.NEW_ORDER, orderDb);
+		notificationService.notifyAllEmployees(notification);
 		
 		modelMapper.getConfiguration().setSourceNameTokenizer(NameTokenizers.UNDERSCORE).setDestinationNameTokenizer(NameTokenizers.UNDERSCORE);
 		return modelMapper.map(order, OrderDTO.class);
