@@ -85,7 +85,7 @@ public class OfferServiceImpl implements IOfferService {
 	}
 
 	@Override
-	public List<OfferDTO> readByDiscountGtratherThanEaual(Double min) {
+	public List<OfferDTO> readByDiscountGreatherThanEqual(Double min) {
 		if(offerRepository.findAll().isEmpty())
 			throw new ArgumentNotFoundException("No offers found");
 
@@ -95,6 +95,30 @@ public class OfferServiceImpl implements IOfferService {
 				.collect(Collectors.toList());
 		return offerDtos;
 		
+	}
+
+	@Override
+	public List<OfferDTO> readByDiscountLessThanEqual(Double max) {
+		if(offerRepository.findAll().isEmpty())
+			throw new ArgumentNotFoundException("No offers found");
+
+		List<OfferDTO> offerDtos = offerRepository.findAll()
+				.stream().filter(o -> o.getDiscount()<=max)
+				.map(offer -> modelMapper.map(offer, OfferDTO.class))
+				.collect(Collectors.toList());
+		return offerDtos;
+	}
+
+	@Override
+	public List<OfferDTO> filterByDiscountBetween(Double min, Double max) {
+		if(offerRepository.findAll().isEmpty())
+			throw new ArgumentNotFoundException("No offers found");
+
+		List<OfferDTO> offerDtos = offerRepository.findAll()
+				.stream().filter(o -> o.getDiscount()>=min && o.getDiscount()<=max)
+				.map(offer -> modelMapper.map(offer, OfferDTO.class))
+				.collect(Collectors.toList());
+		return offerDtos;
 	}	
 }
 	

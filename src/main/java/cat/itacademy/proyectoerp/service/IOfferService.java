@@ -20,6 +20,10 @@ public interface IOfferService {
 	
 	public List<OfferDTO> findByNameContainingIgnoreCase(String name);
 	
-	public List<OfferDTO> readByDiscountGtratherThanEaual(Double min);
+	public List<OfferDTO> readByDiscountGreatherThanEqual(Double min);
+	
+	public List<OfferDTO> readByDiscountLessThanEqual(Double max);
+	
+	public List<OfferDTO> filterByDiscountBetween(Double min,Double max);
 	
 }

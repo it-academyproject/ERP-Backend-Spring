@@ -33,12 +33,10 @@ public class OfferController {
 
 	/**
 	 * 
-	 * Method for Get all Offers
-	 * ONLY AUTHORIZED TO ADMIN AND EMPLOYEE
+	 * Method for Get all Offers ONLY AUTHORIZED TO ADMIN AND EMPLOYEE
 	 */
-		
-	@PreAuthorize("hasRole('ADMIN')" +
-            " || hasRole('EMPLOYEE')" )
+
+	@PreAuthorize("hasRole('ADMIN')" + " || hasRole('EMPLOYEE')")
 	@GetMapping()
 	public MessageDTO getOffers() {
 		MessageDTO messageDto;
@@ -56,19 +54,17 @@ public class OfferController {
 
 	/**
 	 * 
-	 * Method for read Offers by Id	
-	 * ONLY AUTHORIZED TO ADMIN AND EMPLOYEE
+	 * Method for read Offers by Id ONLY AUTHORIZED TO ADMIN AND EMPLOYEE
 	 */
-		
-	@PreAuthorize("hasRole('ADMIN')" +
-            " || hasRole('EMPLOYEE')" )
-	
+
+	@PreAuthorize("hasRole('ADMIN')" + " || hasRole('EMPLOYEE')")
+
 	@GetMapping("/{id}")
 	public MessageDTO getOfferById(@PathVariable UUID id) {
 		MessageDTO messageDto;
 
 		try {
-			
+
 			OfferDTO offerDto = offerService.findById(id);
 
 			messageDto = new MessageDTO("true", "Offer found", offerDto);
@@ -78,9 +74,6 @@ public class OfferController {
 
 		return messageDto;
 	}
-	
-	
-	
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
@@ -130,24 +123,21 @@ public class OfferController {
 
 		return messageDto;
 	}
-	
+
 	/**
 	 * 
-	 * Method for filter Offers by name 	
-	 * ONLY AUTHORIZED TO ADMIN AND EMPLOYEE
+	 * Method for filter Offers by name ONLY AUTHORIZED TO ADMIN AND EMPLOYEE
 	 */
-	
-	@PreAuthorize("hasRole('ADMIN')" +
-            " || hasRole('EMPLOYEE')" )
-	
+
+	@PreAuthorize("hasRole('ADMIN')" + " || hasRole('EMPLOYEE')")
+
 	@GetMapping("/")
-	public MessageDTO filterByNameContainingIgnoreCase(@RequestParam (name = "name") String name) {
+	public MessageDTO filterByNameContainingIgnoreCase(@RequestParam(name = "name") String name) {
 		MessageDTO messageDto;
 
 		try {
-			
+
 			List<OfferDTO> offerDtos = offerService.findByNameContainingIgnoreCase(name);
-					
 
 			messageDto = new MessageDTO("true", "Offer found", offerDtos);
 		} catch (Exception e) {
@@ -156,26 +146,45 @@ public class OfferController {
 
 		return messageDto;
 	}
-	
+
 	/**
 	 * 
-	 * Method for filter offers by minimum discount 	
+	 * Method for filter offers by discount
 	 * ONLY AUTHORIZED TO ADMIN AND EMPLOYEE
 	 */
-	
-	@PreAuthorize("hasRole('ADMIN')" +
-            " || hasRole('EMPLOYEE')" )
-	
+
+	@PreAuthorize("hasRole('ADMIN')" + " || hasRole('EMPLOYEE')")
+
 	@GetMapping("/discount")
-	public MessageDTO readByDiscountGtratherThanEaual(@RequestParam (name = "min") Double min) {
+	public MessageDTO readByDiscount(@RequestParam(required = false) Double min,
+										@RequestParam(required = false) Double max) {
 		MessageDTO messageDto;
-
+		List<OfferDTO> offerDtos = null;
+		
 		try {
-			
-			List<OfferDTO> offerDtos = offerService.readByDiscountGtratherThanEaual(min);
-					
 
-			messageDto = new MessageDTO("true", "Offer found", offerDtos);
+			// min discount
+			
+			if (min != null) {
+
+				offerDtos = offerService.readByDiscountGreatherThanEqual(min);
+
+			// max discount
+				
+			}if (max != null) {
+
+				offerDtos = offerService.readByDiscountLessThanEqual(max);
+
+			// discount between min & max
+				
+			}if (min != null && max != null) {
+				
+				offerDtos = offerService.filterByDiscountBetween(min, max);
+			} 
+			
+				messageDto = new MessageDTO("true", "Offer found", offerDtos);
+			
+
 		} catch (Exception e) {
 			messageDto = new MessageDTO("false", "error: " + e.getMessage());
 		}
@@ -183,4 +192,5 @@ public class OfferController {
 		return messageDto;
 	}
 
+	
 }
