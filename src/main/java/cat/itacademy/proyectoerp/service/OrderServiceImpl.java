@@ -4,10 +4,12 @@ import java.text.DateFormatSymbols;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -373,6 +375,31 @@ public class OrderServiceImpl implements IOrderService{
 		}
 		
 		return map;
+	}
+
+	/**
+	 * Updates the status of an order.
+	 */
+	@Override
+	public Order updateOrderStatus(UUID orderId, OrderStatus orderStatus) {
+		Optional<Order> order = orderRepository.findById(orderId);
+		
+		if(order.isEmpty()) {
+			throw new ArgumentNotFoundException("The order with id " + orderId + " does not exist.");
+		}
+		
+		if(orderStatus == null) {
+			throw new ArgumentNotValidException("The order status cannot be null.");
+		}
+		
+		order.get().setStatus(orderStatus);
+		
+		// Notify client
+		Client client = clientRepository.findById(order.get().getClientId()).get();
+		Notification notification = NotificationBuilder.build(NotificationType.ORDER_STATUS_CHANGED, order.get());
+		notificationService.notifyUser(notification, client.getUser());
+		
+		return orderRepository.save(order.get());
 	}
 	
 }
