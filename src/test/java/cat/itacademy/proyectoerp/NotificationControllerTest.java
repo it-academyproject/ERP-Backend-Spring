@@ -6,8 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.UUID;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +19,12 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import cat.itacademy.proyectoerp.domain.OrderStatus;
+import cat.itacademy.proyectoerp.domain.Notification;
+import cat.itacademy.proyectoerp.domain.NotificationType;
+import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
-import cat.itacademy.proyectoerp.service.IOrderService;
+import cat.itacademy.proyectoerp.service.INotificationService;
+import cat.itacademy.proyectoerp.service.IUserService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -34,7 +35,10 @@ public class NotificationControllerTest {
 	private MockMvc mockMvc;
 	
 	@Autowired
-	private IOrderService orderService;
+	private INotificationService notificationService;
+	
+	@Autowired
+	private IUserService userService;
 	
 	// GET /api/notifications endpoint (as anonymous user)
 	@Test
@@ -48,9 +52,11 @@ public class NotificationControllerTest {
 	@Test
 	@DisplayName("Authenticated users can get their own notifications")
 	void notificationsForAuthenticatedUsers() throws Exception {
-		String accessToken = obtainAccessToken("client@erp.com", "ReW9a0&+TP");
+		User user = userService.findByUsername("client@erp.com");
 		
-		updateOrderStatus("11110000-0000-0000-0000-000000000000"); // generates a notification for the client
+		generateNotification(user);
+		
+		String accessToken = obtainAccessToken("client@erp.com", "ReW9a0&+TP");
 		
 		mockMvc.perform(get("/api/notifications")
 				.header("Authorization", "Bearer " + accessToken)
@@ -75,10 +81,10 @@ public class NotificationControllerTest {
 	}
 	
 	/**
-	 * Generates an ORDER_STATUS_CHANGED notification.
+	 * Generates a notification for a given user
 	 */
-	private void updateOrderStatus(String id) {
-		UUID orderId = UUID.fromString(id);
-		orderService.updateOrderStatus(orderId, OrderStatus.IN_DELIVERY);
+	private void generateNotification(User user) {
+		Notification notification = new Notification(NotificationType.ORDER_STATUS_CHANGED, "This is a test");
+		notificationService.notifyUser(notification, user);
 	}
 }
