@@ -9,8 +9,10 @@ import java.util.UUID;
 
 @Repository
 public interface IEmployeeRepository extends JpaRepository<Employee, UUID> {
-	
-	  @Query(value = "select sum(salary) as salary from employee ", nativeQuery = true)
-	  double getTotalSalariesForYear();
+
+	@Query(value = "select sum(salary) as salary from employee ", nativeQuery = true)
+	double getTotalSalariesForYear();
+
+	Employee getEmployeeByUserId(Long id);
 
 }
