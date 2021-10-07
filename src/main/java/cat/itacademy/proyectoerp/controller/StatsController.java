@@ -125,44 +125,28 @@ public class StatsController {
   }
   
   @PreAuthorize("hasRole('ADMIN')")
-  @RequestMapping(value = "/employees/toptensales", method = RequestMethod.GET)
-  public Map <String,Object> getTopTenEmployeesSales(@RequestBody DatesTopEmployeePOJO datestopemployee) {
-    
-	  HashMap<String, Object> map = new HashMap<>();
-	  
-	  if (datestopemployee.getBegin_date() == null) datestopemployee.setBegin_date(LocalDateTime.of(2020,01,01,00,01)); 
-		
-	  if (datestopemployee.getEnd_date() == null ) datestopemployee.setEnd_date(LocalDateTime.now());
-	  
-	  if (datestopemployee.getBegin_date().isBefore(datestopemployee.getEnd_date())) {
-    
-		  try {  
-			List<TopEmployeeDTO> employeeList = orderService.findAllTopTen(datestopemployee);
+	@GetMapping("/employees/toptensales/{year}/{month}")
+	public Map<String, Object> getTopTenEmployeesSales(@PathVariable("year") int year, @PathVariable("month") int month) {
+		HashMap<String, Object> map = new LinkedHashMap<>();
+		try {
+			List<TopEmployeeDTO> employeeList = orderService.findTopTenMonth(year, month);
 							  
 				  if(employeeList.isEmpty()) {
 			    		map.put("success", "true");
-			            map.put("message", "no employees or orders found between the dates");
+			            map.put("message", "no employees or orders found on the dates");
 				  } 
 				  else {
 					  map.put("success","true");
 					  map.put("message","top 10 employees found");
 					  map.put("employees", employeeList);
 				  }
-					  
-		  } catch(Exception e) {
-		    	 map.put("success", "false");
-		         map.put("message", "error: " + e.getMessage());
-		  }
-			  
-	  }else {
-		  map.put("success", "false");
-	      map.put("message", "_error: invalid date ranges"); 
-	  }
-	  
-	  
-    return map;
-	  
-  }
+
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "error: " + e.getMessage());
+		}
+		return map;
+	}
 
   
   

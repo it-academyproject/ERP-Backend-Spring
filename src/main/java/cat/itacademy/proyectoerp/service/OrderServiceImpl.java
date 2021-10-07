@@ -218,6 +218,27 @@ public class OrderServiceImpl implements IOrderService{
 	}
 	
 	@Override
+	public List<TopEmployeeDTO> findTopTenMonth(int year, int month) {
+				List<Object[]> repositoryQueryList = orderRepository.findEmployeesSalesBetweenDates(
+
+						LocalDateTime.of(year, month, 1, 1, 0, 0),
+						LocalDateTime.of(year, month, 31, 12, 59, 59, 59));  //Busqueda en BD
+		
+		List<TopEmployeeDTO> topEmployeeList = new ArrayList<>();
+		
+		for (Object[] object : repositoryQueryList) {
+			TopEmployeeDTO topEmployeeDTO = new TopEmployeeDTO();
+			
+			topEmployeeDTO.setId(UUID.fromString(object[0].toString()));
+			topEmployeeDTO.setTotal(Double.parseDouble(object[1].toString()));
+			topEmployeeDTO.setDni((object[2].toString()));
+			topEmployeeList.add(topEmployeeDTO);
+		}
+		
+		return topEmployeeList;
+	}
+	
+	@Override
 	public List<TopEmployeeDTO> findAllTopTen(DatesTopEmployeePOJO datestopemployee) {
 		List<Object[]> repositoryQueryList = orderRepository.findEmployeesSalesBetweenDates(datestopemployee.getBegin_date(),datestopemployee.getEnd_date());  //Busqueda en BD
 		
@@ -364,5 +385,7 @@ public class OrderServiceImpl implements IOrderService{
 		
 		return map;
 	}
+
+
 	
 }
