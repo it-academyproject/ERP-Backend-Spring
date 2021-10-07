@@ -18,8 +18,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 /**
  * This class is used to create notification entities. Notifications are used to
  * send a message to a user when an event occurs, represented by a
@@ -54,7 +52,6 @@ public class Notification {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
-	@JsonIgnore
 	private User user;
 
 	public Notification() {
