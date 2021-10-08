@@ -1,6 +1,6 @@
 package cat.itacademy.proyectoerp.repository;
 
-import java.util.List;
+
 import java.util.UUID;
 
 
@@ -13,9 +13,6 @@ import cat.itacademy.proyectoerp.domain.Offer;
 @Repository
 public interface IOfferRepository  extends JpaRepository<Offer, UUID> {
 
-	//public List<Offer> findByNameContainingIgnoreCase(String name);
-	
-	//public List<Offer> readByDiscountGreatherThanEqual(Double min);
 	
 	
 }
