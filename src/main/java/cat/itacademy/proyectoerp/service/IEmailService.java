@@ -16,4 +16,11 @@ public interface IEmailService {
 	
 	// method to send farewell email to user when unsubscribing
 	public void sendFarewellEmail(User user);
+	
+	// method to send an email to a client when its order changes to IN_DELIVERY status
+	public void sendOrderInDeliveryEmail(Client client);
+	
+	// method to send an email to a client when its order changes to CANCELLED status
+	public void sendOrderCancelledEmail(Client client);
+	
 }

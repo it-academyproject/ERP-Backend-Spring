@@ -399,6 +399,13 @@ public class OrderServiceImpl implements IOrderService{
 		Notification notification = NotificationBuilder.build(NotificationType.ORDER_STATUS_CHANGED, order.get());
 		notificationService.notifyUser(notification, client.getUser());
 		
+		// Send email to client
+		if(orderStatus.equals(OrderStatus.IN_DELIVERY)) {
+			emailService.sendOrderInDeliveryEmail(client);
+		} else if(orderStatus.equals(OrderStatus.CANCELLED)) {
+			emailService.sendOrderInDeliveryEmail(client);
+		}
+		
 		return orderRepository.save(order.get());
 	}
 	
