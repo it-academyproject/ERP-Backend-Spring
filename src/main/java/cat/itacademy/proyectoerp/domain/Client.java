@@ -26,6 +26,7 @@ import com.sun.istack.Nullable;
  * @author Anton Lage & Rita Casiello
  *
  */
+
 @Entity
 @Table(name = "clients")
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
