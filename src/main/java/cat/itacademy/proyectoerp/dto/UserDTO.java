@@ -26,7 +26,7 @@ public class UserDTO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "UserDTO [success=" + success + ", message=" + message + ", username=" + username + ", id=" + id +  ", registration: " + registrationDate + " ]";
+		return "UserDTO [success=" + success + ", message=" + message + ", username=" + username + ", id=" + id +  ", registration: " + registrationDate + ", type: " + user_type + " ]";
 	}
 	private static final long serialVersionUID = 1L;
 	
