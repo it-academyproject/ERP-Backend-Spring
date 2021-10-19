@@ -174,7 +174,8 @@ public class OrderController {
 			output = new MessageDTO("true", "orders successfully retrieved.", ordersJoined);
 			return ResponseEntity.status(HttpStatus.OK).body(output);
 		} catch (ArgumentNotFoundException argNotFoundEx) {
-			output = new MessageDTO("False", argNotFoundEx.getMessage());
+			List<Order> ordersUnassigned = orderService.findOrdersByStatus(OrderStatus.UNASSIGNED);
+			output = new MessageDTO("False", argNotFoundEx.getMessage(), ordersUnassigned);
 			return ResponseEntity.status(HttpStatus.OK).body(output);
 		} catch (Exception e) {
 			output = new MessageDTO("False", e.getMessage());
