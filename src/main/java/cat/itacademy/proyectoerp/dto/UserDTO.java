@@ -71,10 +71,10 @@ public class UserDTO implements Serializable{
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	/*
+	
 	public UserType getUserType() {
 		return user_type;
-	}*/
+	}
 	public void setUserType(UserType user_type) {
 		this.user_type = user_type;
 	}
