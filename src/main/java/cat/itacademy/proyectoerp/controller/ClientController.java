@@ -178,16 +178,5 @@ public class ClientController {
 		}
 	}
 
-	// pruebaDTO
-	@GetMapping("/lista")
-	public ResponseEntity<?> listAllUsers() {
-		List<ClientDTO> list = new ArrayList<>();
-		try {
-			list = service.listAllUsers();
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-		return new ResponseEntity<>(list, HttpStatus.OK);
-	}
 
 }
