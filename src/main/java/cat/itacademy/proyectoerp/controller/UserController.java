@@ -157,7 +157,7 @@ public class UserController {
 	public ResponseEntity<?> newUserAndEmployee(@Valid @RequestBody Employee employee) {
 		EmployeeDTO employeeDTO;
 
-		User user = new User(employee.getUser().getUsername(), employee.getUser().getPassword(), UserType.EMPLOYEE);
+		User user = new User(employee.getUser().getUserName(), employee.getUser().getPassword(), UserType.EMPLOYEE);
 		userService.registerNewUserAccount(user);
 
 		employee.setOutDate(null != employee.getOutDate() ? employee.getOutDate() : null);
@@ -222,11 +222,37 @@ public class UserController {
 	 * 
 	 * @return all users
 	 */
+//	@GetMapping("/users")
+//	public ResponseEntity<List<UserDTO>> listAllUsers() {
+//		return new ResponseEntity<>(userService.listAllUsers(), HttpStatus.OK);
+//		
+//	}
+
+//---------------------------------------------------------------------------	
+	
+	
 	@GetMapping("/users")
 	public ResponseEntity<List<UserDTO>> listAllUsers() {
 		return new ResponseEntity<>(userService.listAllUsers(), HttpStatus.OK);
+		
 	}
+	
+   	
+	
+	/**
+	 * Method for search list of users by userType.
+	 * 
+	 * @param user_type
+	 * @return list of users by userType.
+	 */
+//	List<User> findByUserType(UserType user_type);
+	
+	
 
+//---------------------------------------------------------------------------	
+	
+	
+	
 	/**
 	 * Method for list all user with userType = EMPLOYEE
 	 * 
@@ -235,6 +261,7 @@ public class UserController {
 	@GetMapping("/users/employees")
 	public ResponseEntity<List<UserDTO>> listAllEmployeeUsers() {
 		return new ResponseEntity<>(userService.listAllEmployees(), HttpStatus.OK);
+		
 	}
 
 	/**
@@ -313,7 +340,7 @@ public class UserController {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		try {
-			userService.recoverPassword(user.getUsername());
+			userService.recoverPassword(user.getUserName());
 
 			map.put("success", "true");
 			map.put("message", "the new password has been sent");

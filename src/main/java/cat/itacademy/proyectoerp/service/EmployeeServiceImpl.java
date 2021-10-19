@@ -41,7 +41,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 		MessageDTO messageDTO;
 		Employee savedEmployee;
 		
-		User user = IUserRepository.findByUsername(employee.getUser().getUsername());
+		User user = IUserRepository.findByUsername(employee.getUser().getUserName());
 		
 		try {
 			savedEmployee = employeeRepository.save(employee);
@@ -111,11 +111,11 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	private void validateUserEmployeeToUpdate(Employee employee, Employee employeeById) {
 		if (employee.getUser() != null) {
 			employee.getUser().setId(employeeById.getUser().getId());
-			employee.getUser().setUsername(null == employee.getUser().getUsername() ? employeeById.getUser().getUsername() : employee.getUser().getUsername());
+			employee.getUser().setUsername(null == employee.getUser().getUserName() ? employeeById.getUser().getUserName() : employee.getUser().getUserName());
 			employee.getUser().setPassword(null == employee.getUser().getPassword() ? employeeById.getUser().getPassword() : employee.getUser().getPassword());
 			employee.getUser().setUserType(employeeById.getUser().getUserType());
 		} else {
-			User user = new User(employeeById.getUser().getUsername(), employeeById.getUser().getPassword(), UserType.EMPLOYEE);
+			User user = new User(employeeById.getUser().getUserName(), employeeById.getUser().getPassword(), UserType.EMPLOYEE);
 			user.setId(employeeById.getUser().getId());
 			employee.setUser(user);
 		}

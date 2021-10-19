@@ -10,6 +10,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 
 /**
@@ -28,6 +30,7 @@ import com.fasterxml.jackson.annotation.*;
 
 @Entity
 @Table(name = "users")
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class User {
 
   @Id
@@ -112,7 +115,7 @@ public class User {
   }
 
 
-  public String getUsername() {
+  public String getUserName() {
     return username;
   }
 
@@ -198,8 +201,8 @@ public class User {
   
   @Override
   public String toString() {
-	return "User [id=" + id + ", username=" + username + ", password=" + password + ", lastSession=" + lastSession
-			+ ", userType=" + userType + ", registrationDate= " + registrationDate + " ]";
+	return "User [id=" + id + ", user_name=" + username + ", password=" + password + ", last_session=" + lastSession
+			+ ", user_type=" + userType + ", registration_date= " + registrationDate + " ]";
   }
 
 

@@ -58,8 +58,8 @@ public class ClientController {
 
 	private UserDTO getUser(Client client) {
 		UserDTO userDTO;
-		if (userService.existsByUsername(client.getUser().getUsername())) {
-			userDTO = userService.getByUsername(client.getUser().getUsername()).get();
+		if (userService.existsByUsername(client.getUser().getUserName())) {
+			userDTO = userService.getByUsername(client.getUser().getUserName()).get();
 			setErrorMessageUsernameExists(userDTO);
 		} else {
 			userDTO = userService.registerNewUserAccount(client.getUser());

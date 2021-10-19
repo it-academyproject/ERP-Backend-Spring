@@ -127,7 +127,7 @@ public class UserControllerIntegrationTest {
 						.accept(MediaType.APPLICATION_JSON)
 						.contentType(MediaType.APPLICATION_JSON))
 						.andExpect(status().isOk())
-						.andExpect(jsonPath("$.username", is(user.getUsername())))
+						.andExpect(jsonPath("$.username", is(user.getUserName())))
 						.andExpect(jsonPath("$.success",  is("True")));
 
 		String resultString = resultPost.andReturn().getResponse().getContentAsString();

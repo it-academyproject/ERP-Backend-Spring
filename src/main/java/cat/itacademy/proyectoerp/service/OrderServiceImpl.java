@@ -90,7 +90,7 @@ public class OrderServiceImpl implements IOrderService{
 		else {
 			Client client = clientService.findClientById(createOrderDTO.getClientId());
 			
-			if (client.getUser().getUsername().equals(authClient))
+			if (client.getUser().getUserName().equals(authClient))
 				setAddressesForRegisteredClient(client, createOrderDTO);
 			else
 				throw new AuthException();

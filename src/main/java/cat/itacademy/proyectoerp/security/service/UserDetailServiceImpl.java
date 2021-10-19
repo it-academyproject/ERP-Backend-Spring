@@ -33,7 +33,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
 		authoritiesUser
 				.add(new SimpleGrantedAuthority("ROLE_" + userDao.findByUsername(username).getUserType().toString()));
 
-		UserDetails userDetails = User.withUsername(userDao.findByUsername(username).getUsername())
+		UserDetails userDetails = User.withUsername(userDao.findByUsername(username).getUserName())
 				.password(userDao.findByUsername(username).getPassword()).authorities(authoritiesUser).build();
 
 		return userDetails;

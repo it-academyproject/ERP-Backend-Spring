@@ -102,7 +102,7 @@ public class ClientServiceImpl implements IClientService {
 		List<ClientDTO> listaUsers = new ArrayList<>();
 		for (Client user : repository.findAll()) {
 			ClientDTO cliente = modelMapper.map(user, ClientDTO.class);
-			cliente.setUsername(user.getUser().getUsername());
+			cliente.setUsername(user.getUser().getUserName());
 			listaUsers.add(cliente);
 		}
 
@@ -143,8 +143,8 @@ public class ClientServiceImpl implements IClientService {
 	private void setUserClient(Client client, Client clientDB) {
 		if (null != client.getUser()) {
 			client.getUser().setId(clientDB.getUser().getId());
-			client.getUser().setUsername(null == client.getUser().getUsername() ? clientDB.getUser().getUsername()
-					: client.getUser().getUsername());
+			client.getUser().setUsername(null == client.getUser().getUserName() ? clientDB.getUser().getUserName()
+					: client.getUser().getUserName());
 			client.getUser().setPassword(null == client.getUser().getPassword() ? clientDB.getUser().getPassword()
 					: userService.passEconder(client.getUser().getPassword()));
 			client.getUser().setUserType(clientDB.getUser().getUserType());
@@ -247,10 +247,10 @@ public class ClientServiceImpl implements IClientService {
 
 	private String getExceptionMessageUsername(Client client) {
 		String exceptionMessage = "";
-		if (null != client.getUser() && null != client.getUser().getUsername()) {
-			User userByUsername = userService.findByUsername(client.getUser().getUsername());
+		if (null != client.getUser() && null != client.getUser().getUserName()) {
+			User userByUsername = userService.findByUsername(client.getUser().getUserName());
 			if (null != userByUsername && !userByUsername.getId().equals(client.getUser().getId())) {
-				exceptionMessage = exceptionMessage + "User Exists: '" + client.getUser().getUsername() + "'. ";
+				exceptionMessage = exceptionMessage + "User Exists: '" + client.getUser().getUserName() + "'. ";
 			}
 		}
 		return exceptionMessage;

@@ -20,7 +20,7 @@ public class WrongPasswordAttemptsService {
 	IUserRepository userRepository;
 
 	public void increaseFailedAttempts(User user) {
-		String username = user.getUsername();
+		String username = user.getUserName();
 		Integer newFailAttempts = user.getFailedLoginAttempts() + 1;
 		userRepository.updateFailedLoginAttempts(newFailAttempts, username);
 	}

@@ -64,17 +64,17 @@ public class UserDTO implements Serializable{
 	public void setMessage(String message) {
 		this.message = message;
 	}
-
+	
 	public String getUsername() {
 		return username;
 	}
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	/*
+// Estaba comentado en el archivo original	
 	public UserType getUserType() {
 		return user_type;
-	}*/
+	}
 	public void setUserType(UserType user_type) {
 		this.user_type = user_type;
 	}

@@ -112,7 +112,7 @@ public class UserServiceImpl implements IUserService {
 		UserDTO userDto = modelMapper.map(user, UserDTO.class);
 		System.out.println("user pasado " + user.toString());
 
-		if (userRepository.existsByUsername(user.getUsername())) {
+		if (userRepository.existsByUsername(user.getUserName())) {
 			userDto.setSuccess("False");
 			userDto.setMessage("User Exist");
 			return userDto;
@@ -248,7 +248,7 @@ public class UserServiceImpl implements IUserService {
 			return Optional.of(userDto);
 		}
 		// Verify if username already exist
-		if (userRepository.findByUsername(user.getUsername()) != null) {
+		if (userRepository.findByUsername(user.getUserName()) != null) {
 			userDto.setSuccess("Failed");
 			userDto.setMessage("User already exist");
 			return Optional.of(userDto);
@@ -314,9 +314,9 @@ public class UserServiceImpl implements IUserService {
 		// Verifies if username matches
 		if (!(userDto.getSuccess() == "False")) {
 
-			String usernamerepo = userRepository.findById(user.getId()).get().getUsername();
+			String usernamerepo = userRepository.findById(user.getId()).get().getUserName();
 
-			if (!usernamerepo.equals(user.getUsername())) {
+			if (!usernamerepo.equals(user.getUserName())) {
 				userDto.setSuccess("False");
 				userDto.setMessage("The username does not match, please check it again");
 				return userDto;
@@ -389,7 +389,7 @@ public class UserServiceImpl implements IUserService {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 		// Verify if user exist
-		User updatedUser = userRepository.findByUsername(changeuserpassword.getUser().getUsername());
+		User updatedUser = userRepository.findByUsername(changeuserpassword.getUser().getUserName());
 
 		if (updatedUser != null) {
 			// Check password

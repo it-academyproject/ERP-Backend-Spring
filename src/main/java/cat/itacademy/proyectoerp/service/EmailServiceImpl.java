@@ -30,7 +30,7 @@ public class EmailServiceImpl implements IEmailService {
             SimpleMailMessage message = new SimpleMailMessage();
 
             // set email properties/body
-            message.setTo(user.getUsername());
+            message.setTo(user.getUserName());
             message.setSubject("Welcome to ProyectoERP");
             message.setText("Welcome to ProyectoERP \n\nThanks for signing up!");
             
@@ -55,7 +55,7 @@ public class EmailServiceImpl implements IEmailService {
             SimpleMailMessage message = new SimpleMailMessage();
 
             // set email properties/body
-            message.setTo(user.getUsername());
+            message.setTo(user.getUserName());
             
             message.setSubject("Recover email account  ");
             message.setText("Your new password is: " + password
@@ -79,7 +79,7 @@ public class EmailServiceImpl implements IEmailService {
     public void sendOrderConfirmationEmail(Client client) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(client.getUser().getUsername());
+            message.setTo(client.getUser().getUserName());
             message.setSubject("Confirmation Order ");
             message.setText("Hello " + client.getNameAndSurname() + ", your order has been placed");
             javaMailSender.send(message);
@@ -99,7 +99,7 @@ public class EmailServiceImpl implements IEmailService {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
 
-            message.setTo(user.getUsername());
+            message.setTo(user.getUserName());
             message.setSubject("Subscription updates have been successfully made.");
             message.setText("We already miss how close we used to be.");
 
