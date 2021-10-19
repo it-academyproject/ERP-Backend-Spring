@@ -169,6 +169,7 @@ public class ProductController {
 		return map;
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/categories")
 	public HashMap<String, Object> getCategory() {
 		HashMap<String, Object> map = new HashMap<>();
@@ -187,6 +188,7 @@ public class ProductController {
 		return map;
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/categories/{id}")
 	public HashMap<String, Object> getCategoryById(@PathVariable UUID id) {
 		HashMap<String, Object> map = new HashMap<>();
