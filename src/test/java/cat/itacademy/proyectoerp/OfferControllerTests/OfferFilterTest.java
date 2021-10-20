@@ -63,7 +63,7 @@ class OfferFilterTest {
 	@DisplayName("filter Offers by name ")
 	void givenOfferFilteredByName() throws Exception {
 		
-		String offerName ="test";
+		String offerName ="text";
 		String accessToken = this.obtainAccessToken();
 		String endPoint = "/api/offers";
 		
