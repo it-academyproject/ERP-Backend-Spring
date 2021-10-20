@@ -1,6 +1,5 @@
 package cat.itacademy.proyectoerp.OfferControllerTests;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -33,10 +32,10 @@ import cat.itacademy.proyectoerp.service.IOfferService;
 @TestPropertySource("classpath:application-integrationtest.properties")
 @Transactional
 class OfferFilterTest {
-	
+
 	@Autowired
 	private MockMvc mvc;
-	
+
 	@Autowired
 	private IOfferService repository;
 
@@ -47,46 +46,61 @@ class OfferFilterTest {
 	public void setUp() {
 		this.mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
-	
+
 	@Test
 	@DisplayName("Data correctly loaded into db")
 	public void testData() {
 		UUID id = UUID.fromString("33330000-0000-0000-0000-000000000000");
-		
+
 		assertThat(repository.findById(id));
 	}
-	
-	
-	
-	//filter Offers by name
+
+	// filter Offers by name
 	@Test
 	@DisplayName("filter Offers by name ")
 	void givenOfferFilteredByName() throws Exception {
-		
-		String offerName ="text";
+
+		String offerName = "text";
 		String accessToken = this.obtainAccessToken();
 		String endPoint = "/api/offers";
-		
-		this.mvc.perform(get(endPoint, offerName)
-				.header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk());
+
+		this.mvc.perform(get(endPoint, offerName).header("Authorization", "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 	}
 	
+	// filter offers by discount
+		@Test
+		@DisplayName("filter Offers by name ")
+		void givenOfferFilteredByDiscount() throws Exception {
+
+			Double min = 0.15;
+			Double max = 0.05;
+			String accessToken = this.obtainAccessToken();
+			String endPoint = "/api/offers/discount";
+
+			this.mvc.perform(get(endPoint, min).header("Authorization", "Bearer " + accessToken)
+					.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+			
+			this.mvc.perform(get(endPoint, max).header("Authorization", "Bearer " + accessToken)
+					.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+			
+			this.mvc.perform(get(endPoint,min, max).header("Authorization", "Bearer " + accessToken)
+					.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		}
 	
-		
+
 	private String obtainAccessToken() throws Exception {
 		String testUsername = "admin@erp.com";
 		String testPassword = "ReW9a0&+TP";
 		JwtLogin jwtLogin = new JwtLogin(testUsername, testPassword);
 
-		ResultActions resultPost = this.mvc.perform(post("/api/login")
-				.content(new ObjectMapper().writeValueAsString(jwtLogin))
-				.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON))
+		ResultActions resultPost = this.mvc
+				.perform(post("/api/login").content(new ObjectMapper().writeValueAsString(jwtLogin))
+						.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 
 		String resultString = resultPost.andReturn().getResponse().getContentAsString();
 		return new JacksonJsonParser().parseMap(resultString).get("token").toString();
 	}
-	
-	
+
 }
