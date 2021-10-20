@@ -10,6 +10,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 
 /**
@@ -28,6 +30,7 @@ import com.fasterxml.jackson.annotation.*;
 
 @Entity
 @Table(name = "users")
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class User {
 
   @Id
