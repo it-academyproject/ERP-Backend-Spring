@@ -1,17 +1,20 @@
 package cat.itacademy.proyectoerp.service;
 
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.mapstruct.factory.Mappers;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import cat.itacademy.proyectoerp.domain.WorkingHours;
-import cat.itacademy.proyectoerp.domain.WorkingHoursId;
 import cat.itacademy.proyectoerp.dto.WorkingHoursDTO;
+import cat.itacademy.proyectoerp.dto.WorkingHoursToStringDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 import cat.itacademy.proyectoerp.repository.IWorkingHoursRepository;
@@ -19,10 +22,15 @@ import cat.itacademy.proyectoerp.repository.IWorkingHoursRepository;
 @Service
 public class WorkingHoursServiceImpl implements IWorkingHoursService{
 
+	private static final String String = null;
+	
+
 	@Autowired
 	IWorkingHoursRepository workingHoursRepository;
-	
+	IWorkingHoursMapper iWorkingHoursMapper;
 	ModelMapper modelMapper = new ModelMapper();
+	
+	
 
 	@Override
 	public WorkingHoursDTO createWorkingHours(WorkingHoursDTO workingHoursDTO) throws ArgumentNotValidException {
@@ -43,15 +51,19 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService{
 		
 		return modelMapper.map(workingHours, WorkingHoursDTO.class);
 	}
-	
+	@Bean
+	public ModelMapper modelMapper(){
+	    return new ModelMapper();
+	}
 	@Override
-	public List<WorkingHoursDTO> findAllWorkingHours() {
+	public  List<WorkingHoursToStringDTO> findAllWorkingHours() {
+	
 		
 		if(workingHoursRepository.findAll().isEmpty()){
 			throw new ArgumentNotFoundException("No Working Hours found");
 		} else {
-			return workingHoursRepository.findAll().stream().map(workingHours -> modelMapper.map(workingHours, WorkingHoursDTO.class)).collect(Collectors.toList());
-		
+						
+			return iWorkingHoursMapper.map(workingHoursRepository.findAll().stream().map(workingHours -> modelMapper.map(workingHours, WorkingHoursDTO.class)).collect(Collectors.toList()));
 		}
 	}
 	

@@ -1,9 +1,8 @@
 package cat.itacademy.proyectoerp.controller;
 
-import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.domain.WorkingHours;
-import cat.itacademy.proyectoerp.domain.WorkingHoursId;
 import cat.itacademy.proyectoerp.dto.WorkingHoursDTO;
+import cat.itacademy.proyectoerp.dto.WorkingHoursToStringDTO;
 import cat.itacademy.proyectoerp.service.WorkingHoursServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class WorkingHoursController {
   public HashMap<String, Object> getWorkingHours(){
     HashMap<String, Object> map = new HashMap<String, Object>();
     try {
-      List<WorkingHoursDTO> workingHoursList = workingHoursService.findAllWorkingHours();
+      List<WorkingHoursToStringDTO> workingHoursList = workingHoursService.findAllWorkingHours();
       map.put("success", "true");
       map.put("message", "working hours found");
       map.put("working_hours", workingHoursList);
@@ -46,6 +47,7 @@ public class WorkingHoursController {
   @GetMapping("/employeeid/{employee_id}/date/{date}")
   public HashMap<String, Object> getWorkingHoursByEmployeeIdAndDate(@PathVariable(name="employee_id") UUID employeeId, @PathVariable(name="date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
     HashMap<String, Object> map = new HashMap<>();
+   //String strDate=localDateToString(date);
     try {
       WorkingHours workingHours = workingHoursService.findWorkingHoursByEmployeeIdAndDate(employeeId, date);
       map.put("success", "true");
@@ -78,6 +80,7 @@ public class WorkingHoursController {
   @GetMapping("/date/{date}")
   public HashMap<String, Object> getWorkingHoursByDate(@PathVariable(name="date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
     HashMap<String, Object> map = new HashMap<>();
+    //String strDate=localDateToString(date);
     try {
       List<WorkingHoursDTO> workingHoursList = workingHoursService.findWorkingHoursByDate(date);
       map.put("success", "true");
@@ -145,5 +148,30 @@ public class WorkingHoursController {
     }
     return map;
   }
+  
+  /**
+	 * @param LocalDate
+	 * @return String
+	 */
+	public static String localDateToString(LocalDate localDate) {
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		String strDate = localDate.format(formatter);
+
+		return strDate;
+	}
+
+	/**
+	 * @param LocalTime
+	 * @return String
+	 */
+	public static String localTimeToString(LocalTime localTime) {
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+		String strDate = localTime.format(formatter);
+
+		return strDate;
+	}
+  
 }
 
