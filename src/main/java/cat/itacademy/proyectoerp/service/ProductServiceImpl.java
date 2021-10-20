@@ -1,6 +1,5 @@
 package cat.itacademy.proyectoerp.service;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,7 +51,6 @@ public class ProductServiceImpl implements IProductService {
 	public ProductDTO createProduct(ProductDTO productDto) {
 		checkProductName(productDto.getName());
 		checkProductPriceAndWholesalePrice(productDto.getPrice(), productDto.getWholesalePrice());
-		setProductCreatedAndModified(productDto);
 		Product product = mapProductDtoToProductWithoutCategories(productDto);
 		product.setCategory(mapCategoryDtoToCategory(productDto.getCategoryDto()));
 		productRepository.save(product);
@@ -71,12 +69,6 @@ public class ProductServiceImpl implements IProductService {
 			throw new ArgumentNotValidException("The wholesale price cannot be higher than the regular price");		
 	}
 	
-	private void setProductCreatedAndModified(ProductDTO productDto) {
-		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-		long ts = timestamp.getTime();
-		productDto.setCreated(ts);
-		productDto.setModified(ts);
-	}
 	
 	private Product mapProductDtoToProductWithoutCategories(ProductDTO productDto) {
 		typeMap.addMappings(mapper -> mapper.skip(Product::setCategory));
