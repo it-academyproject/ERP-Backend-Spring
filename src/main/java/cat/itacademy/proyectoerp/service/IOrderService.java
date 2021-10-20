@@ -32,9 +32,7 @@ public interface IOrderService {
 	public List<Order> findOrdersByClient(UUID id);
 	
 	public List<Order> findOrdersByEmployeeId(UUID employeeId);	
-	
-	public List<TopEmployeeDTO> findAllTopTen(DatesTopEmployeePOJO topemployee);
-	
+		
 	public EmployeeSalesDTO getBestEmployeeByTotalSales();
 
 	public EmployeeSalesDTO getWorstEmployeeByTotalSales();
@@ -46,5 +44,7 @@ public interface IOrderService {
 	public HashMap<String, Long> countOrdersByfield(String field);
 	
 	public Order updateOrderStatus(UUID orderId, OrderStatus orderStatus);
+
+	public List<TopEmployeeDTO> getTopTen(int year, int month);
 	
 }

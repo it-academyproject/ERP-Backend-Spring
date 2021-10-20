@@ -124,47 +124,29 @@ public class StatsController {
     return map;
   }
   
-  @PreAuthorize("hasRole('ADMIN')")
-  @RequestMapping(value = "/employees/toptensales", method = RequestMethod.GET)
-  public Map <String,Object> getTopTenEmployeesSales(@RequestBody DatesTopEmployeePOJO datestopemployee) {
-    
-	  HashMap<String, Object> map = new HashMap<>();
-	  
-	  if (datestopemployee.getBegin_date() == null) datestopemployee.setBegin_date(LocalDateTime.of(2020,01,01,00,01)); 
-		
-	  if (datestopemployee.getEnd_date() == null ) datestopemployee.setEnd_date(LocalDateTime.now());
-	  
-	  if (datestopemployee.getBegin_date().isBefore(datestopemployee.getEnd_date())) {
-    
-		  try {  
-			List<TopEmployeeDTO> employeeList = orderService.findAllTopTen(datestopemployee);
-							  
-				  if(employeeList.isEmpty()) {
-			    		map.put("success", "true");
-			            map.put("message", "no employees or orders found between the dates");
-				  } 
-				  else {
-					  map.put("success","true");
-					  map.put("message","top 10 employees found");
-					  map.put("employees", employeeList);
-				  }
-					  
-		  } catch(Exception e) {
-		    	 map.put("success", "false");
-		         map.put("message", "error: " + e.getMessage());
-		  }
-			  
-	  }else {
-		  map.put("success", "false");
-	      map.put("message", "_error: invalid date ranges"); 
-	  }
-	  
-	  
-    return map;
-	  
-  }
-
-  
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/employeestop/{year}/{month}")
+	public Map<String, Object> getEmployeesTop(@PathVariable("year") int year, @PathVariable("month") int month) {
+		HashMap<String, Object> map = new LinkedHashMap<>();
+		try {
+			List<TopEmployeeDTO> employeeList = orderService.getTopTen(year,month);
+			String monthName = new DateFormatSymbols().getMonths()[month-1];
+			if (employeeList.isEmpty()) {
+				map.put("success", "false");
+				map.put("message", "orders for " + monthName + " " + year + " not found");
+			} else {
+				map.put("success", "true");
+				map.put("message", "topten for " + monthName + " " + year + " found");
+				map.put("month", month);
+				map.put("year", year);
+				map.put("top ten employees", employeeList);
+			}
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "error: " + e.getMessage());
+		}
+		return map;
+	}
   
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/employees/bestsales")
