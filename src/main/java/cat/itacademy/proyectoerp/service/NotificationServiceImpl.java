@@ -1,5 +1,6 @@
 package cat.itacademy.proyectoerp.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,14 +52,19 @@ public class NotificationServiceImpl implements INotificationService {
 	 */
 	@Override
 	public void notifyUsers(Notification notification, List<User> users) {
+		List<Notification> notificationsBatch = new ArrayList<>();
+		
 		users.forEach(user -> {
 			Optional<User> userDb = userRepository.findById(user.getId());
 
 			if (userDb.isPresent()) {
-				notification.setUser(userDb.get());
-				notificationRepository.save(notification);
+				Notification notificationClone = new Notification(notification);
+				notificationClone.setUser(userDb.get());
+				notificationsBatch.add(notificationClone);
 			}
 		});
+		
+		notificationRepository.saveAll(notificationsBatch);
 	}
 
 	/**
@@ -66,10 +72,17 @@ public class NotificationServiceImpl implements INotificationService {
 	 */
 	@Override
 	public void notifyAllEmployees(Notification notification) {
+		List<Notification> notificationsBatch = new ArrayList<>();
+
 		employeeRepository.findAll().forEach(employee -> {
-			notification.setUser(employee.getUser());
-			notificationRepository.save(notification);
+			Notification notificationClone = new Notification(notification);
+			notificationClone.setUser(employee.getUser());
+			notificationsBatch.add(notificationClone);
 		});
+
+		System.out.println(notificationsBatch);
+		
+		notificationRepository.saveAll(notificationsBatch);
 	}
 
 	/**
@@ -78,10 +91,14 @@ public class NotificationServiceImpl implements INotificationService {
 	 * @param notifications
 	 */
 	private void readNotifications(List<Notification> notifications) {
+		List<Notification> notificationsBatch = new ArrayList<>();
+		
 		notifications.forEach(notification -> {
 			notification.setRead(true);
-			notificationRepository.save(notification);
+			notificationsBatch.add(notification);
 		});
+		
+		notificationRepository.saveAll(notificationsBatch);
 	}
 
 }

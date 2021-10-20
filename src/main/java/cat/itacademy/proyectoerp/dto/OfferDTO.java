@@ -3,10 +3,11 @@ package cat.itacademy.proyectoerp.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class OfferDTO implements Serializable {
 	
@@ -19,6 +20,8 @@ public class OfferDTO implements Serializable {
 	private LocalDateTime endsOn;
 	private int paidQuantity;
 	private int freeQuantity;
+	
+	
 	
 	public OfferDTO() {
 	}
@@ -35,14 +38,7 @@ public class OfferDTO implements Serializable {
 		this.discount = discount;
 	}
 	
-	public void setStartDate(LocalDateTime startsOn) {
-		this.startsOn = startsOn;
-	}
-	
-	public void setEndDate(LocalDateTime endsOn) {
-		this.endsOn = endsOn;
-	}
-	
+		
 	public void setPaidQuantity(int paidQuantity) {
 		this.paidQuantity = paidQuantity;
 	}
@@ -63,14 +59,7 @@ public class OfferDTO implements Serializable {
 		return discount;
 	}
 	
-	public LocalDateTime getStartDate() {
-		return startsOn;
-	}
-	
-	public LocalDateTime getEndDate() {
-		return endsOn;
-	}
-	
+		
 	public int getPaidQuantity() {
 		return paidQuantity;
 	}
@@ -78,5 +67,23 @@ public class OfferDTO implements Serializable {
 	public int getFreeQuantity() {
 		return freeQuantity;
 	}
+	@JsonFormat(pattern = "dd-MM-yyyy")
+	public LocalDateTime getEndsOn() {
+		return endsOn;
+	}
+
+	public void setEndsOn(LocalDateTime endsOn) {
+		this.endsOn = endsOn;
+	}
+	@JsonFormat(pattern = "dd-MM-yyyy")
+	public LocalDateTime getStartsOn() {
+		return startsOn;
+	}
+
+	public void setStartsOn(LocalDateTime startsOn) {
+		this.startsOn = startsOn;
+	}
+	
+		
 	
 }

@@ -46,15 +46,27 @@ public class Notification {
 
 	@Column(name = "created_At")
 	private Date createdAt;
-	
+
 	@Column(name = "is_read")
 	private boolean read;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
 
 	public Notification() {
+	}
+
+	/**
+	 * Constructor for creating Notification object clones
+	 * 
+	 * @param notification
+	 */
+	public Notification(Notification notification) {
+		type = notification.getType();
+		message = notification.getMessage();
+		createdAt = notification.getCreatedAt();
+		read = notification.isRead();
 	}
 
 	public Notification(NotificationType type, String message) {
@@ -110,6 +122,12 @@ public class Notification {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	@Override
+	public String toString() {
+		return "Notification [id=" + id + ", type=" + type + ", message=" + message + ", createdAt=" + createdAt
+				+ ", read=" + read + ", user=" + user + "]";
 	}
 
 }

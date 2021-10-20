@@ -112,5 +112,40 @@ public class EmailServiceImpl implements IEmailService {
 
     }
 
+    /**
+     * Send an email to a client when its order changes to IN_DELIVERY status
+     */
+	@Override
+	public void sendOrderInDeliveryEmail(Client client) {
+		try {
+			SimpleMailMessage message = new SimpleMailMessage();
+			
+			message.setTo(client.getUser().getUsername());
+			message.setSubject("Order updates");
+			message.setText("Your order is in the delivery process.");
+			
+			javaMailSender.send(message);
+		} catch (MailException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Send an email to a client when its order changes to CANCELLED status
+	 */
+	@Override
+	public void sendOrderCancelledEmail(Client client) {
+		try {
+			SimpleMailMessage message = new SimpleMailMessage();
+			
+			message.setTo(client.getUser().getUsername());
+			message.setSubject("Order updates");
+			message.setText("Your order has been cacelled.");
+			
+			javaMailSender.send(message);
+		} catch (MailException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
