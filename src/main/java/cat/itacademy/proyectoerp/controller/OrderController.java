@@ -144,6 +144,7 @@ public class OrderController {
 	}
 	
 	//gets all the orders placed by a client
+	@PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
 	@GetMapping("/orders/client/{clientId}")
 	public ResponseEntity<MessageDTO> getOrdersByClientId(@PathVariable(name = "clientId") UUID id) {
 		MessageDTO output;
