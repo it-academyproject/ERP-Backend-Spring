@@ -27,6 +27,9 @@ import cat.itacademy.proyectoerp.dto.OfferDTO;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 import cat.itacademy.proyectoerp.service.IOfferService;
 
+//mvn -Dtest=OfferFilterTest test
+
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource("classpath:application-integrationtest.properties")
@@ -67,26 +70,50 @@ class OfferFilterTest {
 		this.mvc.perform(get(endPoint, offerName).header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 	}
-	
+
 	// filter offers by discount
+	@Test
+	@DisplayName("filter Offers by discount ")
+	void givenOfferFilteredByDiscount() throws Exception {
+
+		Double min = 0.15;
+		Double max = 0.05;
+		String accessToken = this.obtainAccessToken();
+		String endPoint = "/api/offers/discount";
+
+		this.mvc.perform(
+				get(endPoint, min).header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+
+		this.mvc.perform(
+				get(endPoint, max).header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+
+		this.mvc.perform(get(endPoint, min, max).header("Authorization", "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+	}
+	
+	// filter offers by Date
 		@Test
-		@DisplayName("filter Offers by name ")
-		void givenOfferFilteredByDiscount() throws Exception {
+		@DisplayName("filter Offers by Date ")
+		void givenOfferFilteredByDate() throws Exception {
 
-			Double min = 0.15;
-			Double max = 0.05;
+			String from = "31-08-2021";
+			String to = "2021-09-01";
 			String accessToken = this.obtainAccessToken();
-			String endPoint = "/api/offers/discount";
+			String endPoint = "/api/offers";
 
-			this.mvc.perform(get(endPoint, min).header("Authorization", "Bearer " + accessToken)
-					.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
-			
-			this.mvc.perform(get(endPoint, max).header("Authorization", "Bearer " + accessToken)
-					.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
-			
-			this.mvc.perform(get(endPoint,min, max).header("Authorization", "Bearer " + accessToken)
+			this.mvc.perform(get(endPoint, from).header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
+					.andExpect(status().isOk());
+
+			this.mvc.perform(
+					get(endPoint, to).header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
+					.andExpect(status().isOk());
+
+			this.mvc.perform(get(endPoint, from, to).header("Authorization", "Bearer " + accessToken)
 					.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 		}
+	
 	
 
 	private String obtainAccessToken() throws Exception {
