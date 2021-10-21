@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import cat.itacademy.proyectoerp.domain.Notification;
 import cat.itacademy.proyectoerp.domain.User;
+import cat.itacademy.proyectoerp.domain.UserType;
 import cat.itacademy.proyectoerp.repository.IEmployeeRepository;
 import cat.itacademy.proyectoerp.repository.INotificationRepository;
 import cat.itacademy.proyectoerp.repository.IUserRepository;
@@ -80,6 +81,24 @@ public class NotificationServiceImpl implements INotificationService {
 			notificationsBatch.add(notificationClone);
 		});
 
+		System.out.println(notificationsBatch);
+		
+		notificationRepository.saveAll(notificationsBatch);
+	}
+	
+	/**
+	 * Adds a notification to all users with role ADMIN
+	 */
+	@Override
+	public void notifyAllAdmins(Notification notification) {
+		List<Notification> notificationsBatch = new ArrayList<>();
+		
+		userRepository.findByUserType(UserType.ADMIN).forEach(user -> {
+			Notification notificationClone = new Notification(notification);
+			notificationClone.setUser(user);
+			notificationsBatch.add(notificationClone);
+		});
+		
 		System.out.println(notificationsBatch);
 		
 		notificationRepository.saveAll(notificationsBatch);

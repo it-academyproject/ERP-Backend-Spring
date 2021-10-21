@@ -90,7 +90,7 @@ public class WorkingHoursController {
     return map;
   }
   
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('EMPLOYEE')")
   @PostMapping()
 	public Map<String, Object> createWorkingHours(@RequestBody WorkingHoursDTO workingHoursDTO) {
 
@@ -129,7 +129,7 @@ public class WorkingHoursController {
     return map;
   }
 
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('EMPLOYEE')")
   @PutMapping()
   public HashMap<String, Object> updateEmployee(@RequestBody WorkingHoursDTO workingHoursDTO){
     HashMap<String, Object> map = new HashMap<String, Object>();

@@ -2,6 +2,7 @@ package cat.itacademy.proyectoerp.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -9,18 +10,31 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cat.itacademy.proyectoerp.domain.Employee;
+import cat.itacademy.proyectoerp.domain.Notification;
+import cat.itacademy.proyectoerp.domain.NotificationType;
+import cat.itacademy.proyectoerp.domain.UserType;
 import cat.itacademy.proyectoerp.domain.WorkingHours;
 import cat.itacademy.proyectoerp.domain.WorkingHoursId;
 import cat.itacademy.proyectoerp.dto.WorkingHoursDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
+import cat.itacademy.proyectoerp.repository.IEmployeeRepository;
+import cat.itacademy.proyectoerp.repository.IUserRepository;
 import cat.itacademy.proyectoerp.repository.IWorkingHoursRepository;
+import cat.itacademy.proyectoerp.util.NotificationBuilder;
 
 @Service
 public class WorkingHoursServiceImpl implements IWorkingHoursService{
 
 	@Autowired
 	IWorkingHoursRepository workingHoursRepository;
+	
+	@Autowired
+	IEmployeeRepository employeeRepository;
+	
+	@Autowired
+	INotificationService notificationService;
 	
 	ModelMapper modelMapper = new ModelMapper();
 
@@ -38,6 +52,11 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService{
 									
 		} else {
 			workingHoursRepository.save(workingHours);
+			
+			//Notify all admins
+			Optional<Employee> employee = employeeRepository.findById(workingHours.getEmployeeId());
+			Notification notification = NotificationBuilder.build(NotificationType.EMPLOYEE_ENTRY, employee.get());
+			notificationService.notifyAllAdmins(notification);
 			
 		}
 		

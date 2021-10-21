@@ -11,5 +11,5 @@ public interface INotificationService {
 	void notifyUser(Notification notification, User user);
 	void notifyUsers(Notification notification, List<User> users);
 	void notifyAllEmployees(Notification notification);
-	
+	void notifyAllAdmins(Notification notification);
 }
