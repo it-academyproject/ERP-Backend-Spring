@@ -15,8 +15,7 @@ import org.springframework.stereotype.Repository;
 public interface IWorkingHoursRepository extends JpaRepository<WorkingHours, UUID> {
 	
 	List<WorkingHours> findAll();
-	
-	
+		
 	List<WorkingHours> findWorkingHoursByEmployeeId(UUID employeeId);
 	
 	List<WorkingHours> findWorkingHoursByDate(LocalDate date);

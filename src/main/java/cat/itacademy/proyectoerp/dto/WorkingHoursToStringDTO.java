@@ -1,16 +1,10 @@
 package cat.itacademy.proyectoerp.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-import cat.itacademy.proyectoerp.dto.WorkingHoursDTO.WorkingHoursDTOBuilder;
-
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -59,39 +53,6 @@ public class WorkingHoursToStringDTO implements Serializable {
 		this.employeeId = employeeId;
 	}
 
-	/**
-	 * @param LocalDate
-	 * @return String
-	 */
-	/*
-	public static String localDateToString(LocalDate localDate) {
-
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		String strDate = localDate.format(formatter);
-
-		return strDate;
-	}
-	*/
-
-	/**
-	 * @param LocalTime
-	 * @return String
-	 */
-	/*
-	 * public static String localTimeToString(LocalTime localTime) {
-	 * 
-	 * DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss"); String
-	 * strDate = localTime.format(formatter);
-	 * 
-	 * return strDate; }
-	 */
-
-	/*
-	 * @Override public String toString() { return "WorkingHoursDTO [date=" +
-	 * localDateToString() + ", checkIn=" + localTimeToString(checkIn) +
-	 * ", checkOut=" + localTimeToString(checkOut) + ", employeeId=" + employeeId +
-	 * "]"; }
-	 */
 	public static class WorkingHoursToStringDTOBuilder {
 
 		private String date;
@@ -114,7 +75,6 @@ public class WorkingHoursToStringDTO implements Serializable {
 
 		public WorkingHoursToStringDTOBuilder withCheckOut(String checkOut) {
 			this.checkOut = checkOut;
-			;
 			return this;
 		}
 

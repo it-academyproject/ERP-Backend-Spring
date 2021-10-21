@@ -60,46 +60,6 @@ public class WorkingHoursDTO implements Serializable {
 	
 
 	
-	public static class WorkingHoursDTOBuilder {
-
-		private LocalDate date;
-
-		private LocalTime checkIn;
-
-		private LocalTime checkOut;
-
-		private UUID employeeId;
-
-		public WorkingHoursDTOBuilder withDate(LocalDate date) {
-			this.date = date;
-			return this;
-		}
-
-		public WorkingHoursDTOBuilder withCheckIn(LocalTime checkIn) {
-			this.checkIn = checkIn;
-			return this;
-		}
-
-		public WorkingHoursDTOBuilder withCheckOut(LocalTime checkOut) {
-			this.checkOut = checkOut;
-			return this;
-		}
-
-		public WorkingHoursDTOBuilder withEmployeeId(UUID employeeId) {
-			this.employeeId = employeeId;
-			return this;
-		}
-
-		public WorkingHoursDTO build() {
-			WorkingHoursDTO workingHoursDTO = new WorkingHoursDTO();
-			workingHoursDTO.checkIn = this.checkIn;
-			workingHoursDTO.checkOut = this.checkOut;
-			workingHoursDTO.date = this.date;
-			workingHoursDTO.employeeId = this.employeeId;
-
-			return workingHoursDTO;
-		}
-	}
     
 
 }
