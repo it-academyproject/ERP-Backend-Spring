@@ -65,6 +65,17 @@ public class Offer implements Serializable {
 		this.paidQuantity = paidQuantity;
 		this.freeQuantity = freeQuantity;
 	}
+	
+	public Offer(String name, double discount, LocalDateTime startsOn,
+			LocalDateTime endsOn, int paidQuantity, int freeQuantity) {
+		
+		this.name = name;
+		this.discount = discount;
+		this.startsOn = startsOn;
+		this.endsOn = endsOn;
+		this.paidQuantity = paidQuantity;
+		this.freeQuantity = freeQuantity;
+	}
 
 
 
