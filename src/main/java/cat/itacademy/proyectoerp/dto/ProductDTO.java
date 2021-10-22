@@ -20,8 +20,6 @@ public class ProductDTO implements Serializable {
 	private double vat;
 	private double wholesalePrice;
 	private int wholesaleQuantity;
-	private long created;
-	private long modified;
 	private OfferDTO offerDto;
 	private CategoryDTO categoryDto;
 	private ShopDTO shopDto;
@@ -44,7 +42,7 @@ public class ProductDTO implements Serializable {
 	}
 	
 	public ProductDTO(int id, String name, int stock, String image, double price, double vat, double wholesalePrice, int wholesaleQuantity,
-			long created, long modified, OfferDTO offerDto, CategoryDTO categoryDto, ShopDTO shopDto) {
+		 OfferDTO offerDto, CategoryDTO categoryDto, ShopDTO shopDto) {
 		this.id = id;
 		this.name = name;
 		this.stock = stock;
@@ -53,8 +51,6 @@ public class ProductDTO implements Serializable {
 		this.vat = vat;
 		this.wholesalePrice = wholesalePrice;
 		this.wholesaleQuantity = wholesaleQuantity;
-		this.created = created;
-		this.modified = modified;
 		this.offerDto = offerDto;
 		this.categoryDto = categoryDto;
 		this.shopDto = shopDto;
@@ -92,13 +88,6 @@ public class ProductDTO implements Serializable {
 		this.wholesaleQuantity = wholesaleQuantity;
 	}
 	
-	public void setCreated(long created) {
-		this.created = created;
-	}
-	
-	public void setModified(long modified) {
-		this.modified = modified;
-	}
 	
 	public void setOfferDto(OfferDTO offerDto) {
 		this.offerDto = offerDto;
@@ -144,13 +133,6 @@ public class ProductDTO implements Serializable {
 		return wholesaleQuantity;
 	}
 	
-	public long getCreated() {
-		return created;
-	}
-	
-	public long getModified() {
-		return modified;
-	}
 	
 	public OfferDTO getOfferDto() {
 		return offerDto;

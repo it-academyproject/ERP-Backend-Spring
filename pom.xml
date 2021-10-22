@@ -129,6 +129,20 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- To generate modelmapper-->
+		<dependency>
+  			<groupId>org.modelmapper.extensions</groupId>
+ 			 <artifactId>modelmapper-spring</artifactId>
+ 			 <version>2.4.2</version>
+		</dependency>
+		
+		<!-- mapstruct dependencies-->
+		<dependency>
+       	 <groupId>org.mapstruct</groupId>
+       	 <artifactId>mapstruct</artifactId>
+        	<version>1.4.2.Final</version>
+    </dependency>
+		
 	</dependencies>
 
 	<build>
