@@ -230,8 +230,10 @@ public class OrderServiceImpl implements IOrderService{
 	}
 	
 	@Override
-	public List<TopEmployeeDTO> findAllTopTen(DatesTopEmployeePOJO datestopemployee) {
-		List<Object[]> repositoryQueryList = orderRepository.findEmployeesSalesBetweenDates(datestopemployee.getBegin_date(),datestopemployee.getEnd_date());  //Busqueda en BD
+	public List<TopEmployeeDTO> getTopTen(int year, int month) {
+		List<Object[]> repositoryQueryList = orderRepository.findEmployeesSalesBetweenDates(
+				LocalDateTime.of(year, month, 1, 0, 0),
+				LocalDateTime.of(year, month, 1, 23, 59,59,59).with(TemporalAdjusters.lastDayOfMonth()));
 		
 		List<TopEmployeeDTO> topEmployeeList = new ArrayList<>();
 		
@@ -408,5 +410,7 @@ public class OrderServiceImpl implements IOrderService{
 		
 		return orderRepository.save(order.get());
 	}
+
+
 	
 }
