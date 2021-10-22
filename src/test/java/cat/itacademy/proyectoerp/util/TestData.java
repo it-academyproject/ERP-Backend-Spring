@@ -41,6 +41,8 @@ public class TestData {
 	public static final int VALID_PRODUCT_WHOLESALE_QUANTITY = 50;
 	
 	//datos test Ofertas
+	
+	
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -64,7 +66,7 @@ public class TestData {
 		shopRepository.deleteAll();
 		productRepository.deleteAll();
 		categoryRepository.deleteAll();
-		offerRepository.deleteAll();
+		//offerRepository.deleteAll();
 	}
 	
 	public Category createCategory(String name, String description, Offer offer) {
@@ -89,7 +91,7 @@ public class TestData {
 	//Offer
 	public Offer createOffer(String name, double discount, LocalDateTime startsOn,
 			LocalDateTime endsOn, int paidQuantity, int freeQuantity) {
-		Offer offer = new Offer(name, discount, startsOn,endsOn,paidQuantity,freeQuantity);
+		Offer offer = new Offer(null, name, discount, startsOn,endsOn,paidQuantity,freeQuantity);
 		return offerRepository.save(offer);
 	
 	}
