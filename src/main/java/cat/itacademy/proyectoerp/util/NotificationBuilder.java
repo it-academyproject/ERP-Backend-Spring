@@ -1,5 +1,6 @@
 package cat.itacademy.proyectoerp.util;
 
+import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Notification;
 import cat.itacademy.proyectoerp.domain.NotificationType;
 import cat.itacademy.proyectoerp.domain.Order;
@@ -34,6 +35,14 @@ public class NotificationBuilder {
 				if (order.getId() != null) {
 					notification = new Notification(type,
 							"Order ID " + order.getId() + " has changed to status " + order.getStatus());
+				}
+				break;
+			}
+			case EMPLOYEE_ENTRY: {
+				Employee employee = (Employee) obj;
+				if(employee.getName() != null) {
+					notification = new Notification(type,
+							employee.getName() + " " + employee.getSurname() + " entered.");
 				}
 				break;
 			}
