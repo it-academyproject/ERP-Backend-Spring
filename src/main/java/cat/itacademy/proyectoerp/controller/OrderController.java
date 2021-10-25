@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.domain.OrderStatus;
 import cat.itacademy.proyectoerp.dto.CreateOrderDTO;
@@ -27,6 +28,9 @@ import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.dto.OrderDTO;
 import cat.itacademy.proyectoerp.dto.OrderStatusDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
+import cat.itacademy.proyectoerp.security.jwt.JwtUtil;
+import cat.itacademy.proyectoerp.service.IClientService;
+import cat.itacademy.proyectoerp.service.IUserService;
 import cat.itacademy.proyectoerp.service.OrderServiceImpl;
 
 @RestController
@@ -37,6 +41,15 @@ public class OrderController {
 
 	@Autowired
 	OrderServiceImpl orderService;
+	
+	@Autowired
+	private IClientService clientsService;
+	
+	@Autowired
+	private JwtUtil jwtUtil;
+	
+	@Autowired
+	private IUserService userService;
 
 	String success = "success";
 	String message = "message";
@@ -144,13 +157,31 @@ public class OrderController {
 	}
 	
 	//gets all the orders placed by a client
+	@PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
 	@GetMapping("/orders/client/{clientId}")
-	public ResponseEntity<MessageDTO> getOrdersByClientId(@PathVariable(name = "clientId") UUID id) {
+	public ResponseEntity<MessageDTO> getOrdersByClientId(@PathVariable(name = "clientId") UUID id, @RequestHeader("authorization") String token) {
 		MessageDTO output;
 		try {
-			List<Order> orders = orderService.findOrdersByClient(id);
-			output = new MessageDTO("true", "orders successfully retrieved.", orders);
-			return ResponseEntity.status(HttpStatus.OK).body(output);
+			String auxToken = token.substring(7);
+			
+			String userNameRequest= jwtUtil.getNameOfUser(auxToken);
+			String userNameRequested = clientsService.findClientById(id).getUser().getUsername();
+			
+			if (userNameRequested.equals(userNameRequest)) {
+				List<Order> orders = orderService.findOrdersByClient(id);
+				output = new MessageDTO("true", "orders successfully retrieved.", orders);
+				return ResponseEntity.status(HttpStatus.OK).body(output);
+			}
+			else if (userService.findByUsername(userNameRequest).getUserType().toString().equals("ADMIN")) {
+				List<Order> orders = orderService.findOrdersByClient(id);
+				output = new MessageDTO("true", "orders successfully retrieved.", orders);
+				return ResponseEntity.status(HttpStatus.OK).body(output);
+			}
+			else {
+				output = new MessageDTO("False", "Client can only acces to its own orders");
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(output);
+			}
+			
 		} catch (ArgumentNotFoundException argNotFoundEx) {
 			output = new MessageDTO("False", argNotFoundEx.getMessage());
 			return ResponseEntity.status(HttpStatus.OK).body(output);

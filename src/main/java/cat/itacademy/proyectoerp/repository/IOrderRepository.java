@@ -25,8 +25,8 @@ public interface IOrderRepository extends JpaRepository<Order, UUID>{
   
   List<Order> findAllByStatus(OrderStatus status);
     
-  @Query(value = "select orders.employee_id,sum(orders.total) as total, employee.dni from orders "
-		   	+"left join employee on orders.employee_id = employee.id "
+  @Query(value = "select orders.employee_id,sum(orders.total) as total, employees.dni from orders "
+		   	+"left join employees on orders.employee_id = employees.id "
                   +"where (orders.status like 'COMPLETED') "	
                   +" and (orders.date_created between :begin_date and :end_date) "
 		          +"group by orders.employee_id order by total desc limit 10", nativeQuery = true)

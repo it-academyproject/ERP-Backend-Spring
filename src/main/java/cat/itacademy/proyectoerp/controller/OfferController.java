@@ -92,7 +92,7 @@ public class OfferController {
 		return messageDto;
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')" + " || hasRole('EMPLOYEE')")
 	@PutMapping
 	public MessageDTO update(@Valid @RequestBody Offer offer) {
 		MessageDTO messageDto;
@@ -108,7 +108,7 @@ public class OfferController {
 		return messageDto;
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')" + " || hasRole('EMPLOYEE')")
 	@DeleteMapping
 	public MessageDTO delete(@Valid @RequestBody Offer offer) {
 		MessageDTO messageDto;

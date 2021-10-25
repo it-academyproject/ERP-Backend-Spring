@@ -78,6 +78,7 @@ public class UserController {
 	 * @param user JSON with User data
 	 * @return Welcome String.
 	 */
+	//@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/users", method = RequestMethod.POST)
 	public ResponseEntity<UserDTO> newUser(@Valid @RequestBody User user) {
 		user.setAccountLocked(false);
@@ -225,6 +226,7 @@ public class UserController {
 	 * 
 	 * @return all users
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/users")
 	public ResponseEntity<List<UserDTO>> listAllUsers() {
 		return new ResponseEntity<>(userService.listAllUsers(), HttpStatus.OK);
