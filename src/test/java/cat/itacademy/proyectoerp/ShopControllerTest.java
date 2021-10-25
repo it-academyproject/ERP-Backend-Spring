@@ -67,6 +67,42 @@ public class ShopControllerTest {
 		return new JacksonJsonParser().parseMap(response).get("token").toString();
 	}
 	
+	private String obtainEmployeeAccessToken() throws Exception {
+		String endpoint = "/api/login";
+		
+		String username = "employee@erp.com", password = "ReW9a0&+TP";
+		
+		String content = new ObjectMapper().writeValueAsString(new JwtLogin(username, password));
+		
+		String response = mvc
+				.perform(post(endpoint)
+					.accept(MediaType.APPLICATION_JSON)
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(content))
+				.andExpect(status().isOk())
+				.andReturn().getResponse().getContentAsString();
+			
+			return new JacksonJsonParser().parseMap(response).get("token").toString();
+	}
+	
+	private String obtainClientAccessToken() throws Exception {
+String endpoint = "/api/login";
+		
+		String username = "client@erp.com", password = "ReW9a0&+TP";
+		
+		String content = new ObjectMapper().writeValueAsString(new JwtLogin(username, password));
+		
+		String response = mvc
+				.perform(post(endpoint)
+					.accept(MediaType.APPLICATION_JSON)
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(content))
+				.andExpect(status().isOk())
+				.andReturn().getResponse().getContentAsString();
+			
+			return new JacksonJsonParser().parseMap(response).get("token").toString();
+	}
+	
 	private ResultActions performGetRequest(String endpoint) throws Exception {
 		return mvc
 			.perform(get(endpoint)
@@ -96,6 +132,78 @@ public class ShopControllerTest {
 		return mvc
 			.perform(delete(endpoint)
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainAdminAccessToken())
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(content));
+	}
+	
+	//EMPLOYEE REQUESTS
+	
+	private ResultActions performEmployeeGetRequest(String endpoint) throws Exception {
+		return mvc
+			.perform(get(endpoint)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainEmployeeAccessToken())
+				.accept(MediaType.APPLICATION_JSON));
+	}
+	
+	private ResultActions performEmployeePostRequest(String endpoint, String content) throws Exception {
+		return mvc
+			.perform(post(endpoint)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainEmployeeAccessToken())
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(content));
+	}
+	
+	private ResultActions performEmployeePutRequest(String endpoint, String content) throws Exception {
+		return mvc
+			.perform(put(endpoint)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainEmployeeAccessToken())
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(content));
+	}
+	
+	private ResultActions performEmployeeDeleteRequest(String endpoint, String content) throws Exception {
+		return mvc
+			.perform(delete(endpoint)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainEmployeeAccessToken())
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(content));
+	}
+	
+	//CLIENT REQUESTS
+	
+	private ResultActions performClientGetRequest(String endpoint) throws Exception {
+		return mvc
+			.perform(get(endpoint)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainClientAccessToken())
+				.accept(MediaType.APPLICATION_JSON));
+	}
+	
+	private ResultActions performClientPostRequest(String endpoint, String content) throws Exception {
+		return mvc
+			.perform(post(endpoint)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainClientAccessToken())
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(content));
+	}
+	
+	private ResultActions performClientPutRequest(String endpoint, String content) throws Exception {
+		return mvc
+			.perform(put(endpoint)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainClientAccessToken())
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(content));
+	}
+	
+	private ResultActions performClientDeleteRequest(String endpoint, String content) throws Exception {
+		return mvc
+			.perform(delete(endpoint)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + this.obtainClientAccessToken())
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(content));
@@ -249,6 +357,30 @@ public class ShopControllerTest {
 		
 		this.performDeleteRequest(endpoint, content)
 			.andExpect(status().isBadRequest());
+	}
+	
+	//EMPLOYEE AUTH
+	//GET /api/shops
+	
+	@Test
+	@DisplayName("200 Ok EMPLOYEE GET /api/shops")
+	public void givenEmployeeGetShops_thenStatus200() throws Exception {
+		String endpoint = "/api/shops";
+		
+		this.performEmployeeGetRequest(endpoint)
+			.andExpect(status().isOk());
+	}
+	
+	// GET /api/shops/{id}
+	
+	@Test
+	@DisplayName("200 Ok EMPLOYEE GET /api/shops/{id}")
+	public void givenEmployeeGetShopById_thenStatus200() throws Exception {
+		String id = "11110000-0000-0000-0000-000000000000";
+		String endpoint = "/api/shops/" + id;
+			
+		this.performEmployeeGetRequest(endpoint)
+			.andExpect(status().isOk());
 	}
 
 }
