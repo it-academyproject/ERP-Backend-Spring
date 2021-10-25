@@ -178,7 +178,7 @@ public class OrderController {
 				return ResponseEntity.status(HttpStatus.OK).body(output);
 			}
 			else {
-				output = new MessageDTO("False", "Client can only acces to its own orders");
+				output = new MessageDTO("False", "failed to retrieve the orders.");
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(output);
 			}
 			

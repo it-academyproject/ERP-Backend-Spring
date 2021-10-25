@@ -111,11 +111,12 @@ public class GetRequestTests {
 	
 	//TODO new
 	@Test
-	@DisplayName("get order by client - Succes when placed from the same client")
-	public void givenOrderBySameClient_thenStatus200() throws Exception { //TODO checkstatus
-		String accessToken = obtainClientAccessToken("client@erp.com");
-		UUID idClient = UUID.fromString("76a366c5-a80f-48a1-9135-9aad6a207701");
+	@DisplayName("get order by client - Success when placed from the same client")
+	void givenOrderByClient_whenGetFromSameClient_thenStatus200() throws Exception {
+		String accessToken = this.obtainClientAccessToken("client@erp.com");
+		UUID idClient = UUID.fromString("93aea915-323b-43a6-a652-a406ef5fabea");
 		String endPoint = "/api/orders/{idClient}";
+		
 		this.mockMvc.perform(get(endPoint, idClient)
 				.header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
@@ -123,30 +124,29 @@ public class GetRequestTests {
 	
 	
 	@Test
-	@DisplayName("get order by client - BadRequest when placed from another client")
-	public void givenOrderByOtherClient_thenStatus401() throws Exception { //TODO checkstatus
-		String accessToken = obtainClientAccessToken("client@erp.com");
+	@DisplayName("get order by client - Unauthorized when placed from another client")
+	void givenOrderByClient_whenGetFromOtherClient_thenStatus401() throws Exception {
+		String accessToken = this.obtainClientAccessToken("client@erp.com");
 		UUID idClient = UUID.fromString("0aa0ed3d-d69c-4955-a265-be813c8bf8f3");
 		String endPoint = "/api/orders/{idClient}";
+		
 		this.mockMvc.perform(get(endPoint, idClient)
 				.header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isBadRequest());
+				.andExpect(status().isUnauthorized());
 	}
 	
 	
 	@Test
 	@DisplayName("get order by client - Bad request when placed by an employee")
-	public void givenOrderByAdmin_thenStatus200() throws Exception { //TODO checkstatus
-		String accessToken = obtainAdminAccessToken();
+	void givenOrderByAdmin_whenGetFromAdmin_thenStatus200() throws Exception {
+		String accessToken = this.obtainAdminAccessToken();
 		UUID idClient = UUID.fromString("76a366c5-a80f-48a1-9135-9aad6a207701");
 		String endPoint = "/api/orders/{idClient}";
+		
 		this.mockMvc.perform(get(endPoint, idClient)
 				.header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 	}
-	
-	
-	
 	
 	
 	
