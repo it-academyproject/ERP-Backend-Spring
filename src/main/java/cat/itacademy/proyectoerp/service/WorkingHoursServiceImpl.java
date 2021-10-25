@@ -40,6 +40,9 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 	@Autowired
 	IWorkingHoursMapper iWorkingHoursMapper;
 	ModelMapper modelMapper = new ModelMapper();
+	
+	@Autowired
+	IEmailService emailService;
 
 	@Override
 	public WorkingHoursDTO createWorkingHours(WorkingHoursDTO workingHoursDTO) throws ArgumentNotValidException {
@@ -60,6 +63,8 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 			Optional<Employee> employee = employeeRepository.findById(workingHours.getEmployeeId());
 			Notification notification = NotificationBuilder.build(NotificationType.EMPLOYEE_ENTRY, employee.get());
 			notificationService.notifyAllAdmins(notification);
+			//Mailing notification to admins
+			emailService.sendEmployeeCheckin(notification);
 			
 		}
 

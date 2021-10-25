@@ -1,6 +1,7 @@
 package cat.itacademy.proyectoerp.service;
 
 import cat.itacademy.proyectoerp.domain.Client;
+import cat.itacademy.proyectoerp.domain.Notification;
 import cat.itacademy.proyectoerp.domain.User;
 
 public interface IEmailService {
@@ -23,4 +24,6 @@ public interface IEmailService {
 	// method to send an email to a client when its order changes to CANCELLED status
 	public void sendOrderCancelledEmail(Client client);
 	
+	// method to send an email to admins on an employee checkin
+	public void sendEmployeeCheckin(Notification notification);
 }
