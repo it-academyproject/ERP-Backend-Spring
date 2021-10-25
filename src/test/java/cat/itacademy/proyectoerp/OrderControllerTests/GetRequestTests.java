@@ -23,8 +23,11 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cat.itacademy.proyectoerp.ProyectoErpApplication;
+import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.Order;
+import cat.itacademy.proyectoerp.repository.IClientRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
+import cat.itacademy.proyectoerp.repository.IUserRepository;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = ProyectoErpApplication.class)
@@ -37,6 +40,12 @@ public class GetRequestTests {
 
 	@Autowired
 	IOrderRepository orderRepository;
+	
+	@Autowired
+	IUserRepository userRepository; //TODO check if necessary
+	
+	@Autowired
+	IClientRepository clientRepository; //TODO check if necessary
 
 	@Autowired
 	private WebApplicationContext webApplicationContext;
@@ -113,8 +122,11 @@ public class GetRequestTests {
 	@Test
 	@DisplayName("get order by client - Success when placed from the same client")
 	void givenOrderByClient_whenGetFromSameClient_thenStatus200() throws Exception {
-		String accessToken = this.obtainClientAccessToken("client@erp.com");
-		UUID idClient = UUID.fromString("93aea915-323b-43a6-a652-a406ef5fabea");
+		String clientUsername = "client@erp.com";
+		Client client = clientRepository.findByUserId(userRepository.findByUsername(clientUsername).getId());
+		UUID idClient = client.getId();
+
+		String accessToken = this.obtainClientAccessToken(clientUsername);
 		String endPoint = "/api/orders/{idClient}";
 		
 		this.mockMvc.perform(get(endPoint, idClient)
@@ -126,8 +138,11 @@ public class GetRequestTests {
 	@Test
 	@DisplayName("get order by client - Unauthorized when placed from another client")
 	void givenOrderByClient_whenGetFromOtherClient_thenStatus401() throws Exception {
+		String clientUsername = "testClient@erp.com";
+		Client client = clientRepository.findByUserId(userRepository.findByUsername(clientUsername).getId());
+		UUID idClient = client.getId();  //TODO s'ha de canviar el format de la base de dades
+		
 		String accessToken = this.obtainClientAccessToken("client@erp.com");
-		UUID idClient = UUID.fromString("0aa0ed3d-d69c-4955-a265-be813c8bf8f3");
 		String endPoint = "/api/orders/{idClient}";
 		
 		this.mockMvc.perform(get(endPoint, idClient)
@@ -139,8 +154,11 @@ public class GetRequestTests {
 	@Test
 	@DisplayName("get order by client - Bad request when placed by an employee")
 	void givenOrderByAdmin_whenGetFromAdmin_thenStatus200() throws Exception {
+		String clientUsername = "client@erp.com";
+		Client client = clientRepository.findByUserId(userRepository.findByUsername(clientUsername).getId());
+		UUID idClient = client.getId();
+		
 		String accessToken = this.obtainAdminAccessToken();
-		UUID idClient = UUID.fromString("76a366c5-a80f-48a1-9135-9aad6a207701");
 		String endPoint = "/api/orders/{idClient}";
 		
 		this.mockMvc.perform(get(endPoint, idClient)
