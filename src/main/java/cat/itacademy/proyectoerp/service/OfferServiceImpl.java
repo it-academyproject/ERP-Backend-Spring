@@ -11,7 +11,10 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.Offer;
+import cat.itacademy.proyectoerp.dto.ClientDTO;
 import cat.itacademy.proyectoerp.dto.OfferDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.repository.IOfferRepository;
@@ -72,6 +75,21 @@ public class OfferServiceImpl implements IOfferService {
 			throw new ArgumentNotFoundException("Offer not found. The id " + id + " doesn't exist");
 	
 		offerRepository.deleteById(id);
+	}
+	
+	@Override
+	public OfferDTO deleteOffer(UUID id) throws ArgumentNotFoundException {
+		
+		Offer offer = offerRepository.findById(id).orElseThrow( () -> new ArgumentNotFoundException("Offer not found. The id " + id + " doesn't exist"));
+		OfferDTO clientDTO = modelMapper.map(offer, OfferDTO.class);
+		offerRepository.deleteById(id);
+		return clientDTO;
+		/*UUID id = offer.getId();
+		
+		if (!offerRepository.existsById(id))
+			throw new ArgumentNotFoundException("Offer not found. The id " + id + " doesn't exist");
+	
+		offerRepository.deleteById(id);*/
 	}
 
 	@Override
