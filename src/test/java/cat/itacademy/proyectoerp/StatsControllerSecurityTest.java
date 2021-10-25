@@ -98,47 +98,47 @@ public class StatsControllerSecurityTest {
 	
 	// Test /api/stats/employees/toptensales EndPoint	
 	@Test
-	@DisplayName("Security Admin [GET] /api/stats/employees/toptensales")
+	@DisplayName("Security Admin [GET] /api/stats/employees/toptensales/{year}")
 	public void RequestTop10EmployeesBySales() throws Exception {
 		String accessToken = obtainAdminAccessToken();
-		String uri = "/api/stats/employees/toptensales";
-		String json = "{\"begin_date\":\"2021-01-01T00:00:00\","
-				+ "\"end_date\":\"2021-12-29T23:59:59\"}";	
+		String uri = "/api/stats/employees/toptensales/{year}";
+		/*String json = "{\"begin_date\":\"2021-01-01T00:00:00\","
+				+ "\"end_date\":\"2021-12-29T23:59:59\"}";	*/
 		
-		assertThat(isAuthorized(uri,accessToken,json)).isTrue();
+		assertThat(isAuthorized(uri,accessToken/*,json*/)).isTrue();
 	}
 
 	@Test
-	@DisplayName("Security Employee Auth [GET] /api/stats/employees/toptensales")
+	@DisplayName("Security Employee Auth [GET] /api/stats/employees/toptensales/{year}")
 	public void SecurityEmployeeTop10EmployeesBySales() throws Exception {
 		String accessToken = obtainEmployeeAccessToken();
-		String uri = "/api/stats/employees/toptensales";
-		String json = "{\"begin_date\":\"2021-01-01T00:00:00\","
-				+ "\"end_date\":\"2021-12-29T23:59:59\"}";
+		String uri = "/api/stats/employees/toptensales/{year}";
+		/*String json = "{\"begin_date\":\"2021-01-01T00:00:00\","
+				+ "\"end_date\":\"2021-12-29T23:59:59\"}";	*/
 		
-		assertThat(isAuthorized(uri,accessToken,json)).isFalse();
+		assertThat(isAuthorized(uri,accessToken/*,json*/)).isFalse();
 	}
 	
 	@Test
-	@DisplayName("Security Client [GET] /api/stats/employees/toptensales")
+	@DisplayName("Security Client [GET] /api/stats/employees/toptensales/{year}")
 	public void SecurityClientTop10EmployeesBySales() throws Exception {
 		String accessToken = obtainClientAccessToken();
-		String uri = "/api/stats/employees/toptensales";
-		String json = "{\"begin_date\":\"2021-01-01T00:00:00\","
-				+ "\"end_date\":\"2021-12-29T23:59:59\"}";	
-
-		assertThat(isAuthorized(uri,accessToken,json)).isFalse();
+		String uri = "/api/stats/employees/toptensales/{year}";
+		/*String json = "{\"begin_date\":\"2021-01-01T00:00:00\","
+				+ "\"end_date\":\"2021-12-29T23:59:59\"}";	*/
+		
+		assertThat(isAuthorized(uri,accessToken/*,json*/)).isFalse();
 	}
 	
 	@Test
-	@DisplayName("Security NoAuth [GET] /api/stats/employees/toptensales")
+	@DisplayName("Security NoAuth [GET] /api/stats/employees/toptensales/{year}")
 	public void SecurityNoAuthTop10EmployeesBySales() throws Exception {
 		String accessToken = "";
-		String uri = "/api/stats/employees/toptensales";
-		String json = "{\"begin_date\":\"2021-01-01T00:00:00\","
-				+ "\"end_date\":\"2021-12-29T23:59:59\"}";
+		String uri = "/api/stats/employees/toptensales/{year}";
+		/*String json = "{\"begin_date\":\"2021-01-01T00:00:00\","
+				+ "\"end_date\":\"2021-12-29T23:59:59\"}";	*/
 		
-		assertThat(isAuthorized(uri,accessToken,json)).isFalse();
+		assertThat(isAuthorized(uri,accessToken/*,json*/)).isFalse();
 	}
 		
 	//GET: /api/stats/employees/bestsales

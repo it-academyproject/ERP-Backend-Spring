@@ -125,11 +125,11 @@ public class StatsController {
   }
   
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/employeestop/{year}/{month}")
+	@GetMapping("/employees/toptensales/{year}/{month}")
 	public Map<String, Object> getEmployeesTop(@PathVariable("year") int year, @PathVariable("month") int month) {
 		HashMap<String, Object> map = new LinkedHashMap<>();
 		try {
-			List<TopEmployeeDTO> employeeList = orderService.getTopTen(year,month);
+			List<TopEmployeeDTO> employeeList = orderService.getTopTenMonth(year,month);
 			String monthName = new DateFormatSymbols().getMonths()[month-1];
 			if (employeeList.isEmpty()) {
 				map.put("success", "false");
@@ -138,6 +138,28 @@ public class StatsController {
 				map.put("success", "true");
 				map.put("message", "topten for " + monthName + " " + year + " found");
 				map.put("month", month);
+				map.put("year", year);
+				map.put("top ten employees", employeeList);
+			}
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "error: " + e.getMessage());
+		}
+		return map;
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/employees/toptensales/{year}")
+	public Map<String, Object> getEmployeesTop(@PathVariable("year") int year) {
+		HashMap<String, Object> map = new LinkedHashMap<>();
+		try {
+			List<TopEmployeeDTO> employeeList = orderService.getTopTenYear(year);
+			if (employeeList.isEmpty()) {
+				map.put("success", "false");
+				map.put("message", "orders for " + year + " not found");
+			} else {
+				map.put("success", "true");
+				map.put("message", "topten for " + year + " found");
 				map.put("year", year);
 				map.put("top ten employees", employeeList);
 			}

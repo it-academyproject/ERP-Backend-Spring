@@ -230,10 +230,30 @@ public class OrderServiceImpl implements IOrderService{
 	}
 	
 	@Override
-	public List<TopEmployeeDTO> getTopTen(int year, int month) {
+	public List<TopEmployeeDTO> getTopTenMonth(int year, int month) {
 		List<Object[]> repositoryQueryList = orderRepository.findEmployeesSalesBetweenDates(
 				LocalDateTime.of(year, month, 1, 0, 0),
 				LocalDateTime.of(year, month, 1, 23, 59,59,59).with(TemporalAdjusters.lastDayOfMonth()));
+		
+		List<TopEmployeeDTO> topEmployeeList = new ArrayList<>();
+		
+		for (Object[] object : repositoryQueryList) {
+			TopEmployeeDTO topEmployeeDTO = new TopEmployeeDTO();
+			
+			topEmployeeDTO.setId(UUID.fromString(object[0].toString()));
+			topEmployeeDTO.setTotal(Double.parseDouble(object[1].toString()));
+			topEmployeeDTO.setDni((object[2].toString()));
+			topEmployeeList.add(topEmployeeDTO);
+		}
+		
+		return topEmployeeList;
+	}
+	
+	@Override
+	public List<TopEmployeeDTO> getTopTenYear(int year) {
+		List<Object[]> repositoryQueryList = orderRepository.findEmployeesSalesBetweenDates(
+				LocalDateTime.of(year, 1, 1, 0, 0),
+				LocalDateTime.of(year, 1, 1, 23, 59, 59, 59).with(TemporalAdjusters.lastDayOfYear()));
 		
 		List<TopEmployeeDTO> topEmployeeList = new ArrayList<>();
 		

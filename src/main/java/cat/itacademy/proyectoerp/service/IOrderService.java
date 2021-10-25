@@ -27,7 +27,7 @@ public interface IOrderService {
 
 	public void deleteOrder(UUID id);
 
-	public List<Order> findOrdersByStatus(OrderStatus status);			
+	public List<Order> findOrdersByStatus(OrderStatus status);		
 
 	public List<Order> findOrdersByClient(UUID id);
 	
@@ -45,6 +45,8 @@ public interface IOrderService {
 	
 	public Order updateOrderStatus(UUID orderId, OrderStatus orderStatus);
 
-	public List<TopEmployeeDTO> getTopTen(int year, int month);
+	public List<TopEmployeeDTO> getTopTenMonth(int year, int month);
+	
+	public List<TopEmployeeDTO> getTopTenYear(int year);
 	
 }

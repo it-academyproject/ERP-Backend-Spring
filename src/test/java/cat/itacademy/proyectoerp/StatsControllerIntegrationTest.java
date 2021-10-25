@@ -85,17 +85,17 @@ public class StatsControllerIntegrationTest {
 
 	// Test /api/stats/employees/toptensales EndPoint	
 	@Test
-	@DisplayName("Correct [GET] /api/stats/employees/toptensales")
+	@DisplayName("Correct [GET] /api/stats/employees/toptensales/{year}")
 	public void RequestTop10EmployeesBySales() throws Exception {
 
 		String accessToken = obtainAdminAccessToken();
-		String json = "{\"begin_date\":\"2021-01-01T00:00:00\","
-				+ "\"end_date\":\"2021-12-29T23:59:59\"}";		
+		/*String json = "{\"begin_date\":\"2021-01-01T00:00:00\","
+		+ "\"end_date\":\"2021-12-29T23:59:59\"}";	*/
 			
 		// request
 		mockMvc.perform(get("/api/stats/employees/toptensales")
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-				.contentType(MediaType.APPLICATION_JSON).content(json)
+				.contentType(MediaType.APPLICATION_JSON)/*.content(json)*/
 				.accept(MediaType.APPLICATION_JSON_VALUE))
 		
 		// results
@@ -105,17 +105,17 @@ public class StatsControllerIntegrationTest {
 	}
 	
 	@Test
-	@DisplayName("Empty Order Period [GET] /api/stats/employees/toptensales")
+	@DisplayName("Empty Order Period [GET] /api/stats/employees/toptensales/{year}")
 	public void EmptyPeriodTop10EmployeesBySales() throws Exception {
 
 		String accessToken = obtainAdminAccessToken();
-		String json = "{\"begin_date\":\"2001-01-01T00:00:00\","
-				+ "\"end_date\":\"2001-12-29T23:59:59\"}";		
+		/*String json = "{\"begin_date\":\"2021-01-01T00:00:00\","
+		+ "\"end_date\":\"2021-12-29T23:59:59\"}";	*/
 			
 		// request
-		mockMvc.perform(get("/api/stats/employees/toptensales")
+		mockMvc.perform(get("/api/stats/employees/toptensales/{year}")
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-				.contentType(MediaType.APPLICATION_JSON).content(json)
+				.contentType(MediaType.APPLICATION_JSON)/*.content(json)*/
 				.accept(MediaType.APPLICATION_JSON_VALUE))
 		
 		// results
@@ -124,13 +124,13 @@ public class StatsControllerIntegrationTest {
 	}
 	
 	@Test
-	@DisplayName("BadRequest [GET] /api/stats/employees/toptensales")
+	@DisplayName("BadRequest [GET] /api/stats/employees/toptensales/{year}")
 	public void BadRequestTop10EmployeesBySales() throws Exception {
 
 		String accessToken = obtainAdminAccessToken();	
 			
 		// request
-		mockMvc.perform(get("/api/stats/employees/toptensales")
+		mockMvc.perform(get("/api/stats/employees/toptensales/{year}")
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON_VALUE))
 		
