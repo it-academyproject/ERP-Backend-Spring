@@ -265,9 +265,9 @@ String endpoint = "/api/login";
 	// POST /api/shop
 	
 	@Test
-	@DisplayName("200 Ok POST /api/shop")
+	@DisplayName("200 Ok POST /api/shops")
 	public void givenPostShop_thenStatus200() throws Exception {
-		String endpoint = "/api/shop";
+		String endpoint = "/api/shops";
 		
 		Address address = new Address("City3", "Country3", "3 C", "C/ Ccc", "33333");
 		Shop shop = new Shop("Brand3", "Company3", "33333333C", 888888888, address, "www.shop3.com");
@@ -279,9 +279,9 @@ String endpoint = "/api/login";
 	}
 	
 	@Test
-	@DisplayName("400 Bad Request POST /api/shop HttpMessageNotReadableException")
+	@DisplayName("400 Bad Request POST /api/shops HttpMessageNotReadableException")
 	public void givenPostShop_whenHttpMessageNotReadableException_thenStatus400() throws Exception {
-		String endpoint = "/api/shop";
+		String endpoint = "/api/shops";
 		
 		String content = new ObjectMapper().writeValueAsString(null);
 		
@@ -290,9 +290,9 @@ String endpoint = "/api/login";
 	}
 	
 	@Test
-	@DisplayName("400 Bad Request POST /api/shop MethodArgumentNotValidException")
+	@DisplayName("400 Bad Request POST /api/shops MethodArgumentNotValidException")
 	public void givenPostShop_whenMethodArgumentNotValidException_thenStatus400() throws Exception {
-		String endpoint = "/api/shop";
+		String endpoint = "/api/shops";
 		
 		Address address = new Address("City3", "Country3", "3 C", "C/ Ccc", "33333");
 		Shop shop = new Shop(" ", "Company3", "33333333C", 888888888, address, "www.shop3.com");
@@ -416,9 +416,9 @@ String endpoint = "/api/login";
 	// POST /api/shop
 	
 	@Test
-	@DisplayName("403 Forbidden EMPLOYEE POST /api/shop")
+	@DisplayName("401 Unauthorized EMPLOYEE POST /api/shops")
 	public void givenEmployeePostShop_thenStatus403() throws Exception {
-		String endpoint = "/api/shop";
+		String endpoint = "/api/shops";
 			
 		Address address = new Address("City3", "Country3", "3 C", "C/ Ccc", "33333");
 		Shop shop = new Shop("Brand3", "Company3", "33333333C", 888888888, address, "www.shop3.com");
@@ -426,13 +426,13 @@ String endpoint = "/api/login";
 		String content = new ObjectMapper().writeValueAsString(shop);
 			
 		this.performEmployeePostRequest(endpoint, content)
-			.andExpect(status().isForbidden());
+			.andExpect(status().isUnauthorized());
 	}
 	
 	// PUT /api/shop
 	
 	@Test
-	@DisplayName("403 Forbidden EMPLOYEE PUT /api/shop")
+	@DisplayName("401 Unauthorized EMPLOYEE PUT /api/shop")
 	public void givenEmployeePutShop_thenStatus403() throws Exception {
 		String endpoint = "/api/shop";
 			
@@ -443,13 +443,13 @@ String endpoint = "/api/login";
 		String content = new ObjectMapper().writeValueAsString(shop);
 			
 		this.performEmployeePutRequest(endpoint, content)
-			.andExpect(status().isForbidden());
+			.andExpect(status().isUnauthorized());
 		}
 	
 	// DELETE /api/shop
 	
 	@Test
-	@DisplayName("403 Forbidden EMPLOYEE DELETE /api/shop")
+	@DisplayName("401 Unauthorized EMPLOYEE DELETE /api/shop")
 	public void givenEmployeeDeleteShop_thenStatus403() throws Exception {
 		String endpoint = "/api/shop";
 		
@@ -460,7 +460,7 @@ String endpoint = "/api/login";
 		String content = new ObjectMapper().writeValueAsString(shop);
 		
 		this.performEmployeeDeleteRequest(endpoint, content)
-			.andExpect(status().isForbidden());
+			.andExpect(status().isUnauthorized());
 	}
 	
 	//CLIENT AUTH
@@ -520,9 +520,9 @@ String endpoint = "/api/login";
 	// POST /api/shop
 	
 	@Test
-	@DisplayName("403 Forbidden CLIENT POST /api/shop")
+	@DisplayName("401 Unauthorized CLIENT POST /api/shops")
 	public void givenClientPostShop_thenStatus403() throws Exception {
-		String endpoint = "/api/shop";
+		String endpoint = "/api/shops";
 			
 		Address address = new Address("City3", "Country3", "3 C", "C/ Ccc", "33333");
 		Shop shop = new Shop("Brand3", "Company3", "33333333C", 888888888, address, "www.shop3.com");
@@ -530,13 +530,13 @@ String endpoint = "/api/login";
 		String content = new ObjectMapper().writeValueAsString(shop);
 			
 		this.performClientPostRequest(endpoint, content)
-			.andExpect(status().isForbidden());
+			.andExpect(status().isUnauthorized());
 	}
 	
 	// PUT /api/shop
 	
 	@Test
-	@DisplayName("403 Forbidden CLIENT PUT /api/shop")
+	@DisplayName("401 Unauthorized CLIENT PUT /api/shop")
 	public void givenClientPutShop_thenStatus403() throws Exception {
 		String endpoint = "/api/shop";
 			
@@ -547,13 +547,13 @@ String endpoint = "/api/login";
 		String content = new ObjectMapper().writeValueAsString(shop);
 			
 		this.performClientPutRequest(endpoint, content)
-			.andExpect(status().isForbidden());
+			.andExpect(status().isUnauthorized());
 		}
 	
 	// DELETE /api/shop
 	
 	@Test
-	@DisplayName("403 Forbidden CLIENT DELETE /api/shop")
+	@DisplayName("401 Unauthorized CLIENT DELETE /api/shop")
 	public void givenClientDeleteShop_thenStatus403() throws Exception {
 		String endpoint = "/api/shop";
 		
@@ -564,6 +564,6 @@ String endpoint = "/api/login";
 		String content = new ObjectMapper().writeValueAsString(shop);
 		
 		this.performClientDeleteRequest(endpoint, content)
-			.andExpect(status().isForbidden());
+			.andExpect(status().isUnauthorized());
 	}
 }
