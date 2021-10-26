@@ -383,4 +383,187 @@ String endpoint = "/api/login";
 			.andExpect(status().isOk());
 	}
 
+	@Test
+	@DisplayName("200 Ok EMPLOYEE GET /api/shops/{id} ArgumentNotFoundException")
+	public void givenEmployeeGetShopById_whenArgumentNotFoundException_thenStatus200() throws Exception {
+		String id = "33330000-0000-0000-0000-000000000000";
+		String endpoint = "/api/shops/" + id;
+		
+		this.performEmployeeGetRequest(endpoint)
+			.andExpect(status().isOk());
+	}
+	
+	@Test
+	@DisplayName("400 Bad Request EMPLOYEE GET /api/shops/{id} MethodArgumentTypeMismatchException")
+	public void givenEmployeeGetShopById_whenMethodArgumentTypeMismatchException_thenStatus400() throws Exception {
+		String id = "1";
+		String endpoint = "/api/shops/" + id;
+		
+		this.performEmployeeGetRequest(endpoint)
+			.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	@DisplayName("500 Internal Server Error EMPLOYEE GET /api/shops/{id} MissingPathVariableException")
+	public void givenEmployeeGetShopById_whenMissingPathVariableException_thenStatus500() throws Exception {
+		String id = " ";
+		String endpoint = "/api/shops/" + id;
+		
+		this.performEmployeeGetRequest(endpoint)
+			.andExpect(status().isInternalServerError());
+	}
+	
+	// POST /api/shop
+	
+	@Test
+	@DisplayName("403 Forbidden EMPLOYEE POST /api/shop")
+	public void givenEmployeePostShop_thenStatus403() throws Exception {
+		String endpoint = "/api/shop";
+			
+		Address address = new Address("City3", "Country3", "3 C", "C/ Ccc", "33333");
+		Shop shop = new Shop("Brand3", "Company3", "33333333C", 888888888, address, "www.shop3.com");
+			
+		String content = new ObjectMapper().writeValueAsString(shop);
+			
+		this.performEmployeePostRequest(endpoint, content)
+			.andExpect(status().isForbidden());
+	}
+	
+	// PUT /api/shop
+	
+	@Test
+	@DisplayName("403 Forbidden EMPLOYEE PUT /api/shop")
+	public void givenEmployeePutShop_thenStatus403() throws Exception {
+		String endpoint = "/api/shop";
+			
+		UUID id = UUID.fromString("22220000-0000-0000-0000-000000000000");
+		Address address = new Address(id, "Actualización", "Actualización", "2 B", "C/ Actualización", "22222");
+		Shop shop = new Shop(id, "Actualización", "Actualización", "22222222B", 777777777, address, "www.shop2.com");
+			
+		String content = new ObjectMapper().writeValueAsString(shop);
+			
+		this.performEmployeePutRequest(endpoint, content)
+			.andExpect(status().isForbidden());
+		}
+	
+	// DELETE /api/shop
+	
+	@Test
+	@DisplayName("403 Forbidden EMPLOYEE DELETE /api/shop")
+	public void givenEmployeeDeleteShop_thenStatus403() throws Exception {
+		String endpoint = "/api/shop";
+		
+		UUID id = UUID.fromString("22220000-0000-0000-0000-000000000000");
+		Address address = new Address(id, "City2", "Country2", "2 B", "C/ Bbb", "22222");
+		Shop shop = new Shop(id, "Brand2", "Company2", "22222222B", 777777777, address, "www.shop2.com");
+		
+		String content = new ObjectMapper().writeValueAsString(shop);
+		
+		this.performEmployeeDeleteRequest(endpoint, content)
+			.andExpect(status().isForbidden());
+	}
+	
+	//CLIENT AUTH
+	//GET /api/shops
+	
+	@Test
+	@DisplayName("200 Ok CLIENT GET /api/shops")
+	public void givenClientGetShops_thenStatus200() throws Exception {
+		String endpoint = "/api/shops";
+		
+		this.performClientGetRequest(endpoint)
+			.andExpect(status().isOk());
+	}
+	
+	// GET /api/shops/{id}
+	
+	@Test
+	@DisplayName("200 Ok CLIENT GET /api/shops/{id}")
+	public void givenClientGetShopById_thenStatus200() throws Exception {
+		String id = "11110000-0000-0000-0000-000000000000";
+		String endpoint = "/api/shops/" + id;
+			
+		this.performClientGetRequest(endpoint)
+			.andExpect(status().isOk());
+	}
+
+	@Test
+	@DisplayName("200 Ok CLIENT GET /api/shops/{id} ArgumentNotFoundException")
+	public void givenClientGetShopById_whenArgumentNotFoundException_thenStatus200() throws Exception {
+		String id = "33330000-0000-0000-0000-000000000000";
+		String endpoint = "/api/shops/" + id;
+		
+		this.performClientGetRequest(endpoint)
+			.andExpect(status().isOk());
+	}
+	
+	@Test
+	@DisplayName("400 Bad Request CLIENT GET /api/shops/{id} MethodArgumentTypeMismatchException")
+	public void givenClientGetShopById_whenMethodArgumentTypeMismatchException_thenStatus400() throws Exception {
+		String id = "1";
+		String endpoint = "/api/shops/" + id;
+		
+		this.performClientGetRequest(endpoint)
+			.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	@DisplayName("500 Internal Server Error CLIENT GET /api/shops/{id} MissingPathVariableException")
+	public void givenClientGetShopById_whenMissingPathVariableException_thenStatus500() throws Exception {
+		String id = " ";
+		String endpoint = "/api/shops/" + id;
+		
+		this.performClientGetRequest(endpoint)
+			.andExpect(status().isInternalServerError());
+	}
+	
+	// POST /api/shop
+	
+	@Test
+	@DisplayName("403 Forbidden CLIENT POST /api/shop")
+	public void givenClientPostShop_thenStatus403() throws Exception {
+		String endpoint = "/api/shop";
+			
+		Address address = new Address("City3", "Country3", "3 C", "C/ Ccc", "33333");
+		Shop shop = new Shop("Brand3", "Company3", "33333333C", 888888888, address, "www.shop3.com");
+			
+		String content = new ObjectMapper().writeValueAsString(shop);
+			
+		this.performClientPostRequest(endpoint, content)
+			.andExpect(status().isForbidden());
+	}
+	
+	// PUT /api/shop
+	
+	@Test
+	@DisplayName("403 Forbidden CLIENT PUT /api/shop")
+	public void givenClientPutShop_thenStatus403() throws Exception {
+		String endpoint = "/api/shop";
+			
+		UUID id = UUID.fromString("22220000-0000-0000-0000-000000000000");
+		Address address = new Address(id, "Actualización", "Actualización", "2 B", "C/ Actualización", "22222");
+		Shop shop = new Shop(id, "Actualización", "Actualización", "22222222B", 777777777, address, "www.shop2.com");
+			
+		String content = new ObjectMapper().writeValueAsString(shop);
+			
+		this.performClientPutRequest(endpoint, content)
+			.andExpect(status().isForbidden());
+		}
+	
+	// DELETE /api/shop
+	
+	@Test
+	@DisplayName("403 Forbidden CLIENT DELETE /api/shop")
+	public void givenClientDeleteShop_thenStatus403() throws Exception {
+		String endpoint = "/api/shop";
+		
+		UUID id = UUID.fromString("22220000-0000-0000-0000-000000000000");
+		Address address = new Address(id, "City2", "Country2", "2 B", "C/ Bbb", "22222");
+		Shop shop = new Shop(id, "Brand2", "Company2", "22222222B", 777777777, address, "www.shop2.com");
+		
+		String content = new ObjectMapper().writeValueAsString(shop);
+		
+		this.performClientDeleteRequest(endpoint, content)
+			.andExpect(status().isForbidden());
+	}
 }
