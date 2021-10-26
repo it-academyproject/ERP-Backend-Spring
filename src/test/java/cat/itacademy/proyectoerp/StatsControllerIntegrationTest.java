@@ -85,7 +85,7 @@ public class StatsControllerIntegrationTest {
 
 	// Test /api/stats/employees/toptensales EndPoint	
 	@Test
-	@DisplayName("Correct [GET] /api/stats/employees/toptensales/{year}")
+	@DisplayName("Correct [GET] /api/stats/employees/toptensales/{year}") 
 	public void RequestTop10EmployeesBySales() throws Exception {
 
 		String accessToken = obtainAdminAccessToken();

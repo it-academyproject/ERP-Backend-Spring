@@ -109,7 +109,7 @@ public class StatsControllerSecurityTest {
 	}
 
 	@Test
-	@DisplayName("Security Employee Auth [GET] /api/stats/employees/toptensales/{year}")
+	@DisplayName("Security Employee Auth [GET] /api/stats/employees/toptensales/{year}") 
 	public void SecurityEmployeeTop10EmployeesBySales() throws Exception {
 		String accessToken = obtainEmployeeAccessToken();
 		String uri = "/api/stats/employees/toptensales/{year}";
