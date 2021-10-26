@@ -89,19 +89,17 @@ public class StatsControllerIntegrationTest {
 	public void RequestTop10EmployeesBySales() throws Exception {
 
 		String accessToken = obtainAdminAccessToken();
-		/*String json = "{\"begin_date\":\"2021-01-01T00:00:00\","
-		+ "\"end_date\":\"2021-12-29T23:59:59\"}";	*/
 			
 		// request
-		mockMvc.perform(get("/api/stats/employees/toptensales")
+		mockMvc.perform(get("/api/stats/employees/toptensales/2021")
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-				.contentType(MediaType.APPLICATION_JSON)/*.content(json)*/
 				.accept(MediaType.APPLICATION_JSON_VALUE))
 		
 		// results
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.employees[0].id", is("11110000-0000-0000-0000-000000000000")))
-				.andExpect(jsonPath("$.employees[0].total", is(5000.0)));
+				.andExpect(jsonPath("$.employees[0].dni", is("C3333333C")))
+				.andExpect(jsonPath("$.employees[0].total", is(3000.0)));
 	}
 	
 	@Test
@@ -109,18 +107,15 @@ public class StatsControllerIntegrationTest {
 	public void EmptyPeriodTop10EmployeesBySales() throws Exception {
 
 		String accessToken = obtainAdminAccessToken();
-		/*String json = "{\"begin_date\":\"2021-01-01T00:00:00\","
-		+ "\"end_date\":\"2021-12-29T23:59:59\"}";	*/
 			
 		// request
-		mockMvc.perform(get("/api/stats/employees/toptensales/{year}")
+		mockMvc.perform(get("/api/stats/employees/toptensales/2020/")
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-				.contentType(MediaType.APPLICATION_JSON)/*.content(json)*/
 				.accept(MediaType.APPLICATION_JSON_VALUE))
 		
 		// results
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.message", is("no employees or orders found between the dates")));
+				.andExpect(jsonPath("$.message", is("orders for 2020 not found")));
 	}
 	
 	@Test
@@ -130,7 +125,7 @@ public class StatsControllerIntegrationTest {
 		String accessToken = obtainAdminAccessToken();	
 			
 		// request
-		mockMvc.perform(get("/api/stats/employees/toptensales/{year}")
+		mockMvc.perform(get("/api/stats/employees/toptensales/XXXX")
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON_VALUE))
 		
