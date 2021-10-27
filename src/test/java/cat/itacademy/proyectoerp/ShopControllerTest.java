@@ -1,6 +1,8 @@
 package cat.itacademy.proyectoerp;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -17,15 +19,20 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cat.itacademy.proyectoerp.domain.Address;
 import cat.itacademy.proyectoerp.domain.Shop;
+import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.repository.IShopRepository;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 
@@ -239,7 +246,9 @@ String endpoint = "/api/login";
 		String endpoint = "/api/shops/" + id;
 		
 		this.performGetRequest(endpoint)
-			.andExpect(status().isOk());
+			.andExpect(status().isOk())
+			.andExpect(result -> assertTrue(result.getResolvedException() instanceof ArgumentNotFoundException))
+			.andExpect(result -> assertEquals("Shop not found. The id: " + id + " doesn't exist", result.getResolvedException().getMessage()));
 	}
 	
 	@Test
@@ -249,7 +258,8 @@ String endpoint = "/api/login";
 		String endpoint = "/api/shops/" + id;
 		
 		this.performGetRequest(endpoint)
-			.andExpect(status().isBadRequest());
+			.andExpect(status().isBadRequest())
+			.andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentTypeMismatchException));
 	}
 	
 	@Test
@@ -259,7 +269,8 @@ String endpoint = "/api/login";
 		String endpoint = "/api/shops/" + id;
 		
 		this.performGetRequest(endpoint)
-			.andExpect(status().isInternalServerError());
+			.andExpect(status().isInternalServerError())
+			.andExpect(result -> assertTrue(result.getResolvedException() instanceof MissingPathVariableException));
 	}
 	
 	// POST /api/shop
@@ -286,7 +297,8 @@ String endpoint = "/api/login";
 		String content = new ObjectMapper().writeValueAsString(null);
 		
 		this.performPostRequest(endpoint, content)
-			.andExpect(status().isBadRequest());
+			.andExpect(status().isBadRequest())
+			.andExpect(result -> assertTrue(result.getResolvedException() instanceof HttpMessageNotReadableException));
 	}
 	
 	@Test
@@ -300,7 +312,8 @@ String endpoint = "/api/login";
 		String content = new ObjectMapper().writeValueAsString(shop);
 		
 		this.performPostRequest(endpoint, content)
-			.andExpect(status().isBadRequest()); // Brand name is mandatory
+			.andExpect(status().isBadRequest())
+			.andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException)); // Brand name is mandatory
 	}
 	
 	// PUT /api/shop
@@ -328,7 +341,8 @@ String endpoint = "/api/login";
 		String content = new ObjectMapper().writeValueAsString(null);
 		
 		this.performPutRequest(endpoint, content)
-			.andExpect(status().isBadRequest());
+			.andExpect(status().isBadRequest())
+			.andExpect(result -> assertTrue(result.getResolvedException() instanceof HttpMessageNotReadableException));
 	}
 	
 	// DELETE /api/shop
@@ -356,7 +370,8 @@ String endpoint = "/api/login";
 		String content = new ObjectMapper().writeValueAsString(null);
 		
 		this.performDeleteRequest(endpoint, content)
-			.andExpect(status().isBadRequest());
+			.andExpect(status().isBadRequest())
+			.andExpect(result -> assertTrue(result.getResolvedException() instanceof HttpMessageNotReadableException));
 	}
 	
 	//EMPLOYEE AUTH
@@ -390,7 +405,9 @@ String endpoint = "/api/login";
 		String endpoint = "/api/shops/" + id;
 		
 		this.performEmployeeGetRequest(endpoint)
-			.andExpect(status().isOk());
+			.andExpect(status().isOk())
+			.andExpect(result -> assertTrue(result.getResolvedException() instanceof ArgumentNotFoundException))
+			.andExpect(result -> assertEquals("Shop not found. The id: " + id + " doesn't exist", result.getResolvedException().getMessage()));;
 	}
 	
 	@Test
@@ -400,7 +417,8 @@ String endpoint = "/api/login";
 		String endpoint = "/api/shops/" + id;
 		
 		this.performEmployeeGetRequest(endpoint)
-			.andExpect(status().isBadRequest());
+			.andExpect(status().isBadRequest())
+			.andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentTypeMismatchException));
 	}
 	
 	@Test
@@ -410,7 +428,8 @@ String endpoint = "/api/login";
 		String endpoint = "/api/shops/" + id;
 		
 		this.performEmployeeGetRequest(endpoint)
-			.andExpect(status().isInternalServerError());
+			.andExpect(status().isInternalServerError())
+			.andExpect(result -> assertTrue(result.getResolvedException() instanceof MissingPathVariableException));
 	}
 	
 	// POST /api/shop
@@ -494,7 +513,9 @@ String endpoint = "/api/login";
 		String endpoint = "/api/shops/" + id;
 		
 		this.performClientGetRequest(endpoint)
-			.andExpect(status().isOk());
+			.andExpect(status().isOk())
+			.andExpect(result -> assertTrue(result.getResolvedException() instanceof ArgumentNotFoundException))
+			.andExpect(result -> assertEquals("Shop not found. The id: " + id + " doesn't exist", result.getResolvedException().getMessage()));;;
 	}
 	
 	@Test
@@ -504,7 +525,8 @@ String endpoint = "/api/login";
 		String endpoint = "/api/shops/" + id;
 		
 		this.performClientGetRequest(endpoint)
-			.andExpect(status().isBadRequest());
+			.andExpect(status().isBadRequest())
+			.andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentTypeMismatchException));
 	}
 	
 	@Test
@@ -514,7 +536,8 @@ String endpoint = "/api/login";
 		String endpoint = "/api/shops/" + id;
 		
 		this.performClientGetRequest(endpoint)
-			.andExpect(status().isInternalServerError());
+			.andExpect(status().isInternalServerError())
+			.andExpect(result -> assertTrue(result.getResolvedException() instanceof MissingPathVariableException));
 	}
 	
 	// POST /api/shop
