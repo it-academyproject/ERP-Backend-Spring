@@ -24,8 +24,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cat.itacademy.proyectoerp.ProyectoErpApplication;
 import cat.itacademy.proyectoerp.domain.Client;
+import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Order;
 import cat.itacademy.proyectoerp.repository.IClientRepository;
+import cat.itacademy.proyectoerp.repository.IEmployeeRepository;
 import cat.itacademy.proyectoerp.repository.IOrderRepository;
 import cat.itacademy.proyectoerp.repository.IUserRepository;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
@@ -46,6 +48,9 @@ public class GetRequestTests {
 	
 	@Autowired
 	IClientRepository clientRepository;
+	
+	@Autowired
+	IEmployeeRepository employeeRepository;  //TODO check if necessary
 
 	@Autowired
 	private WebApplicationContext webApplicationContext;
@@ -121,7 +126,7 @@ public class GetRequestTests {
 	//TODO new
 	@Test
 	@DisplayName("get all the orders from a client - Success when placed by the same client")
-	void givenOrderByClient_whenGetFromSameClient_thenStatus200() throws Exception {
+	void givenClient_whenGetOrdersFromSameClient_thenStatus200() throws Exception {
 		String clientUsername = "client@erp.com";
 		Client client = clientRepository.findByUserId(userRepository.findByUsername(clientUsername).getId());
 		UUID idClient = client.getId();
@@ -137,7 +142,7 @@ public class GetRequestTests {
 	
 	@Test
 	@DisplayName("get all the orders from a client - Unauthorized when placed by another client")
-	void givenOrderByClient_whenGetFromOtherClient_thenStatus401() throws Exception {
+	void givenClient_whenGetOrdersFromOtherClient_thenStatus401() throws Exception {
 		String clientUsername = "testClient@erp.com";
 		Client client = clientRepository.findByUserId(userRepository.findByUsername(clientUsername).getId());
 		UUID idClient = client.getId();
@@ -154,7 +159,7 @@ public class GetRequestTests {
 	
 	@Test
 	@DisplayName("get all the orders from a client - Unauthorized when placed by an employee")
-	void givenOrderByClient_whenGetFromEmployee_thenStatus401() throws Exception {
+	void givenClient_whenGetOrdersFromEmployee_thenStatus401() throws Exception {
 		String clientUsername = "testClient@erp.com";
 		Client client = clientRepository.findByUserId(userRepository.findByUsername(clientUsername).getId());
 		UUID idClient = client.getId();
@@ -171,7 +176,7 @@ public class GetRequestTests {
 	
 	@Test
 	@DisplayName("get all the orders from a client - Success when placed by an admin")
-	void givenOrderByClient_whenGetFromAdmin_thenStatus200() throws Exception {
+	void givenClient_whenGetOrdersFromAdmin_thenStatus200() throws Exception {
 		String clientUsername = "client@erp.com";
 		Client client = clientRepository.findByUserId(userRepository.findByUsername(clientUsername).getId());
 		UUID idClient = client.getId();
@@ -183,6 +188,25 @@ public class GetRequestTests {
 				.header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 	}
+	
+	
+
+	@Test
+	@DisplayName("get all the orders attended by an employee and the unattended orders - Success")
+	void givenEmployee_whenGetOrdersAttached_thenStatus200() throws Exception {
+		String employeeUsername = "testEmployee01@erp.com";
+		Employee employee = employeeRepository.findByUserId(userRepository.findByUsername(employeeUsername).getId());
+		UUID idEmployee = employee.getId();
+		
+		String accessToken = this.obtainAdminAccessToken();
+		String endPoint = "/api/orders/employee/{idEmployee}";
+		
+		this.mockMvc.perform(get(endPoint, idEmployee)
+				.header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+	}
+	
+	
 	
 	
 	

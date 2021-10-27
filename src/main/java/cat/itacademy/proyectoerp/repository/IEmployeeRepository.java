@@ -14,5 +14,10 @@ public interface IEmployeeRepository extends JpaRepository<Employee, UUID> {
 	double getTotalSalariesForYear();
 
 	Employee getEmployeeByUserId(Long id);
+	
+	
+	//finds an employee from its user id
+	@Query(value = "SELECT * FROM employees c WHERE c.user_id = ?1", nativeQuery = true)
+	Employee findByUserId(Long userId);
 
 }
