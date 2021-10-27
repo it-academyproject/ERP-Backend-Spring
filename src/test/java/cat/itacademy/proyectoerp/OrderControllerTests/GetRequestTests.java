@@ -42,10 +42,10 @@ public class GetRequestTests {
 	IOrderRepository orderRepository;
 	
 	@Autowired
-	IUserRepository userRepository; //TODO check if necessary
+	IUserRepository userRepository;
 	
 	@Autowired
-	IClientRepository clientRepository; //TODO check if necessary
+	IClientRepository clientRepository;
 
 	@Autowired
 	private WebApplicationContext webApplicationContext;
@@ -120,14 +120,14 @@ public class GetRequestTests {
 	
 	//TODO new
 	@Test
-	@DisplayName("get order by client - Success when placed from the same client")
+	@DisplayName("get all the orders from a client - Success when placed by the same client")
 	void givenOrderByClient_whenGetFromSameClient_thenStatus200() throws Exception {
 		String clientUsername = "client@erp.com";
 		Client client = clientRepository.findByUserId(userRepository.findByUsername(clientUsername).getId());
 		UUID idClient = client.getId();
 
 		String accessToken = this.obtainClientAccessToken(clientUsername);
-		String endPoint = "/api/orders/{idClient}";
+		String endPoint = "/api/orders/client/{idClient}";
 		
 		this.mockMvc.perform(get(endPoint, idClient)
 				.header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
@@ -136,14 +136,15 @@ public class GetRequestTests {
 	
 	
 	@Test
-	@DisplayName("get order by client - Unauthorized when placed from another client")
+	@DisplayName("get all the orders from a client - Unauthorized when placed by another client")
 	void givenOrderByClient_whenGetFromOtherClient_thenStatus401() throws Exception {
 		String clientUsername = "testClient@erp.com";
 		Client client = clientRepository.findByUserId(userRepository.findByUsername(clientUsername).getId());
-		UUID idClient = client.getId();  //TODO s'ha de canviar el format de la base de dades
+		UUID idClient = client.getId();
 		
 		String accessToken = this.obtainClientAccessToken("client@erp.com");
-		String endPoint = "/api/orders/{idClient}";
+		String endPoint = "/api/orders/client/{idClient}";
+		
 		
 		this.mockMvc.perform(get(endPoint, idClient)
 				.header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
@@ -152,14 +153,31 @@ public class GetRequestTests {
 	
 	
 	@Test
-	@DisplayName("get order by client - Bad request when placed by an employee")
-	void givenOrderByAdmin_whenGetFromAdmin_thenStatus200() throws Exception {
+	@DisplayName("get all the orders from a client - Unauthorized when placed by an employee")
+	void givenOrderByClient_whenGetFromEmployee_thenStatus401() throws Exception {
+		String clientUsername = "testClient@erp.com";
+		Client client = clientRepository.findByUserId(userRepository.findByUsername(clientUsername).getId());
+		UUID idClient = client.getId();
+		
+		String accessToken = this.obtainEmployeeAccessToken();
+		String endPoint = "/api/orders/client/{idClient}";
+		
+		this.mockMvc.perform(get(endPoint, idClient)
+				.header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().isUnauthorized());
+	}
+	
+	
+	
+	@Test
+	@DisplayName("get all the orders from a client - Success when placed by an admin")
+	void givenOrderByClient_whenGetFromAdmin_thenStatus200() throws Exception {
 		String clientUsername = "client@erp.com";
 		Client client = clientRepository.findByUserId(userRepository.findByUsername(clientUsername).getId());
 		UUID idClient = client.getId();
 		
 		String accessToken = this.obtainAdminAccessToken();
-		String endPoint = "/api/orders/{idClient}";
+		String endPoint = "/api/orders/client/{idClient}";
 		
 		this.mockMvc.perform(get(endPoint, idClient)
 				.header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
@@ -188,6 +206,22 @@ public class GetRequestTests {
 				.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 
+		String resultString = resultPost.andReturn().getResponse().getContentAsString();
+		return new JacksonJsonParser().parseMap(resultString).get("token").toString();
+	}
+	
+	
+	
+	private String obtainEmployeeAccessToken() throws Exception {
+		String testUsername = "employee@erp.com";
+		String testPassword = "ReW9a0&+TP";
+		JwtLogin jwtLogin = new JwtLogin(testUsername, testPassword);
+		
+		ResultActions resultPost = this.mockMvc.perform(post("/api/login")
+				.content(new ObjectMapper().writeValueAsString(jwtLogin))
+				.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+		
 		String resultString = resultPost.andReturn().getResponse().getContentAsString();
 		return new JacksonJsonParser().parseMap(resultString).get("token").toString();
 	}
