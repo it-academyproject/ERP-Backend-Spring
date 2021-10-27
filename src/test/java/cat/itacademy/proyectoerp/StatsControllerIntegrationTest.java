@@ -96,10 +96,17 @@ public class StatsControllerIntegrationTest {
 				.accept(MediaType.APPLICATION_JSON_VALUE))
 		
 		// results
-				.andExpect(status().isOk()
-				/*.andExpect(jsonPath("$.employees[0].id", is("11110000-0000-0000-0000-000000000000")))
-				.andExpect(jsonPath("$.employees[0].dni", is("C3333333C")))
-				.andExpect(jsonPath("$.employees[0].total", is(3000.0))*/);
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.success", is("true")))
+				.andExpect(jsonPath("$.message", is("topten for 2021 found")))
+				.andExpect(jsonPath("$.year", is(2021)))
+				.andExpect(jsonPath("$.employee[0].id", is("11110000-0000-0000-0000-000000000000")))
+				.andExpect(jsonPath("$.employee[0].total", is(5000.0)))
+				.andExpect(jsonPath("$.employee[0].dni", is("C3333333C")))
+				.andExpect(jsonPath("$.employee[1].id", is("22220000-0000-0000-0000-000000000000")))
+				.andExpect(jsonPath("$.employee[1].total", is(2000.0)))
+				.andExpect(jsonPath("$.employee[1].dni", is("C3333334C")))
+				;
 	}
 	
 	@Test

@@ -139,7 +139,7 @@ public class StatsController {
 				map.put("message", "topten for " + monthName + " " + year + " found");
 				map.put("month", month);
 				map.put("year", year);
-				map.put("top ten employees", employeeList);
+				map.put("employee", employeeList);
 			}
 		} catch (Exception e) {
 			map.put("success", "false");
@@ -161,7 +161,7 @@ public class StatsController {
 				map.put("success", "true");
 				map.put("message", "topten for " + year + " found");
 				map.put("year", year);
-				map.put("top ten employees", employeeList);
+				map.put("employee", employeeList);
 			}
 		} catch (Exception e) {
 			map.put("success", "false");
