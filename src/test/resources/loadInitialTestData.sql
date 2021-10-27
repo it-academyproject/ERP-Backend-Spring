@@ -28,7 +28,12 @@ INSERT INTO addresses (id, street, number, city, country, zip_code)
 	VALUES
 		('11110000-0000-0000-0000-000000000000', 'C/ Aaa', '1 A', 'City1', 'Country1', '11111'),
 		('22220000-0000-0000-0000-000000000000', 'C/ Bbb', '2 B', 'City2', 'Country2', '22222'),
-		('33330000-0000-0000-0000-000000000000', 'Calle Escorial', '1 C', 'Barcelona', 'Spain', '08024');
+		('33330000-0000-0000-0000-000000000000', 'Calle Escorial', '1 C', 'Barcelona', 'Spain', '08024'),
+		('44440000-0000-0000-0000-000000000000', 'Calle Escorial', '1 C', 'Barcelona', 'Spain', '08024');
+
+INSERT INTO clients (id, dni, image, name_surname, address_id, user_id, shipping_address_id)
+	VALUES
+		('11110000-0000-0000-0000-000000000000', 'B7654321C', 'url image', 'Random Name', '44440000-0000-0000-0000-000000000000', 3, NULL);
 
 INSERT INTO shops (shop_id, brand_name, company_name, creation_date, nif, phone, web_address, address_id)
 	VALUES

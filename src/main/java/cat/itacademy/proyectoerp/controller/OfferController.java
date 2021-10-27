@@ -79,7 +79,7 @@ public class OfferController {
 		return messageDto;
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')" + " || hasRole('EMPLOYEE')")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public MessageDTO create(@Valid @RequestBody Offer offer) {
@@ -96,7 +96,7 @@ public class OfferController {
 		return messageDto;
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')" + " || hasRole('EMPLOYEE')")
 	@PutMapping
 	public MessageDTO update(@Valid @RequestBody Offer offer) {
 		MessageDTO messageDto;
@@ -112,7 +112,7 @@ public class OfferController {
 		return messageDto;
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')" + " || hasRole('EMPLOYEE')")
 	@DeleteMapping
 	
 	public Map<String, Object> delete(@RequestBody ObjectNode objectNode) {

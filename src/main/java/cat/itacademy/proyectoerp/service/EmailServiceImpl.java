@@ -9,7 +9,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import cat.itacademy.proyectoerp.domain.Client;
+import cat.itacademy.proyectoerp.domain.Notification;
 import cat.itacademy.proyectoerp.domain.User;
+import cat.itacademy.proyectoerp.domain.UserType;
+import cat.itacademy.proyectoerp.repository.IUserRepository;
 
 
 @Service
@@ -17,6 +20,9 @@ public class EmailServiceImpl implements IEmailService {
 
     @Autowired
     JavaMailSender javaMailSender;
+    
+    @Autowired
+    IUserRepository userRepository;
 
     /**
      * Method to send welcome email to user
@@ -112,5 +118,60 @@ public class EmailServiceImpl implements IEmailService {
 
     }
 
+    /**
+     * Send an email to a client when its order changes to IN_DELIVERY status
+     */
+	@Override
+	public void sendOrderInDeliveryEmail(Client client) {
+		try {
+			SimpleMailMessage message = new SimpleMailMessage();
+			
+			message.setTo(client.getUser().getUsername());
+			message.setSubject("Order updates");
+			message.setText("Your order is in the delivery process.");
+			
+			javaMailSender.send(message);
+		} catch (MailException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Send an email to a client when its order changes to CANCELLED status
+	 */
+	@Override
+	public void sendOrderCancelledEmail(Client client) {
+		try {
+			SimpleMailMessage message = new SimpleMailMessage();
+			
+			message.setTo(client.getUser().getUsername());
+			message.setSubject("Order updates");
+			message.setText("Your order has been cacelled.");
+			
+			javaMailSender.send(message);
+		} catch (MailException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 *  Send an email to all admins on an employee checkin
+	 */
+	@Override
+	public void sendEmployeeCheckin(Notification notification) {
+		userRepository.findByUserType(UserType.ADMIN).forEach(admin -> {
+			try {
+				SimpleMailMessage  message = new SimpleMailMessage();
+				
+				message.setTo(admin.getUsername());
+				message.setSubject("New Check-in Notification");
+				message.setText(notification.getMessage());
+				
+				javaMailSender.send(message);
+			} catch (MailException e) {
+				e.printStackTrace();
+			}
+		});
+	}
 
 }
