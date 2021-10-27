@@ -3,9 +3,7 @@ package cat.itacademy.proyectoerp.service;
 
 import java.util.List;
 import java.util.UUID;
-
 import cat.itacademy.proyectoerp.domain.Offer;
-import cat.itacademy.proyectoerp.dto.ClientDTO;
 import cat.itacademy.proyectoerp.dto.OfferDTO;
 
 public interface IOfferService {
@@ -18,10 +16,9 @@ public interface IOfferService {
 	
 	public OfferDTO update(Offer offer);
 	
-	public void delete(Offer offer);
+	public OfferDTO delete(UUID id);
 	
-	public OfferDTO deleteOffer(UUID id); //DELETE - deletes Offer
-	
+		
 	public List<OfferDTO> findByNameContainingIgnoreCase(String name);
 	
 	public List<OfferDTO> readByDiscountGreatherThanEqual(Double min);

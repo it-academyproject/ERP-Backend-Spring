@@ -67,29 +67,15 @@ public class OfferServiceImpl implements IOfferService {
 		return modelMapper.map(offer, OfferDTO.class);
 	}
 	
-	@Override
-	public void delete(Offer offer) throws ArgumentNotFoundException {
-		UUID id = offer.getId();
 		
-		if (!offerRepository.existsById(id))
-			throw new ArgumentNotFoundException("Offer not found. The id " + id + " doesn't exist");
-	
-		offerRepository.deleteById(id);
-	}
-	
 	@Override
-	public OfferDTO deleteOffer(UUID id) throws ArgumentNotFoundException {
+	public OfferDTO delete(UUID id) throws ArgumentNotFoundException {
 		
 		Offer offer = offerRepository.findById(id).orElseThrow( () -> new ArgumentNotFoundException("Offer not found. The id " + id + " doesn't exist"));
 		OfferDTO clientDTO = modelMapper.map(offer, OfferDTO.class);
 		offerRepository.deleteById(id);
 		return clientDTO;
-		/*UUID id = offer.getId();
 		
-		if (!offerRepository.existsById(id))
-			throw new ArgumentNotFoundException("Offer not found. The id " + id + " doesn't exist");
-	
-		offerRepository.deleteById(id);*/
 	}
 
 	@Override

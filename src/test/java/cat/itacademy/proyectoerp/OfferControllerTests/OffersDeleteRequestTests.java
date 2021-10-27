@@ -1,16 +1,12 @@
 package cat.itacademy.proyectoerp.OfferControllerTests;
 
-import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.Before;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cat.itacademy.proyectoerp.ProyectoErpApplication;
 import cat.itacademy.proyectoerp.repository.IOfferRepository;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
-import cat.itacademy.proyectoerp.util.TestData;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = ProyectoErpApplication.class)
 @AutoConfigureMockMvc

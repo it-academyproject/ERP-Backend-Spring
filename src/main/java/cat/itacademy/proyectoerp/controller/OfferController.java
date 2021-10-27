@@ -20,10 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.Offer;
 import cat.itacademy.proyectoerp.dto.MessageDTO;
 import cat.itacademy.proyectoerp.dto.OfferDTO;
@@ -118,41 +115,21 @@ public class OfferController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping
 	
-	public Map<String, Object> deleteOffer(@RequestBody ObjectNode objectNode) {
+	public Map<String, Object> delete(@RequestBody ObjectNode objectNode) {
 		UUID id = UUID.fromString(objectNode.get("id").asText());
 		HashMap<String, Object> map = new HashMap<>();
 		
 		try {
-			offerService.deleteOffer(id);
+			offerService.delete(id);
 			map.put("success", true);
 			map.put("message", "Offer with id: " + id + " has been deleted");
 		} catch (Exception e) {
-			map.put("success..", false);
+			map.put("success", false);
 			map.put("message", e.getMessage());
 		}
 		
 		return map;
 	}
-	
-	
-	
-	/*public ResponseEntity<MessageDTO> deleteOfferyId(@RequestBody Offer offer) {
-		MessageDTO output;
-		try {
-			// empty id case
-			if (offer.getId() == null) {
-				output = new MessageDTO("False", "empty mandatory field in body request");
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(output);
-			}
-			String name = offerService.deleteOffer(offer.getId()).getDescription();
-			output = new MessageDTO("true", "Offer " + name + " has been successfully deleted");
-			return ResponseEntity.status(HttpStatus.OK).body(output);
-		} catch (Exception e) {
-			output = new MessageDTO("False", e.getMessage());
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(output);
-		}
-	}*/
-	
 	
 	
 
