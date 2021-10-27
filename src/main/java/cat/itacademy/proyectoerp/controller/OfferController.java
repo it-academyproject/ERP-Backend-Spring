@@ -1,7 +1,9 @@
 package cat.itacademy.proyectoerp.controller;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.Offer;
@@ -114,7 +118,25 @@ public class OfferController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping
 	
-	public ResponseEntity<MessageDTO> deleteOfferyId(@RequestBody Offer offer) {
+	public Map<String, Object> deleteOffer(@RequestBody ObjectNode objectNode) {
+		UUID id = UUID.fromString(objectNode.get("id").asText());
+		HashMap<String, Object> map = new HashMap<>();
+		
+		try {
+			offerService.deleteOffer(id);
+			map.put("success", true);
+			map.put("message", "Offer with id: " + id + " has been deleted");
+		} catch (Exception e) {
+			map.put("success..", false);
+			map.put("message", e.getMessage());
+		}
+		
+		return map;
+	}
+	
+	
+	
+	/*public ResponseEntity<MessageDTO> deleteOfferyId(@RequestBody Offer offer) {
 		MessageDTO output;
 		try {
 			// empty id case
@@ -129,7 +151,7 @@ public class OfferController {
 			output = new MessageDTO("False", e.getMessage());
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(output);
 		}
-	}
+	}*/
 	
 	
 	
