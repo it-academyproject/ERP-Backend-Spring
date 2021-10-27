@@ -96,7 +96,7 @@ public class StatsControllerSecurityTest {
 		assertThat(isAuthorized(uri,accessToken)).isFalse();
 	}
 	
-	// Test /api/stats/employees/toptensales EndPoint	
+	// Test /api/stats/employees/toptensales EndPoint BY YEAR
 	@Test
 	@DisplayName("Security Admin [GET] /api/stats/employees/toptensales/{year}")
 	public void RequestTop10EmployeesBySales() throws Exception {
@@ -105,7 +105,18 @@ public class StatsControllerSecurityTest {
 		
 		assertThat(isAuthorized(uri,accessToken)).isTrue();
 	}
+	
+	// Test /api/stats/employees/toptensales EndPoint BY YEAR-MONTH
+	@Test
+	@DisplayName("Security Admin [GET] /api/stats/employees/toptensales/{year}/{month}")
+	public void RequestTop10EmployeesBySalesYearMonth() throws Exception {
+		String accessToken = obtainAdminAccessToken();
+		String uri = "/api/stats/employees/toptensales/2021/02";
+		
+		assertThat(isAuthorized(uri,accessToken)).isTrue();
+	}
 
+	// Test /api/stats/employees/toptensales EndPoint BY YEAR
 	@Test
 	@DisplayName("Security Employee Auth [GET] /api/stats/employees/toptensales/{year}") 
 	public void SecurityEmployeeTop10EmployeesBySales() throws Exception {
@@ -115,6 +126,17 @@ public class StatsControllerSecurityTest {
 		assertThat(isAuthorized(uri,accessToken)).isFalse();
 	}
 	
+	// Test /api/stats/employees/toptensales EndPoint BY YEAR-MONTH
+	@Test
+	@DisplayName("Security Employee Auth [GET] /api/stats/employees/toptensales/{year}/{month}") 
+	public void SecurityEmployeeTop10EmployeesBySalesYearMonth() throws Exception {
+		String accessToken = obtainEmployeeAccessToken();
+		String uri = "/api/stats/employees/toptensales/2021/02";
+		
+		assertThat(isAuthorized(uri,accessToken)).isFalse();
+	}
+	
+	// Test /api/stats/employees/toptensales EndPoint BY YEAR
 	@Test
 	@DisplayName("Security Client [GET] /api/stats/employees/toptensales/{year}")
 	public void SecurityClientTop10EmployeesBySales() throws Exception {
@@ -124,11 +146,32 @@ public class StatsControllerSecurityTest {
 		assertThat(isAuthorized(uri,accessToken)).isFalse();
 	}
 	
+	// Test /api/stats/employees/toptensales EndPoint BY YEAR-MONTH
+	@Test
+	@DisplayName("Security Client [GET] /api/stats/employees/toptensales/{year}/{month}")
+	public void SecurityClientTop10EmployeesBySalesYearMonth() throws Exception {
+		String accessToken = obtainClientAccessToken();
+		String uri = "/api/stats/employees/toptensales/2021/02";
+		
+		assertThat(isAuthorized(uri,accessToken)).isFalse();
+	}
+	
+	// Test /api/stats/employees/toptensales EndPoint BY YEAR
 	@Test
 	@DisplayName("Security NoAuth [GET] /api/stats/employees/toptensales/{year}")
 	public void SecurityNoAuthTop10EmployeesBySales() throws Exception {
 		String accessToken = "";
 		String uri = "/api/stats/employees/toptensales/2021";
+		
+		assertThat(isAuthorized(uri,accessToken)).isFalse();
+	}
+	
+	// Test /api/stats/employees/toptensales EndPoint BY YEAR-MONTH
+	@Test
+	@DisplayName("Security NoAuth [GET] /api/stats/employees/toptensales/{year}/{month}")
+	public void SecurityNoAuthTop10EmployeesBySalesYearMonth() throws Exception {
+		String accessToken = "";
+		String uri = "/api/stats/employees/toptensales/2021/02";
 		
 		assertThat(isAuthorized(uri,accessToken)).isFalse();
 	}

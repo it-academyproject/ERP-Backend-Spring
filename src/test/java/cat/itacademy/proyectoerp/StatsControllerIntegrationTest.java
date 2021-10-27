@@ -83,7 +83,7 @@ public class StatsControllerIntegrationTest {
 				.andExpect(jsonPath("$.employee[1].dni", is("C3333334C")));
 	}
 
-	// Test /api/stats/employees/toptensales EndPoint	
+	// Test /api/stats/employees/toptensales EndPoint BY YEAR
 	@Test
 	@DisplayName("Correct [GET] /api/stats/employees/toptensales/{year}") 
 	public void RequestTop10EmployeesBySales() throws Exception {
@@ -109,6 +109,34 @@ public class StatsControllerIntegrationTest {
 				;
 	}
 	
+	// Test /api/stats/employees/toptensales EndPoint BY YEAR-MONTH
+		@Test
+		@DisplayName("Correct [GET] /api/stats/employees/toptensales/{year}/{month}") 
+		public void RequestTop10EmployeesBySalesYearMonth() throws Exception {
+
+			String accessToken = obtainAdminAccessToken();
+				
+			// request
+			mockMvc.perform(get("/api/stats/employees/toptensales/2021/02")
+					.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+					.accept(MediaType.APPLICATION_JSON_VALUE))
+			
+			// results
+					.andExpect(status().isOk())
+					.andExpect(jsonPath("$.success", is("true")))
+					.andExpect(jsonPath("$.message", is("topten for febrero 2021 found")))
+					.andExpect(jsonPath("$.month", is(2)))
+					.andExpect(jsonPath("$.year", is(2021)))
+					.andExpect(jsonPath("$.employee[0].id", is("11110000-0000-0000-0000-000000000000")))
+					.andExpect(jsonPath("$.employee[0].total", is(5000.0)))
+					.andExpect(jsonPath("$.employee[0].dni", is("C3333333C")))
+					.andExpect(jsonPath("$.employee[1].id", is("22220000-0000-0000-0000-000000000000")))
+					.andExpect(jsonPath("$.employee[1].total", is(2000.0)))
+					.andExpect(jsonPath("$.employee[1].dni", is("C3333334C")))
+					;
+		}
+	
+	// Test /api/stats/employees/toptensales EndPoint BY YEAR
 	@Test
 	@DisplayName("Empty Order Period [GET] /api/stats/employees/toptensales/{year}")
 	public void EmptyPeriodTop10EmployeesBySales() throws Exception {
@@ -125,6 +153,24 @@ public class StatsControllerIntegrationTest {
 				.andExpect(jsonPath("$.message", is("orders for 2020 not found")));
 	}
 	
+	// Test /api/stats/employees/toptensales EndPoint BY YEAR-MONTH
+		@Test
+		@DisplayName("Empty Order Period [GET] /api/stats/employees/toptensales/{year}")
+		public void EmptyPeriodTop10EmployeesBySalesYearMonth() throws Exception {
+
+			String accessToken = obtainAdminAccessToken();
+				
+			// request
+			mockMvc.perform(get("/api/stats/employees/toptensales/2020/01")
+					.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+					.accept(MediaType.APPLICATION_JSON_VALUE))
+			
+			// results
+					.andExpect(status().isOk())
+					.andExpect(jsonPath("$.message", is("orders for enero 2020 not found")));
+		}
+	
+	// Test /api/stats/employees/toptensales EndPoint BY YEAR
 	@Test
 	@DisplayName("BadRequest [GET] /api/stats/employees/toptensales/{year}")
 	public void BadRequestTop10EmployeesBySales() throws Exception {
@@ -133,6 +179,23 @@ public class StatsControllerIntegrationTest {
 			
 		// request
 		mockMvc.perform(get("/api/stats/employees/toptensales/XXXX")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+		
+		// results
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.status", is("BAD_REQUEST")));
+	}
+	
+	// Test /api/stats/employees/toptensales EndPoint BY YEAR-MONTH
+	@Test
+	@DisplayName("BadRequest [GET] /api/stats/employees/toptensales/{year}")
+	public void BadRequestTop10EmployeesBySalesYearMonth() throws Exception {
+
+		String accessToken = obtainAdminAccessToken();	
+			
+		// request
+		mockMvc.perform(get("/api/stats/employees/toptensales/XXXX/01")
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON_VALUE))
 		
