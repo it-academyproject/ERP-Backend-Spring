@@ -50,7 +50,7 @@ public class GetRequestTests {
 	IClientRepository clientRepository;
 	
 	@Autowired
-	IEmployeeRepository employeeRepository;  //TODO check if necessary
+	IEmployeeRepository employeeRepository;
 
 	@Autowired
 	private WebApplicationContext webApplicationContext;
@@ -120,10 +120,6 @@ public class GetRequestTests {
 	}
 	
 	
-	
-	
-	
-	//TODO new
 	@Test
 	@DisplayName("get all the orders from a client - Success when placed by the same client")
 	void givenClient_whenGetOrdersFromSameClient_thenStatus200() throws Exception {
@@ -205,18 +201,6 @@ public class GetRequestTests {
 				.header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//TODO finish new
-	
-	
 	
 	
 	
