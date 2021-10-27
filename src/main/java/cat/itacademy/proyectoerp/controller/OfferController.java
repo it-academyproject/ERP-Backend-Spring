@@ -75,7 +75,7 @@ public class OfferController {
 		return messageDto;
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')" + " || hasRole('EMPLOYEE')")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public MessageDTO create(@Valid @RequestBody Offer offer) {
