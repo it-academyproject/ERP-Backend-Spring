@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.Before;
@@ -21,8 +22,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cat.itacademy.proyectoerp.ProyectoErpApplication;
+import cat.itacademy.proyectoerp.dto.OfferDTO;
 import cat.itacademy.proyectoerp.repository.IOfferRepository;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
+import cat.itacademy.proyectoerp.service.IOfferService;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = ProyectoErpApplication.class)
@@ -33,6 +36,8 @@ public class OffersDeleteRequestTests {
 	@Autowired
 	private MockMvc mockMvc;
 
+	@Autowired
+	IOfferService offerService;
 			
 	@Autowired
 	IOfferRepository offerRepository;
@@ -115,6 +120,8 @@ public class OffersDeleteRequestTests {
 		
 		switch (idType) {
 		case "existentId":
+			
+						
 			id = UUID.fromString("66660000-0000-0000-0000-000000000000");
 			
 			idMap.put("id", id);
