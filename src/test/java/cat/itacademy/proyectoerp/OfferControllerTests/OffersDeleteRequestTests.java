@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.junit.Before;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +25,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cat.itacademy.proyectoerp.ProyectoErpApplication;
 import cat.itacademy.proyectoerp.dto.OfferDTO;
+import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.repository.IOfferRepository;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 import cat.itacademy.proyectoerp.service.IOfferService;
@@ -36,8 +39,8 @@ public class OffersDeleteRequestTests {
 	@Autowired
 	private MockMvc mockMvc;
 
-	@Autowired
-	IOfferService offerService;
+	//@Autowired
+	//IOfferService offerService;
 			
 	@Autowired
 	IOfferRepository offerRepository;
@@ -49,6 +52,8 @@ public class OffersDeleteRequestTests {
 	public void setUp() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
+	
+
 	
 		
 	@Test
@@ -120,8 +125,7 @@ public class OffersDeleteRequestTests {
 		
 		switch (idType) {
 		case "existentId":
-			
-						
+									
 			id = UUID.fromString("66660000-0000-0000-0000-000000000000");
 			
 			idMap.put("id", id);
@@ -145,6 +149,9 @@ public class OffersDeleteRequestTests {
 		
 		return idMap;
 	}
+
+	
+
 	
 	private String obtainAccessToken() throws Exception {
 		String testUsername = "admin@erp.com";
@@ -175,3 +182,5 @@ public class OffersDeleteRequestTests {
 	}
 
 }
+	
+
