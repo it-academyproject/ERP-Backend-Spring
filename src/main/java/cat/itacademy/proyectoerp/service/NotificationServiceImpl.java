@@ -123,12 +123,15 @@ public class NotificationServiceImpl implements INotificationService {
 	}
 	
 	
-	//changes the read status of an order to true
+	//changes the read status of a notification to true
 	public Notification readNotification(UUID notificationId) {
 		Optional<Notification> notification = notificationRepository.findById(notificationId);
 		
 		if(notification.isEmpty()) {
 			throw new ArgumentNotFoundException("The notification id " + notificationId + " does not exist.");
+		}
+		else if (notification.get() == null) {
+			throw new NullPointerException("The notification id " + notificationId + " is null");
 		}
 		else {
 			notification.get().setRead(true);
