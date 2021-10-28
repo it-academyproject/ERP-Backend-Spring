@@ -29,7 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cat.itacademy.proyectoerp.ProyectoErpApplication;
-
+import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.repository.IEmployeeRepository;
 import cat.itacademy.proyectoerp.repository.IWorkingHoursRepository;
 import cat.itacademy.proyectoerp.security.entity.JwtLogin;
@@ -39,13 +39,22 @@ import cat.itacademy.proyectoerp.security.entity.JwtLogin;
 @TestPropertySource(locations = "classpath:application-integrationtest.properties")
 
 public class GetWorkingHoursTests {
-	String testUsername = "employee@erp.com";
+	
+	private String testUsername = "employee@erp.com";
 
-	String testUserPassword = "ReW9a0&+TP";
+	private String testUserPassword = "ReW9a0&+TP";
 
-	String testAdminUsername = "admin@erp.com";
+	private String testAdminUsername = "admin@erp.com";
 
-	String testAdminPassword = "ReW9a0&+TP";
+	private String testAdminPassword = "ReW9a0&+TP";
+	
+	private String endPointWorkingHours = "/api/workinghours";
+	
+	private String endPointWorkingHoursEmployeeId = "/api/workinghours/employeeid/{employeeId}";
+	
+	private String endPointWorkingHoursDate = "/api/workinghours/date/{date}";
+	
+	private String endPointWorkingHoursEmployeeIdDate = "/api/workinghours/employeeid/{employeeId}/date/{date}";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -69,11 +78,9 @@ public class GetWorkingHoursTests {
 	void givenWorkingHours_whenGetWorkingHours_thenStatus200() throws Exception {
 		
 		String accessToken = obtainAccessToken(testAdminUsername, testAdminPassword);
-				
-		String endPoint = "/api/workinghours";
-		
+						
 		this.mockMvc.perform(
-				get(endPoint).header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
+				get(endPointWorkingHours).header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 	}
 	
@@ -82,11 +89,9 @@ public class GetWorkingHoursTests {
 	void givenWorkingHoursLoginAsEmployee_whenGetWorkingHours_thenStatus401() throws Exception {
 		
 		String accessToken = obtainAccessToken(testUsername, testUserPassword);
-				
-		String endPoint = "/api/workinghours";
-		
+					
 		ResultActions resultPost=this.mockMvc.perform(
-				get(endPoint).header("Authorization", "Bearer " + accessToken)
+				get(endPointWorkingHours).header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON));
 		
 		printResult(resultPost);
@@ -101,14 +106,14 @@ public class GetWorkingHoursTests {
 	@Test
 	@DisplayName("get working hours by employeeId - success")
 	void givenExistentEmployeeId_whenGetWorkingHoursById_thenStatus200() throws Exception {
-
-		UUID employeeId = UUID.fromString("22220000-0000-0000-0000-000000000000");
+		
+		Employee firstEmployee = employeeRepository.findAll().get(0);
+		
+		UUID employeeId = firstEmployee.getId();
 
 		String accessToken = obtainAccessToken(testAdminUsername, testAdminPassword);
 
-		String endPoint = "/api/workinghours/employeeid/{employeeId}";
-
-		this.mockMvc.perform(get(endPoint, employeeId).header("Authorization", "Bearer " + accessToken)
+		this.mockMvc.perform(get(endPointWorkingHoursEmployeeId, employeeId).header("Authorization", "Bearer " + accessToken)
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk());
 
@@ -122,9 +127,7 @@ public class GetWorkingHoursTests {
 
 		String accessToken = obtainAccessToken(testAdminUsername, testAdminPassword);
 
-		String endPoint = "/api/workinghours/employeeid/{employeeId}";
-
-		ResultActions resultPost = this.mockMvc.perform(get(endPoint, nonEmployeeId)
+		ResultActions resultPost = this.mockMvc.perform(get(endPointWorkingHoursEmployeeId, nonEmployeeId)
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON));
 
@@ -145,9 +148,7 @@ public class GetWorkingHoursTests {
 
 		String accessToken = obtainAccessToken(testAdminUsername, testAdminPassword);
 
-		String endPoint = "/api/workinghours/employeeid/{employeeId}";
-
-		ResultActions resultPost = this.mockMvc.perform(get(endPoint, wrongIdFormat)
+		ResultActions resultPost = this.mockMvc.perform(get(endPointWorkingHoursEmployeeId, wrongIdFormat)
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON));
 
@@ -163,13 +164,12 @@ public class GetWorkingHoursTests {
 
 	@DisplayName("get working hours by employeeId - BadRequest when id is space character(s)")
 	void givenBlankEmployeeId_whenGetOrderById_thenStatus500() throws Exception {
+		
 		String wrongIdFormat = "   ";
 
 		String accessToken = obtainAccessToken(testAdminUsername, testAdminPassword);
 
-		String endPoint = "/api/workinghours/employeeid/{employeeId}";
-
-		ResultActions resultPost = this.mockMvc.perform(get(endPoint, wrongIdFormat)
+		ResultActions resultPost = this.mockMvc.perform(get(endPointWorkingHoursEmployeeId, wrongIdFormat)
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON));
 
@@ -188,11 +188,9 @@ public class GetWorkingHoursTests {
 		LocalDate date = LocalDate.parse("2021-01-01");
 
 		String accessToken = obtainAccessToken(testAdminUsername, testAdminPassword);
-
-		String endPoint = "/api/workinghours/date/{date}";
-
+		
 		this.mockMvc.perform(
-				get(endPoint, date).header("Authorization", "Bearer " + accessToken)
+				get(endPointWorkingHoursDate, date).header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 
@@ -208,9 +206,7 @@ public class GetWorkingHoursTests {
 
 		String accessToken = obtainAccessToken(testAdminUsername, testAdminPassword);
 
-		String endPoint = "/api/workinghours/date/{date}";
-
-		ResultActions resultPost = this.mockMvc.perform(get(endPoint, dateTime)
+		ResultActions resultPost = this.mockMvc.perform(get(endPointWorkingHoursDate, dateTime)
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON));
 
@@ -230,9 +226,7 @@ public class GetWorkingHoursTests {
 
 		String accessToken = obtainAccessToken(testAdminUsername, testAdminPassword);
 
-		String endPoint = "/api/workinghours/date/{date}";
-
-		ResultActions resultPost = this.mockMvc.perform(get(endPoint, date)
+		ResultActions resultPost = this.mockMvc.perform(get(endPointWorkingHoursDate, date)
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON));
 
@@ -252,9 +246,7 @@ public class GetWorkingHoursTests {
 
 		String accessToken = obtainAccessToken(testAdminUsername, testAdminPassword);
 
-		String endPoint = "/api/workinghours/date/{date}";
-
-		ResultActions resultPost = this.mockMvc.perform(get(endPoint, date)
+		ResultActions resultPost = this.mockMvc.perform(get(endPointWorkingHoursDate, date)
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON));
 
@@ -270,7 +262,9 @@ public class GetWorkingHoursTests {
 	@DisplayName("get working hours by employeeId and date - success")
 	void givenEmployeeIdAndDate_whenGetWorkingHoursByDate_thenStatus200() throws Exception {
 
-		UUID employeeId = UUID.fromString("22220000-0000-0000-0000-000000000000");
+		Employee firstEmployee = employeeRepository.findAll().get(0);
+		
+		UUID employeeId = firstEmployee.getId();
 
 		LocalDate date = LocalDate.parse("2021-01-01");
 
@@ -290,7 +284,9 @@ public class GetWorkingHoursTests {
 	@DisplayName("get working hours by employeeId and date - BadRequest when wrong date format")
 	void givenEmployeeIDAndWrongDateFormat_whenGetWorkingHoursByDate_thenStatus400() throws Exception {
 
-		UUID employeeId = UUID.fromString("22220000-0000-0000-0000-000000000000");
+Employee firstEmployee = employeeRepository.findAll().get(0);
+		
+		UUID employeeId = firstEmployee.getId();
 
 		String date = "2017-03-08 12:30";
 
@@ -323,9 +319,7 @@ public class GetWorkingHoursTests {
 
 		String accessToken = obtainAccessToken(testAdminUsername, testAdminPassword);
 
-		String endPoint = "/api/workinghours/employeeid/{employeeId}/date/{date}";
-
-		ResultActions resultPost = this.mockMvc.perform(get(endPoint, nonEmployeeId, date)
+		ResultActions resultPost = this.mockMvc.perform(get(endPointWorkingHoursEmployeeIdDate, nonEmployeeId, date)
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON));
 
@@ -341,15 +335,15 @@ public class GetWorkingHoursTests {
 	@DisplayName("get working hours by employeeId and date - NotFound when date is a blank")
 	void givenExistentEmployeeIDAndBlankDate_whenGetWorkingHoursByDate_thenStatus404() throws Exception {
 
-		UUID nonEmployeeId = UUID.fromString("22220000-0000-0000-0000-000000000000");
+Employee firstEmployee = employeeRepository.findAll().get(0);
+		
+		UUID employeeId = firstEmployee.getId();
 
 		String date = "   ";
 
 		String accessToken = obtainAccessToken(testAdminUsername, testAdminPassword);
 
-		String endPoint = "/api/workinghours/employeeid/{employeeId}/date/{date}";
-
-		ResultActions resultPost = this.mockMvc.perform(get(endPoint, nonEmployeeId, date)
+		ResultActions resultPost = this.mockMvc.perform(get(endPointWorkingHoursEmployeeIdDate, employeeId, date)
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON));
 
