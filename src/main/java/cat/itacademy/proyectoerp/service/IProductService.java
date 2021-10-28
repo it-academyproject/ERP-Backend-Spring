@@ -22,4 +22,6 @@ public interface IProductService {
 	public ProductStatsDTO getMaxPrice();
 
 	public ProductStatsDTO getMinPrice();
+	
+	public double getAveragePrice();
 }

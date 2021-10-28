@@ -209,4 +209,18 @@ public class ProductServiceImpl implements IProductService {
 		}
 		
 	}
+	
+	public double getAveragePrice() {
+		List<Product> list = productRepository.findAll().stream().filter(i -> i.getPrice() > 0).collect(Collectors.toList());
+		
+		int products = list.size();
+		double totalPrices = 0;
+		for(Product i : list) {
+			totalPrices = totalPrices + i.getPrice();
+		}
+		
+		double average = totalPrices / products;
+		
+		return average;
+	}
 }

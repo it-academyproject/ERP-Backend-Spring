@@ -314,4 +314,21 @@ public class StatsController {
 		return map;
 	}
 	
+	@GetMapping("/products/averageprice")
+	public Map<String, Object> getAveragePriceProducts(){
+		
+		HashMap<String, Object> map = new HashMap<>();
+		
+		try {
+			double average = productService.getAveragePrice();
+			map.put("success", "true");
+			map.put("message", "average price of products found");
+			map.put("average", average);
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "error: " + e.getMessage());
+		}
+		
+		return map;
+	}
 }
