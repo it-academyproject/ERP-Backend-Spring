@@ -1,6 +1,7 @@
 package cat.itacademy.proyectoerp.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -14,6 +15,7 @@ import cat.itacademy.proyectoerp.domain.Category;
 import cat.itacademy.proyectoerp.domain.Product;
 import cat.itacademy.proyectoerp.dto.CategoryDTO;
 import cat.itacademy.proyectoerp.dto.ProductDTO;
+import cat.itacademy.proyectoerp.dto.ProductStatsDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 import cat.itacademy.proyectoerp.repository.IProductRepository;
@@ -180,4 +182,31 @@ public class ProductServiceImpl implements IProductService {
 		productRepository.deleteById(id);
 	}
 	
+	@Override
+	public ProductStatsDTO getMaxPrice() throws NoSuchElementException {
+		List<Product> list = productRepository.findAllByOrderByPriceDesc();
+		
+		try {
+			Product product = list.get(0);
+			return modelMapper.map(product, ProductStatsDTO.class);
+			
+		} catch (Exception e) {
+			throw new NoSuchElementException("No products found.");
+		}
+
+	}
+	
+	@Override
+	public ProductStatsDTO getMinPrice() throws NoSuchElementException {
+		List<Product> list = productRepository.findAllByOrderByPriceAsc();
+		
+		try {
+			Product product = list.stream().filter(i -> i.getPrice() > 0).collect(Collectors.toList()).get(0) ;
+			return modelMapper.map(product, ProductStatsDTO.class);
+			
+		} catch (Exception e) {
+			throw new NoSuchElementException("No products found.");
+		}
+		
+	}
 }
