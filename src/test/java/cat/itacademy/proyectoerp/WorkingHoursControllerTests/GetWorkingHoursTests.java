@@ -1,5 +1,9 @@
 package cat.itacademy.proyectoerp.WorkingHoursControllerTests;
 
+import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -94,14 +98,14 @@ public class GetWorkingHoursTests {
 				get(endPointWorkingHours).header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON));
 		
-		printResult(resultPost);
-
 		String resultString = resultPost.andReturn().getResponse().getContentAsString();
-
-		Assertions.assertTrue(resultString
-				.contains("Access Denied"));
+		
+		assertAll(() ->assertTrue(resultString.contains("Access Denied"),"error"),
+				() ->assertTrue(resultString.contains("false"),"success"),
+				() ->assertTrue(resultString.contains("UNAUTHORIZED"),"status"));
 
 	}
+	
 
 	@Test
 	@DisplayName("get working hours by employeeId - success")
@@ -130,14 +134,12 @@ public class GetWorkingHoursTests {
 		ResultActions resultPost = this.mockMvc.perform(get(endPointWorkingHoursEmployeeId, nonEmployeeId)
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON));
-
-		printResult(resultPost);
-
+		
 		String resultString = resultPost.andReturn().getResponse().getContentAsString();
-
-		Assertions.assertTrue(resultString
-				.contains("No Working Hours found for this Employee Id: 22220002-0000-0000-0000-000000000000"));
-
+	
+		assertAll(() ->assertTrue(resultString.contains("No Working Hours found for this Employee Id: 22220002-0000-0000-0000-000000000000"),"message"),
+				() ->assertTrue(resultString.contains("false"),"success"));
+			
 	}
 
 	@Test
@@ -152,17 +154,17 @@ public class GetWorkingHoursTests {
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON));
 
-		printResult(resultPost);
-
 		String resultString = resultPost.andReturn().getResponse().getContentAsString();
-
-		Assertions.assertTrue(resultString.contains("Method Argument Type Mismatch"));
-
+		
+		assertAll(() ->assertTrue(resultString.contains("Method Argument Type Mismatch"),"error"),
+				() ->assertTrue(resultString.contains("BAD_REQUEST"),"status"),
+				() ->assertTrue(resultString.contains("false"),"success"));
+		
 	}
 
 	@Test
 
-	@DisplayName("get working hours by employeeId - BadRequest when id is space character(s)")
+	@DisplayName("get working hours by employeeId - Internal Server Error when id is space character(s)")
 	void givenBlankEmployeeId_whenGetOrderById_thenStatus500() throws Exception {
 		
 		String wrongIdFormat = "   ";
@@ -173,11 +175,11 @@ public class GetWorkingHoursTests {
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON));
 
-		printResult(resultPost);
-
 		String resultString = resultPost.andReturn().getResponse().getContentAsString();
 
-		Assertions.assertTrue(resultString.contains("INTERNAL_SERVER_ERROR"));
+		assertAll(() ->assertTrue(resultString.contains("INTERNAL_SERVER_ERROR"),"status"),
+				() ->assertTrue(resultString.contains("Missing Path Variable"),"error"),
+				() ->assertTrue(resultString.contains("false"),"success"));
 
 	}
 
@@ -201,7 +203,9 @@ public class GetWorkingHoursTests {
 	void givenWrongDateFormat_whenGetWorkingHoursByDate_thenStatus400() throws Exception {
 
 		String date = "2017-03-08 12:30";
+		
 		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		
 		LocalDateTime dateTime = LocalDateTime.parse(date, format);
 
 		String accessToken = obtainAccessToken(testAdminUsername, testAdminPassword);
@@ -210,11 +214,11 @@ public class GetWorkingHoursTests {
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON));
 
-		printResult(resultPost);
-
 		String resultString = resultPost.andReturn().getResponse().getContentAsString();
 
-		Assertions.assertTrue(resultString.contains("Method Argument Type Mismatch"));
+		assertAll(() ->assertTrue(resultString.contains("BAD_REQUEST"),"status"),
+				() ->assertTrue(resultString.contains("Method Argument Type Mismatch"),"error"),
+				() ->assertTrue(resultString.contains("false"),"success"));
 
 	}
 
@@ -230,17 +234,17 @@ public class GetWorkingHoursTests {
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON));
 
-		printResult(resultPost);
-
 		String resultString = resultPost.andReturn().getResponse().getContentAsString();
 
-		Assertions.assertTrue(resultString.contains("Method Argument Type Mismatch"));
+		assertAll(() ->assertTrue(resultString.contains("BAD_REQUEST"),"status"),
+				() ->assertTrue(resultString.contains("Method Argument Type Mismatch"),"error"),
+				() ->assertTrue(resultString.contains("false"),"success"));
 
 	}
 
 	@Test
-	@DisplayName("get working hours by date - BadRequest when date is a blank")
-	void givenBlankDate_whenGetWorkingHoursByDate_thenStatus400() throws Exception {
+	@DisplayName("get working hours by date - Internal Server Error when date is a blank")
+	void givenBlankDate_whenGetWorkingHoursByDate_thenStatus500() throws Exception {
 
 		String date = "   ";
 
@@ -250,11 +254,11 @@ public class GetWorkingHoursTests {
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON));
 
-		printResult(resultPost);
-
 		String resultString = resultPost.andReturn().getResponse().getContentAsString();
 
-		Assertions.assertTrue(resultString.contains("Missing Path Variable"));
+		assertAll(() ->assertTrue(resultString.contains("INTERNAL_SERVER_ERROR"),"status"),
+				() ->assertTrue(resultString.contains("Missing Path Variable"),"error"),
+				() ->assertTrue(resultString.contains("false"),"success"));
 
 	}
 
@@ -284,7 +288,7 @@ public class GetWorkingHoursTests {
 	@DisplayName("get working hours by employeeId and date - BadRequest when wrong date format")
 	void givenEmployeeIDAndWrongDateFormat_whenGetWorkingHoursByDate_thenStatus400() throws Exception {
 
-Employee firstEmployee = employeeRepository.findAll().get(0);
+		Employee firstEmployee = employeeRepository.findAll().get(0);
 		
 		UUID employeeId = firstEmployee.getId();
 
@@ -302,11 +306,11 @@ Employee firstEmployee = employeeRepository.findAll().get(0);
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON));
 
-		printResult(resultPost);
-
 		String resultString = resultPost.andReturn().getResponse().getContentAsString();
 
-		Assertions.assertTrue(resultString.contains("Method Argument Type Mismatch"));
+		assertAll(() ->assertTrue(resultString.contains("BAD_REQUEST"),"status"),
+				() ->assertTrue(resultString.contains("Method Argument Type Mismatch"),"error"),
+				() ->assertTrue(resultString.contains("false"),"success"));
 	}
 
 	@Test
@@ -323,17 +327,17 @@ Employee firstEmployee = employeeRepository.findAll().get(0);
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON));
 
-		printResult(resultPost);
-
 		String resultString = resultPost.andReturn().getResponse().getContentAsString();
 
-		Assertions.assertTrue(resultString.contains("Method Argument Type Mismatch"));
+		assertAll(() ->assertTrue(resultString.contains("BAD_REQUEST"),"status"),
+				() ->assertTrue(resultString.contains("Method Argument Type Mismatch"),"error"),
+				() ->assertTrue(resultString.contains("false"),"success"));
 
 	}
 
 	@Test
-	@DisplayName("get working hours by employeeId and date - NotFound when date is a blank")
-	void givenExistentEmployeeIDAndBlankDate_whenGetWorkingHoursByDate_thenStatus404() throws Exception {
+	@DisplayName("get working hours by employeeId and date - Internal Server error when date is a blank")
+	void givenExistentEmployeeIDAndBlankDate_whenGetWorkingHoursByDate_thenStatus500() throws Exception {
 
 Employee firstEmployee = employeeRepository.findAll().get(0);
 		
@@ -347,11 +351,13 @@ Employee firstEmployee = employeeRepository.findAll().get(0);
 				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON));
 
-		printResult(resultPost);
+	
 
 		String resultString = resultPost.andReturn().getResponse().getContentAsString();
 
-		Assertions.assertTrue(resultString.contains("Missing Path Variable"));
+		assertAll(() ->assertTrue(resultString.contains("INTERNAL_SERVER_ERROR"),"status"),
+				() ->assertTrue(resultString.contains("Missing Path Variable"),"error"),
+				() ->assertTrue(resultString.contains("false"),"success"));
 
 	}
 
@@ -370,14 +376,6 @@ Employee firstEmployee = employeeRepository.findAll().get(0);
 		return new JacksonJsonParser().parseMap(resultString).get("token").toString();
 	}
 
-	private void printResult(ResultActions resultPost) throws UnsupportedEncodingException {
-		
-		String resultString = resultPost.andReturn().getResponse().getContentAsString();
-
-		System.out.println("===================================");
-		System.out.println("output test:");
-		System.out.println(resultString);
-		System.out.println("===================================");
-	}
+	
 
 }
