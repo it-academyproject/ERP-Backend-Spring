@@ -63,12 +63,11 @@ public class OrderController {
 	 * @return OrderDTO
 	 */
 	@PostMapping("/orders")
-	public Map<String, Object> createOrder(@RequestBody CreateOrderDTO createOrderDTO,
-			@RequestHeader("authorization") String token) {
+	public Map<String, Object> createOrder(@RequestBody CreateOrderDTO createOrderDTO) {
 		HashMap<String, Object> map = new HashMap<>();
 
 		try {
-			OrderDTO newOrder = orderService.createOrder(createOrderDTO, token);
+			OrderDTO newOrder = orderService.createOrder(createOrderDTO);
 			map.put(success, "true");
 			map.put(message, "Order created");
 			map.put("order", newOrder);
