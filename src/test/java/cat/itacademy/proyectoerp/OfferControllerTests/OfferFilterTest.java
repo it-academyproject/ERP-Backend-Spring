@@ -73,11 +73,11 @@ class OfferFilterTest {
 
 	// filter offers by discount
 	@Test
-	@DisplayName("filter Offers by discount ")
-	void givenOfferFilteredByDiscount() throws Exception {
+	@DisplayName("filter Offers by discount min and max")
+	void givenOfferFilteredByDiscountMinAndMax() throws Exception {
 
 		Double min = 0.15;
-		Double max = 0.05;
+		Double max = 0.3;
 		String accessToken = this.obtainAccessToken();
 		String endPoint = "/api/offers/discount";
 
@@ -90,6 +90,44 @@ class OfferFilterTest {
 				.andExpect(status().isOk());
 
 		this.mvc.perform(get(endPoint, min, max).header("Authorization", "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+	}
+	
+	@Test
+	@DisplayName("filter Offers by discount min")
+	void givenOfferFilteredByDiscountMin() throws Exception {
+
+		Double min = 0.15;
+		
+		String accessToken = this.obtainAccessToken();
+		String endPoint = "/api/offers/discount";
+
+		this.mvc.perform(
+				get(endPoint, min).header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+
+		
+
+		this.mvc.perform(get(endPoint, min).header("Authorization", "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+	}
+	
+	@Test
+	@DisplayName("filter Offers by discount max")
+	void givenOfferFilteredByDiscountMax() throws Exception {
+
+		Double max = 0.05;
+		
+		String accessToken = this.obtainAccessToken();
+		String endPoint = "/api/offers/discount";
+
+		this.mvc.perform(
+				get(endPoint, max).header("Authorization", "Bearer " + accessToken).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+
+		
+
+		this.mvc.perform(get(endPoint, max).header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 	}
 	
