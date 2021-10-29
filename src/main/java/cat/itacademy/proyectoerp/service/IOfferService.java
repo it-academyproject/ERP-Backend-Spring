@@ -17,8 +17,7 @@ public interface IOfferService {
 	public OfferDTO update(Offer offer);
 	
 	public OfferDTO delete(UUID id);
-	
-		
+			
 	public List<OfferDTO> findByNameContainingIgnoreCase(String name);
 	
 	public List<OfferDTO> readByDiscountGreatherThanEqual(Double min);

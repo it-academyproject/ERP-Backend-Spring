@@ -39,9 +39,7 @@ public class OffersDeleteRequestTests {
 	@Autowired
 	private MockMvc mockMvc;
 
-	//@Autowired
-	//IOfferService offerService;
-			
+				
 	@Autowired
 	IOfferRepository offerRepository;
 

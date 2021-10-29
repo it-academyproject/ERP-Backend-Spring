@@ -27,7 +27,6 @@ public class OfferDTO implements Serializable {
 	}
 	
 	
-	
 	public OfferDTO(String name, double discount, LocalDateTime startsOn, LocalDateTime endsOn, int paidQuantity,
 			int freeQuantity) {
 		this.name = name;

@@ -172,13 +172,13 @@ public class OfferController {
 		
 		try {
 
-			// min discount
+			// min. discount
 			
 			if (min != null) {
 
 				offerDtos = offerService.readByDiscountGreatherThanEqual(min);
 
-			// max discount
+			// max. discount
 				
 			}if (max != null) {
 

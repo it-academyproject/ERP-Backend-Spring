@@ -11,10 +11,7 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import cat.itacademy.proyectoerp.domain.Client;
 import cat.itacademy.proyectoerp.domain.Offer;
-import cat.itacademy.proyectoerp.dto.ClientDTO;
 import cat.itacademy.proyectoerp.dto.OfferDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.repository.IOfferRepository;
