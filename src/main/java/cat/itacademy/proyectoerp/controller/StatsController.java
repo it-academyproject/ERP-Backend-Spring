@@ -1,25 +1,23 @@
 package cat.itacademy.proyectoerp.controller;
 
 import cat.itacademy.proyectoerp.domain.Order;
-import cat.itacademy.proyectoerp.domain.DatesTopEmployeePOJO;
 import cat.itacademy.proyectoerp.dto.TopEmployeeDTO;
 import cat.itacademy.proyectoerp.dto.EmployeeDTO;
 import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 import cat.itacademy.proyectoerp.dto.OrderDTO;
+import cat.itacademy.proyectoerp.dto.ProductStatsDTO;
 import cat.itacademy.proyectoerp.service.IEmployeeService;
 import cat.itacademy.proyectoerp.service.IOrderService;
+import cat.itacademy.proyectoerp.service.IProductService;
 import cat.itacademy.proyectoerp.util.StringToOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.DateFormatSymbols;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -38,6 +36,9 @@ public class StatsController {
   
   @Autowired
   IEmployeeService employeeService;
+  
+  @Autowired
+  IProductService productService;
 
   @GetMapping("/status/{status}")
   public Map<String, Object> getOrderBySatus(@PathVariable(value = "status") String status) throws Exception{
@@ -274,6 +275,60 @@ public class StatsController {
 		      map.put("success", "false");
 		      map.put("message", "error: " + e.getMessage());
 		    }
+		return map;
+	}
+	
+	@GetMapping("/products/maxprice")
+	public Map<String, Object> getMaxPriceProduct(){
+		
+		HashMap<String, Object> map = new HashMap<>();
+		
+		try {
+			ProductStatsDTO dto = productService.getMaxPrice();
+			map.put("success", "true");
+			map.put("message", "max price product found");
+			map.put("product", dto);
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "error: " + e.getMessage());
+		}
+		
+		return map;
+	}
+	
+	@GetMapping("/products/minprice")
+	public Map<String, Object> getMinPriceProduct(){
+		
+		HashMap<String, Object> map = new HashMap<>();
+		
+		try {
+			ProductStatsDTO dto = productService.getMinPrice();
+			map.put("success", "true");
+			map.put("message", "min price product found");
+			map.put("product", dto);
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "error: " + e.getMessage());
+		}
+		
+		return map;
+	}
+	
+	@GetMapping("/products/averageprice")
+	public Map<String, Object> getAveragePriceProducts(){
+		
+		HashMap<String, Object> map = new HashMap<>();
+		
+		try {
+			double average = productService.getAveragePrice();
+			map.put("success", "true");
+			map.put("message", "average price of products found");
+			map.put("average", average);
+		} catch (Exception e) {
+			map.put("success", "false");
+			map.put("message", "error: " + e.getMessage());
+		}
+		
 		return map;
 	}
 }

@@ -17,4 +17,8 @@ public interface IProductRepository extends JpaRepository<Product, Integer> {
 	boolean existsByName(String name);
 	
 	List<Product> findAllByCategoryName(String name);
+	
+	List<Product> findAllByOrderByPriceDesc();
+	
+	List<Product> findAllByOrderByPriceAsc();
 }
