@@ -3,6 +3,7 @@ package cat.itacademy.proyectoerp.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import cat.itacademy.proyectoerp.domain.Notification;
 import cat.itacademy.proyectoerp.domain.User;
 import cat.itacademy.proyectoerp.domain.UserType;
+import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.repository.IEmployeeRepository;
 import cat.itacademy.proyectoerp.repository.INotificationRepository;
 import cat.itacademy.proyectoerp.repository.IUserRepository;
@@ -119,5 +121,22 @@ public class NotificationServiceImpl implements INotificationService {
 		
 		notificationRepository.saveAll(notificationsBatch);
 	}
-
+	
+	
+	//changes the read status of a notification to true
+	public Notification readNotification(UUID notificationId) {
+		Optional<Notification> notification = notificationRepository.findById(notificationId);
+		
+		if(notification.isEmpty()) {
+			throw new ArgumentNotFoundException("The notification id " + notificationId + " does not exist.");
+		}
+		else if (notification.get() == null) {
+			throw new NullPointerException("The notification id " + notificationId + " is null");
+		}
+		else {
+			notification.get().setRead(true);
+		}
+		
+		return notificationRepository.save(notification.get());
+	}
 }

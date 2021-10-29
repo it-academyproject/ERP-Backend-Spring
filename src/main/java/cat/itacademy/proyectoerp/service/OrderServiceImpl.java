@@ -87,25 +87,21 @@ public class OrderServiceImpl implements IOrderService{
 	ModelMapper modelMapper = new ModelMapper();
 	
 	@Override
-	public OrderDTO createOrder(CreateOrderDTO createOrderDTO, String token) throws  AuthException{
-		String auxToken;
-		auxToken=token.substring(7);
-		
-		String authClient= jwtUtil.getNameOfUser(auxToken);
+	public OrderDTO createOrder(CreateOrderDTO createOrderDTO) throws  AuthException{
 		
 		if (createOrderDTO.getClientId() == null)
 			setAddressesForUnregisteredClient(createOrderDTO);
 		else {
 			Client client = clientService.findClientById(createOrderDTO.getClientId());
 			
-			if (client.getUser().getUsername().equals(authClient))
+			if (client != null)
 				setAddressesForRegisteredClient(client, createOrderDTO);
 			else
 				throw new AuthException();
 		}
 		Order order = modelMapper.map(createOrderDTO, Order.class);
 		Set<OrderDetail> orderDetails = createOrderDetailFromProductQuantity(order, createOrderDTO.getProductsQuantity());
-//		order.setOrderDetails(orderDetails);
+		order.setOrderDetails(orderDetails);
 		order.setTotal(calculateTotalFromOrderDetail(orderDetails));
 		Order orderDb = orderRepository.save(order);
 		

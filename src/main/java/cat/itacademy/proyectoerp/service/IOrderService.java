@@ -17,7 +17,7 @@ import cat.itacademy.proyectoerp.dto.EmployeeSalesDTO;
 
 public interface IOrderService {
 	
-	public OrderDTO createOrder(CreateOrderDTO createOrderDTO, String token) throws  AuthException;
+	public OrderDTO createOrder(CreateOrderDTO createOrderDTO) throws  AuthException;
 	 
 	public Order findOrderById(UUID id);
 
