@@ -98,16 +98,16 @@ public class WorkingHoursController {
 
 	@PreAuthorize("hasRole('ADMIN') or hasRole('EMPLOYEE')")
 	@PostMapping()
-	public Map<String, Object> createWorkingHours(@RequestBody WorkingHoursDTO workingHoursDTO) {
+	public Map<String, Object> createWorkingHours(@RequestBody WorkingHoursToStringDTO workingHoursToStringDTO) {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		try {
-			workingHoursService.createWorkingHours(workingHoursDTO);
+			workingHoursService.createWorkingHours(workingHoursToStringDTO);
 
 			map.put("success", "true");
 			map.put("message", "New Working Hours created");
-			map.put("working_hours", workingHoursDTO);
+			map.put("working_hours", workingHoursToStringDTO);
 
 		} catch (Exception e) {
 
@@ -140,14 +140,14 @@ public class WorkingHoursController {
 
 	@PreAuthorize("hasRole('ADMIN') or hasRole('EMPLOYEE')")
 	@PutMapping()
-	public HashMap<String, Object> updateEmployee(@RequestBody WorkingHoursDTO workingHoursDTO) {
+	public HashMap<String, Object> updateEmployee(@RequestBody WorkingHoursToStringDTO workingHoursToStringDTO) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		try {
-			WorkingHoursDTO workingHoursUpdated = workingHoursService
-					.updateWorkingHoursByEmployeeIdAndDate(workingHoursDTO);
+			
+			WorkingHoursToStringDTO workingHoursUpdated= workingHoursService.updateWorkingHoursByEmployeeIdAndDate(workingHoursToStringDTO);
 			map.put("success", "true");
-			map.put("message", "Working Hours with Empployee id: " + workingHoursDTO.getEmployeeId() + " and "
-					+ workingHoursDTO.getDate() + " have been updated");
+			map.put("message", "Working Hours with Empployee id: " + workingHoursToStringDTO.getEmployeeId() + " and "
+					+ workingHoursToStringDTO.getDate() + " have been updated");
 			map.put("working_hours", workingHoursUpdated);
 
 		} catch (Exception e) {

@@ -25,18 +25,33 @@ public class WorkingHoursMapperImpl implements IWorkingHoursMapper {
 	}
 
 	@Override
-	public WorkingHoursToStringDTO workingHoursToAllDto(WorkingHours workingHours) {
-		if (workingHours == null) {
+	public WorkingHoursToStringDTO workingHoursToAllDto(WorkingHours entity) {
+		if (entity == null) {
 			return null;
 		}
 
-		WorkingHoursToStringDTO workingHoursToStringDTO = new WorkingHoursToStringDTO();
-		workingHoursToStringDTO.setCheckIn(workingHours.checkInToString());
-		workingHoursToStringDTO.setCheckOut(workingHours.checkOutToString());
-		workingHoursToStringDTO.setDate(workingHours.localDateToString());
-		workingHoursToStringDTO.setEmployeeId(workingHours.getEmployeeId());
+		WorkingHoursToStringDTO dto = new WorkingHoursToStringDTO();
+		dto.setCheckIn(entity.getCheckInToString());
+		dto.setCheckOut(entity.getCheckOutToString());
+		dto.setDate(entity.getLocalDateToString());
+		dto.setEmployeeId(entity.getEmployeeId());
 
-		return workingHoursToStringDTO;
+		return dto;
+	}
+
+	@Override
+	public WorkingHours workingHoursStringDTOToEntity(WorkingHoursToStringDTO dto) {
+		if (dto == null) {
+			return null;
+		}
+
+		WorkingHours entity = new WorkingHours();
+		entity.setCheckInStringToDate(dto.getCheckIn());
+		entity.setCheckOutStringToDate(dto.getCheckOut());
+		entity.setLocalDateStringToDate(dto.getDate());
+		entity.setEmployeeId(dto.getEmployeeId());
+
+		return entity;
 	}
 
 }

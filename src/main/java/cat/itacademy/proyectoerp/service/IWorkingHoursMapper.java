@@ -13,5 +13,5 @@ public interface IWorkingHoursMapper {
 
 		WorkingHoursToStringDTO workingHoursToAllDto(WorkingHours workingHours);
 
-		
+		WorkingHours workingHoursStringDTOToEntity(WorkingHoursToStringDTO workingHoursToStringDTO);
 }

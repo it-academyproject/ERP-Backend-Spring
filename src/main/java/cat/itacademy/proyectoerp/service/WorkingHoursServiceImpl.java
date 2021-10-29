@@ -12,14 +12,11 @@ import org.springframework.stereotype.Service;
 import cat.itacademy.proyectoerp.domain.Employee;
 import cat.itacademy.proyectoerp.domain.Notification;
 import cat.itacademy.proyectoerp.domain.NotificationType;
-import cat.itacademy.proyectoerp.domain.UserType;
 import cat.itacademy.proyectoerp.domain.WorkingHours;
-import cat.itacademy.proyectoerp.dto.WorkingHoursDTO;
 import cat.itacademy.proyectoerp.dto.WorkingHoursToStringDTO;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotFoundException;
 import cat.itacademy.proyectoerp.exceptions.ArgumentNotValidException;
 import cat.itacademy.proyectoerp.repository.IEmployeeRepository;
-import cat.itacademy.proyectoerp.repository.IUserRepository;
 import cat.itacademy.proyectoerp.repository.IWorkingHoursRepository;
 import cat.itacademy.proyectoerp.util.NotificationBuilder;
 
@@ -30,45 +27,65 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 
 	@Autowired
 	IWorkingHoursRepository workingHoursRepository;
-	
+
 	@Autowired
 	IEmployeeRepository employeeRepository;
-	
+
 	@Autowired
 	INotificationService notificationService;
-	
+
 	@Autowired
 	IWorkingHoursMapper iWorkingHoursMapper;
 	ModelMapper modelMapper = new ModelMapper();
-	
+
 	@Autowired
 	IEmailService emailService;
 
 	@Override
-	public WorkingHoursDTO createWorkingHours(WorkingHoursDTO workingHoursDTO) throws ArgumentNotValidException {
-		WorkingHours workingHours = modelMapper.map(workingHoursDTO, WorkingHours.class);
-		if (workingHours.getEmployeeId() == null) {
+	public WorkingHoursToStringDTO createWorkingHours(WorkingHoursToStringDTO dto) throws ArgumentNotValidException {
+
+		WorkingHours entity = iWorkingHoursMapper.workingHoursStringDTOToEntity(dto);
+
+		if (dto.getEmployeeId() == null) {
 			throw new ArgumentNotValidException("An Employee ID is required");
 
-		} else if ((workingHours.getCheckIn() == null) && (workingHours.getCheckOut() == null)) {
+		} else if ((dto.getCheckIn() == null) && (dto.getCheckOut() == null)) {
 			throw new ArgumentNotValidException("Either the CheckIn time or Checkout time is required");
 
-		} else if (workingHours.getDate() == null) {
+		} else if (dto.getDate() == null) {
 			throw new ArgumentNotValidException("A Date is required");
 
 		} else {
-			workingHoursRepository.save(workingHours);
-			
-			//Notify all admins
-			Optional<Employee> employee = employeeRepository.findById(workingHours.getEmployeeId());
+
+			workingHoursRepository.save(entity);
+
+			// Notify all admins
+			Optional<Employee> employee = employeeRepository.findById(entity.getEmployeeId());
 			Notification notification = NotificationBuilder.build(NotificationType.EMPLOYEE_ENTRY, employee.get());
 			notificationService.notifyAllAdmins(notification);
-			//Mailing notification to admins
+			// Mailing notification to admins
 			emailService.sendEmployeeCheckin(notification);
-			
+
 		}
 
-		return modelMapper.map(workingHours, WorkingHoursDTO.class);
+		return iWorkingHoursMapper.workingHoursToAllDto(entity);
+	}
+
+	@Override
+	public WorkingHoursToStringDTO updateWorkingHoursByEmployeeIdAndDate(WorkingHoursToStringDTO dto)
+			throws ArgumentNotValidException {
+
+		WorkingHours entity = iWorkingHoursMapper.workingHoursStringDTOToEntity(dto);
+
+		if (workingHoursRepository.findWorkingHoursByEmployeeIdAndDate(entity.getEmployeeId(),
+				entity.getDate()) == null) {
+			throw new ArgumentNotFoundException("No WorkingHours found for this Employee Id and date");
+
+		} else {
+			workingHoursRepository.save(entity);
+		}
+
+		return iWorkingHoursMapper.workingHoursToAllDto(entity);
 	}
 
 	@Bean
@@ -117,22 +134,6 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 			return iWorkingHoursMapper
 					.workingHoursToAllDto(workingHoursRepository.findWorkingHoursByEmployeeIdAndDate(employeeId, date));
 		}
-	}
-
-	@Override
-	public WorkingHoursDTO updateWorkingHoursByEmployeeIdAndDate(WorkingHoursDTO workingHoursDTO)
-			throws ArgumentNotValidException {
-		WorkingHours workingHours = modelMapper.map(workingHoursDTO, WorkingHours.class);
-
-		if (workingHoursRepository.findWorkingHoursByEmployeeIdAndDate(workingHours.getEmployeeId(),
-				workingHours.getDate()) == null) {
-			throw new ArgumentNotFoundException("No WorkingHours found for this Employee Id and date");
-
-		} else {
-			workingHoursRepository.save(workingHours);
-		}
-
-		return modelMapper.map(workingHours, WorkingHoursDTO.class);
 	}
 
 	@Override

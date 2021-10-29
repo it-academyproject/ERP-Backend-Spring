@@ -56,6 +56,15 @@ public class WorkingHours {
 		return date;
 	}
 
+	
+	public void setLocalDateStringToDate(String localTime) {
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate date = LocalDate.parse(localTime, formatter);
+		this.date = date;
+
+	}
+
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
@@ -68,12 +77,26 @@ public class WorkingHours {
 		this.checkIn = checkIn;
 	}
 
+	public void setCheckInStringToDate(String localTime) {
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+		LocalTime date = LocalTime.parse(localTime, formatter);
+		this.checkIn = date;
+	}
+
 	public LocalTime getCheckOut() {
 		return checkOut;
 	}
 
 	public void setCheckOut(LocalTime checkOut) {
 		this.checkOut = checkOut;
+	}
+
+	public void setCheckOutStringToDate(String localTime) {
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+		LocalTime date = LocalTime.parse(localTime, formatter);
+		this.checkOut = date;
 	}
 
 	public UUID getEmployeeId() {
@@ -84,11 +107,8 @@ public class WorkingHours {
 		this.employeeId = employeeId;
 	}
 
-	/**
-	 * @param LocalDate
-	 * @return String
-	 */
-	public String localDateToString() {
+	
+	public String getLocalDateToString() {
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		String strDate = this.date.format(formatter);
@@ -96,10 +116,7 @@ public class WorkingHours {
 		return strDate;
 	}
 
-	/**
-	 * @param LocalTime
-	 * @return String
-	 */
+	
 	public String localTimeToString(LocalTime localTime) {
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -108,11 +125,17 @@ public class WorkingHours {
 		return strDate;
 	}
 
-	/**
-	 * @param LocalTime
-	 * @return String
-	 */
-	public String checkOutToString() {
+	
+	public LocalTime localTimeStringToDate(String localTime) {
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+		LocalTime date = LocalTime.parse(localTime, formatter);
+
+		return date;
+	}
+
+	
+	public String getCheckOutToString() {
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 		String strDate = this.checkOut.format(formatter);
@@ -120,11 +143,8 @@ public class WorkingHours {
 		return strDate;
 	}
 
-	/**
-	 * @param LocalTime
-	 * @return String
-	 */
-	public String checkInToString() {
+	
+	public String getCheckInToString() {
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 		String strDate = this.checkIn.format(formatter);
@@ -134,7 +154,7 @@ public class WorkingHours {
 
 	@Override
 	public String toString() {
-		return "WorkingHoursDTO [date=" + localDateToString() + ", checkIn=" + localTimeToString(checkIn)
+		return "WorkingHoursDTO [date=" + getLocalDateToString() + ", checkIn=" + localTimeToString(checkIn)
 				+ ", checkOut=" + localTimeToString(checkOut) + ", employeeId=" + employeeId + "]";
 	}
 
