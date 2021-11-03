@@ -285,12 +285,9 @@ public class StatsController {
 		
 		try {
 			ProductStatsDTO dto = productService.getMaxPrice();
-			map.put("success", "true");
-			map.put("message", "max price product found");
-			map.put("product", dto);
+			map = successMessage("max price product found", dto);
 		} catch (Exception e) {
-			map.put("success", "false");
-			map.put("message", "error: " + e.getMessage());
+			map = errorMessage(e);
 		}
 		
 		return map;
@@ -303,12 +300,9 @@ public class StatsController {
 		
 		try {
 			ProductStatsDTO dto = productService.getMinPrice();
-			map.put("success", "true");
-			map.put("message", "min price product found");
-			map.put("product", dto);
+			map = successMessage("min price product found", dto);
 		} catch (Exception e) {
-			map.put("success", "false");
-			map.put("message", "error: " + e.getMessage());
+			map = errorMessage(e);
 		}
 		
 		return map;
@@ -321,13 +315,29 @@ public class StatsController {
 		
 		try {
 			double average = productService.getAveragePrice();
-			map.put("success", "true");
-			map.put("message", "average price of products found");
-			map.put("average", average);
+			map = successMessage("average price found", average);
 		} catch (Exception e) {
-			map.put("success", "false");
-			map.put("message", "error: " + e.getMessage());
+			map = errorMessage(e);
 		}
+		
+		return map;
+	}
+	
+	private HashMap<String, Object> successMessage(String message, Object object){
+		HashMap<String, Object> map = new HashMap<>();
+		
+		map.put("success", "true");
+		map.put("message", message);
+		map.put("object", object);
+		
+		return map;
+	}
+	
+	private HashMap<String, Object> errorMessage(Exception e){
+		HashMap<String, Object> map = new HashMap<>();
+		
+		map.put("success", "false");
+		map.put("message", "error: " + e.getMessage());
 		
 		return map;
 	}
